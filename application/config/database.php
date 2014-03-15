@@ -48,9 +48,15 @@
 $active_group = 'default';
 $active_record = TRUE;
 
+<<<<<<< .mine
+$db['default']['hostname'] = 'jhonatan-pc';
+$db['default']['username'] = 'mtps';
+$db['default']['password'] = 'root';
+=======
 $db['default']['hostname'] = 'Jhonatan-PC';
 $db['default']['username'] = 'mtps';
 $db['default']['password'] = 'root';
+>>>>>>> .r9
 $db['default']['database'] = 'mtps';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
