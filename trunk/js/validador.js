@@ -213,7 +213,7 @@
 			var mensaje="";
 			if(resultado) {
 				if(settings.verOk) {
-					mensaje="<span class='mensaje-tooltip'><img src='img/ok.png' width='12' width='12'/> Ok!</span><br/>";
+					mensaje="<span class='mensaje-tooltip'><img src='"+base_url()+"img/ok.png' width='12' width='12'/> Ok!</span><br/>";
 					$obj.tooltipster('enable');
 				}
 				else {
@@ -222,7 +222,7 @@
 				}
 			}
 			else {
-				mensaje="<span class='mensaje-tooltip'><img src='img/error.png' width='12' width='12'/> "+to+"</span><br/>";
+				mensaje="<span class='mensaje-tooltip'><img src='"+base_url()+"img/error.png' width='12' width='12'/> "+to+"</span><br/>";
 				$obj.tooltipster('enable');
 			}
 			$obj.tooltipster('content', $(mensaje));
