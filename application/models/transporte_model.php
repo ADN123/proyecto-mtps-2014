@@ -123,7 +123,7 @@ class Transporte_model extends CI_Model {
 	}
 	
 	function solicitudes_por_confirmar(){
-	  $query=$this->db->query(" SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,hora_entrada_mision entrada, hora_salida_mision salida, municipio,lugar_destino lugar, mision_encomendada mision FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_org_municipio=m.id_municipio WHERE estado=2");
+	  $query=$this->db->query(" SELECT id_solicitud_transporte AS id, CONCAT_WS(' ',fecha_mision,hora_salida) AS fecha, lugar_destino AS lugar, mision_encomendada  mision FROM tcm_solicitud_transporte WHERE estado_solicitud_transporte = 1");
    	return $query->result();
 		
 	}
@@ -133,19 +133,18 @@ class Transporte_model extends CI_Model {
 		
 	}
 	function datos_de_solicitudes($id){
-		  $query=$this->db->query("	SELECT 
-									fecha_mision  fecha,
-									hora_entrada entrada, 
-									hora_salida salida,
-									municipio,
-									lugar_destino lugar, 
-									mision_encomendada mision, 
-									CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre,
-									NR
-									FROM tcm_solicitud_transporte s   
-									INNER JOIN org_municipio m ON s.id_municipio=m.id_municipio
-									INNER JOIN sir_empleado e on e.NR=s.id_empleado_solicitante 
-									WHERE id_solicitud_transporte = ".$id);
+		  $query=$this->db->query("	SELECT id_solicitud_transporte id, 
+	CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre,
+	mision_encomendada mision, 
+	fecha_solicitud_transporte fecha,
+	hora_salida salida,
+	hora_entrada entrada,
+	m.municipio ,
+	lugar_destino lugar	
+	FROM tcm_solicitud_transporte  s 
+	INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
+	INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio
+	WHERE id_solicitud_transporte =".$id);
 	
 		return $query->result();
 	}	
