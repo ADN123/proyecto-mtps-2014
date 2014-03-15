@@ -1,0 +1,96 @@
+@charset "utf-8";
+/* CSS Document */
+form {
+	position: relative;
+	width: 80%;
+	height: auto;
+	margin: 0 auto;
+	font-family: Verdana, Geneva, sans-serif;
+}       
+form p {
+	position: relative;
+	width: 100%;
+	height: auto;
+	margin-top: 5px !important;
+	margin-bottom: 5px !important;
+	padding: 0 !important;	
+	font-size: 0.85em !important;	
+}
+form label {
+	position: relative;
+	cursor: pointer;
+	width: 15%;
+	height: auto;
+	display: inline-block;
+	vertical-align: top;
+}
+input[type="text"], input[type="password"], select, input[type="radio"], textarea {
+	height: 22px;
+	padding: 5px;
+	position: relative;
+	border: solid 1px #777;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	display: inline-block;
+	box-sizing: initial !important;
+}
+textarea {
+	min-height: 70px;	
+	max-height: 70px;
+} 
+button {
+	height: 34px !important;
+}
+.required {
+	border: solid 1px #f00 !important;
+}
+.correct {
+	border: solid 1px #666 !important;;
+}
+.correct2 {
+	border: solid 1px #0f0 !important;
+}
+.mensaje-tooltip {
+	font-size: 0.75em;
+}
+.obligatorio {
+	color: #F00;
+}	
+.tam-1, .tam-2, .tam-3 {
+	/*min-width: 300px;*/
+}
+.tam-1 {
+	width: 20% !important;
+}
+.tam-2 {
+	width: 30% !important;
+}
+.tam-3 {
+	width: 55% !important;
+}
+.tam-4 {
+	width: 80% !important;
+}
+#contenedor {
+	position: relative;
+	width: 50%;
+	height: auto;
+	margin: 0 auto;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.85em !important;
+}
+/*SCROLL*/
+::-webkit-scrollbar {  
+    width: 8px; 
+}  
+::-webkit-scrollbar-track {  
+    background-color: #eaeaea;  
+    border-left: 1px solid #ccc;  
+}  
+::-webkit-scrollbar-thumb {  
+    background-color: #ccc;  
+}  
+::-webkit-scrollbar-thumb:hover {  
+    background-color: #aaa;  
+}
+

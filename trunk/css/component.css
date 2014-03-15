@@ -1,0 +1,652 @@
+/* General styles for all menus */
+.cbp-spmenu {
+	background: #47a3da;
+	position: fixed;
+	overflow: scroll;
+}
+
+.regresar {
+	background: rgba(0,0,0,0.4);
+	background-image: url(../img/regresar.png) !important;
+	background-repeat: no-repeat !important;
+	background-position: 95% !important;
+}
+
+.regresar:hover {
+	background-image: url(../img/regresar.png) !important;
+	background-repeat: no-repeat !important;
+	background-position: 95% !important;
+}
+
+.oscuro {
+	background: rgba(0,0,0,0.12);
+}
+
+.cbp-spmenu h3 {
+	color: #FFF;/*#afdefa;*/
+	font-size: 1.9em;
+	padding: 20px;
+	margin: 0;
+	font-weight: 300;
+	background: #00436F;
+	/*border-bottom: 5px solid #91B510;*/
+}
+
+.cbp-spmenu a {
+	display: block;
+	color: #fff;
+	font-size: 1.1em;
+	font-weight: 300;
+}
+
+.cbp-spmenu a:hover {
+	background: #F48F35;
+}
+
+.padre {
+	background-image: url(../img/flecha_izq.png);
+	background-repeat: no-repeat;
+	background-position: 5%;
+}
+
+.padre:hover {
+	background-image: url(../img/flecha_izq.png) !important;
+	background-repeat: no-repeat !important;
+	background-position: 5% !important;
+}
+
+.cbp-spmenu a:active {
+	background: #afdefa;
+	color: #47a3da;
+}
+
+/* Orientation-dependent styles for the content of the menu */
+
+.cbp-spmenu-vertical {
+	width: 325px;
+	height: 100%;
+	top: 0;
+	z-index: 1000;
+}
+
+.cbp-spmenu-vertical a {
+	border-bottom: 1px solid #258ecd;
+	padding: 1em;
+	padding-left: 2em;
+}
+
+.cbp-spmenu-vertical a img {
+	vertical-align: initial;
+}
+
+.cbp-spmenu-horizontal {
+	width: 100%;
+	height: 150px;
+	left: 0;
+	z-index: 1000;
+	overflow: hidden;
+}
+
+.cbp-spmenu-horizontal h3 {
+	height: 100%;
+	width: 20%;
+	float: left;
+}
+
+.cbp-spmenu-horizontal a {
+	float: left;
+	width: 20%;
+	padding: 0.8em;
+	border-left: 1px solid #258ecd;
+}
+
+/* Vertical menu that slides from the left or right */
+
+.cbp-spmenu-left {
+	left: -325px;
+}
+
+.cbp-spmenu-right {
+	right: -325px;
+}
+
+.cbp-spmenu-left.cbp-spmenu-open {
+	left: 0px;
+}
+
+.cbp-spmenu-right.cbp-spmenu-open {
+	right: 0px;
+}
+
+/* Horizontal menu that slides from the top or bottom */
+
+.cbp-spmenu-top {
+	top: -150px;
+}
+
+.cbp-spmenu-bottom {
+	bottom: -150px;
+}
+
+.cbp-spmenu-top.cbp-spmenu-open {
+	top: 0px;
+}
+
+.cbp-spmenu-bottom.cbp-spmenu-open {
+	bottom: 0px;
+}
+
+/* Push classes applied to the body */
+
+.cbp-spmenu-push {
+	overflow-x: hidden;
+	position: relative;
+	left: 0;
+}
+
+.cbp-spmenu-push-toright {
+	left: 240px;
+}
+
+.cbp-spmenu-push-toleft {
+	left: -240px;
+}
+
+/* Transitions */
+
+.cbp-spmenu,
+.cbp-spmenu-push {
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+/* Header styles and animations */
+
+.ha-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	padding: 0;
+	z-index: 50;
+	font-family: 'Lato', Arial, sans-serif;
+	-webkit-transform: translateY(0%);
+	-moz-transform: translateY(0%);
+	transform: translateY(0%);
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+.ha-header-perspective {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	-webkit-perspective: 1100px;
+	-moz-perspective: 1100px;
+	perspective: 1100px;
+	-webkit-perspective-origin: 50% 0;
+	-moz-perspective-origin: 50% 0;
+	perspective-origin: 50% 0;
+}
+
+.ha-header-perspective > div {
+	background: #fff;
+	text-align: left;
+	/*padding: 0 7%;*/
+	height: 50%;
+	width: 100%;
+	margin: 0 auto;
+	position: relative;
+	text-align: justify;
+	-webkit-backface-visibility: hidden;
+	-moz-backface-visibility: hidden;
+	backface-visibility: hidden;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	transition: all 0.5s;
+	overflow: hidden;
+}
+
+.ha-header-front {
+	z-index: 2;
+	-webkit-transform-origin: 50% 100%;
+	-moz-transform-origin: 50% 100%;
+	transform-origin: 50% 100%;
+	background-image: url(../img/banner.gif) !important;
+	background-repeat: no-repeat !important;
+	background-size: 100% 100% !important;
+}
+
+.ha-header-perspective .ha-header-bottom {
+	background: #cd4436;
+	-webkit-transform-origin: 50% 0%;
+	-moz-transform-origin: 50% 0%;
+	transform-origin: 50% 0%;
+	z-index: 1;
+	-webkit-transform: rotateX(-90deg);
+	-moz-transform: rotateX(-90deg);
+	transform: rotateX(-90deg);
+	-webkit-transition: top 0.5s;
+	-moz-transition: top 0.5s;
+	transition: top 0.5s;
+	position: absolute;
+	top: 0;
+}
+
+/* Justify inline-block elements (h1 on left side, nav on right) */
+.ha-header-perspective > div::after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+}
+
+/* Text styling */
+.ha-header h1,
+.ha-header h1::before,
+.ha-header h1 span,
+.ha-header nav,
+.ha-header nav::before {
+	display: inline-block;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.ha-header h1 {
+	font-weight: 300;
+	font-size: 3.2em;
+	margin: 0;
+	padding: 0 1em 0 0;
+	color: #2d383f;
+	cursor: default;
+	height: 100%;
+	z-index: 1;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+.ha-header h1::before,
+.ha-header nav::before {
+	content: '';
+	height: 100%;
+}
+
+.ha-header h1::after {
+	content: '';
+	width: 100px;
+	height: 96px;
+	background: #fff;
+	position: absolute;
+	z-index: 100;
+	top: 0;
+	left: 0;
+	cursor: pointer;
+	box-shadow: inset 0 8px #2d383f, inset 0 16px #fff, inset 0 24px #2d383f, inset 0 32px #fff, inset 0 40px #2d383f, inset 0 48px #fff, inset 0 56px #2d383f;
+	opacity: 0;
+	border: 20px solid #fff;
+	-webkit-transition: opacity 0.5s;
+	-moz-transition: opacity 0.5s;
+	transition: opacity 0.5s;
+}
+
+.ha-header nav {
+	width: 100%;
+	height: 100%;
+}
+
+.ha-header nav a {
+	position: relative;
+	display: inline-block;
+	margin: 20px 25px;/*15px 25px*/
+	outline: none;
+	color: #fff;
+	text-decoration: none;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 400;
+	text-shadow: 0 0 1px rgba(255,255,255,0.3);
+	font-size: 0.8125em;
+	float: left;
+}
+
+
+
+.ha-header nav a:last-child {
+    margin-right: 0;
+}
+
+.ha-header .ha-header-front nav a:first-child,
+.ha-header .ha-header-front nav a:last-child {
+	border: 2px solid #e74c3c;
+}
+
+.ha-header .ha-header-front nav a:first-child:hover,
+.ha-header .ha-header-front nav a:last-child:hover {
+	border: 2px solid #bc3c2f;
+}
+
+/* Individual states */
+
+.ha-header-large {
+	height: 420px;
+}
+
+.ha-header-small {
+	height: 220px;
+}
+
+.ha-header-hide {
+	height: 150px;
+	-webkit-transform: translateY(-66%);
+	-moz-transform: translateY(-66%);
+	transform: translateY(-66%);
+}
+
+.ha-header-show {
+	height: 150px;
+	-webkit-transform: translateY(0%);
+	-moz-transform: translateY(0%);
+	transform: translateY(0%);
+}
+
+.ha-header-show .ha-header-bottom {
+	opacity: 0;
+	-webkit-transition: top 0.5s, opacity 0s 0.5s;
+	-moz-transition: top 0.5s, opacity 0s 0.5s;
+	transition: top 0.5s, opacity 0s 0.5s;
+	-webkit-transform: rotateX(0deg);
+	-moz-transform: rotateX(0deg);
+	transform: rotateX(0deg);
+	top: 0%;
+}
+
+.ha-header-subshow {
+	height: 150px;
+}
+
+.ha-header-subshow .ha-header-bottom {
+	-webkit-transition: top 0.5s;
+	-moz-transition: top 0.5s;
+	transition: top 0.5s;
+	-webkit-transform: rotateX(0deg);
+	-moz-transform: rotateX(0deg);
+	transform: rotateX(0deg);
+	top: 65%;
+}
+
+.ha-header-shrink {
+	height: 150px;
+	top: 50px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+.ha-header-shrink .ha-header-bottom {
+	opacity: 0;
+}
+
+.ha-header-rotate {
+	height: 150px;
+	top: 0px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+.ha-header-rotate .ha-header-front {
+	-webkit-transform: translateY(-100%) rotateX(90deg);
+	-moz-transform: translateY(-100%) rotateX(90deg);
+	transform: translateY(-100%) rotateX(90deg);
+}
+
+.ha-header-rotate .ha-header-bottom {
+	top: 50%;
+	-webkit-transition: -webkit-transform 0.5s;
+	-moz-transition: -moz-transform 0.5s;
+	transition: transform 0.5s;
+	-webkit-transform: rotateX(0deg) translateY(-100%);
+	-moz-transform: rotateX(0deg) translateY(-100%);
+	transform: rotateX(0deg) translateY(-100%);
+}
+
+.ha-header-rotateBack {
+	height: 150px;
+	top: 50px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+.ha-header-rotateBack .ha-header-front {
+	-webkit-transform: translateY(0%) rotateX(0deg);
+	-moz-transform: translateY(0%) rotateX(0deg);
+	transform: translateY(0%) rotateX(0deg);
+}
+
+.ha-header-rotateBack .ha-header-bottom {
+	top: 50%;
+	-webkit-transition: -webkit-transform 0.5s;
+	-moz-transition: -moz-transform 0.5s;
+	transition: transform 0.5s;
+	-webkit-transform: rotateX(-90deg);
+	-moz-transform: rotateX(-90deg);
+	transform: rotateX(-90deg);
+}
+
+.ha-header-color {
+	height: 420px;
+}
+
+.ha-header-color .ha-header-front,
+.ha-header-color .ha-header-bottom {
+	background: #f3796c;
+}
+
+.ha-header-color h1,
+.ha-header-color nav a {
+	color: #fff;
+}
+
+.ha-header-box {
+	height: 192px;
+	width: 100px;
+	top: 20px;
+	left: 20px;
+}
+
+.ha-header-box h1 {
+	padding-left: 150px;
+}
+
+.ha-header-box h1,
+.ha-header-box nav a {
+	color: transparent;
+}
+
+.ha-header-box h1:after {
+	opacity: 1;
+}
+
+.ha-header-box nav {
+	opacity: 0;
+}
+
+.ha-header-fullscreen {
+	height: 100%;
+	opacity: 0.9;
+}
+
+.ha-header-fullscreen .ha-header-front {
+	height: 100%;
+}
+
+.ha-header-fullscreen .ha-header-bottom {
+	opacity: 0;
+	-webkit-transition: top 0.5s, opacity 0s 0.5s;
+	-moz-transition: top 0.5s, opacity 0s 0.5s;
+	transition: top 0.5s, opacity 0s 0.5s;
+	-webkit-transform: rotateX(0deg);
+	-moz-transform: rotateX(0deg);
+	transform: rotateX(0deg);
+	top: 50%;
+	background: #f3796c;
+}
+
+.ha-header-subfullscreen {
+	height: 100%;
+	opacity: 0.9;
+}
+
+.ha-header-subfullscreen .ha-header-bottom {
+	-webkit-transition: top 0.5s;
+	-moz-transition: top 0.5s;
+	transition: top 0.5s;
+	-webkit-transform: rotateX(0deg);
+	-moz-transform: rotateX(0deg);
+	transform: rotateX(0deg);
+	top: 50%;
+	background: #f3796c;
+}
+
+.ha-header-subfullscreen .ha-header-bottom nav a {
+	color: #fff;
+}
+
+/* Effect 12: circle */
+.cl-effect-12 a::before,
+.cl-effect-12 a::after {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100px;
+	height: 100px;
+	border: 2px solid rgba(0,0,0,0.1);
+	border-radius: 50%;
+	content: '';
+	opacity: 0;
+	-webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
+	-moz-transition: -moz-transform 0.3s, opacity 0.3s;
+	transition: transform 0.3s, opacity 0.3s;
+	-webkit-transform: translateX(-50%) translateY(-50%) scale(0.2);
+	-moz-transform: translateX(-50%) translateY(-50%) scale(0.2);
+	transform: translateX(-50%) translateY(-50%) scale(0.2);
+}
+
+.cl-effect-12 a::after {
+	width: 90px;
+	height: 90px;
+	border-width: 6px;
+	-webkit-transform: translateX(-50%) translateY(-50%) scale(0.8);
+	-moz-transform: translateX(-50%) translateY(-50%) scale(0.8);
+	transform: translateX(-50%) translateY(-50%) scale(0.8);
+}
+
+.cl-effect-12 a:hover::before,
+.cl-effect-12 a:hover::after {
+	opacity: 1;
+	-webkit-transform: translateX(-50%) translateY(-50%) scale(1);
+	-moz-transform: translateX(-50%) translateY(-50%) scale(1);
+	transform: translateX(-50%) translateY(-50%) scale(1);
+}
+
+.cm {
+		display: none !important;
+	}
+/* Example media queries */
+
+@media screen and (max-width: 55.1875em){
+
+	
+	.cbp-spmenu-vertical {
+		font-size: 90%;
+		width: 100%;
+	}
+
+	.cbp-spmenu-left,
+	.cbp-spmenu-push-toleft {
+		left: -100%;
+	}
+	
+	.cbp-spmenu-horizontal {
+		font-size: 75%;
+		height: 110px;
+	}
+
+	.cbp-spmenu-top {
+		top: -110px;
+	}
+
+	.cbp-spmenu-bottom {
+		bottom: -110px;
+	}
+	
+	form label {
+		width: 100% !important;
+	}
+	
+	.cm {
+		display: inherit !important;
+	}
+	.ha-header a span {
+		display: none;
+	}
+	form {
+		width: 90% !important;
+	}
+	.button {
+		width: 50% !important;
+	}
+	.tam-1, .tam-2, .tam-3, .tam-4 {
+		min-width: 100% !important;
+	}
+	.cbp-spmenu-vertical a {
+		padding-left: 4em !important;
+	}
+}
+
+
+@media screen and (max-height: 26.375em){
+
+	
+	
+	.cbp-spmenu-vertical {
+		font-size: 90%;
+		width: 100%;
+	}
+
+	.cm {
+		display: inherit !important;
+	}
+	.cbp-spmenu-left,
+	.cbp-spmenu-push-toleft {
+		left: -100%;
+	}
+
+	.cbp-spmenu-right {
+		right: -250px;
+	}
+
+	.cbp-spmenu-push-toright {
+		left: 250px;
+	}
+	
+	form label {
+		width: 100% !important;
+	}
+	body {
+		background: none;
+		overflow-y: hidden !important;
+	}
+	form {
+		width: 90% !important;
+	}
+	.button {
+		width: 50% !important;
+	}
+	.tam-1, .tam-2, .tam-3, .tam-4 {
+		min-width: 100% !important;
+	}
+	.cbp-spmenu-vertical a {
+		padding-left: 4em !important;
+	}
+}
