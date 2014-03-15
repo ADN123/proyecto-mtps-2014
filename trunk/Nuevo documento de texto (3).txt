@@ -1,0 +1,10 @@
+006->lista (REPORTES)
+00b->lapiz y nota (NOTA)
+00f->cajon 
+011->libreta (MATERIA)
+012->usuario (ALUMNO)
+013->union
+014->estrella
+004->reloj
+009->pantalla movil
+00c->eslabon (INSCRIPCION)
