@@ -47,7 +47,7 @@
 										
 ?>
   <tr>
-    <td><?=$fila->fecha?>&nbsp;&nbsp;<?=$fila->salida?></td>
+    <td><?=$fila->fecha?></td>
     <td><?=$fila->lugar?></td>
     <td><?=$fila->mision?></td>
     <td><a rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>)"><img  src="<?=base_url()?>img/lupa.png"/></a>
