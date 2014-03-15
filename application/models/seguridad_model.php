@@ -19,7 +19,7 @@ class Seguridad_model extends CI_Model {
 		}
 		else {
 			return array(
-				'usuario' => 0
+				'id_usuario' => 0
 			);
 		}
 	}
