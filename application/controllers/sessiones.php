@@ -23,7 +23,7 @@ class Sessiones extends CI_Controller {
 		if($v['id_usuario']==0) {
 			$json =array(
 				'estado'=>"0",
-				'msj'=>"Datos incorrectos"
+				'msj'=>"Error al intentar ingresar al sistema: Los datos ingresados son incorrectos"
 			);
 		 	echo json_encode($json);
 			//redirect('index.php/sessiones');
