@@ -75,8 +75,8 @@
         <label for="observacion" id="lobservacion">Observacion</label><br />
         <textarea class="tam-4" id="observacion" tabindex="2" name="observacion"/></textarea>
     </p>
-        <button  id="aprobar" name="aprobar" onclick="Enviar(2)">Aprobar</button>
-        <button  id="denegar" name="Denegar" onclick="Enviar(0)">Denegar</button>
+        <button type="submit"  id="aprobar" class="button tam-1 boton_validador" name="aprobar" onclick="Enviar(2)">Aprobar</button>
+        <button  type="submit" id="denegar" class="button tam-1 boton_validador" name="Denegar" onclick="Enviar(0)">Denegar</button>
 
 	<form>
 </div>
@@ -130,8 +130,7 @@ function dialogo(id){
 			$('a[rel*=leanModal]').leanModal({ top : 50 });		
 		});
 	function Enviar(v){
-		document.getElementById('resp').value=v;		
-		document.getElementById("form").submit();
+		document.getElementById('resp').value=v;
 	}
 	
 	$("#observacion").validacion({
