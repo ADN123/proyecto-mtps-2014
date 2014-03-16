@@ -53,14 +53,18 @@
                      }
                 ?>
                 </select>
-            </p>  
+            </p> 
+            <p>
+            	<div id="info_adicional">
+                </div>
+            </p> 
             <!--<p>
                 <label for="seccion" id="lseccion">Secci&oacute;n</label>
                 <select name="seccion" id="seccion" tabindex="3" placeholder="[Seleccione...]" class="select" style="width:75%">
                 <?php
-                     foreach($secciones as $val) {
+                     /*foreach($secciones as $val) {
                          echo '<option value="'.$val['id_seccion'].'">'.$val['nombre_seccion'].'</option>';
-                     }
+                     }*/
                 ?>
                 </select>
             </p>--> 
