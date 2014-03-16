@@ -132,19 +132,21 @@ class Transporte_model extends CI_Model {
    	return $query->result();
 		
 	}
-	function datos_de_solicitudes($id){
-		  $query=$this->db->query("	SELECT id_solicitud_transporte id, 
+	function datos_de_solicitudes($id,$seccion){
+		  $query=$this->db->query("SELECT id_solicitud_transporte id, 
 	CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre,
 	mision_encomendada mision, 
 	fecha_solicitud_transporte fecha,
 	hora_salida salida,
 	hora_entrada entrada,
 	m.municipio ,
-	lugar_destino lugar	
+	lugar_destino lugar,
+	nombre_seccion
 	FROM tcm_solicitud_transporte  s 
 	INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
-	INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio
-	WHERE id_solicitud_transporte =".$id);
+	INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio,
+	org_seccion sec
+	WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
 	
 		return $query->result();
 	}	

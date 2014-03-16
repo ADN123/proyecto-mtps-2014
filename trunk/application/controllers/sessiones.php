@@ -33,6 +33,7 @@ class Sessiones extends CI_Controller {
 			$this->session->set_userdata('id_usuario', $v['id_usuario']);
 			$this->session->set_userdata('usuario', $v['usuario']);
 			$this->session->set_userdata('nr', $v['NR']);			
+			$this->session->set_userdata('id_seccion', $v['id_seccion']);			
 			$json =array(
 				'estado'=>1,
 				'msj'=>"Iniciando Session...."

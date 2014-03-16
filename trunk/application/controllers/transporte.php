@@ -42,7 +42,7 @@ $this->solicitud();
 	}
 	
 	function datos_de_solicitudes($id){
-		$d=$this->transporte_model->datos_de_solicitudes($id);	
+		$d=$this->transporte_model->datos_de_solicitudes($id, $this->session->userdata('id_seccion'));	
 		$j=json_encode($d);
 		echo $j;
 	}

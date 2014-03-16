@@ -9,7 +9,7 @@ class Seguridad_model extends CI_Model {
 	
 	function consultar_usuario($login,$clave)
 	{
-		$sentencia="SELECT id_usuario, usuario, nombre_completo, NR
+		$sentencia="SELECT id_usuario, usuario, nombre_completo, NR , id_seccion
 					FROM org_usuario
 					WHERE usuario='$login' AND password=MD5('$clave') AND estado=1";
 		$query=$this->db->query($sentencia);
