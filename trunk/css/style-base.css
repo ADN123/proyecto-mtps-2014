@@ -20,9 +20,10 @@ form label {
 	position: relative;
 	cursor: pointer;
 	width: 15%;
-	height: auto;
+	height: 22px;
+	vertical-align: baseline;
 	display: inline-block;
-	vertical-align: top;
+	text-align: right;
 }
 input[type="text"], input[type="password"], select, input[type="radio"], textarea {
 	height: 22px;
