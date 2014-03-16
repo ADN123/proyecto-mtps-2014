@@ -297,7 +297,7 @@
 		
 		/*Verificacion de que tipo de evento va a disparar la validacion*/		
 		if($objeto[0].tagName=="INPUT" || $objeto[0].tagName=="TEXTAREA") {
-			if($objeto.data("role")=="datepicker") {
+			if($objeto.data("role")=="datepicker" || $objeto.data("role")=="timepicker") {
 				$obj=$objeto.parent();
 			}
 			$objeto.blur(function(){ 
