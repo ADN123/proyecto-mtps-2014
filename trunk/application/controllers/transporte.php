@@ -90,5 +90,20 @@ class Transporte extends CI_Controller
 		pantalla('transporte/asignacion_veh_mot',$data);
 	}	
 	
+	function buscar_info_adicional()
+	{
+		$id_empleado=$this->input->post('id_empleado');
+		$data=$this->transporte_model->info_adicional($id_empleado);
+		if($data['']!=0) {
+			$json =array(
+				'estado'=>1
+			);
+		}
+		else {
+			$json =array(
+				'estado'=>0
+			);}
+		echo json_encode($json);
+	}
 }
 ?>
