@@ -13,8 +13,8 @@
 		#ventana {
 			width: 60%;
 			min-height: 25%;
-			max-height: 55%;
-			padding: 30px; 
+			max-height: 70%;
+			padding: 10px; 
 			display:none;
 			background: #FFF;
 			border-radius: 5px; 
@@ -59,35 +59,23 @@
 
 <div id="ventana" style="height:600px">
    <form action="<?=base_url()?>index.php/transporte/aprobar_solicitud" id="form" method="post">
-    <fieldset>
-      <legend align="left">Información de la Solicitud</legend>
        <input type="hidden"   id="resp" name="resp"/>
        <input type="hidden"   id="ids" name="ids"/>
-        <p>
-        <label>Solicitado por</label>
-       <input type="text" id="empleado" readonly  size="50"/>
-        </p>
-        <p>
-        <label>Justificación de la Misión:</label>
-       <input type="text" id="mision"  size="70"readonly/>
-        </p>
-        <p>
-        <label>Fecha de Misión:</label>
-        <input type="date"  id="fecha" id="fecha" readonly/>Desde <input type="text" id="salida" readonly/>Hasta <input type="text" id="entrada" readonly/>
-        </p>
-        <p>
-        <label>Municipio</label>
-        <input type="text" size="20"  id="municipio" readonly/>
-        Lugar:<input type="text" size="50"  id="lugar" readonly/>
-        </p>
-        <p>
-        <button  id="aprobar" name="aprobar" onclick="Enviar(3)">Aprobar</button>
+       
+        <fieldset  >
+                <legend align="left">Información del  Solicitante</legend>
+                <div id="empleado" style="font-size:12px;"> </div>        
+         </fieldset>
+         
+         <fieldset>      
+              <legend align="left">Información de la Solicitud</legend>
+               <label  id="mision"></label>
+         </fieldset>
+            
+        <button  id="aprobar" name="aprobar" onclick="Enviar(2)">Aprobar</button>
         <button  id="denegar" name="Denegar" onclick="Enviar(0)">Denegar</button>
-        </p>
-    </fieldset>
-<form>
 
-
+	<form>
 </div>
 <script language="javascript" >
 
@@ -98,16 +86,19 @@ function dialogo(id){
 		url:	"<?=base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
 		dataType:"json",
 		success: function(data){
-			 document.getElementById('ids').value=id;
-			 document.getElementById('empleado').value=data[0].nombre;
-			 document.getElementById('mision').value=data[0].mision;
-			 document.getElementById('fecha').value=data[0].fecha;
- 			 document.getElementById('salida').value=data[0].salida;
-			 document.getElementById('entrada').value=data[0].entrada;
-			 document.getElementById('municipio').value=data[0].municipio;
-			 document.getElementById('lugar').value=data[0].lugar;
+/*			 document.getElementById('ids').value=id;
+			 document.getElementById('empleado').innerHTML =data[0].nombre;
+			 document.getElementById('mision').innerHTML=data[0].mision;
+			 document.getElementById('fecha').innerHTML=data[0].fecha;
+ 			 document.getElementById('salida').innerHTML=data[0].salida;
+			 document.getElementById('entrada').innerHTML=data[0].entrada;
+			 document.getElementById('municipio').innerHTML=data[0].municipio;
+			 document.getElementById('lugar').innerHTML=data[0].lugar;
+*/
+ 	var echo1="Nombre: <strong>"+data[0].nombre+"</strong> <br>";
 			
-			
+			document.getElementById('empleado').innerHTML=echo1;
+						
 			},
 		error:function(data){
 			 alert('Error al cargar datos');
