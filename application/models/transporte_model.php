@@ -189,5 +189,19 @@ class Transporte_model extends CI_Model {
 		return $query->result();
 	}
 	
+	function info_adicional($id_empleado)
+	{
+		$sentencia="";
+		$query=$this->db->query($sentencia);
+	
+		if($query->num_rows>0) {
+			return (array)$query->row();
+		}
+		else {
+			return array(
+				'' => 0
+			);
+		}
+	}
 }
 ?>
