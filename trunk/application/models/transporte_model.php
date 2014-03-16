@@ -219,10 +219,24 @@ class Transporte_model extends CI_Model {
 		}
 	}
 	
-	function guardar($tabla, $formuInfo) 
+	function guardar_solicitud($formuInfo) 
 	{
-		$this->db->insert($tabla, $formuInfo);
-		return TRUE;
+		extract($formuInfo);
+		$sentencia="INSERT INTO tcm_solicitud_transporte
+					(fecha_solicitud_transporte, id_empleado_solicitante, mision_encomendada, fecha_mision, hora_salida, hora_entrada, id_municipio, lugar_destino, acompanante, id_usuario_crea, fecha_creacion, estado_solicitud_transporte) 
+					VALUES 
+					('$fecha_solicitud_transporte', '$id_empleado_solicitante', '$mision_encomendada', '$fecha_mision', '$hora_salida', '$hora_entrada', '$id_municipio', '$lugar_destino', '$acompanante', '$id_usuario_crea', '$fecha_creacion', '$estado_solicitud_transporte')";
+		$this->db->query($sentencia);
+		return $this->db->insert_id();
+	}
+	
+	function guardar_acompanantes($formuInfo) {
+		extract($formuInfo);
+		$sentencia="INSERT INTO tcm_acompanante
+					(id_solicitud_transporte, id_empleado) 
+					VALUES 
+					('$id_solicitud_transporte', '$id_empleado')";
+		$this->db->query($sentencia);
 	}
 }
 ?>

@@ -4,6 +4,7 @@
  *  leoneladonispm@hotmail.com
  *  Febrero 27 de 2014
  */
+ var multi;
 $(document).ready(function() {
 	var f = new Date();
 	$("select").prepend('<option value="" selected="selected"></option>');
@@ -11,9 +12,10 @@ $(document).ready(function() {
 		autoBind: false,
 		filter: "contains"
 	});
-	$(".multi").kendoMultiSelect({
+	multi= $(".multi").kendoMultiSelect({
 		filter: "contains"	
-	});
+	}).data("kendoMultiSelect");
+	
 	$(".nac").kendoDatePicker({
 		culture: "es-SV",
 		format: "dd/MM/yyyy",
