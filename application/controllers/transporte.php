@@ -113,18 +113,19 @@ class Transporte extends CI_Controller
 	}
 	
 	function guardar_solicitud()
-	{
+	{	
+		$fec=str_replace("/","-",$this->input->post('fecha_mision'));
 		$fecha_solicitud_transporte=date('Y-m-d');
-		$id_empleado_solicitante=$this->input->post('nombre');
+		$id_empleado_solicitante=(int)$this->input->post('nombre');
 		$mision_encomendada=$this->input->post('mision_encomendada');
-		$fecha_mision=$this->input->post('fecha_mision');
-		$hora_salida=$this->input->post('hora_salida');
-		$hora_entrada=$this->input->post('hora_regreso');
-		$id_municipio=$this->input->post('municipio');
+		$fecha_mision=date("Y-m-d", strtotime($fec));
+		$hora_salida=date("H:i:s", strtotime($this->input->post('hora_salida')));
+		$hora_entrada=date("H:i:s", strtotime($this->input->post('hora_regreso')));
+		$id_municipio=(int)$this->input->post('municipio');
 		$lugar_destino=$this->input->post('lugar_destino');
 		$acompanante=$this->input->post('acompanantes2');
 		$id_usuario_crea=$this->session->userdata('id_usuario');
-		$fecha_creacion=date('Y-m-d');
+		$fecha_creacion=date('Y-m-d H:i:s');
 		$estado_solicitud_transporte=1;
 		
 		$formuInfo = array(
@@ -139,13 +140,19 @@ class Transporte extends CI_Controller
 			'acompanante'=>$acompanante,
 			'id_usuario_crea'=>$id_usuario_crea,
 			'fecha_creacion'=>$fecha_creacion,
-			'estado_solicitud_transporte'=>$estado_solicitud_transporte,
+			'estado_solicitud_transporte'=>$estado_solicitud_transporte
 		);
 		
-		$id_solicitud_transporte=$this->transporte_model->guardar('tcm_solicitud_transporte',$formuInfo);
-		
+		$id_solicitud_transporte=$this->transporte_model->guardar_solicitud($formuInfo);
 		$acompanantes=$this->input->post('acompanantes');
-		//redirect('index.php/transporte/solicitud');
+		for($i=0;$i<count($acompanantes);$i++) {
+			$formuInfo = array(
+				'id_solicitud_transporte'=>$id_solicitud_transporte,
+				'id_empleado'=>$acompanantes[$i]
+			);
+			$this->transporte_model->guardar_acompanantes($formuInfo);
+		}
+		redirect('index.php/transporte/solicitud');
 	}
 }
 ?>

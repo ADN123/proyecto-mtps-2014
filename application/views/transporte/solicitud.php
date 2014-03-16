@@ -95,7 +95,7 @@
             <h2 class="StepTitle">Selecci&oacute;n de las personas que ir&aacute;n en el veh&iacute;culo</h2>
             <p>
                 <label for="acompanantes" id="lacompanantes">Acompa&ntilde;antes</label>
-                <select name="acompanantes" id="acompanantes" class="multi" multiple="multiple" tabindex="8" placeholder="[Seleccione...]" style="width:400px;">
+                <select name="acompanantes[]" id="acompanantes" class="multi" multiple="multiple" tabindex="8" placeholder="[Seleccione...]" style="width:400px;">
                 <?php
                      foreach($acompanantes as $val) {
                          echo '<option value="'.$val['NR'].'">'.$val['nombre'].'</option>';
