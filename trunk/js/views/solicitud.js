@@ -1,6 +1,26 @@
 // JavaScript Document
 $(document).ready(function(){
 	$('#wizard').smartWizard();
+	
+	function startChange() {
+		var startTime = start.value();
+		if (startTime) {
+			startTime = new Date(startTime);
+			end.max(startTime);
+			startTime.setMinutes(startTime.getMinutes() + this.options.interval);
+			end.min(startTime);
+			end.value(startTime);
+		}
+	}
+	var start = $(".inicio").kendoTimePicker({
+		change: startChange
+	}).data("kendoTimePicker");
+	var end = $(".fin").kendoTimePicker().data("kendoTimePicker");
+	start.min("5:00 AM");
+	start.max("5:30 PM");
+	end.min("5:30 AM");
+	end.max("6:00 PM");
+	
 	$("#fecha_mision").validacion({
 		valFecha: true
 	});
