@@ -46,16 +46,36 @@
             </p>
             <p>
                 <label for="nombre" id="lnombre">Solicitante</label>
-                <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:75%">
+                <?php 
+					if($id_permiso>1) {
+				?>
+                    <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:75%">
+                    <?php
+                         foreach($empleados as $val) {
+                             echo '<option value="'.$val['NR'].'">'.$val['nombre'].'</option>';
+                         }
+                    ?>
+                    </select>
+             	<?php 
+					} 
+					else {
+						foreach($empleados as $val) {
+							echo '<strong>'.$val['nombre'].'</strong>';
+				?>
+                			<input type="hidden" id="nombre" name="nombre" value="<?php echo $val['NR']; ?>" />
                 <?php
-                     foreach($empleados as $val) {
-                         echo '<option value="'.$val['NR'].'">'.$val['nombre'].'</option>';
-                     }
-                ?>
-                </select>
+						}
+					}
+				?>
             </p> 
             <p>
             	<div id="info_adicional">
+                	<?php
+						echo	"<p><label>NR</label> <strong>".$info['nr']."</strong></p>".
+								"<p><label>Cargo</label> <strong>".$info['funcional']."</strong></p>".
+								"<p><label>Departamento</label> <strong>".$info['nivel_2']."</strong></p>".
+								"<p><label>Secci&oacute;n</label> <strong>".$info['nivel_1']."</strong></p>";
+					?>
                 </div>
             </p> 
         </div>
