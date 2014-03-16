@@ -143,6 +143,9 @@ class Transporte_model extends CI_Model {
    	return $query->result();
 		
 	}
+
+
+
 	function solicitudes_por_asignar(){
 	  $query=$this->db->query(" SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,hora_entrada_mision entrada, hora_salida_mision salida, municipio,lugar_destino lugar, mision_encomendada mision FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_org_municipio=m.id_municipio WHERE estado=3");
    	return $query->result();
