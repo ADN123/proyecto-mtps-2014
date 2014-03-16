@@ -169,10 +169,10 @@ class Transporte_model extends CI_Model {
 	}	
 	function aprobar($id, $estado, $nr){
 		$q="UPDATE tcm_solicitud_transporte SET 
-	id_empleado_autoriza= (SELECT id_empleado FROM sir_empleado WHERE NR LIKE '".$nr."'),
-	estado_solicitud_transporte = $estado  
-	WHERE id_solicitud_transporte= ".$id;
-	echo$q;
+				id_empleado_autoriza= (SELECT id_empleado FROM sir_empleado WHERE NR LIKE '".$nr."'),
+				estado_solicitud_transporte = $estado  
+			WHERE id_solicitud_transporte= ".$id;
+	
 		  $query=$this->db->query($q);
 	
 		return $query;
@@ -238,5 +238,19 @@ class Transporte_model extends CI_Model {
 					('$id_solicitud_transporte', '$id_empleado')";
 		$this->db->query($sentencia);
 	}
+	
+	
+function insertar_descripcion($id,$descrip){
+		$q="INSERT INTO mtps.tcm_observacion 
+				(id_solicitud_transporte, observacion)
+			VALUES
+				('$id', 
+				'$descrip'
+				);";
+		
+		$query=$this->db->query($q);	
+		return $query;
+		
+		}
 }
 ?>
