@@ -66,12 +66,15 @@
                 <legend align="left">Información del  Solicitante</legend>
                 <div id="empleado" style="font-size:14px;"> </div>        
          </fieldset>
-         
+         <br />
          <fieldset>      
               <legend align="left">Información de la Solicitud</legend>
                <div  id="mision" style="font-size:14px;"></div>
          </fieldset>
-            
+    <p>
+        <label for="observacion" id="lobservacion">Observacion</label><br />
+        <textarea class="tam-4" id="observacion" tabindex="2" name="observacion"/></textarea>
+    </p>
         <button  id="aprobar" name="aprobar" onclick="Enviar(2)">Aprobar</button>
         <button  id="denegar" name="Denegar" onclick="Enviar(0)">Denegar</button>
 
@@ -130,4 +133,9 @@ function dialogo(id){
 		document.getElementById('resp').value=v;		
 		document.getElementById("form").submit();
 	}
+	
+	$("#observacion").validacion({
+			req: false,
+			lonMin: 10
+		});
 </script>
