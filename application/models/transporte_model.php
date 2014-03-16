@@ -141,7 +141,7 @@ class Transporte_model extends CI_Model {
 	hora_entrada entrada,
 	m.municipio ,
 	lugar_destino lugar,
-	nombre_seccion
+	nombre_seccion seccion
 	FROM tcm_solicitud_transporte  s 
 	INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
 	INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio,
@@ -151,7 +151,12 @@ class Transporte_model extends CI_Model {
 		return $query->result();
 	}	
 	function aprobar($id, $estado, $nr){
-		  $query=$this->db->query("UPDATE tcm_solicitud_transporte SET estado_solicitud_transporte=".$estado.", NR_autorizado = '".$nr."' WHERE id_solicitud_transporte= '".$id."'");
+		$q="UPDATE tcm_solicitud_transporte SET 
+	id_empleado_autoriza= (SELECT id_empleado FROM sir_empleado WHERE NR LIKE '".$nr."'),
+	estado_solicitud_transporte = $estado  
+	WHERE id_solicitud_transporte= ".$id;
+	echo$q;
+		  $query=$this->db->query($q);
 	
 		return $query;
 	}	

@@ -50,12 +50,16 @@ $this->solicitud();
 	{
 	$id=$this->input->post('ids'); //id solicitud
 	$estado=$this->input->post('resp'); //estado de la solicitud
-	$nr=$this->session->userdata('id_usuario'); //NR del usuario Logueado
+	$nr=$this->session->userdata('nr'); //NR del usuario Logueado
 		
-	$this->transporte_model->aprobar($id,$estado, $nr);
-	$data['datos']=$this->transporte_model->solicitudes_por_confirmar();
-	pantalla('transporte/ControlSolicitudes',$data);
-
+	if($estado ==2 || $estado== 0){
+		$this->transporte_model->aprobar($id,$estado, $nr);
+		$data['datos']=$this->transporte_model->solicitudes_por_confirmar();
+		pantalla('transporte/ControlSolicitudes',$data);
+	}else{
+		echo'Datos corruptos';
+		}
+			
 	}
 	
 	function asignar_vehiculo_motorista()

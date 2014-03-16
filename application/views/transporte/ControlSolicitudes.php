@@ -64,12 +64,12 @@
        
         <fieldset  >
                 <legend align="left">Información del  Solicitante</legend>
-                <div id="empleado" style="font-size:12px;"> </div>        
+                <div id="empleado" style="font-size:14px;"> </div>        
          </fieldset>
          
          <fieldset>      
               <legend align="left">Información de la Solicitud</legend>
-               <label  id="mision"></label>
+               <div  id="mision" style="font-size:14px;"></div>
          </fieldset>
             
         <button  id="aprobar" name="aprobar" onclick="Enviar(2)">Aprobar</button>
@@ -86,18 +86,20 @@ function dialogo(id){
 		url:	"<?=base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
 		dataType:"json",
 		success: function(data){
-/*			 document.getElementById('ids').value=id;
-			 document.getElementById('empleado').innerHTML =data[0].nombre;
-			 document.getElementById('mision').innerHTML=data[0].mision;
-			 document.getElementById('fecha').innerHTML=data[0].fecha;
- 			 document.getElementById('salida').innerHTML=data[0].salida;
-			 document.getElementById('entrada').innerHTML=data[0].entrada;
-			 document.getElementById('municipio').innerHTML=data[0].municipio;
-			 document.getElementById('lugar').innerHTML=data[0].lugar;
-*/
- 	var echo1="Nombre: <strong>"+data[0].nombre+"</strong> <br>";
+			 document.getElementById('ids').value=id;
+
+ 	var echo1="Nombre: <strong>"+data[0].nombre+"</strong> <br>" +
+		       "Seccion: <strong>"+data[0].seccion+"</strong> <br>";
+			   
+	var echo2="Mision: <strong>"+data[0].mision+"</strong> <br>"+
+		       "Fecha: <strong>"+data[0].fecha+"</strong> <br>"+
+		       "Salida: <strong>"+data[0].salida+"</strong> <br>"+
+		       "Entrada: <strong>"+data[0].entrada+"</strong> <br>"+
+			   "Municipio: <strong>"+data[0].municipio+"</strong> <br>"+
+			   "Lugar: <strong>"+data[0].lugar+"</strong> <br>";
 			
 			document.getElementById('empleado').innerHTML=echo1;
+			document.getElementById('mision').innerHTML=echo2;
 						
 			},
 		error:function(data){
