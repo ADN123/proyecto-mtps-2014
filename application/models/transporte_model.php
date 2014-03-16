@@ -48,7 +48,7 @@ class Transporte_model extends CI_Model {
 	function consultar_empleados($nr=0) 
 	{
 		$sentencia="SELECT
-					sir_empleado.NR,
+					sir_empleado.id_empleado AS NR,
 					CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada) AS nombre
 					FROM sir_empleado
 					WHERE sir_empleado.NR<>".$nr;
@@ -64,13 +64,13 @@ class Transporte_model extends CI_Model {
 	function consultar_empleado($nr) 
 	{
 		$sentencia="SELECT
-					sir_empleado.NR,
+					sir_empleado.id_empleado AS NR,
 					CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada) AS nombre
 					FROM sir_empleado
 					WHERE sir_empleado.NR=".$nr;
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
-			return (array)$query->result_array();
+			return (array)$query->row();
 		}
 		else {
 			return 0;
@@ -96,7 +96,13 @@ class Transporte_model extends CI_Model {
 
 	function consultar_municipios() 
 	{
-		$sentencia="SELECT id_municipio id , municipio nombre FROM org_municipio ";
+		$sentencia="SELECT
+					org_municipio.id_municipio,
+					CONCAT_WS(', ', org_departamento.departamento, org_municipio.municipio) AS nombre
+					FROM
+					org_municipio
+					INNER JOIN org_departamento ON org_municipio.id_departamento_pais = org_departamento.id_departamento
+					ORDER BY org_departamento.departamento, org_municipio.municipio";
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->result_array();
