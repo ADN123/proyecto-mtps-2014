@@ -71,10 +71,12 @@
             <p>
             	<div id="info_adicional">
                 	<?php
-						echo	"<p><label>NR</label> <strong>".$info['nr']."</strong></p>".
-								"<p><label>Cargo</label> <strong>".$info['funcional']."</strong></p>".
-								"<p><label>Departamento</label> <strong>".$info['nivel_2']."</strong></p>".
-								"<p><label>Secci&oacute;n</label> <strong>".$info['nivel_1']."</strong></p>";
+						if($id_permiso==1) {
+							echo	"<p><label>NR</label> <strong>".$info['nr']."</strong></p>".
+									"<p><label>Cargo</label> <strong>".$info['funcional']."</strong></p>".
+									"<p><label>Departamento</label> <strong>".$info['nivel_2']."</strong></p>".
+									"<p><label>Secci&oacute;n</label> <strong>".$info['nivel_1']."</strong></p>";
+						}
 					?>
                 </div>
             </p> 

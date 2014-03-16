@@ -7,33 +7,15 @@ class Transporte_model extends CI_Model {
         parent::__construct();
 	
     }
-	function consultar_seccion($nr=0)
+	function consultar_seccion_usuario($nr=0)
 	{
 		$sentencia="SELECT
-					o1.id_seccion AS id_nivel_1,
-					o1.nombre_seccion AS nivel_1,
-					o2.id_seccion AS id_nivel_2,
-					o2.nombre_seccion AS nivel_2,
-					o3.id_seccion AS id_nivel_3,
-					o3.nombre_seccion AS nivel_3,
-					o4.id_seccion AS id_nivel_4,
-					o4.nombre_seccion AS nivel_4,
-					o5.id_seccion AS id_nivel_5,
-					o5.nombre_seccion AS nivel_5,
-					o6.id_seccion AS id_nivel_6,
-					o6.nombre_seccion AS nivel_6,
-					CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre) AS nombre,
-					CONCAT_WS(' ',sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada) AS apellido
+					sir_empleado_informacion_laboral.id_seccion
 					FROM
-					sir_empleado
-					lEFT JOIN sir_empleado_informacion_laboral ON sir_empleado_informacion_laboral.id_empleado = sir_empleado.id_empleado
-					LEFT JOIN org_seccion AS o1 ON sir_empleado_informacion_laboral.id_seccion = o1.id_seccion
-					LEFT JOIN org_seccion AS o2 ON o2.id_seccion = o1.depende
-					LEFT JOIN org_seccion AS o3 ON o3.id_seccion = o2.depende
-					LEFT JOIN org_seccion AS o4 ON o4.id_seccion = o3.depende
-					LEFT JOIN org_seccion AS o5 ON o5.id_seccion = o4.depende
-					LEFT JOIN org_seccion AS o6 ON o6.id_seccion = o5.depende  
-					WHERE sir_empleado.id_empleado='".$nr."'";
+					org_usuario
+					LEFT JOIN sir_empleado ON org_usuario.nr = sir_empleado.nr
+					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado
+					WHERE org_usuario.nr like '".$nr."'";
 		$query=$this->db->query($sentencia);
 	
 		if($query->num_rows>0) {
@@ -104,22 +86,6 @@ class Transporte_model extends CI_Model {
 					org_municipio
 					INNER JOIN org_departamento ON org_municipio.id_departamento_pais = org_departamento.id_departamento
 					ORDER BY org_departamento.departamento, org_municipio.municipio";
-		$query=$this->db->query($sentencia);
-		if($query->num_rows>0) {
-			return (array)$query->result_array();
-		}
-		else {
-			return 0;
-		}
-	}
-	
-	function consultar_secciones() 
-	{
-		$sentencia="SELECT
-					org_seccion.id_seccion,
-					org_seccion.nombre_seccion
-					FROM
-					org_seccion";
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->result_array();
@@ -230,7 +196,8 @@ class Transporte_model extends CI_Model {
 		return $this->db->insert_id();
 	}
 	
-	function guardar_acompanantes($formuInfo) {
+	function guardar_acompanantes($formuInfo) 
+	{
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_acompanante
 					(id_solicitud_transporte, id_empleado) 
@@ -239,18 +206,34 @@ class Transporte_model extends CI_Model {
 		$this->db->query($sentencia);
 	}
 	
-	
-function insertar_descripcion($id,$descrip){
+	function insertar_descripcion($id,$descrip)
+	{
 		$q="INSERT INTO mtps.tcm_observacion 
 				(id_solicitud_transporte, observacion)
 			VALUES
 				('$id', 
 				'$descrip'
 				);";
-		
 		$query=$this->db->query($q);	
 		return $query;
-		
+	}
+	
+	function consultar_empleados_seccion($id_seccion)
+	{
+		$sentencia="SELECT
+					sir_empleado.id_empleado AS NR,
+					CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada) AS nombre
+					FROM
+					sir_empleado
+					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado
+					WHERE sir_empleado_informacion_laboral.id_seccion='".$id_seccion."'";
+		$query=$this->db->query($sentencia);
+		if($query->num_rows>0) {
+			return (array)$query->result_array();
 		}
+		else {
+			return 0;
+		}
+	}
 }
 ?>
