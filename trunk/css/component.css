@@ -169,7 +169,7 @@
 	left: 0;
 	width: 100%;
 	padding: 0;
-	z-index: 50;
+	z-index: 500000;
 	font-family: 'Lato', Arial, sans-serif;
 	-webkit-transform: translateY(0%);
 	-moz-transform: translateY(0%);
