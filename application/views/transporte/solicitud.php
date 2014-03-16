@@ -7,7 +7,7 @@
 	display: inline-block;
 }
 </style>
-<form name="form_mision" method="post" action="controller.php">
+<form name="form_mision" method="post" action="<?php echo base_url()?>index.php/transporte/guardar_solicitud">
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -41,11 +41,11 @@
         <div id="step-1">	
             <h2 class="StepTitle">Selecci&oacute;n de la persona que requiere el transporte</h2>
             <p>
-                <label>Fecha:</label>
-                <?php echo date('d/m/Y'); ?>
+                <label>Fecha</label>
+                <strong><?php echo date('d/m/Y'); ?></strong>
             </p>
             <p>
-                <label for="nombre" id="lnombre">Solicitante:</label>
+                <label for="nombre" id="lnombre">Solicitante</label>
                 <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:75%">
                 <?php
                      foreach($empleados as $val) {
@@ -58,16 +58,6 @@
             	<div id="info_adicional">
                 </div>
             </p> 
-            <!--<p>
-                <label for="seccion" id="lseccion">Secci&oacute;n</label>
-                <select name="seccion" id="seccion" tabindex="3" placeholder="[Seleccione...]" class="select" style="width:75%">
-                <?php
-                     /*foreach($secciones as $val) {
-                         echo '<option value="'.$val['id_seccion'].'">'.$val['nombre_seccion'].'</option>';
-                     }*/
-                ?>
-                </select>
-            </p>--> 
         </div>
         <div id="step-2">	
             <h2 class="StepTitle">Ingreso de datos del viaje</h2>
@@ -81,10 +71,10 @@
             </p>
             <p>
                 <label for="hora_salida" id="lhora_salida">Hora de salida </label>
-                <input type="text" tabindex="4" class="hora" id="hora_salida" name="hora_salida"/>
+                <input type="text" tabindex="4" class="inicio" id="hora_salida" name="hora_salida"/>
 
                 <label for="hora_regreso" id="lhora_regreso">Hora de regreso </label>
-                <input type="text" tabindex="5" class="hora" id="hora_regreso" name="hora_regreso"/>
+                <input type="text" tabindex="5" class="fin" id="hora_regreso" name="hora_regreso"/>
             </p>
              <p>
                 <label for="municipio" id="lmunicipio">Municipio</label>

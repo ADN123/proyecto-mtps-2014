@@ -94,9 +94,15 @@ class Transporte extends CI_Controller
 	{
 		$id_empleado=$this->input->post('id_empleado');
 		$data=$this->transporte_model->info_adicional($id_empleado);
-		if($data['']!=0) {
+		if($data['nr']!='0') {
 			$json =array(
-				'estado'=>1
+				'estado'=>1,
+				'nr'=>$data['nr'],
+				'id_seccion'=>$data['id_seccion'],
+				'funcional'=>$data['funcional'],
+				'nivel_1'=>$data['nivel_1'],
+				'nivel_2'=>$data['nivel_2'],
+				'nivel_3'=>$data['nivel_3']
 			);
 		}
 		else {
@@ -104,6 +110,42 @@ class Transporte extends CI_Controller
 				'estado'=>0
 			);}
 		echo json_encode($json);
+	}
+	
+	function guardar_solicitud()
+	{
+		$fecha_solicitud_transporte=date('Y-m-d');
+		$id_empleado_solicitante=$this->input->post('nombre');
+		$mision_encomendada=$this->input->post('mision_encomendada');
+		$fecha_mision=$this->input->post('fecha_mision');
+		$hora_salida=$this->input->post('hora_salida');
+		$hora_entrada=$this->input->post('hora_regreso');
+		$id_municipio=$this->input->post('municipio');
+		$lugar_destino=$this->input->post('lugar_destino');
+		$acompanante=$this->input->post('acompanantes2');
+		$id_usuario_crea=$this->session->userdata('id_usuario');
+		$fecha_creacion=date('Y-m-d');
+		$estado_solicitud_transporte=1;
+		
+		$formuInfo = array(
+			'fecha_solicitud_transporte'=>$fecha_solicitud_transporte,
+			'id_empleado_solicitante'=>$id_empleado_solicitante,
+			'mision_encomendada'=>$mision_encomendada,
+			'fecha_mision'=>$fecha_mision,
+			'hora_salida'=>$hora_salida,
+			'hora_entrada'=>$hora_entrada,
+			'id_municipio'=>$id_municipio,
+			'lugar_destino'=>$lugar_destino,
+			'acompanante'=>$acompanante,
+			'id_usuario_crea'=>$id_usuario_crea,
+			'fecha_creacion'=>$fecha_creacion,
+			'estado_solicitud_transporte'=>$estado_solicitud_transporte,
+		);
+		
+		$id_solicitud_transporte=$this->transporte_model->guardar('tcm_solicitud_transporte',$formuInfo);
+		
+		$acompanantes=$this->input->post('acompanantes');
+		//redirect('index.php/transporte/solicitud');
 	}
 }
 ?>

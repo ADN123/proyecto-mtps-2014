@@ -29,7 +29,20 @@ $(document).ready(function(){
 			dataType: "json",
 			success: function(data) { 
 				if(data['estado']==1) {
-					var html="Hola!";
+					if(data['funcional']==null)
+						data['funcional']="(No se encuentro este registro)";
+					if(data['nivel_1']==null)
+						data['nivel_1']="(No se encuentro este registro)";
+					if(data['nivel_2']==null)
+						data['nivel_2']="(No se encuentro este registro)";
+					if(data['nivel_3']==null)
+						data['nivel_3']="(No se encuentro este registro)";
+					var html=	"<br>"+
+								"<p><label>NR</label> <strong>"+data['nr']+"</strong></p>"+
+								"<p><label>Cargo</label> <strong>"+data['funcional']+"</strong></p>"+
+								"<p><label>Departamento</label> <strong>"+data['nivel_2']+"</strong></p>"+
+								"<p><label>Secci&oacute;n</label> <strong>"+data['nivel_1']+"</strong></p>";
+
 					$("#info_adicional").html(html);
 				}
 				else {	
