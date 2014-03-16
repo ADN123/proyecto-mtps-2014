@@ -52,7 +52,18 @@
 	 	$CI->load->view('piePagina');
 	}
 
-	
+	function ir_a($url){
+		echo'<script language="JavaScript" type="text/javascript">
+				var pagina="'.base_url().$url.'"
+				function redireccionar() 
+				{
+				location.href=pagina
+				} 
+				setTimeout ("redireccionar()", 1000);
+				
+				</script>';
+		
+		}	
 
 
 
