@@ -37,17 +37,32 @@ $this->solicitud();
 	
 	function control_solicitudes()
 	{
-	$data['datos']=$this->transporte_model->solicitudes_por_confirmar();
+	$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
+		if($data['permiso']>=2){
+	$data['datos']=$this->transporte_model->solicitudes_por_confirmar($this->session->userdata('id_seccion'));
 	pantalla('transporte/ControlSolicitudes',$data);
+	}else{
+		echo ' No tiene permiso';
+		}
+	
 	}
 	
 	function datos_de_solicitudes($id){
+		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
+		if($data['permiso']>=2){
+			
 		$d=$this->transporte_model->datos_de_solicitudes($id, $this->session->userdata('id_seccion'));	
 		$j=json_encode($d);
 		echo $j;
+			}else{
+		echo ' No tiene permiso';
+		}
 	}
 	function aprobar_solicitud()
 	{
+		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
+		if($data['permiso']>=2){
+		
 	$id=$this->input->post('ids'); //id solicitud
 	$estado=$this->input->post('resp'); //estado de la solicitud
 	$nr=$this->session->userdata('nr'); //NR del usuario Logueado
@@ -56,8 +71,12 @@ $this->solicitud();
 		$this->transporte_model->aprobar($id,$estado, $nr);
 		$data['datos']=$this->transporte_model->solicitudes_por_confirmar();
 		pantalla('transporte/ControlSolicitudes',$data);
+		
 	}else{
 		echo'Datos corruptos';
+		}
+		}else{
+		echo ' No tiene permiso';
 		}
 			
 	}
