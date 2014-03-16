@@ -1,3 +1,4 @@
+<script src="<?php echo base_url()?>js/views/solicitud.js" type="text/javascript"></script>
 <section>
     <h2>Nueva solicitud para Misi&oacute;n Oficial</h2>
 </section>
@@ -115,22 +116,3 @@
         </div>
     </div>
 </form>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('#wizard').smartWizard();
-		$("#fecha_mision").validacion({
-			valFecha: true
-		});
-		$("#nombre").validacion({
-			men: "Debe seleccionar un item"
-		});
-		/*$("#seccion").validacion({
-			men: "Debe seleccionar un item"
-		});*/
-		/*$("#guardar").click(function(){
-			if($("#formu").data("ok"))
-				alert()
-			return false;		
-		});*/
-	});
-</script>
