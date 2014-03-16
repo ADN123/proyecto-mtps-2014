@@ -52,7 +52,7 @@ class Transporte_model extends CI_Model {
 					sir_empleado.id_empleado AS NR,
 					CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada) AS nombre
 					FROM sir_empleado
-					WHERE sir_empleado.NR<>".$nr;
+					WHERE sir_empleado.NR<>'".$nr."'";
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->result_array();
@@ -62,16 +62,16 @@ class Transporte_model extends CI_Model {
 		}
 	}
 	
-	function consultar_empleado($nr) 
+	function consultar_empleado($nr=0) 
 	{
 		$sentencia="SELECT
 					sir_empleado.id_empleado AS NR,
 					CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada) AS nombre
 					FROM sir_empleado
-					WHERE sir_empleado.NR=".$nr;
+					WHERE sir_empleado.NR='".$nr."'";
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
-			return (array)$query->row();
+			return (array)$query->result_array();
 		}
 		else {
 			return 0;

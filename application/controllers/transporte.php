@@ -18,8 +18,8 @@ class Transporte extends CI_Controller
 	
 	function solicitud()
 	{
-		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['permiso']>1) {
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		if($data['id_permiso']>1) {
 			/*$data['secciones']=$this->transporte_model->consultar_secciones();*/
 			$data['empleados']=$this->transporte_model->consultar_empleados();
 			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
@@ -27,6 +27,9 @@ class Transporte extends CI_Controller
 		else {
 			/*$data['secciones']=$this->transporte_model->consultar_seccion($this->session->userdata('nr'));*/
 			$data['empleados']=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
+			foreach($data['empleados'] as $val) {
+				$data['info']=$this->transporte_model->info_adicional($val['NR']);
+			}
 			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
 		}
 		$data['municipios']=$this->transporte_model->consultar_municipios();
