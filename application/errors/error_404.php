@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>404 Page Not Found</title>
+<title>Error 404 P&aacute;gina no encontrada</title>
 <style type="text/css">
 
 ::selection{ background-color: #E13300; color: white; }
@@ -43,20 +43,31 @@ code {
 }
 
 #container {
-	margin: 10px;
+	width: 100%;
+	max-width: 693px;
+	margin: 10px auto;
 	border: 1px solid #D0D0D0;
 	-webkit-box-shadow: 0 0 8px #D0D0D0;
+	text-align: center;
 }
 
 p {
 	margin: 12px 15px 12px 15px;
 }
+img {
+	position: relative;
+	width: 100%;
+	max-width: 693px;
+	height: auto;
+}
 </style>
 </head>
 <body>
 	<div id="container">
-		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
+		<!--<h1><?php echo $heading; ?></h1>
+		<?php echo $message; ?>-->
+        <img src="../../img/error-404.png">
+        Para regresar al inicio presione <a href="<?php echo base_url() ?>">Aqu&iacute;</a>
 	</div>
 </body>
 </html>
