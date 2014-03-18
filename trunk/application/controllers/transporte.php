@@ -129,14 +129,9 @@ class Transporte extends CI_Controller
 				$salida=$row->salida;		
 			}
 			
-			$solicitudes_existentes=$this->transporte_model->consultar_fechas_solicitudes($fecha,$entrada,$salida);
-			
-			foreach($solicitudes_existentes as $row2)
-			{
-			}
-			
-			$d=$this->transporte_model->datos_de_solicitudes_anteriores($id_solicitud, $id_seccion['id_seccion']);	
-			$j=json_encode($d);
+			$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
+				
+			$j=json_encode($vehiculos_disponibles);
 			echo $j;
 		}
 		else
