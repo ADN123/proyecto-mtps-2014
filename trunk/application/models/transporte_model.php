@@ -126,7 +126,7 @@ function todas_solicitudes_por_confirmar(){
 		
 	}
 	function solicitudes_por_asignar(){
-	  $query=$this->db->query("SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,date_format(hora_entrada,'%r') entrada, date_format(hora_salida,'%r') salida, m.municipio, lugar_destino lugar, mision_encomendada mision FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_municipio=m.id_municipio where (estado_solicitud_transporte=2))");
+	  $query=$this->db->query("SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,date_format(hora_entrada,'%r') entrada, date_format(hora_salida,'%r') salida, m.municipio, lugar_destino lugar, mision_encomendada mision FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_municipio=m.id_municipio where (estado_solicitud_transporte=2)");
    	return $query->result();
 		
 	}
@@ -141,7 +141,7 @@ function todas_solicitudes_por_confirmar(){
 	{
 		$query=$this->db->query("select id_vehiculo from tcm_vehiculo where id_vehiculo not in (select avm.id_vehiculo from tcm_solicitud_transporte as st
 inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
-where st.fecha_mision='$fecha' and (st.hora_salida>='$hsalida' and st.hora_entrada<='$hentrada');");
+where st.fecha_mision='$fecha' and (st.hora_salida>='$hsalida' and st.hora_entrada<='$hentrada'));");
 		return $query->result();
 	}
 	////////////////////
