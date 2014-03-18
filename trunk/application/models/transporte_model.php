@@ -126,10 +126,26 @@ function todas_solicitudes_por_confirmar(){
 		
 	}
 	function solicitudes_por_asignar(){
-	  $query=$this->db->query(" SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,hora_entrada entrada, hora_salida salida, m.municipio, lugar_destino lugar, mision_encomendada mision FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_municipio=m.id_municipio");
+	  $query=$this->db->query("SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,date_format(hora_entrada,'%r') entrada, date_format(hora_salida,'%r') salida, m.municipio, lugar_destino lugar, mision_encomendada mision FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_municipio=m.id_municipio where (estado_solicitud_transporte=2)");
    	return $query->result();
 		
 	}
+	function consultar_fecha_solicitud($id)
+	{
+		$query=$this->db->query("select st.fecha_mision as fecha, st.hora_salida as salida, st.hora_entrada as entrada from tcm_solicitud_transporte as st where st.id_solicitud_transporte='$id';");
+		return $query->result();
+	}
+	
+	///////////////////
+	function consultar_fechas_solicitudes($fecha,$hentrada,$hsalida)
+	{
+		$query=$this->db->query("select avm.id_vehiculo from tcm_solicitud_transporte as st
+inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
+where st.fecha_mision='$fecha' and (st.hora_salida>='$hentrada' and st.hora_salida<='$hsalida');");
+		return $query->result();
+	}
+	////////////////////
+	
 	function datos_de_solicitudes($id,$seccion){
 		  $query=$this->db->query("
 SELECT id_solicitud_transporte id, 
@@ -166,10 +182,17 @@ WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
 	
 	function consultar_vehiculos()
 	{
+		$query=$this->db->query("select * from tcm_vehiculo");
+		return $query->result();
+	}
+	
+	function validar_fecha_hora()
+	{
 		$query=$this->db->query("select st.id_solicitud_transporte,st.fecha_mision, st.hora_salida, st.hora_entrada, avm.id_vehiculo from tcm_solicitud_transporte as st
 inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)");
 		return $query->result();
 	}
+	
 	function consultar_motoristas()
 	{
 		$query=$this->db->query("SELECT * FROM sir_empleado;");
