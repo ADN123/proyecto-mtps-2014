@@ -256,5 +256,56 @@ inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.
 			return 0;
 		}
 	}
+/*---------------------------------Control de salidas y entradas de Vehiculos------------------------------------*/
+	function salidas_entradas_vehiculos(){
+		$query=$this->db->query("SELECT s.id_solicitud_transporte id,
+	CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre,
+	e.primer_apellido,e.segundo_apellido,e.apellido_casada) AS nombre,
+	estado_solicitud_transporte estado,
+	DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+	DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
+	CONCAT_WS(', ',d.departamento,m.municipio) municipio,
+	vh.placa	
+FROM tcm_solicitud_transporte  s 
+INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
+INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio
+INNER JOIN org_departamento d ON d.id_departamento= m.id_departamento_pais
+INNER JOIN  tcm_asignacion_sol_veh_mot asi ON asi.id_solicitud_transporte=s.id_solicitud_transporte
+INNER JOIN tcm_vehiculo vh ON vh.id_vehiculo= asi.id_vehiculo
+WHERE  s.fecha_mision= CURDATE() AND (estado_solicitud_transporte=3 OR estado_solicitud_transporte=4)");
+		return $query->result();
+		
+		}
+function salida_vehiculo($id, $km_inicial,$hora_salida){
+		$q="INSERT INTO tcm_vehiculo_kilometraje (
+					id_solicitud_transporte, 
+					id_vehiculo, 
+					km_inicial, 
+					hora_salida, 
+					fecha_modificacion)
+				VALUES(
+					'".$id."', 
+					(SELECT id_vehiculo FROM tcm_asignacion_sol_veh_mot WHERE id_solicitud_transporte = ".$id."),
+					 '".$km_inicial."',    
+					CONCAT_WS(' ',CURDATE(),'".$hora_salida."'), 
+					CONCAT_WS(' ',CURDATE(),CURTIME())
+				);";
+		$this->db->query($q);
+		return $this->db->insert_id();
+	}
+
+function regreso_vehiculo($id, $km, $hora, $gas){
+	$q="UPDATE tcm_vehiculo_kilometraje 
+	SET
+		km_final = '$km' , 
+		combustible = '$gas' , 
+		hora_entrada = '$hora' , 
+		fecha_modificacion = CURDATE()
+	WHERE
+		id_solicitud_transporte = '$id' ;";
+	$this->db->query($q);
+		return $this->db->insert_id();
+		
+	}
 }
 ?>
