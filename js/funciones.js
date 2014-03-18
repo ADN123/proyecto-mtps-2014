@@ -31,6 +31,19 @@ $(document).ready(function() {
 		min: new Date(f.getFullYear(), f.getMonth(), f.getDate()+2)
 	});
 	$(".hora").kendoTimePicker();
+	$(".grid").kendoGrid({
+		height: 400,
+		width: 800,
+		sortable: true,
+		dataSource: {
+			type: "odata",
+			pageSize: 5
+		},
+		pageable: {
+			pageSizes: true,
+			buttonCount: 5
+		},
+	});
 });
 $(function() {
 	$('a[rel*=leanModal]').leanModal({ top : 50, closeButton: ".modal_close"});		
