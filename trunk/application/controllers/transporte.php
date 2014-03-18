@@ -96,6 +96,11 @@ class Transporte extends CI_Controller
 		$data['motoristas']=$this->transporte_model->consultar_motoristas();
 		$data['datos']=$this->transporte_model->solicitudes_por_asignar();
 		pantalla('transporte/asignacion_veh_mot',$data);
+	}
+
+	function verificar_fecha_hora($id_solicitud)
+	{
+		
 	}	
 	
 	function buscar_info_adicional()
