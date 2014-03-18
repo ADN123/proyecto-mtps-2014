@@ -111,7 +111,7 @@ class Transporte_model extends CI_Model {
 		
 	}
 	function solicitudes_por_asignar(){
-	  $query=$this->db->query(" SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,hora_entrada_mision entrada, hora_salida_mision salida, municipio,lugar_destino lugar, mision_encomendada mision FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_org_municipio=m.id_municipio WHERE estado=3");
+	  $query=$this->db->query(" SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,hora_entrada entrada, hora_salida salida, m.municipio, lugar_destino lugar, mision_encomendada mision FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_municipio=m.id_municipio");
    	return $query->result();
 		
 	}
@@ -152,7 +152,7 @@ inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.
 	}
 	function consultar_motoristas()
 	{
-		$query=$this->db->query("SELECT * FROM sir_empleado o;");
+		$query=$this->db->query("SELECT * FROM sir_empleado;");
 		return $query->result();
 	}
 	
