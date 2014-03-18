@@ -1,7 +1,7 @@
 <section>
     <h2>Control de Solicitudes</h2>
 </section>
-<table  id="grid">
+<table  class="grid">
 <thead>
   <tr>
     <th>Fecha y Hora</th>
@@ -86,20 +86,6 @@ function dialogo(id){
 			}
 		});	
 	}
-	
-	$("#grid").kendoGrid({
-		height: 400,
-		width: 800,
-		sortable: true,
-		dataSource: {
-			type: "odata",
-			pageSize: 5
-		},
-		pageable: {
-			pageSizes: true,
-			buttonCount: 5
-		},
-	});
 	
 	function Enviar(v){
 		document.getElementById('resp').value=v;

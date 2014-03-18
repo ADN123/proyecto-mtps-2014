@@ -2,9 +2,7 @@
 <section>
     <h2>Asignación de Vehículo y Motorista</h2>
 </section>
-
-
-<table  id="grid">
+<table  class="grid">
 
 <thead>
   <tr>
@@ -22,7 +20,7 @@
 										
 ?>
   <tr>
-    <td><?=$fila->fecha?>&nbsp;&nbsp;<?=$fila->salida?></td>>
+    <td><?=$fila->fecha?>&nbsp;&nbsp;<?=$fila->salida?></td>
     <td><?=$fila->lugar?></td>
     <td><?=$fila->mision?></td>
     <td><a rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>)"><img  src="<?=base_url()?>img/lupa.gif"/></a>
@@ -95,23 +93,4 @@ function dialogo(id){
 			}
 		});	
 	}
-	
-	$("#grid").kendoGrid({
-		height: 225,
-		width: 800,
-		sortable: true,
-		dataSource: {
-			type: "odata",
-			pageSize: 5
-		},
-		pageable: {
-			pageSizes: true,
-			buttonCount: 5
-		},
-	});
-	
-		$(function() {
-			$('a[rel*=leanModal]').leanModal({ top : 50 });		
-		});
-
 </script>
