@@ -2,7 +2,7 @@
 /* CSS Document */
 form {
 	position: relative;
-	width: 80%;
+	width: 95%;
 	height: auto;
 	margin: 0 auto;
 	font-family: Verdana, Geneva, sans-serif;
@@ -82,11 +82,40 @@ button {
 }
 #pie {
 	position: relative;
-	margin: 20px auto;
-	width: 100%;
+	margin: 40px auto;
+	width: 85%;
+	max-width: 69em;
 	height: 100px;
-	max-width: 1000px;
-	background-color: #BEBEBE;
+	text-align: center;
+	overflow: hidden;
+}
+#pie .pie-izq {
+	position: relative;
+	width: 20%;
+	height: 100%;
+	display: inline-block;	
+}
+#pie .pie-der {
+	position: relative;
+	width: 70%;
+	height: 100%;
+	display: inline-block;	
+}
+#pie span {
+	text-align: center;
+	font-size: 12px;
+}
+#pie .ues {
+	float: left;
+	width: 50%;
+	max-width: 75px;
+	height: auto;
+}
+#pie .escudo {
+	float: right;
+	width: 50%;
+	max-width: 100px;
+	height: auto;
 }
 .k-delete {
 	float: right;

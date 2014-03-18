@@ -32,6 +32,7 @@
 				var menu = document.getElementById( 'menu-total' ),
 					container = document.getElementById( 'container' ),
 					main = document.getElementById( 'main' );
+					pie = document.getElementById( 'pie' );
 					menu1 = document.getElementById( 'cbp-spmenu-s1' );
 				
 				var $head = $( '#ha-header' );
@@ -56,6 +57,7 @@
 								$fun.="$('#verMenu".$id[$x]."').click (function() {
 									classie.toggle( this, 'active' );
 									classie.toggle( main, 'cbp-spmenu-toright' );
+									classie.toggle( pie, 'cbp-spmenu-toright' );
 									classie.toggle( menu".$id[$x].", 'cbp-spmenu-open' );
 								});";
 							}
@@ -68,6 +70,7 @@
 				$( '#verMenu1' ).click (function() {
 					classie.toggle( this, 'active' );
 					classie.toggle( main, 'cbp-spmenu-push-toright' );
+					classie.toggle( pie, 'cbp-spmenu-push-toright' );
 					classie.toggle( document.body, 'oscuro' );
 					classie.toggle( menu1, 'cbp-spmenu-open' );
 					if(!classie.has( menu1, 'cbp-spmenu-open' )) {
@@ -83,6 +86,7 @@
 				function cerrar() {
 					classie.remove( menu1, 'active' );
 					classie.remove( main, 'cbp-spmenu-push-toright' );
+					classie.remove( pie, 'cbp-spmenu-push-toright' );
 					classie.remove( document.body, 'oscuro' );
 					classie.remove( menu1, 'cbp-spmenu-open' );
 					<?= $call?>
@@ -113,6 +117,11 @@
 					if(!classie.has( menu1, 'cbp-spmenu-open' )) 
 						if($(this).scrollTop()>=25) {
 							$head.attr('class', 'ha-header ha-header-rotate');
+							if($(this).scrollTop()>=300 ) {
+								/*$head.attr('class', 'ha-header ha-header-box');*/
+							}
+							else {
+							}
 						}
 						else {
 							$head.attr('class', 'ha-header ha-header-subshow');
