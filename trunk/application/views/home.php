@@ -2,59 +2,46 @@
     <h2>Datos de Sesion</h2>
 </section>
     <div id="example" class="k-content">
-    <div id="wrapper">
-
-            <input class="eqSlider" value="0.5" />
-        
-
-    </div>
-    </div>
+    <div id="wrappers">
     
-        
-        
-        <script>
-        $(document).ready(function() {
-     
+          <p>
+		<label for="timepicker" > Hora</label>    
+        <input id="timepicker"  name="hora" value="<? echo date("h:m A");?>" />
+      </p>
+        <p>
+		<label for="km" >Kilometraje</label>    
+        <input id="km"  name="km"  class="tam-1"/>
+      </p>
+      <p>
+		<label for="combustible" > Nivel tanque(%)</label> <br />    
+        <input class="eqSlider" value="50" id="combustible" name="combustible"/>
+	  </p>
 
-            $(".eqSlider").kendoSlider({
+    </div>
+    </div>
+	<script>
+        $(document).ready(function() {
+			var templateString = "#= selectionStart # - #= selectionEnd #";
+			
+    		$(".eqSlider").kendoSlider({
                 min: 0,
                 max: 100,
                 smallStep: 25,
                 largeStep: 25,
                 showButtons: false
             });
+		  $("#timepicker").kendoTimePicker();
         });
     </script>
 
     <style>
-        #wrapper {
-            width: 300px;
-            height: 255px;
-            padding: 45px 0 0 0;
-            margin: 0 auto;
-            background: url('../../content/web/slider/eqBack.png') no-repeat 0 0;
-            text-align: center;
-        }
-        #equalizer {
-            display: inline-block;
-            zoom: 1;
-            margin: 0 12px;
-            height: 122px;
-        }
-        .balSlider {
-            width: 240px;
-        }
-        .balSlider .k-slider-selection {
-            width: 240px;
-            display: none;
-        }
+
         .eqSlider {
             display: inline-block;
             zoom: 1;
             margin: 30px;
             height: 50px;
+			background:#FFFFFF
         }
-
-        *+html .eqSlider {display:inline;}
 
     </style>
