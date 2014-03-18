@@ -5,11 +5,49 @@
 <script src="<?php echo base_url()?>js/gauge.js"></script>
 
 
+<section>
+    <h2>Control de Entradas y Salidas</h2>
+</section>
+<table  class="grid">
+<thead>
+  <tr>
+    <th>Empleado</th>
+    <th>Salida</th>
+    <th>Regreso</th>
+    <th>Vehiculo</th>
+    <th>Municipio</th>
+    <th>Opción</th>
+  </tr>
+ </thead>
+ <tbody>
+<?
 
-    <div id="wrappers" style="width:75%">
+	foreach ($datos as $fila)
+	{
+										
+?>
+  <tr>
+    <td><?=$fila->nombre?></td>
+    <td><?=$fila->salida?></td>
+    <td><?=$fila->entrada?></td>
+    <td><?=$fila->placa?></td>
+	<td><?=$fila->municipio?></td>
+    <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>)"><img  src="<?=base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a>
+	</td>
+  </tr>
+<? } ?>
+</tbody>
+</table> 
 
-  <form id="opts" class="opts">
-  
+<div id="ventana">
+	<div id="signup-header">
+        <h2>Control de Entradas y Salidas</h2>
+        <a class="modal_close"></a>
+    </div>
+
+
+      <form id="opts" class="opts" action="<?=base_url()?>index.php/transporte/aprobar_solicitud"  method="post">
+       <input type="hidden"   id="ids" name="ids"/>  
       <p>
 		<label for="timepicker" > Hora</label>    
         <input id="timepicker"  name="hora" value="<? echo date("h:m A");?>" />
@@ -18,48 +56,31 @@
 		<label for="km" >Kilometraje</label>    
         <input id="km"  name="km"  class="tam-1"/>
       </p>
-        <p>
+     <p>
     <input type="hidden" name="animationSpeed" min="1" max="128" step="1" value="32" >
-	<label>Tanque</label><input  type="text" name="currval" min="0" max="100" step="1" value="50" >
-    </p>
- <div id="preview" >
-  	<canvas width=220 height=70 id="canvas-preview"></canvas>
-  	<div id="preview-textfield"></div>
-</div>
+	<label>Tanque</label><input  type="text" name="currval" min="0" max="100" step="1" value="50" id="curval" >
+     </p>
   </form>
 
+</div>
+
+<div id="ventana2">
 
 
-    </div>
-	<script>
-        $(document).ready(function() {
+          <div id="preview" >
+            <canvas width=220 height=70 id="canvas-preview"></canvas>
+            <div id="preview-textfield"></div>
+        </div>
 
-			
-    		$(".eqSlider").kendoSlider({
-                min: 0,
-                max: 100,
-                smallStep: 25,
-                largeStep: 25,
-                showButtons: false
-            });
-		  $("#timepicker").kendoTimePicker();
-        });
-    </script>
+</div>
 
-    <style>
-
-        .eqSlider {
-            display: inline-block;
-            zoom: 1;
-            margin: 30px;
-            height: 50px;
-			background:#FFFFFF
-        }
-
-    </style>
-    
-
-    <script>
+<script>
+function dialogo(){
+	
+	}
+	
+ $("#timepicker").kendoTimePicker();
+ 
   prettyPrint();
   function update() {
     var opts = {};
@@ -68,13 +89,7 @@
       if($(this).hasClass("color")){
         val = "#" + val;
       }
-      if(this.name.indexOf("lineWidth") != -1 ||
-        this.name.indexOf("angle") != -1 ||
-        this.name.indexOf("pointer.length") != -1){
-        val /= 100;
-      }else if(this.name.indexOf("pointer.strokeWidth") != -1){
-        val /= 1000;
-      }
+     
       $('#opt-' + this.name.replace(".", "-")).text(val);
       if(this.name.indexOf(".") != -1){
       	var elems = this.name.split(".");
@@ -98,6 +113,7 @@
       	demoGauge.set(parseInt(this.value));
       	AnimationUpdater.run();
       }
+	  console.log(val);
     });
  
     demoGauge.animationSpeed = opts.animationSpeed;

@@ -178,7 +178,8 @@ class Transporte extends CI_Controller
 		redirect('index.php/transporte/solicitud');
 	}
 	function control_salidas_entradas(){
-	pantalla("transporte/despacho");	
+	$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
+	pantalla("transporte/despacho",$data);	
 	}
 }
 ?>
