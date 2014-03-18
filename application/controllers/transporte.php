@@ -20,14 +20,14 @@ class Transporte extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		if($data['id_permiso']>1) {
-			if($data['id_permiso']>2)
+			if($data['id_permiso']>2)//nivel 3
 				$data['empleados']=$this->transporte_model->consultar_empleados();
-			else {
+			else {//nivel 2
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$data['empleados']=$this->transporte_model->consultar_empleados_seccion($id_seccion['id_seccion']);
 			}
 		}
-		else {
+		else {//nivel 1
 			$data['empleados']=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
 			foreach($data['empleados'] as $val) {
 				$data['info']=$this->transporte_model->info_adicional($val['NR']);
@@ -41,22 +41,32 @@ class Transporte extends CI_Controller
 	
 	function control_solicitudes()
 	{
-		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
-		if($data['permiso']>=2){
-			$data['datos']=$this->transporte_model->solicitudes_por_confirmar($this->session->userdata('id_seccion'));
+ 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
+		
+		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
+			if($data['id_permiso']>2){//nivel 3
+				$data['datos']=$this->transporte_model->todas_solicitudes_por_confirmar();
+			}else {//nivel 2
+				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+				$data['datos']=$this->transporte_model->solicitudes_por_confirmar($id_seccion['id_seccion']);			
+			}	 
 			pantalla('transporte/ControlSolicitudes',$data);
+		
+		}else{//nivel 1
+				echo "No Autorizado";
+
 		}
-		else {
-			echo ' No tiene permiso';
-		}
+
+
 	
 	}
 	
 	function datos_de_solicitudes($id)
 	{
-		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
-		if($data['permiso']>=2){
-			$d=$this->transporte_model->datos_de_solicitudes($id, $this->session->userdata('id_seccion'));	
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
+		if(isset($data['id_permiso'])) {
+				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);	
 			$j=json_encode($d);
 			echo $j;
 		}
@@ -71,11 +81,11 @@ class Transporte extends CI_Controller
 		if($data['permiso']>=2){
 			$id=$this->input->post('ids'); //id solicitud
 			$estado=$this->input->post('resp'); //estado de la solicitud
-			$descrip=$this->input->post('resp'); //estado de la solicitud
+			$descrip=$this->input->post('observacion'); //Observacion
 			$nr=$this->session->userdata('nr'); //NR del usuario Logueado
 			
 			if($estado ==2 || $estado== 0){
-				$this->transporte_model->aprobar($id,$estado, $nr);
+				$this->transporte_model->aprobar($id,$estado, $nr,$this->session->userdata('id_usuario'));
 					if($descrip!="")
 						$this->transporte_model->insertar_descripcion($id,$descrip);
 						
@@ -166,6 +176,9 @@ class Transporte extends CI_Controller
 			$this->transporte_model->guardar_acompanantes($formuInfo);
 		}
 		redirect('index.php/transporte/solicitud');
+	}
+	function control_salidas_entradas(){
+	pantalla("transporte/despacho");	
 	}
 }
 ?>
