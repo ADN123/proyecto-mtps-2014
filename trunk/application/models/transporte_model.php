@@ -146,8 +146,8 @@ class Transporte_model extends CI_Model {
 	
 	function consultar_vehiculos()
 	{
-		$query=$this->db->query("SELECT ov.placa,ov.marca,ov.modelo,otv.nombre as tipo_vehiculo,ov.condicion
-								FROM org_vehiculo as ov inner join org_tipo_vehiculo as otv on (ov.id_tipo_vehiculo=otv.id_tipo_vehiculo);");
+		$query=$this->db->query("select st.id_solicitud_transporte,st.fecha_mision, st.hora_salida, st.hora_entrada, avm.id_vehiculo from tcm_solicitud_transporte as st
+inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)");
 		return $query->result();
 	}
 	function consultar_motoristas()
