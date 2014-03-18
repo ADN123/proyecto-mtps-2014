@@ -32,3 +32,6 @@ $(document).ready(function() {
 	});
 	$(".hora").kendoTimePicker();
 });
+$(function() {
+	$('a[rel*=leanModal]').leanModal({ top : 50, closeButton: ".modal_close"});		
+});

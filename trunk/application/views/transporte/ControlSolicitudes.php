@@ -1,35 +1,6 @@
-
-    <style>
-		#lean_overlay {
-			position: fixed;
-			z-index:100;
-			top: 0px;
-			left: 0px;
-			height:100%;
-			width:100%;
-			background: #000;
-			display: none;
-		}
-		#ventana {
-			width: 60%;
-			min-height: 25%;
-			max-height: 70%;
-			padding: 10px; 
-			display:none;
-			background: #FFF;
-			border-radius: 5px; 
-			-moz-border-radius: 5px; 
-			-webkit-border-radius: 5px;
-			box-shadow: 0px 0px 4px rgba(0,0,0,0.7); 
-			-webkit-box-shadow: 0 0 4px rgba(0,0,0,0.7);
-			-moz-box-shadow: 0 0px 4px rgba(0,0,0,0.7);   
-		}
-	</style>
 <section>
     <h2>Control de Solicitudes</h2>
 </section>
-
-
 <table  id="grid">
 <thead>
   <tr>
@@ -50,7 +21,7 @@
     <td><?=$fila->fecha?></td>
     <td><?=$fila->lugar?></td>
     <td><?=$fila->mision?></td>
-    <td><a rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>)"><img  src="<?=base_url()?>img/lupa.png"/></a>
+    <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>)"><img  src="<?=base_url()?>img/lupa.gif"/></a>
 	</td>
   </tr>
 <? } ?>
@@ -58,6 +29,10 @@
 </table>
 
 <div id="ventana" style="height:600px">
+	<div id="signup-header">
+        <h2>Solicitud de Misi&oacute;n Oficial</h2>
+        <a class="modal_close"></a>
+    </div>
    <form action="<?=base_url()?>index.php/transporte/aprobar_solicitud" id="form" method="post">
        <input type="hidden"   id="resp" name="resp"/>
        <input type="hidden"   id="ids" name="ids"/>
@@ -126,9 +101,6 @@ function dialogo(id){
 		},
 	});
 	
-		$(function() {
-			$('a[rel*=leanModal]').leanModal({ top : 50 });		
-		});
 	function Enviar(v){
 		document.getElementById('resp').value=v;
 	}
