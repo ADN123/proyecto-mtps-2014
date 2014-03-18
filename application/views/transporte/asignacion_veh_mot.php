@@ -37,16 +37,9 @@
                                         <p>
                                         <label>Información</label>
                                        <select class="select" name="vehiculo">
-                                       <?php
-                                       foreach ($vehiculos as $fila1)
-                                       {
-									   ?>
-                                       		<option value="<?php echo $fila1->placa; ?>">
+                                       	<option value="<?php echo $fila1->placa; ?>">
 											<?php echo $fila1->placa; ?>
                                             </option>
-                                       <?php
-									   }
-									   ?>
                                        </select>
                                         </p>
                                     </fieldset>
@@ -84,8 +77,7 @@ function dialogo(id){
 		dataType:"json",
 		success: function(data){
 			 json2 = data;
-			console.log(json2);				
-			
+			console.log(json2);	
 			},
 		error:function(data){
 			 alert('Error al cargar los datos de los vehículos');

@@ -137,11 +137,11 @@ function todas_solicitudes_por_confirmar(){
 	}
 	
 	///////////////////
-	function consultar_fechas_solicitudes($fecha,$hentrada,$hsalida)
+	function vehiculos_disponibles($fecha,$hentrada,$hsalida)
 	{
-		$query=$this->db->query("select avm.id_vehiculo from tcm_solicitud_transporte as st
+		$query=$this->db->query("select id_vehiculo from tcm_vehiculo where id_vehiculo not in (select avm.id_vehiculo from tcm_solicitud_transporte as st
 inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
-where st.fecha_mision='$fecha' and (st.hora_salida>='$hentrada' and st.hora_salida<='$hsalida');");
+where st.fecha_mision='$fecha' and (st.hora_salida>='$hsalida' and st.hora_entrada<='$hentrada');");
 		return $query->result();
 	}
 	////////////////////
