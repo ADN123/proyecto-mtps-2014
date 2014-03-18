@@ -39,7 +39,7 @@
 </tbody>
 </table> 
 
-<div id="ventana">
+<div id="ventana2">
 	<div id="signup-header">
         <h2>Control de Entradas y Salidas</h2>
         <a class="modal_close"></a>
@@ -62,15 +62,16 @@
      </p>
   </form>
 
-</div>
-
-<div id="ventana2">
-
-
           <div id="preview" >
             <canvas width=220 height=70 id="canvas-preview"></canvas>
             <div id="preview-textfield"></div>
         </div>
+</div>
+
+<div id="ventana">
+
+
+
 
 </div>
 
@@ -116,7 +117,7 @@ function dialogo(){
 	  console.log(val);
     });
  
-    demoGauge.animationSpeed = opts.animationSpeed;
+ 
     opts.generateGradient = true;
     demoGauge.setOptions(opts);
     demoGauge.ctx.clearRect(0, 0, demoGauge.ctx.canvas.width, demoGauge.ctx.canvas.height);
