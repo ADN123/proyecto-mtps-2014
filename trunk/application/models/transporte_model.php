@@ -99,12 +99,27 @@ class Transporte_model extends CI_Model {
 
 	  $query=$this->db->query("
  SELECT id_solicitud_transporte AS id, 
- CONCAT_WS(' ',fecha_mision,hora_salida) AS fecha, 
- lugar_destino AS lugar, 
- mision_encomendada  mision 
+  	CONCAT_WS(' ',DATE_FORMAT(fecha_mision, '%d-%m-%Y'),DATE_FORMAT(hora_salida,'%h:%i %p')) AS fecha, 
+    lugar_destino AS lugar, 
+    mision_encomendada  mision 
  FROM tcm_solicitud_transporte s
  INNER JOIN sir_empleado_informacion_laboral i ON s.id_empleado_solicitante  = i.id_empleado 
  WHERE estado_solicitud_transporte = 1 AND i.id_seccion =".$seccion);
+ 
+ 
+   	return $query->result();
+		
+	}
+function todas_solicitudes_por_confirmar(){
+
+	  $query=$this->db->query("
+ SELECT id_solicitud_transporte AS id, 
+ 	 CONCAT_WS(' ',DATE_FORMAT(fecha_mision, '%d-%m-%Y'),DATE_FORMAT(hora_salida,'%h:%i %p')) AS fecha, 
+ 	 lugar_destino AS lugar, 
+ 	 mision_encomendada  mision 
+ FROM tcm_solicitud_transporte s
+ INNER JOIN sir_empleado_informacion_laboral i ON s.id_empleado_solicitante  = i.id_empleado 
+ WHERE estado_solicitud_transporte = 1");
  
  
    	return $query->result();
@@ -116,27 +131,32 @@ class Transporte_model extends CI_Model {
 		
 	}
 	function datos_de_solicitudes($id,$seccion){
-		  $query=$this->db->query("SELECT id_solicitud_transporte id, 
-	CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido,    		e.apellido_casada) AS nombre,
+		  $query=$this->db->query("
+SELECT id_solicitud_transporte id, 
+	CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada) AS nombre,
 	mision_encomendada mision, 
-	fecha_solicitud_transporte fecha,
-	hora_salida salida,
-	hora_entrada entrada,
-	m.municipio ,
+	DATE_FORMAT(fecha_solicitud_transporte, '%d-%m-%Y') fechaS,
+	DATE_FORMAT(fecha_mision, '%d-%m-%Y')  fechaM,
+	DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+	DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
+	CONCAT_WS(', ',d.departamento,m.municipio) municipio,
 	lugar_destino lugar,
 	nombre_seccion seccion
-	FROM tcm_solicitud_transporte  s 
-	INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
-	INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio,
-	org_seccion sec
-	WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
+FROM tcm_solicitud_transporte  s 
+INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
+INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio
+INNER JOIN org_departamento d ON d.id_departamento= m.id_departamento_pais,
+org_seccion sec
+WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
 	
 		return $query->result();
 	}	
-	function aprobar($id, $estado, $nr){
+	function aprobar($id, $estado, $nr, $iduse){
 		$q="UPDATE tcm_solicitud_transporte SET 
 				id_empleado_autoriza= (SELECT id_empleado FROM sir_empleado WHERE NR LIKE '".$nr."'),
-				estado_solicitud_transporte = $estado  
+				estado_solicitud_transporte = $estado,
+				id_usuario_modifica = '".$iduse."', 
+				fecha_modificacion=  CONCAT_WS(' ', CURDATE(),CURTIME())  
 			WHERE id_solicitud_transporte= ".$id;
 	
 		  $query=$this->db->query($q);
@@ -211,9 +231,10 @@ inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.
 		$q="INSERT INTO mtps.tcm_observacion 
 				(id_solicitud_transporte, observacion)
 			VALUES
-				('$id', 
-				'$descrip'
+				('".$id."', 
+				'".$descrip."'
 				);";
+		
 		$query=$this->db->query($q);	
 		return $query;
 	}

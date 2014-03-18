@@ -47,12 +47,11 @@
                <div  id="mision" style="font-size:14px;"></div>
          </fieldset>
     <p>
-        <label for="observacion" id="lobservacion">Observacion</label><br />
+        <label for="observacion" id="lobservacion">Observacion</label>
         <textarea class="tam-4" id="observacion" tabindex="2" name="observacion"/></textarea>
     </p>
         <button type="submit"  id="aprobar" class="button tam-1 boton_validador" name="aprobar" onclick="Enviar(2)">Aprobar</button>
         <button  type="submit" id="denegar" class="button tam-1 boton_validador" name="Denegar" onclick="Enviar(0)">Denegar</button>
-
 	<form>
 </div>
 <script language="javascript" >
@@ -67,12 +66,13 @@ function dialogo(id){
 			 document.getElementById('ids').value=id;
 
  	var echo1="Nombre: <strong>"+data[0].nombre+"</strong> <br>" +
-		       "Seccion: <strong>"+data[0].seccion+"</strong> <br>";
+		       "Sección: <strong>"+data[0].seccion+"</strong> <br>";
 			   
-	var echo2="Mision: <strong>"+data[0].mision+"</strong> <br>"+
-		       "Fecha: <strong>"+data[0].fecha+"</strong> <br>"+
-		       "Salida: <strong>"+data[0].salida+"</strong> <br>"+
-		       "Entrada: <strong>"+data[0].entrada+"</strong> <br>"+
+	var echo2="Misión: <strong>"+data[0].mision+"</strong> <br>"+
+		       "Fecha de Solicitud: <strong>"+data[0].fechaS+"</strong> <br>"+
+   		       "Fecha de Misión: <strong>"+data[0].fechaM+"</strong> <br>"+
+		       "Hora de Salida: <strong>"+data[0].salida+"</strong> <br>"+
+		       "Hora de Regreso: <strong>"+data[0].entrada+"</strong> <br>"+
 			   "Municipio: <strong>"+data[0].municipio+"</strong> <br>"+
 			   "Lugar: <strong>"+data[0].lugar+"</strong> <br>";
 			
