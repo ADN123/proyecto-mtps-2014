@@ -36,13 +36,13 @@
                                     <legend align="left">Vehículos</legend>
                                         <p>
                                         <label>Información</label>
-                                       <select name="vehiculo">
+                                       <select class="select" name="vehiculo">
                                        <?php
                                        foreach ($vehiculos as $fila1)
                                        {
 									   ?>
                                        		<option value="<?php echo $fila1->placa; ?>">
-											<?php echo $fila1->marca." - ".$fila1->modelo." - ".$fila1->tipo_vehiculo." - ".$fila1->condicion; ?>
+											<?php echo $fila1->placa; ?>
                                             </option>
                                        <?php
 									   }
@@ -80,7 +80,7 @@ function dialogo(id){
 
 		$.ajax({
 		async:	true, 
-		url:	"<?=base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
+		url:	"<?=base_url()?>/index.php/transporte/verificar_fecha_hora/"+id,
 		dataType:"json",
 		success: function(data){
 			 json2 = data;
@@ -88,7 +88,7 @@ function dialogo(id){
 			
 			},
 		error:function(data){
-			 alert('Error al cargar datos de alumnos');
+			 alert('Error al cargar los datos de los vehículos');
 			console.log(data);
 			}
 		});	

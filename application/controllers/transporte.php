@@ -102,15 +102,47 @@ class Transporte extends CI_Controller
 	
 	function asignar_vehiculo_motorista()
 	{
-		$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
-		$data['motoristas']=$this->transporte_model->consultar_motoristas();
-		$data['datos']=$this->transporte_model->solicitudes_por_asignar();
-		pantalla('transporte/asignacion_veh_mot',$data);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		if($data['id_permiso']>2)
+		{
+			//$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
+			//$data['motoristas']=$this->transporte_model->consultar_motoristas();
+			$data['datos']=$this->transporte_model->solicitudes_por_asignar();
+			pantalla('transporte/asignacion_veh_mot',$data);
+		}
 	}
 
 	function verificar_fecha_hora($id_solicitud)
 	{
-		
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		if($data['id_permiso']>2)
+		{
+			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));////////consulta la seccion
+			
+			$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id_solicitud);
+			//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.
+									
+			foreach($solicitud_actual as $row)
+			{
+				$fecha=$row->fecha;
+				$entrada=$row->entrada;
+				$salida=$row->salida;		
+			}
+			
+			$solicitudes_existentes=$this->transporte_model->consultar_fechas_solicitudes($fecha,$entrada,$salida);
+			
+			foreach($solicitudes_existentes as $row2)
+			{
+			}
+			
+			$d=$this->transporte_model->datos_de_solicitudes_anteriores($id_solicitud, $id_seccion['id_seccion']);	
+			$j=json_encode($d);
+			echo $j;
+		}
+		else
+		{
+			echo ' No tiene permiso';
+		}
 	}	
 	
 	function buscar_info_adicional()
