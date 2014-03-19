@@ -41,53 +41,80 @@
         <h2>Control de Entradas y Salidas</h2>
         <a class="modal_close"></a>
     </div>
-    <form name="datos" method="post" action="<?base_url()?>index.php/transporte/guardar_despacho">
+    <form name="datos" method="post" action="<? echo base_url()?>index.php/transporte/guardar_despacho">
     <div id="formulario"> 
-    	<div id="izq"  style="float:left; width:50%" type="text"> 
-        	      <p>
-                    <label for="timepicker" > Hora</label> 
-                    <input id="timepicker"  name="hora" />
-	              </p>
-    	           <p>
-                    <label for="km" >Kilometraje Inicial</label><br> 
-                    <input id="km"  name="km"   class="tam-1"/>
-                  </p>        
+    	<div id="izq"  style=" width:50%; float:left;" type="text"> 
+                 <input type="hidden" name="estado" id="estado" />
+				<input type="hidden" name="id" id="id" />
+
+    	           <div id="InfoMision" style="font-size:12px;">
+                   
+                  </div> 
+                  <p>
+                     Kilometraje actual:
+                    <input id="km"  name="km"   class="tam-2"  autofocus="autofocus"/>
+                  </p>
                    <p>
-                    <label for="kmf" >Kilometraje Final </label><br> 
-                    <input id="kmf"  name="kmf"   class="tam-1"/>
-                  </p>        
+                    Hora:
+                    <input id="timepicker"  name="hora" />
+	              </p>       
+
         </div>
      
-     	<div id="dere" style="float:left;  width:30%;";>
+     	<div id="dere" style="width:50%; float:left;">
 			<div id="preview" >
         	    <canvas  id="canvas-preview"></canvas>
-    			<div id="preview-textfield" style="float:left;"></div>
-                <label style=" float:left;">% Combustible</label>                    
+    			<div id="preview-textfield"></div>% Combustible
          	</div>    
-			<input id="km"  name="km"  onchange="gas(this.value)" type="range" min="10" max="100" step="10"   value="50"/>        
+			<input id="gas"  name="gas"  onchange="tanque(this.value)" type="range" min="10" max="100" step="10"   value="50"/>        
          </div>
      </div>
+           <button type="submit"  id="aprobar" class="button tam-1 boton_validador">Guardar</button>
   </form>
-
-
-
-
 
 </div>
 <script>
-function dialogo(id, val){
-	if(val==3){
-$('#dere').hide();
-$('#kmf').hide();
-	}else{
-$('#dere').show();
-$('#kmf').show();
-	}
+function info(id){
+$.ajax({
+		async:	true, 
+		url:	"<?=base_url()?>/index.php/transporte/infoSolicitud/"+id,
+		dataType:"json",
+		success: function(data){
+			
 
+	 	var echo1="Solicitud numero:<strong>"+id+"</strong><br />"+
+                   " Solicitante:<strong> "+data[0].nombre+"</strong><br />"+
+                    "Hora de Salida:<strong>"+data[0].salida+"</strong><br />"+
+                    "Hora de Regreso:<strong>"+data[0].regreso+"</strong><br />"+
+                   " Vehiculo:<strong>"+data[0].modelo+"</strong><br />"+
+                    "Placa:<strong>"+data[0].placa+"</strong><br /> ";
+			  
+			  			console.log(echo1);
+			document.getElementById('InfoMision').innerHTML=echo1;
+
+			},
+		error:function(data){
+			 alert('Error al cargar datos');
+			console.log(data);
+			}
+		});	
+	
+}
+
+function dialogo(id, val){
+	$('#id').val(id);
+	$('#estado').val(val);
+
+	if(val==3){
+		$('#dere').hide();
+			}else{
+		$('#dere').show();
+	}
+	info(id);	
 }
 
 
-function gas(val){
+function tanque(val){
       	demoGauge.set(parseInt(val));
      	AnimationUpdater.run();	
 }
