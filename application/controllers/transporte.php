@@ -16,7 +16,7 @@ class Transporte extends CI_Controller
 		$this->solicitud();
   	}
 	
-	function solicitud()
+	function solicitud($id_solicitud=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		if($data['id_permiso']>1) {
@@ -33,6 +33,7 @@ class Transporte extends CI_Controller
 				$data['info']=$this->transporte_model->info_adicional($val['NR']);
 			}
 		}
+		$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
 		$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
 		$data['municipios']=$this->transporte_model->consultar_municipios();
 		//print_r($data);
@@ -282,6 +283,30 @@ function asignar_veh_mot()
 			$j=json_encode($d);
 			echo $j;
 		
+	}
+	function ver_solicitudes()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),61);
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) {
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes();
+			}
+			pantalla("transporte/ver_solicitudes",$data);	
+		}
+		else {
+			echo "No tiene permisos para acceder";
+		}
+	}
+	
+	function eliminar_solicitud($id_solicitud)
+	{
+		$this->transporte_model->eliminar_solicitud($id_solicitud);
+		redirect('index.php/transporte/ver_solicitudes');
 	}
 }
 ?>
