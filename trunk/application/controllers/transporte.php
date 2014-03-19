@@ -208,5 +208,9 @@ class Transporte extends CI_Controller
 	$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
 	pantalla("transporte/despacho",$data);	
 	}
+	function guardar_despacho(){
+		
+		
+	}
 }
 ?>
