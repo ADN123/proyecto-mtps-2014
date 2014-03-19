@@ -389,5 +389,61 @@ function infoSolicitud($id){
 		$q=$this->db->query($query);
 		return $q->result();
 	}
+	function buscar_solicitudes($id_seccion=NULL)
+	{
+		$sentencia="SELECT
+					tcm_solicitud_transporte.id_solicitud_transporte AS id,
+					CONCAT_WS(' ',DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d-%m-%Y'),DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p')) AS fecha,
+					tcm_solicitud_transporte.lugar_destino AS lugar,
+					tcm_solicitud_transporte.mision_encomendada AS mision,
+					tcm_solicitud_transporte.estado_solicitud_transporte AS estado
+					FROM
+					tcm_solicitud_transporte";
+		$query=$this->db->query($sentencia);
+		if($query->num_rows>0) {
+			return (array)$query->result_array();
+		}
+		else {
+			return 0;
+		}
+	}
+	function eliminar_solicitud($id_solicitud)
+	{
+		$sentencia="DELETE FROM tcm_solicitud_transporte where id_solicitud_transporte='$id_solicitud'";
+		$query=$this->db->query($sentencia);
+		return true;
+	}
+	function consultar_solicitud($id_solicitud)
+	{
+		$sentencia="SELECT
+					tcm_solicitud_transporte.id_solicitud_transporte,
+					tcm_solicitud_transporte.id_empleado_solicitante,
+					DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d/%m/%Y') AS fecha_mision,
+					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS hora_salida,
+					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS hora_entrada,
+					tcm_solicitud_transporte.acompanante,
+					tcm_solicitud_transporte.id_municipio,
+					tcm_solicitud_transporte.lugar_destino,
+					tcm_solicitud_transporte.mision_encomendada
+					FROM tcm_solicitud_transporte
+					WHERE tcm_solicitud_transporte.id_solicitud_transporte='".$id_solicitud."'";
+		$query=$this->db->query($sentencia);
+		if($query->num_rows>0) {
+			return (array)$query->row();
+		}
+		else {
+			return array(
+				'id_solicitud_transporte' => 0,
+				'id_empleado_solicitante' => 0,
+				'fecha_mision' => "",
+				'hora_salida' => "",
+				'hora_entrada' => "",
+				'acompanante' => "",
+				'id_municipio' => 0,
+				'lugar_destino' => "",
+				'mision_encomendada' => ""
+			);
+		}
+	}
 }
 ?>

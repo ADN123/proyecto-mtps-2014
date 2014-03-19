@@ -42,7 +42,7 @@
             <h2 class="StepTitle">Selecci&oacute;n de la persona que requiere el transporte</h2>
             <p>
                 <label>Fecha</label>
-                <strong><?php echo date('d/m/Y'); ?></strong>
+                <strong><?php echo date('d/m/Y')?></strong>
             </p>
             <p>
                 <label for="nombre" id="lnombre">Solicitante</label>
@@ -51,9 +51,13 @@
 				?>
                     <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:75%">
                     <?php
-                         foreach($empleados as $val) {
-                             echo '<option value="'.$val['NR'].'">'.$val['nombre'].'</option>';
-                         }
+                        foreach($empleados as $val) {
+							if($val['NR']==$solicitud['id_empleado_solicitante'])
+							 	$sel='selected="selected"';
+							else
+								$sel="";
+                            echo '<option '.$sel.' value="'.$val['NR'].'">'.$val['nombre'].'</option>';
+                        }
                     ?>
                     </select>
              	<?php 
@@ -85,18 +89,18 @@
             <h2 class="StepTitle">Ingreso de datos del viaje</h2>
              <p>
                  <label for="mision_encomendada" id="lmision_encomendada">Mision encomendada </label>
-                 <input type="text" tabindex="2" class="tam-3" id="mision_encomendada" name="mision_encomendada"/>
+                 <input type="text" tabindex="2" class="tam-3" id="mision_encomendada" name="mision_encomendada" value="<?php echo $solicitud['mision_encomendada']; ?>"/>
             </p>
             <p>
-                <label for="fecha_mision" id="lfecha_mision">Fecha Misi&oacute;n</label>
-                <input type="text" class="fec_hoy" tabindex="3" id="fecha_mision" name="fecha_mision"/>
+                <label for="fecha_mision" id="lfecha_mision">Fecha Misi&oacute;n </label>
+                <input type="text" class="fec_hoy" tabindex="3" id="fecha_mision" name="fecha_mision" value="<?php echo $solicitud['fecha_mision']; ?>"/>
             </p>
             <p>
                 <label for="hora_salida" id="lhora_salida">Hora de salida </label>
-                <input type="text" tabindex="4" class="inicio" id="hora_salida" name="hora_salida"/>
+                <input type="text" tabindex="4" class="inicio" id="hora_salida" name="hora_salida" value="<?php echo $solicitud['hora_salida']; ?>"/>
 
                 <label for="hora_regreso" id="lhora_regreso">Hora de regreso </label>
-                <input type="text" tabindex="5" class="fin" id="hora_regreso" name="hora_regreso"/>
+                <input type="text" tabindex="5" class="fin" id="hora_regreso" name="hora_regreso" value="<?php echo $solicitud['hora_entrada']; ?>"/>
             </p>
              <p>
                 <label for="municipio" id="lmunicipio">Municipio</label>
@@ -110,7 +114,7 @@
             </p> 
             <p>
              <label for="lugar_destino" id="llugar_destino">Lugar de destino </label>
-             <input type="text" tabindex="7" class="tam-3" id="lugar_destino" name="lugar_destino"/>
+             <input type="text" tabindex="7" class="tam-3" id="lugar_destino" name="lugar_destino" value="<?php echo $solicitud['lugar_destino']; ?>"/>
             </p>
       	</div>
         <div id="step-3">	
@@ -127,7 +131,7 @@
             </p> 
             <p>
                 <label for="acompanantes2" id="lacompanantes2">Otros acompa&ntilde;antes</label>
-                <textarea class="tam-4" id="acompanantes2" tabindex="9" name="acompanantes2"/></textarea>
+                <textarea class="tam-4" id="acompanantes2" tabindex="9" name="acompanantes2"/> <?php echo $solicitud['acompanante']; ?></textarea>
             </p>
         </div>
     </div>

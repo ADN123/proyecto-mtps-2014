@@ -66,7 +66,7 @@ img {
 	<div id="container">
 		<!--<h1><?php echo $heading; ?></h1>
 		<?php echo $message; ?>-->
-        <img src="../../img/error-404.png">
+        <img src="<?php echo base_url()?>img/error-404.png">
         Para regresar al inicio presione <a href="<?php echo base_url() ?>">Aqu&iacute;</a>
 	</div>
 </body>
