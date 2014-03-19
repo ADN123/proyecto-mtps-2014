@@ -202,14 +202,33 @@ class Transporte extends CI_Controller
 			);
 			$this->transporte_model->guardar_acompanantes($formuInfo);
 		}
-		redirect('index.php/transporte/solicitud');
+		ir_a('index.php/transporte/solicitud');
 	}
 	function control_salidas_entradas(){
 	$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
 	pantalla("transporte/despacho",$data);	
 	}
 	function guardar_despacho(){
-		
+
+		$estado=$this->input->post('estado');
+		$id=$this->input->post('id');
+		$km=$this->input->post('km');
+		$hora=date("H:i:s", strtotime($this->input->post('hora')));
+		if($estado==3){
+			$this->transporte_model->salida_vehiculo($id, $km,$hora);
+		}else{
+			if($estado==4){
+			$gas=$this->input->post('gas');
+			$this->transporte_model->regreso_vehiculo($id, $km, $hora, $gas);		
+			}
+		}
+		ir_a('index.php/transporte/control_salidas_entradas');
+		}
+	function infoSolicitud($id){
+			
+			$d=$this->transporte_model->infoSolicitud($id);	
+			$j=json_encode($d);
+			echo $j;
 		
 	}
 }

@@ -313,8 +313,14 @@ function salida_vehiculo($id, $km_inicial,$hora_salida){
 					CONCAT_WS(' ',CURDATE(),'".$hora_salida."'), 
 					CONCAT_WS(' ',CURDATE(),CURTIME())
 				);";
-		$this->db->query($q);
-		return $this->db->insert_id();
+		$r1=$this->db->query($q);
+		
+		$q="UPDATE tcm_solicitud_transporte SET
+		estado_solicitud_transporte = '4' 
+		WHERE	id_solicitud_transporte = '$id' ;";
+		$r2=$this->db->query($q);
+		
+		return ($r1 AND $r2);
 	}
 
 function regreso_vehiculo($id, $km, $hora, $gas){
@@ -326,9 +332,31 @@ function regreso_vehiculo($id, $km, $hora, $gas){
 		fecha_modificacion = CURDATE()
 	WHERE
 		id_solicitud_transporte = '$id' ;";
-	$this->db->query($q);
-		return $this->db->insert_id();
 		
+		$r1=$this->db->query($q);
+		
+		$q="UPDATE tcm_solicitud_transporte SET
+		estado_solicitud_transporte = '5'  
+		WHERE	id_solicitud_transporte = '$id' ;";
+		$r2=$this->db->query($q);
+		
+		return ($r1 AND $r2);		
+	}
+function infoSolicitud($id){
+	$query="
+	SELECT  
+		CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada) AS nombre,
+		DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+		DATE_FORMAT(hora_entrada,'%h:%i %p') regreso,
+		v.modelo,
+		v.placa			
+	FROM tcm_asignacion_sol_veh_mot asi
+		INNER JOIN sir_empleado e ON e.id_empleado= asi.id_empleado
+		INNER JOIN tcm_solicitud_transporte s ON s.id_solicitud_transporte = asi.id_solicitud_transporte
+		INNER JOIN tcm_vehiculo_datos v ON v.id_vehiculo = asi.id_vehiculo
+	WHERE asi.id_solicitud_transporte =".$id;
+		$q=$this->db->query($query);
+		return $q->result();
 	}
 }
 ?>
