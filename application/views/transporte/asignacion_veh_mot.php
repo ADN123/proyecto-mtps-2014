@@ -31,54 +31,52 @@
 </table>
 
 <div id="ventana">
-
-                                    <fieldset>
-                                    <legend align="left">Vehículos</legend>
-                                        <p>
-                                        <label>Información</label>
-                                       <select  name="vehiculo" id="vehiculo" onchange="motorista(this.value)">
-                                       	
-                                       </select>
-                                        </p>
-                                    </fieldset>
-                                    <fieldset>
-                                    <legend align="left">Motorista</legend>
-                                        <p>
-                                        <label>Nombre</label>
-                                       <select name="motorista">
-                                       <?php
-                                       foreach ($motoristas as $fila2)
-                                       {
-									   ?>
-                                       		<option value="<?php echo $fila2->NR; ?>">
-											<?php echo $fila2->nombre." ".$fila2->apellido; ?>
-                                            </option>
-                                       <?php
-									   }
-									   ?>
-                                       </select>
-                                        </p>
-                                    </fieldset>
-                                    <p>
-                                    <button id="asignar" name="asignar">Asignar</button>
-                                    </p>
+    
+    <div id="signup-header">
+        <h2>Asignaci&oacute;n de Veh&iacute;culos y Motoristas</h2>
+        <a class="modal_close"></a>
+    </div>
+    <form id="form" action="<?=base_url()?>index.php/transporte/asignar_veh_mot" method="post">
+    <input type="hidden"   id="id_solicitud" name="id_solicitud"/>
+    <input type="hidden" id="resp" name="resp" />
+    <fieldset>
+    <legend align="left">Vehículos</legend>
+        <p>
+        <label>Información</label>
+       <select  name="vehiculo" id="vehiculo" onchange="motorista(this.value)">    
+       </select>
+        </p>   
+    </fieldset>
+    
+    <fieldset>
+    <legend align="left">Motorista</legend>
+        <p>
+        <label>Nombre</label>
+       <select name="motorista" id="motorista">
+       </select>
+        </p>
+    </fieldset>
+    <p>
+    <button type="submit" id="asignar" name="asignar" onclick="enviar(3)">Asignar</button>
+    </p>
 
 
 </div>
 <script language="javascript" >
 
 function dialogo(id){
-
+		
 		$.ajax({
 		async:	true, 
 		url:	"<?=base_url()?>/index.php/transporte/verificar_fecha_hora/"+id,
 		dataType:"json",
 		success: function(data){
-		
+		document.getElementById('id_solicitud').value=id;
 			 json = data;
 
 			for(i=0;i<json.length;i++){
-				$('#vehiculo').append('<option value="'+json[i].id_vehiculo+'">'+json[i].id_vehiculo+'</option>');
+				
+				$('#vehiculo').append('<option value="'+json[i].id_vehiculo+'">'+json[i].placa+' - '+json[i].nombre+' - '+json[i].modelo+' - '+json[i].condicion+'</option>');
 				
 				}
 			},
@@ -94,18 +92,26 @@ function motorista(id){
 
 		$.ajax({
 		async:	true, 
-		url:	"<?=base_url()?>/index.php/transporte/verificar_fecha_hora/"+id,
+		url:	"<?=base_url()?>/index.php/transporte/verificar_motoristas/"+id,
 		dataType:"json",
-		success: function(data){
-//				alert("ok"); console.log();
-
-
-			},
+		success: function(data)
+		{
+			json = data;
+			
+			for(i=0;i<json.length;i++)
+			{			
+				$('#motorista').append('<option value="'+json[i].id_empleado+'">'+json[i].nombre+'</option>');
+			}
+		},
 			
 		error:function(data){
-			 alert('Error al cargar los datos de los vehículos');
+			 alert('Error al cargar los datos de los motoristas');
 		
 			}
 		});	
+	}
+	
+	function enviar(v){
+		document.getElementById('resp').value=v;
 	}
 </script>

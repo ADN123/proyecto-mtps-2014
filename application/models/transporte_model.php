@@ -139,9 +139,17 @@ function todas_solicitudes_por_confirmar(){
 	///////////////////
 	function vehiculos_disponibles($fecha,$hentrada,$hsalida)
 	{
-		$query=$this->db->query("select id_vehiculo from tcm_vehiculo where id_vehiculo not in (select avm.id_vehiculo from tcm_solicitud_transporte as st
-inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
-where st.fecha_mision='$fecha' and (st.hora_salida>='$hsalida' and st.hora_entrada<='$hentrada'));");
+		$query=$this->db->query("select v.id_vehiculo,v.placa,vm.nombre,vmo.modelo,vc.nombre_clase,vcon.condicion from tcm_vehiculo as v
+inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+where v.id_vehiculo not in
+  (select avm.id_vehiculo from tcm_solicitud_transporte as st
+  inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
+  where st.fecha_mision='$fecha' and (st.hora_salida>='$hsalida' and st.hora_entrada<='$hentrada'))
+  and id_seccion=21
+order by v.id_vehiculo asc;");
 		return $query->result();
 	}
 	////////////////////
@@ -192,13 +200,36 @@ WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
 inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)");
 		return $query->result();
 	}
-	
-	function consultar_motoristas()
+	////////////////////////////////////////
+	function consultar_motoristas($id)
 	{
-		$query=$this->db->query("SELECT * FROM sir_empleado;");
+		$query=$this->db->query("SELECT t.id_empleado,CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre FROM tcm_vehiculo_motorista t inner join sir_empleado e on (t.id_empleado=e.id_empleado)
+where t.id_vehiculo='$id';");
 		return $query->result();
 	}
 	
+	function motoristas_disponibles()
+	{
+		$query=$this->db->query("SELECT t.id_empleado,CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre FROM tcm_vehiculo_motorista t
+inner join sir_empleado e on (t.id_empleado=e.id_empleado)
+inner join tcm_vehiculo v on (t.id_vehiculo=v.id_vehiculo)
+where (v.id_seccion=15 ||v.id_seccion=21 || v.id_seccion=32 || v.id_seccion=34 || v.id_seccion=113)
+order by e.primer_nombre asc;");
+		return $query->result();
+	}
+	
+	///////////////////////////////////////////////////
+	
+	function asignar_veh_mot($id_solicitud,$id_empleado,$id_vehiculo,$estado,$fecha,$nr,$id_usuario)
+	{
+		$query=$this->db->query("insert into tcm_asignacion_sol_veh_mot(id_solicitud_transporte,id_empleado,id_vehiculo) values('$id_solicitud','$id_empleado','$id_vehiculo')");
+		
+		$query2=$this->db->query("update tcm_solicitud_transporte set estado_solicitud_transporte='$estado', fecha_modificacion='$fecha', id_usuario_modifica='$id_usuario' where id_solicitud_transporte='$id_solicitud'");
+		
+		return $query;
+	}
+	
+	/////////////////////////////////////////////////
 	function info_adicional($id_empleado=0)
 	{
 		$sentencia="SELECT

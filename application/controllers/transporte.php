@@ -105,8 +105,6 @@ class Transporte extends CI_Controller
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		if($data['id_permiso']>2)
 		{
-			//$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
-			//$data['motoristas']=$this->transporte_model->consultar_motoristas();
 			$data['datos']=$this->transporte_model->solicitudes_por_asignar();
 			pantalla('transporte/asignacion_veh_mot',$data);
 		}
@@ -117,7 +115,7 @@ class Transporte extends CI_Controller
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		if($data['id_permiso']>2)
 		{
-			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));////////consulta la seccion
+			/*$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));*////////consulta la seccion
 			
 			$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id_solicitud);
 			//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.
@@ -138,8 +136,62 @@ class Transporte extends CI_Controller
 		{
 			echo ' No tiene permiso';
 		}
-	}	
+	}
 	
+	function verificar_motoristas($id_vehiculo)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		if($data['id_permiso']>2)
+		{
+			
+			//$motorista_asignado=$this->transporte_model->consultar_motoristas($id_vehiculo);
+			//////////consulta al motorista asignado al vehiculo.
+			
+		/*	foreach($motorista_asignado as $m)
+			{
+				$id_motorista=$m->id_empleado;
+			}
+			*/ //
+			$motoristas_disponibles=$this->transporte_model->motoristas_disponibles();//////////////////consulta los motoristas disponibles, pero no muestra al asignado
+			$j=json_encode($motoristas_disponibles);
+			echo $j;
+		}
+		else
+		{
+			echo ' No tiene permiso';
+		}
+	}
+////////////////////////////////////////////////////////////
+function asignar_veh_mot()
+	{
+		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		if($data['permiso']>=2)
+		{
+			$id_solicitud=$this->input->post('id_solicitud');//id_solicitud
+			$id_vehiculo=$this->input->post('vehiculo'); //id_vehiculo
+			$id_motorista=$this->input->post('motorista'); //estado de la solicitud
+			$estado=$this->input->post('resp');//futurp estado de la solicitud
+			$fecha_m=date('Y-m-d H:i:s');
+			$nr=$this->session->userdata('nr'); //NR del usuario Logueado
+			
+			if($estado==3)
+			{
+				$this->transporte_model->asignar_veh_mot($id_solicitud,$id_empleado,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));						
+				
+				ir_a("index.php/transporte/control_solicitudes");
+			
+			}
+			else
+			{
+				echo'Datos corruptos';
+			}
+		}
+		else
+		{
+			echo ' No tiene permisos para acceder';
+		}	
+	}
+///////////////////////////////////////////////////////////	
 	function buscar_info_adicional()
 	{
 		$id_empleado=$this->input->post('id_empleado');
