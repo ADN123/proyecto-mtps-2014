@@ -179,7 +179,7 @@ function asignar_veh_mot()
 			{
 				$this->transporte_model->asignar_veh_mot($id_solicitud,$id_empleado,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));						
 				
-				ir_a("index.php/transporte/control_solicitudes");
+				ir_a("index.php/transporte/asignar_vehiculo_motorista");
 			
 			}
 			else

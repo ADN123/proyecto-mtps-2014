@@ -43,7 +43,7 @@
     <legend align="left">Vehículos</legend>
         <p>
         <label>Información</label>
-       <select  name="vehiculo" id="vehiculo" onchange="motorista(this.value)">    
+       <select  name="vehiculo" id="vehiculo" onchange="motoristaf(this.value)">    
        </select>
         </p>   
     </fieldset>
@@ -88,7 +88,8 @@ function dialogo(id){
 		});	
 	}
 	
-function motorista(id){
+function motoristaf(id){
+
 
 		$.ajax({
 		async:	true, 
