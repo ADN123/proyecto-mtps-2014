@@ -36,10 +36,8 @@
                                     <legend align="left">Vehículos</legend>
                                         <p>
                                         <label>Información</label>
-                                       <select class="select" name="vehiculo">
-                                       	<option value="<?php echo $fila1->placa; ?>">
-											<?php echo $fila1->placa; ?>
-                                            </option>
+                                       <select  name="vehiculo" id="vehiculo" onchange="motorista(this.value)">
+                                       	
                                        </select>
                                         </p>
                                     </fieldset>
@@ -76,12 +74,37 @@ function dialogo(id){
 		url:	"<?=base_url()?>/index.php/transporte/verificar_fecha_hora/"+id,
 		dataType:"json",
 		success: function(data){
-			 json2 = data;
-			console.log(json2);	
+		
+			 json = data;
+
+			for(i=0;i<json.length;i++){
+				$('#vehiculo').append('<option value="'+json[i].id_vehiculo+'">'+json[i].id_vehiculo+'</option>');
+				
+				}
 			},
+			
 		error:function(data){
 			 alert('Error al cargar los datos de los vehículos');
-			console.log(data);
+		
+			}
+		});	
+	}
+	
+function motorista(id){
+
+		$.ajax({
+		async:	true, 
+		url:	"<?=base_url()?>/index.php/transporte/verificar_fecha_hora/"+id,
+		dataType:"json",
+		success: function(data){
+//				alert("ok"); console.log();
+
+
+			},
+			
+		error:function(data){
+			 alert('Error al cargar los datos de los vehículos');
+		
 			}
 		});	
 	}

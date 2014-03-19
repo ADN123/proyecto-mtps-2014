@@ -63,6 +63,7 @@ function dialogo(id){
 		url:	"<?=base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
 		dataType:"json",
 		success: function(data){
+			console.log(data);
 			 document.getElementById('ids').value=id;
 
  	var echo1="Nombre: <strong>"+data[0].nombre+"</strong> <br>" +
