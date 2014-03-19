@@ -214,9 +214,10 @@
 	-webkit-transform-origin: 50% 100%;
 	-moz-transform-origin: 50% 100%;
 	transform-origin: 50% 100%;
-	background-image: url(../img/banner.gif) !important;
+	background-image: url(../img/banner.png) !important;
 	background-repeat: no-repeat !important;
-	background-size: 100% 100% !important;
+	background-size: auto auto !important;
+	background-position: left;
 }
 
 .ha-header-perspective .ha-header-bottom {
