@@ -132,12 +132,34 @@ function todas_solicitudes_por_confirmar(){
 	}
 	function consultar_fecha_solicitud($id)
 	{
-		$query=$this->db->query("select st.fecha_mision as fecha, st.hora_salida as salida, st.hora_entrada as entrada from tcm_solicitud_transporte as st where st.id_solicitud_transporte='$id';");
+		$query=$this->db->query("SELECT om.id_departamento_pais, st.fecha_mision AS fecha, st.hora_salida AS salida, st.hora_entrada AS entrada
+FROM tcm_solicitud_transporte AS st
+INNER JOIN org_municipio AS om ON ( st.id_municipio = om.id_municipio ) 
+WHERE st.id_solicitud_transporte =  '$id';");
 		return $query->result();
 	}
 	
-	///////////////////
+	///////////////////VEHICUlOS DISPONIBlES PARA MISIONES lOCAlES////////////////////////////////
 	function vehiculos_disponibles($fecha,$hentrada,$hsalida)
+	{
+		$query=$this->db->query("select v.id_vehiculo,v.placa,vm.nombre,vmo.modelo,vc.nombre_clase,vcon.condicion from tcm_vehiculo as v
+inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+where v.id_vehiculo not in
+  (select avm.id_vehiculo from tcm_solicitud_transporte as st
+  inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
+  where st.fecha_mision='$fecha' and (st.hora_salida='$hsalida' or st.hora_entrada='$hentrada'))
+  and id_seccion=21
+order by v.id_vehiculo asc;");
+		return $query->result();
+	}
+	/////////////////////////////////////////////////////////////////////////////////////
+	
+	////////////////////VEHICUlOS DISPONIBlES PARA MISIONES FUERA DE SAN SAlVADOR//////////////
+	
+	function vehiculos_disponibles2($fecha,$hentrada,$hsalida)
 	{
 		$query=$this->db->query("select v.id_vehiculo,v.placa,vm.nombre,vmo.modelo,vc.nombre_clase,vcon.condicion from tcm_vehiculo as v
 inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
@@ -152,8 +174,8 @@ where v.id_vehiculo not in
 order by v.id_vehiculo asc;");
 		return $query->result();
 	}
-	////////////////////
 	
+	//////////////////////////////////////////////////////////////////////////////////
 	function datos_de_solicitudes($id,$seccion){
 		  $query=$this->db->query("
 SELECT id_solicitud_transporte id, 

@@ -21,7 +21,7 @@
     <td><?=$fila->fecha?></td>
     <td><?=$fila->lugar?></td>
     <td><?=$fila->mision?></td>
-    <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>)"><img  src="<?=base_url()?>img/lupa.gif"/></a>
+    <td><a title="Ver solicitud" title="Asignar Vehículo" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>)"><img  src="<?=base_url()?>img/lupa.gif"/></a>
 	</td>
   </tr>
 <? } ?>

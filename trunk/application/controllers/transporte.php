@@ -101,6 +101,8 @@ class Transporte extends CI_Controller
 		}	
 	}
 	
+	
+	///////////esta función carga la vista de Asignaciones de vehículos y Motoristas////////////
 	function asignar_vehiculo_motorista()
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
@@ -110,7 +112,9 @@ class Transporte extends CI_Controller
 			pantalla('transporte/asignacion_veh_mot',$data);
 		}
 	}
+///////////////////////////////////////////////////////////////////////////////////////
 
+/////////////////Función para conocer los vehículos disponibles para las misiones oficiales
 	function verificar_fecha_hora($id_solicitud)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
@@ -123,12 +127,20 @@ class Transporte extends CI_Controller
 									
 			foreach($solicitud_actual as $row)
 			{
+				$id_departamento=$row->id_departamento_pais;
 				$fecha=$row->fecha;
 				$entrada=$row->entrada;
 				$salida=$row->salida;		
 			}
 			
-			$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
+			if($id_departamento=="00006")////Para misiones locales, el 6 significa departamento de San Salvador
+			{
+				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
+			}
+			else///////////////////////para misiones fuera de san salvador
+			{
+				$vehiculos_disponibles2=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
+			}
 				
 			$j=json_encode($vehiculos_disponibles);
 			echo $j;
@@ -138,7 +150,9 @@ class Transporte extends CI_Controller
 			echo ' No tiene permiso';
 		}
 	}
+	////////////////////////////////////////////////////////////////////////////////////////////
 	
+	////////función para conocer el motorista que se ha de asignar a la misión oficial//////////
 	function verificar_motoristas($id_vehiculo)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
@@ -162,7 +176,9 @@ class Transporte extends CI_Controller
 			echo ' No tiene permiso';
 		}
 	}
-////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+/////Función para registrar una asignación de vehículo con su correspondiente motorista////////
 function asignar_veh_mot()
 	{
 		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
@@ -192,7 +208,9 @@ function asignar_veh_mot()
 			echo ' No tiene permisos para acceder';
 		}	
 	}
-///////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
 	function buscar_info_adicional()
 	{
 		$id_empleado=$this->input->post('id_empleado');
