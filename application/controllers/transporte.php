@@ -139,7 +139,7 @@ class Transporte extends CI_Controller
 			}
 			else///////////////////////para misiones fuera de san salvador
 			{
-				$vehiculos_disponibles2=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
+				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles2($fecha,$entrada,$salida);
 			}
 				
 			$j=json_encode($vehiculos_disponibles);
