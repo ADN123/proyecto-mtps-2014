@@ -65,7 +65,7 @@
 	
                     }
                 ?>					
-				<?= $var?>
+				<?php echo $var?>
 				
 				$( '#verMenu1' ).click (function() {
 					classie.toggle( this, 'active' );
@@ -81,7 +81,7 @@
 					}
 				});
 				
-				<?= $fun?>
+				<?php echo $fun?>
 				
 				function cerrar() {
 					classie.remove( menu1, 'active' );
@@ -89,7 +89,7 @@
 					classie.remove( pie, 'cbp-spmenu-push-toright' );
 					classie.remove( document.body, 'oscuro' );
 					classie.remove( menu1, 'cbp-spmenu-open' );
-					<?= $call?>
+					<?php echo $call?>
 					$( window  ).scroll();
 				}
 				
@@ -162,9 +162,9 @@
 						$url=explode(",",$menu['url_modulo']);
 						$img=explode(",",$menu['img_modulo']);
 				?>
-                		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s<?= $id_padre?>">
-                        <h3><br/><?= $nombre_menu?></h3>
-                        <a href="#" class="regresar" onClick="$('#verMenu<?= $id_padre?>').click();return false;">Regresar</a>
+                		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s<?php echo $id_padre?>">
+                        <h3><br/><?php echo $nombre_menu?></h3>
+                        <a href="#" class="regresar" onClick="$('#verMenu<?php echo $id_padre?>').click();return false;">Regresar</a>
               	<?php
 						for($x=0;$x<count($modulo);$x++) {
 							if($url[$x]=="NULL")
@@ -176,7 +176,7 @@
 							else
 								$ima='';
 				?>
-                			<a <?= $tipo?> title="<?= $descripcion_modulo[$x]?>" ><?= $ima." ".$modulo[$x]?></a>
+                			<a <?php echo $tipo?> title="<?php echo $descripcion_modulo[$x]?>" ><?php echo $ima." ".$modulo[$x]?></a>
 				<?php		
 						}
                 ?>        

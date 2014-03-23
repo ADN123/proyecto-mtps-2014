@@ -17,22 +17,22 @@
   </tr>
  </thead>
  <tbody>
-<?
+<?php
 
 	foreach ($datos as $fila)
 	{
 										
 ?>
   <tr>
-    <td><?=$fila->nombre?></td>
-    <td><?=$fila->salida?></td>
-    <td><?=$fila->entrada?></td>
-    <td><?=$fila->placa?></td>
-	<td><?=$fila->municipio?></td>
-    <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>,<?=$fila->estado?>)"><img  src="<?=base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a>
+    <td><?php echo $fila->nombre?></td>
+    <td><?php echo $fila->salida?></td>
+    <td><?php echo $fila->entrada?></td>
+    <td><?php echo $fila->placa?></td>
+	<td><?php echo $fila->municipio?></td>
+    <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila->id?>,<?php echo $fila->estado?>)"><img  src="<?php echo base_url()?>img/vehiculo<?php echo $fila->estado?>.png"/></a>
 	</td>
   </tr>
-<? } ?>
+<?php } ?>
 </tbody>
 </table> 
 
@@ -41,7 +41,7 @@
         <h2>Control de Entradas y Salidas</h2>
         <a class="modal_close"></a>
     </div>
-    <form name="datos" method="post" action="<? echo base_url()?>index.php/transporte/guardar_despacho">
+    <form name="datos" method="post" action="<?php echo base_url()?>index.php/transporte/guardar_despacho">
     <div id="formulario"> 
     	<div id="izq"  style=" width:50%; float:left;" type="text"> 
                  <input type="hidden" name="estado" id="estado" />
@@ -77,7 +77,7 @@
 function info(id){
 $.ajax({
 		async:	true, 
-		url:	"<?=base_url()?>/index.php/transporte/infoSolicitud/"+id,
+		url:	"<?php echo base_url()?>/index.php/transporte/infoSolicitud/"+id,
 		dataType:"json",
 		success: function(data){
 			

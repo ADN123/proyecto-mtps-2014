@@ -1,7 +1,7 @@
 <?php echo form_open('index.php/Seguridad/registrar_usuario', array('id' => 'agregaform', 'onsubmit' => 'return checkform();'));?>
 <fieldset class="formulalios">
 <legend class="tituloForm" align="center">Registrar Usuario</legend>
-<img   align="left"src="<? echo base_url();?>/imagenes/addExpediente.png"  width="64px" height="64px"/>
+<img   align="left"src="<?php echo base_url();?>/imagenes/addExpediente.png"  width="64px" height="64px"/>
 <table cellpadding="5" cellspacing="0" align="center">
 <tr>
    <td class="texte" align="right">Login:</td>

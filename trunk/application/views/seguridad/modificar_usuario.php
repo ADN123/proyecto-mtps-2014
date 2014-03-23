@@ -1,12 +1,12 @@
 <?php echo form_open('index.php/Seguridad/actualizar_usuario', array('id' => 'agregaform', 'onsubmit' => 'return checkform();'));?>
 <fieldset class="formulalios">
 <legend class="tituloForm" align="center">Modificar Usuario</legend>
-<img   align="left"src="<? echo base_url();?>/imagenes/addExpediente.png"  width="64px" height="64px"/>
-<input type="hidden" name="id_usuario" value="<?=$id_usuario;?>">
+<img   align="left"src="<?php echo base_url();?>/imagenes/addExpediente.png"  width="64px" height="64px"/>
+<input type="hidden" name="id_usuario" value="<?php echo $id_usuario;?>">
 <table cellpadding="5" cellspacing="0" align="center">
 <tr>
    <td class="texte" align="right">Login:</td>
-   <td class="compont"><input type="text" name="loginC" id="loginC" size="24" maxlength="16" value="<?=$loginC ?>"  /></td>
+   <td class="compont"><input type="text" name="loginC" id="loginC" size="24" maxlength="16" value="<?php echo $loginC ?>"  /></td>
         <script type="text/javascript">
 			var login = new LiveValidation('loginC');
 			login.add(Validate.Presence);
@@ -15,7 +15,7 @@
     </tr>
  <tr>
   <td class="texte" align="right">Nombre:</td>
-  <td class="compont"><input type="text" name="nombreC" id="nombreC" size="30" value="<?=$nombreC ?>" /></td>
+  <td class="compont"><input type="text" name="nombreC" id="nombreC" size="30" value="<?php echo $nombreC ?>" /></td>
   		<script type="text/javascript">
 			var nombre = new LiveValidation('nombreC');
 			nombre.add(Validate.Presence);
@@ -24,7 +24,7 @@
 </tr>
 <tr>
   <td class="texte" align="right">Apellido:</td>
-  <td class="compont"><input type="text" name="apellidoC" id="apellidoC" size="30" value="<?=$apellidoC ?>" /></td>
+  <td class="compont"><input type="text" name="apellidoC" id="apellidoC" size="30" value="<?php echo $apellidoC ?>" /></td>
   		<script type="text/javascript">
 			var apellido = new LiveValidation('apellidoC');
 			apellido.add(Validate.Presence);
@@ -33,7 +33,7 @@
 </tr>
 <tr>
   <td class="texte" align="right">Contrase&ntilde;a:</td>
-  <td class="compont"><input type="password" name="claveC" id="claveC" size="24" maxlength="16" value="<?=$claveC ?>" /></td>
+  <td class="compont"><input type="password" name="claveC" id="claveC" size="24" maxlength="16" value="<?php echo $claveC ?>" /></td>
   		<script type="text/javascript">
 			var clave = new LiveValidation('claveC');
 			clave.add(Validate.Presence);
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td class="texte" align="right">Confirmar Contrase&ntilde;a:</td>
-  <td class="compont"><input type="password" name="clave2C" id="clave2C" size="24" maxlength="16" value="<?=$claveC ?>" /></td>
+  <td class="compont"><input type="password" name="clave2C" id="clave2C" size="24" maxlength="16" value="<?php echo $claveC ?>" /></td>
   		<script type="text/javascript">
 			var clave2 = new LiveValidation('clave2C');
 			clave2.add(Validate.Presence);
