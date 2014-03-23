@@ -1,8 +1,8 @@
 		<style type="text/css" title="currentStyle">
-			@import "<?= base_url()?>/datatable/media/css/demo_table.css";
+			@import "<?php echo base_url()?>/datatable/media/css/demo_table.css";
 		</style>
-		<script type="text/javascript" language="javascript" src="<?= base_url()?>/datatable/media/js/jquery.js"></script>
-		<script type="text/javascript" language="javascript" src="<?= base_url()?>/datatable/media/js/jquery.dataTables.js"></script>
+		<script type="text/javascript" language="javascript" src="<?php echo base_url()?>/datatable/media/js/jquery.js"></script>
+		<script type="text/javascript" language="javascript" src="<?php echo base_url()?>/datatable/media/js/jquery.dataTables.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			$(document).ready(function() {
 				$('#tabla').dataTable();
@@ -41,7 +41,7 @@ function restaurar(ele){
 	
      </tbody>
  </table>
- <form action="<?=base_url();?>subida.php" method="post" enctype="multipart/form-data">
+ <form action="<?php echo base_url();?>subida.php" method="post" enctype="multipart/form-data">
  <input type="file" name="foto" />
  <button type="submit"><img src='/siscliden/imagenes/restaurar.png' width='20' height='20' align='top'>Restaurar</button>
  </form>

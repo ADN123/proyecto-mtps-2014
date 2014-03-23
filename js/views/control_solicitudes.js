@@ -5,7 +5,7 @@ function dialogo(id){
 
 		$.ajax({
 		async:	true, 
-		url:	"<?=base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
+		url:	base_url()+"index.php/transporte/datos_de_solicitudes/"+id,
 		dataType:"json",
 		success: function(data){
 			 document.getElementById('ids').value=id;

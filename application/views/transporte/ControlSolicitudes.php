@@ -11,20 +11,20 @@
   </tr>
  </thead>
  <tbody>
-<?
+<?php
 
 	foreach ($datos as $fila)
 	{
 										
 ?>
   <tr>
-    <td><?=$fila->fecha?></td>
-    <td><?=$fila->lugar?></td>
-    <td><?=$fila->mision?></td>
-    <td><a title="Ver solicitud" title="Asignar Vehículo" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>)"><img  src="<?=base_url()?>img/lupa.gif"/></a>
+    <td><?php echo $fila->fecha?></td>
+    <td><?php echo $fila->lugar?></td>
+    <td><?php echo $fila->mision?></td>
+    <td><a title="Ver solicitud" title="Asignar Vehículo" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
 	</td>
   </tr>
-<? } ?>
+<?php } ?>
 </tbody>
 </table>
 
@@ -33,7 +33,7 @@
         <h2>Solicitud de Misi&oacute;n Oficial</h2>
         <a class="modal_close"></a>
     </div>
-   <form action="<?=base_url()?>index.php/transporte/aprobar_solicitud" id="form" method="post">
+   <form action="<?php echo base_url()?>index.php/transporte/aprobar_solicitud" id="form" method="post">
        <input type="hidden"   id="resp" name="resp"/>
        <input type="hidden"   id="ids" name="ids"/>
        
@@ -60,7 +60,7 @@ function dialogo(id){
 
 		$.ajax({
 		async:	true, 
-		url:	"<?=base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
+		url:	"<?php echo base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
 		dataType:"json",
 		success: function(data){
 			console.log(data);

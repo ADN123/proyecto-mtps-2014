@@ -13,20 +13,20 @@
   </tr>
  </thead>
  <tbody>
-<?    
+<?php    
 
 	foreach ($datos as $fila)
 	{
 										
 ?>
   <tr>
-    <td><?=$fila->fecha?>&nbsp;&nbsp;<?=$fila->salida?></td>
-    <td><?=$fila->lugar?></td>
-    <td><?=$fila->mision?></td>
-    <td><a rel="leanModal" title="Asignar Vehículo" href="#ventana" onclick="dialogo(<?=$fila->id?>)"><img  src="<?=base_url()?>img/lupa.gif"/></a>
+    <td><?php echo $fila->fecha?>&nbsp;&nbsp;<?php echo $fila->salida?></td>
+    <td><?php echo $fila->lugar?></td>
+    <td><?php echo $fila->mision?></td>
+    <td><a rel="leanModal" title="Asignar Vehículo" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
 	</td>
   </tr>
-<? } ?>
+<?php } ?>
 </tbody>
 </table>
 
@@ -36,7 +36,7 @@
         <h2>Asignaci&oacute;n de Veh&iacute;culos y Motoristas</h2>
         <a class="modal_close"></a>
     </div>
-    <form id="form" action="<?=base_url()?>index.php/transporte/asignar_veh_mot" method="post">
+    <form id="form" action="<?php echo base_url()?>index.php/transporte/asignar_veh_mot" method="post">
     <input type="hidden"   id="id_solicitud" name="id_solicitud"/>
     <input type="hidden" id="resp" name="resp" />
     
@@ -79,7 +79,7 @@ function dialogo(id){
 
 	$.ajax({
 	async:	true, 
-	url:	"<?=base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
+	url:	"<?php echo base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
 	dataType:"json",
 	success: function(data){
 		console.log(data);
@@ -113,7 +113,7 @@ function dialogo1(id1){
 		
 		$.ajax({
 		async:	true, 
-		url:	"<?=base_url()?>/index.php/transporte/verificar_fecha_hora/"+id1,
+		url:	"<?php echo base_url()?>/index.php/transporte/verificar_fecha_hora/"+id1,
 		dataType:"json",
 		success: function(data){
 		document.getElementById('id_solicitud').value=id;
@@ -138,7 +138,7 @@ function motoristaf(id){
 
 		$.ajax({
 		async:	true, 
-		url:	"<?=base_url()?>/index.php/transporte/verificar_motoristas/"+id,
+		url:	"<?php echo base_url()?>/index.php/transporte/verificar_motoristas/"+id,
 		dataType:"json",
 		success: function(data)
 		{
