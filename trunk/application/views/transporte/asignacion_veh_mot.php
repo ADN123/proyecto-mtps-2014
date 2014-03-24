@@ -78,13 +78,12 @@
 function dialogo(id){
 
 	$.ajax({
-	async:	true, 
+	async:	true,
 	url:	"<?php echo base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
 	dataType:"json",
 	success: function(data){
 		console.log(data);
-		 document.getElementById('ids').value=id;
-
+document.getElementById('id_solicitud').value=id;
 var echo1="Nombre: <strong>"+data[0].nombre+"</strong> <br>" +
 		   "Sección: <strong>"+data[0].seccion+"</strong> <br>";
 		   
@@ -96,7 +95,7 @@ var echo2="Misión: <strong>"+data[0].mision+"</strong> <br>"+
 		   "Municipio: <strong>"+data[0].municipio+"</strong> <br>"+
 		   "Lugar: <strong>"+data[0].lugar+"</strong> <br>";
 		
-		document.getElementById('empleado').innerHTML=echo1;
+		//document.getElementById('empleado').innerHTML=echo1;
 		document.getElementById('mision').innerHTML=echo2;
 		
 		dialogo1(id);
@@ -116,7 +115,7 @@ function dialogo1(id1){
 		url:	"<?php echo base_url()?>/index.php/transporte/verificar_fecha_hora/"+id1,
 		dataType:"json",
 		success: function(data){
-		document.getElementById('id_solicitud').value=id;
+		document.getElementById('id_solicitud').value=id1;
 			 json = data;
 
 			for(i=0;i<json.length;i++){
