@@ -1,3 +1,6 @@
+<script>
+	 var permiso=<?php echo $id_permiso?>;
+</script>
 <script src="<?php echo base_url()?>js/views/solicitud.js" type="text/javascript"></script>
 <section>
     <h2>Nueva solicitud para Misi&oacute;n Oficial</h2>
@@ -115,6 +118,10 @@
             <p>
              <label for="lugar_destino" id="llugar_destino">Lugar de destino </label>
              <input type="text" tabindex="7" class="tam-3" id="lugar_destino" name="lugar_destino" value="<?php echo $solicitud['lugar_destino']; ?>"/>
+            </p>
+            <p>
+                 <label for="requiere_motorista" id="lrequiere_motorista">Requiere motorista </label>
+                 <input type="checkbox" id="requiere_motorista" name="requiere_motorista" value="1"/>
             </p>
       	</div>
         <div id="step-3">	
