@@ -461,7 +461,7 @@ function infoSolicitud($id){
 			);
 		}
 	}
-	function kilometraje($id){
+	function KMmayor($id){
 			$query="SELECT v.id_vehiculo, COALESCE(MAX(k.km_final), 0) AS KM 
 				FROM tcm_vehiculo  v 
 				LEFT JOIN tcm_vehiculo_kilometraje  K 
