@@ -473,19 +473,8 @@ function infoSolicitud($id){
 			);
 		}
 	}
-	function KMfinal($id){
-			$query="SELECT v.id_vehiculo, COALESCE(MAX(k.km_final), 0) AS KM 
-				FROM tcm_vehiculo  v 
-				LEFT JOIN tcm_vehiculo_kilometraje  K 
-				ON  V.id_vehiculo= K.id_vehiculo 
-				GROUP BY v.id_vehiculo HAVING v.id_vehiculo=".$id;
-		$q=$this->db->query($query);
-		return $q->result();
-
-	}
-
-		function KMinicial($id){
-			$query="SELECT v.id_vehiculo, COALESCE(MAX(k.km_inicial), 0) AS KM 
+	function kilometraje($id){
+			$query="SELECT v.id_vehiculo, COALESCE(MAX(k.km_inicial), 0) AS KMinicial, COALESCE(MAX(k.km_Final), 0) AS KMFinal
 				FROM tcm_vehiculo  v 
 				LEFT JOIN tcm_vehiculo_kilometraje  K 
 				ON  V.id_vehiculo= K.id_vehiculo 

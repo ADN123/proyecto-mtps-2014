@@ -314,22 +314,14 @@ function asignar_veh_mot()
 			$d=$this->transporte_model->infoSolicitud($id);	
 			$j=json_encode($d);
 			echo $j;
+				
+	}
+	function kilometraje($id){
 			
-			
-//			$d=(array)$d[0];			
-			$k= $d[0]['id_vehiculo'];
-			
-			$j=$this->transporte_model->KMfinal($k);	
-			$j=(array)$j[0];
-			$d[0]['KMfinal']=$j['KM'];
-			
-			$j=$this->transporte_model->KMinicial($k);	
-			$j=(array)$j[0];			
-			$d[0]['KMinicial']=$j['KM'];
-			
-			$d=json_encode($d);
-			echo $d;
-		
+			$d=$this->transporte_model->kilometraje($id);	
+			$j=json_encode($d);
+			echo $j;
+				
 	}
 	function ver_solicitudes()
 	{
