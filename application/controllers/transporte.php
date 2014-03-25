@@ -341,6 +341,8 @@ function asignar_veh_mot()
 					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR']);
 					break;
 				case 2:
+					$seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes_seccion($seccion['id_seccion']);
 					break;
 				case 3:
 					$data['solicitudes']=$this->transporte_model->buscar_solicitudes();
@@ -356,6 +358,29 @@ function asignar_veh_mot()
 	{
 		$this->transporte_model->eliminar_solicitud($id_solicitud);
 		redirect('index.php/transporte/ver_solicitudes');
+	}
+	
+	function reporte_solicitud()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),61);
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) {
+				case 1:
+					$empleado=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR'],3);
+					break;
+				case 2:
+					$seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes_seccion($seccion['id_seccion'],3);
+					break;
+				case 3:
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,3);
+			}
+			pantalla("transporte/reporte_solicitudes",$data);	
+		}
+		else {
+			echo "No tiene permisos para acceder";
+		}
 	}
 	
 }

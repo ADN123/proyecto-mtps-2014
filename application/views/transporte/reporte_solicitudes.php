@@ -47,10 +47,7 @@
             <td><?php echo $val['mision']?></td>
             <td><?php echo $estado?></td>
             <td>
-            	<?php if($val['estado']<=1) {?>
-            		<a title="Editar solicitud" href="<?php echo base_url()?>index.php/transporte/solicitud/<?php echo $val['id']?>"><img  src="<?php echo base_url()?>img/editar.png"/></a>
-                <?php } ?>
-                <a title="Eliminar solicitud" href="<?php echo base_url()?>index.php/transporte/eliminar_solicitud/<?php echo $val['id']?>"><img  id="eliminar"  src="<?php echo base_url()?>img/ico_basura.png"/></a>
+            	<a title="Crear .pdf de solicitud" target="_blank" href="<?php echo base_url()?>index.php/transporte/solicitud_pdf/<?php echo $val['id']?>"><img  src="<?php echo base_url()?>img/ico_pdf.png"/></a>
             </td>
   		</tr>
 	<?php
@@ -58,11 +55,3 @@
 	?>
 	</tbody>
 </table>
-<script language="javascript" >
-	$(document).ready(function(){
-		$('#eliminar').click(function(){
-			if(!(confirm("Realmente desea eliminar esta solicitud? Se perderán todos los datos relacionados a esta solicitud. Este proceso no se puede revertir.")))
-				return false;
-		});
-	});
-</script>
