@@ -16,7 +16,21 @@ $(document).ready(function(){
 		change: startChange
 	}).data("kendoTimePicker");
 	var end = $(".fin").kendoTimePicker().data("kendoTimePicker");
-	start.min("5:00 AM");
+	if(permiso==3)
+		start.min("5:00 AM");
+	else {
+		var tiempo = new Date();
+		var hora=Number(tiempo.getHours());
+		var tipo="AM";
+		if(Number(tiempo.getHours())<=5)
+			hora=5;
+		else 
+			if(Number(tiempo.getHours())>12) {
+				hora=Number(tiempo.getHours())-12;
+				tipo="PM";
+			}
+		start.min(hora+":00 "+tipo);
+	}
 	start.max("5:30 PM");
 	end.min("5:30 AM");
 	end.max("6:00 PM");
