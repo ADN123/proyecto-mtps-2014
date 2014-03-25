@@ -71,7 +71,9 @@
 			<input id="gas"  name="gas"  onchange="tanque(this.value)" type="range" min="10" max="100" step="10"   value="50"/>        
          </div>
      </div>
+     <p style="text-align: center">
            <button type="submit"  id="aprobar" class="button tam-1 boton_validador">Guardar</button>
+  	</p>
   </form>
 
 </div>
