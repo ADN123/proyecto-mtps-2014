@@ -321,5 +321,12 @@ function asignar_veh_mot()
 		$this->transporte_model->eliminar_solicitud($id_solicitud);
 		redirect('index.php/transporte/ver_solicitudes');
 	}
+	
+	function  KMayor($id){
+			$d=$this->transporte_model->infoSolicitud($id);	
+			$d=json_encode($d);
+			echo $d;
+			
+	}
 }
 ?>
