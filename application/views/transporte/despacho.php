@@ -46,13 +46,15 @@
     	<div id="izq"  style=" width:50%; float:left;" type="text"> 
                  <input type="hidden" name="estado" id="estado" />
 				<input type="hidden" name="id" id="id" />
+   				<input type="hidden" id="kmf" />
+				<input type="hidden" id="kmi" />
 
     	           <div id="InfoMision" style="font-size:12px;">
                    
                   </div> 
                   <p>
                      Kilometraje actual:
-                    <input id="km"  name="km"   class="tam-2"  autofocus="autofocus"/>
+                    <input id="km"  name="km"   class="tam-2"  autofocus="autofocus" class="tam-3"/>
                   </p>
                    <p>
                     Hora:
@@ -74,27 +76,33 @@
 
 </div>
 <script>
- var km =null;
+ var kmi =null;
+ var kmf =null;
  
 function info(id){
+
 $.ajax({
 		async:	true, 
 		url:	"<?php echo base_url()?>/index.php/transporte/infoSolicitud/"+id,
 		dataType:"json",
 		success: function(data){
-
-		
-	 	var echo1="Solicitud numero:<strong>"+id+"</strong><br />"+
-                   " Solicitante:<strong> "+data[0].nombre+"</strong><br />"+
-                    "Hora de Salida:<strong>"+data[0].salida+"</strong><br />"+
-                    "Hora de Regreso:<strong>"+data[0].regreso+"</strong><br />"+
-                   " Vehiculo:<strong>"+data[0].modelo+"</strong><br />"+
-                    "Placa:<strong>"+data[0].placa+"</strong><br />"+
-					 "Kilometraje Recorrido:<strong>"+ km+"</strong>";
-			  
-			  			console.log(echo1);
-			document.getElementById('InfoMision').innerHTML=echo1;
+			var json1= data;
+			var id_vehiculo=data[0].id_vehiculo;
 			
+					$.ajax({
+						async:	true, 
+						url:	"<?php echo base_url()?>/index.php/transporte/kilometraje/"+id_vehiculo,
+						dataType:"json",
+						success: function(data){
+	
+							 document.getElementById('kmf').value=data[0].KMFinal;
+							 document.getElementById('kmi').value=data[0].KMInicial;
+							 document.getElementById('km').m
+								datos(json1);
+//								$('#km').destruirValidador();
+						
+							}
+					});				
 
 			},
 		error:function(data){
@@ -104,6 +112,19 @@ $.ajax({
 		});	
 	
 }
+
+function datos(data){
+	var id=  document.getElementById('id').value;
+		 	var echo1="Solicitud numero:<strong>"+id+"</strong><br />"+
+                   " Solicitante:<strong> "+data[0].nombre+"</strong><br />"+
+                    "Hora de Salida:<strong>"+data[0].salida+"</strong><br />"+
+                    "Hora de Regreso:<strong>"+data[0].regreso+"</strong><br />"+
+                   " Vehiculo:<strong>"+data[0].modelo+"</strong><br />"+
+                    "Placa:<strong>"+data[0].placa+"</strong><br />"+
+					 "Kilometraje Recorrido:<strong>"+ document.getElementById('kmf').value+"</strong>";
+			 
+			document.getElementById('InfoMision').innerHTML=echo1;
+	}
 
 function dialogo(id, val){
 	$('#id').val(id);
@@ -125,7 +146,9 @@ function tanque(val){
 }
 	
  $("#timepicker").kendoTimePicker();
- 
+ $("#km").validacion({
+			numMin: 0
+		});
  
   function update() {
 
