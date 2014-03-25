@@ -91,6 +91,7 @@ $.ajax({
 			  
 			  			console.log(echo1);
 			document.getElementById('InfoMision').innerHTML=echo1;
+			
 
 			},
 		error:function(data){
