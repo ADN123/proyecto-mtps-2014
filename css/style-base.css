@@ -14,7 +14,7 @@ form p {
 	margin-top: 5px !important;
 	margin-bottom: 5px !important;
 	padding: 0 !important;	
-	font-size: 0.85em !important;	
+	font-size: 0.85em !important;
 }
 form label {
 	position: relative;
@@ -207,4 +207,57 @@ button {
 	background: url(../img/modal_close.png); 
 	z-index: 2;
 	cursor: pointer;
+}
+
+.table_design {
+	width: 90%;
+	border:0;
+	outline:0;
+	font-size:100%;
+	vertical-align:baseline;
+	background:transparent;
+	font:12px/15px "Helvetica Neue",Arial, Helvetica, sans-serif;
+	color: #555;
+	overflow:hidden;
+	border:1px solid #d3d3d3;
+	background:#fefefe;
+	-moz-border-radius:5px; /* FF1+ */
+	-webkit-border-radius:5px; /* Saf3-4 */
+	border-radius:5px;
+	-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.table_design th, .table_design td {
+	padding:5px 28px 5px;
+}
+button {
+	display: inline-block;
+	margin: 15px auto;
+	padding: 5px;
+	text-decoration: none;
+	text-align: center;
+	font: bold 13px Verdana, Arial, Helvetica, sans-serif;
+	width: 100px;
+	color: #FFF;
+	cursor: pointer;
+	outline-style: none;
+	background-color: #5A5655;
+	border: 1px solid #5A5655;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+.table_design th {
+	text-shadow: 1px 1px 1px #fff; 
+	background:#e8eaeb;
+	text-align:center;
+	background: -moz-linear-gradient(100% 20% 90deg, #e8eaeb, #ededed);
+	background: -webkit-gradient(linear, 0% 0%, 0% 20%, from(#ededed), to(#e8eaeb));
+}
+
+.table_design td {
+	border-top:1px solid #e0e0e0; 
+	border-right:1px solid #e0e0e0;
+	background: -moz-linear-gradient(100% 25% 90deg, #fefefe, #f9f9f9);
+	background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f9f9f9), to(#fefefe));
 }

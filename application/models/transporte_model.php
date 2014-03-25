@@ -187,7 +187,8 @@ SELECT id_solicitud_transporte id,
 	DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
 	CONCAT_WS(', ',d.departamento,m.municipio) municipio,
 	lugar_destino lugar,
-	nombre_seccion seccion
+	nombre_seccion seccion,
+	requiere_motorista req
 FROM tcm_solicitud_transporte  s 
 INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
 INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio
@@ -470,6 +471,15 @@ function infoSolicitud($id){
 		$q=$this->db->query($query);
 		return $q->result();
 
+	}
+	function guardar_destinos($formuInfo) 
+	{
+		extract($formuInfo);
+		$sentencia="INSERT INTO tcm_destino_mision
+					(id_solicitud_transporte, id_municipio, lugar_destino) 
+					VALUES 
+					('$id_solicitud_transporte', '$id_municipio', '$lugar_destino')";
+		$this->db->query($sentencia);
 	}
 }
 ?>
