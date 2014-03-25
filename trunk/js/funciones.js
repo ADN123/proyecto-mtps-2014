@@ -28,7 +28,7 @@ $(document).ready(function() {
 	$(".fec_hoy").kendoDatePicker({
 		culture: "es-SV",
 		format: "dd/MM/yyyy",
-		min: new Date(f.getFullYear(), f.getMonth(), f.getDate()+2)
+		min: new Date(f.getFullYear(), f.getMonth(), f.getDate()+1),
 	});
 	$(".hora").kendoTimePicker();
 	$(".grid").kendoGrid({

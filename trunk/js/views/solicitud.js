@@ -16,24 +16,53 @@ $(document).ready(function(){
 		change: startChange
 	}).data("kendoTimePicker");
 	var end = $(".fin").kendoTimePicker().data("kendoTimePicker");
-	if(permiso==3)
-		start.min("5:00 AM");
-	else {
+	if(permiso!=3) {
 		var tiempo = new Date();
 		var hora=Number(tiempo.getHours());
 		var tipo="AM";
-		if(Number(tiempo.getHours())<=5)
+		if(Number(tiempo.getHours())<=5 || Number(tiempo.getHours())>=18)
 			hora=5;
 		else 
 			if(Number(tiempo.getHours())>12) {
 				hora=Number(tiempo.getHours())-12;
 				tipo="PM";
 			}
-		start.min(hora+":00 "+tipo);
 	}
+	start.min("5:00 AM");
 	start.max("5:30 PM");
 	end.min("5:30 AM");
 	end.max("6:00 PM");
+	
+	function verificar_hora() {
+		if((tiempo.getDate()+1)<10)
+			d="0"+(tiempo.getDate()+1);
+		else
+			d=(tiempo.getDate()+1);
+		if((tiempo.getMonth()+1)<10)
+			m="0"+(tiempo.getMonth()+1);
+		else
+			m=(tiempo.getMonth()+1);
+		var fec=d+"/"+m+"/"+tiempo.getFullYear();
+		if($("#fecha_mision").val()==fec) {
+			start.min(hora+":00 "+tipo);
+			end.min(hora+":30 "+tipo);
+		}
+		else {
+			start.min("5:00 AM");
+			end.min("5:30 AM");
+		}
+	}
+	if(Number(tiempo.getHours())>=18)
+		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate()+2);
+	else
+		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate()+1);
+		
+	$("#fecha_mision").kendoDatePicker({
+		culture: "es-SV",
+		format: "dd/MM/yyyy",
+		min: newfec,
+		change: verificar_hora
+	});
 	
 	$("#fecha_mision").validacion({
 		valFecha: true

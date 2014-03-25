@@ -96,7 +96,7 @@
             </p>
             <p>
                 <label for="fecha_mision" id="lfecha_mision">Fecha Misi&oacute;n </label>
-                <input type="text" class="fec_hoy" tabindex="3" id="fecha_mision" name="fecha_mision" value="<?php echo $solicitud['fecha_mision']; ?>"/>
+                <input type="text" tabindex="3" id="fecha_mision" name="fecha_mision" value="<?php echo $solicitud['fecha_mision']; ?>"/>
             </p>
             <p>
                 <label for="hora_salida" id="lhora_salida">Hora de salida </label>
@@ -121,14 +121,14 @@
             </p>
             <p>
                  <label for="requiere_motorista" id="lrequiere_motorista">Requiere motorista </label>
-                 <input type="checkbox" id="requiere_motorista" name="requiere_motorista" value="1"/>
+                 <input type="checkbox" tabindex="8" id="requiere_motorista" name="requiere_motorista" value="1" title="S&iacute;"/>
             </p>
       	</div>
         <div id="step-3">	
             <h2 class="StepTitle">Selecci&oacute;n de las personas que ir&aacute;n en el veh&iacute;culo</h2>
             <p>
                 <label for="acompanantes" id="lacompanantes">Acompa&ntilde;antes</label>
-                <select name="acompanantes[]" id="acompanantes" class="multi" multiple="multiple" tabindex="8" placeholder="[Seleccione...]" style="width:400px;">
+                <select name="acompanantes[]" id="acompanantes" class="multi" multiple="multiple" tabindex="9" placeholder="[Seleccione...]" style="width:400px;">
                 <?php
                      foreach($acompanantes as $val) {
                          echo '<option value="'.$val['NR'].'">'.$val['nombre'].'</option>';
@@ -138,7 +138,7 @@
             </p> 
             <p>
                 <label for="acompanantes2" id="lacompanantes2">Otros acompa&ntilde;antes</label>
-                <textarea class="tam-4" id="acompanantes2" tabindex="9" name="acompanantes2"/> <?php echo $solicitud['acompanante']; ?></textarea>
+                <textarea class="tam-4" id="acompanantes2" tabindex="10" name="acompanantes2"/> <?php echo $solicitud['acompanante']; ?></textarea>
             </p>
         </div>
     </div>
