@@ -44,6 +44,7 @@ class Transporte extends CI_Controller
 	{
  		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
 		
+		echo $data['id_permiso'];
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 			if($data['id_permiso']>2){//nivel 3
 				$data['datos']=$this->transporte_model->todas_solicitudes_por_confirmar();
@@ -298,8 +299,8 @@ function asignar_veh_mot()
 	function infoSolicitud($id){
 			
 			$d=$this->transporte_model->infoSolicitud($id);	
-			$j=json_encode($d);
-			echo $j;
+			$d=json_encode($d);
+			echo $d;
 		
 	}
 	function ver_solicitudes()
