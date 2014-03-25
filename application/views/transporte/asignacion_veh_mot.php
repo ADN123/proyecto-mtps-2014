@@ -1,4 +1,6 @@
-
+<script>
+var requiere_motorista;
+</script>
 <section>
     <h2>Asignación de Vehículo y Motorista</h2>
 </section>
@@ -39,6 +41,7 @@
     <form id="form" action="<?php echo base_url()?>index.php/transporte/asignar_veh_mot" method="post">
     <input type="hidden"   id="id_solicitud" name="id_solicitud"/>
     <input type="hidden" id="resp" name="resp" />
+    <input type="hidden" name="id_mot" value="id_mot" />
     
     <fieldset>      
         <legend align="left">Información de la Solicitud</legend>
@@ -58,8 +61,22 @@
     <legend align="left">Motorista</legend>
         <p>
         <label>Nombre</label>
+        <?php
+		$re_mot = "<script> document.write(requiere_motorista) </script>";
+		if($re_mo==1)
+		{
+        ?>
        <select name="motorista" id="motorista">
        </select>
+       <?php
+		}
+		else
+		{
+	   ?>
+       <input type="text" name="motorista" value=""/>
+       <?php
+		}
+	   ?>
         </p>
     </fieldset>
      <p>
@@ -94,7 +111,9 @@ var echo2="Misión: <strong>"+data[0].mision+"</strong> <br>"+
 		   "Hora de Regreso: <strong>"+data[0].entrada+"</strong> <br>"+
 		   "Municipio: <strong>"+data[0].municipio+"</strong> <br>"+
 		   "Lugar: <strong>"+data[0].lugar+"</strong> <br>";
-		
+			requiere_motorista=data[0].requiere_motorista;
+			
+			//alert(requiere_motorista);
 		//document.getElementById('empleado').innerHTML=echo1;
 		document.getElementById('mision').innerHTML=echo2;
 		
@@ -108,8 +127,17 @@ var echo2="Misión: <strong>"+data[0].mision+"</strong> <br>"+
 	});	
 }
 
+/*function carga_select(id_s,re_mot)
+{
+	if(re_mot==0)
+	{
+		$('#motorista').attr("disabled", true);
+		$('#motorista').append('<option value="3">Oscar</option>');
+	}
+	dialogo(id_s);
+}*/
+
 function dialogo1(id1){
-		
 		$.ajax({
 		async:	true, 
 		url:	"<?php echo base_url()?>/index.php/transporte/verificar_fecha_hora/"+id1,
@@ -124,7 +152,7 @@ function dialogo1(id1){
 				
 				}
 				
-				$('#vehiculo').kendoCombobox();
+				//////$('#vehiculo').kendoCombobox();
 				
 			},
 			
@@ -132,8 +160,8 @@ function dialogo1(id1){
 			 alert('Error al cargar los datos de los vehículos');
 		
 			}
-		});	
-	}
+		});
+}
 	
 function motoristaf(id){
 		
