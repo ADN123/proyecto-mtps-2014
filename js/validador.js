@@ -362,4 +362,21 @@
 			});
 		});
 	};
+	$.fn.destruirValidacion = function(options) {
+		var	$objeto = $(this), /*Objeto que se quiere validar*/
+			$obj = $objeto, /*Objeto al que se le aplica el diseño de validacion*/
+			$form = $objeto.parents('form'), /*Form al que pertenece el objeto*/
+			$self = this
+			
+		$objeto.removeClass("validar"); /*Se quita el identificador al objeto*/
+		$objeto.removeClass("tooltipster"); /*Se quita el identificador al objeto*/
+		$objeto.removeData("ok");
+		$objeto.off('change');
+		$objeto.off('blur');
+		
+		var label="#l"+$objeto.attr("id");
+		var span=$(label).find('span');
+		span.remove();
+		
+	};
 })(jQuery); 

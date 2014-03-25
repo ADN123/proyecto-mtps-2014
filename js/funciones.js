@@ -32,17 +32,14 @@ $(document).ready(function() {
 	});
 	$(".hora").kendoTimePicker();
 	$(".grid").kendoGrid({
-		height: 400,
+		height: 450,
 		width: 800,
 		sortable: true,
 		dataSource: {
 			type: "odata",
-			pageSize: 5
+			pageSize: 9
 		},
-		pageable: {
-			pageSizes: true,
-			buttonCount: 5
-		},
+		pageable: true
 	});
 });
 $(function() {
