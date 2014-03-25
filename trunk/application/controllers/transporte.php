@@ -107,12 +107,14 @@ class Transporte extends CI_Controller
 	function asignar_vehiculo_motorista()
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['id_permiso']>2)
+		if($data['id_permiso']>=2)
 		{
 			$data['datos']=$this->transporte_model->solicitudes_por_asignar();
 			pantalla('transporte/asignacion_veh_mot',$data);
 		}
+		//echo $data['id_permiso'];
 	}
+	
 ///////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////Función para conocer los vehículos disponibles para las misiones oficiales
@@ -239,6 +241,10 @@ function asignar_veh_mot()
 		$hora_entrada=date("H:i:s", strtotime($this->input->post('hora_regreso')));
 		$id_municipio=(int)$this->input->post('municipio');
 		$lugar_destino=$this->input->post('lugar_destino');
+		if($this->input->post('requiere_motorista')!="")
+			$requiere_motorista=$this->input->post('requiere_motorista');
+		else
+			$requiere_motorista=0;
 		$acompanante=$this->input->post('acompanantes2');
 		$id_usuario_crea=$this->session->userdata('id_usuario');
 		$fecha_creacion=date('Y-m-d H:i:s');
@@ -253,6 +259,7 @@ function asignar_veh_mot()
 			'hora_entrada'=>$hora_entrada,
 			'id_municipio'=>$id_municipio,
 			'lugar_destino'=>$lugar_destino,
+			'requiere_motorista'=>$requiere_motorista,
 			'acompanante'=>$acompanante,
 			'id_usuario_crea'=>$id_usuario_crea,
 			'fecha_creacion'=>$fecha_creacion,
