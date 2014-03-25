@@ -275,6 +275,16 @@ function asignar_veh_mot()
 			);
 			$this->transporte_model->guardar_acompanantes($formuInfo);
 		}
+		$destinos=$this->input->post('values');
+		for($i=0;$i<count($destinos);$i++) {
+			$campos=explode("**",$destinos[$i]);
+			$formuInfo = array(
+				'id_solicitud_transporte'=>$id_solicitud_transporte,
+				'id_municipio'=>$campos[0],
+				'lugar_destino'=>$campos[1]
+			);
+			$this->transporte_model->guardar_destinos($formuInfo);
+		}
 		ir_a('index.php/transporte/solicitud');
 	}
 	function control_salidas_entradas(){

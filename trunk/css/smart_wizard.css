@@ -39,7 +39,7 @@
   background-color:#F8F8F8;  
   height:300px;
   text-align:left;
-  overflow:visible;    
+  overflow:auto;    
   z-index:88; 
   -webkit-border-radius: 5px;
   -moz-border-radius  : 5px;

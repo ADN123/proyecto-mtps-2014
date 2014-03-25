@@ -16,8 +16,8 @@ $(document).ready(function(){
 		change: startChange
 	}).data("kendoTimePicker");
 	var end = $(".fin").kendoTimePicker().data("kendoTimePicker");
+	var tiempo = new Date();
 	if(permiso!=3) {
-		var tiempo = new Date();
 		var hora=Number(tiempo.getHours());
 		var tipo="AM";
 		if(Number(tiempo.getHours())<=5 || Number(tiempo.getHours())>=18)
@@ -56,7 +56,10 @@ $(document).ready(function(){
 		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate()+2);
 	else
 		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate()+1);
-		
+	
+	if(permiso==3) 
+		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate());
+	
 	$("#fecha_mision").kendoDatePicker({
 		culture: "es-SV",
 		format: "dd/MM/yyyy",
@@ -75,10 +78,10 @@ $(document).ready(function(){
 	});
 	$("#hora_salida").validacion();
 	$("#hora_regreso").validacion();
-	$("#municipio").validacion({
+	/*$("#municipio").validacion({
 		men: "Debe seleccionar un item"
 	});
-	$("#lugar_destino").validacion();
+	$("#lugar_destino").validacion();*/
 	
 	$("#nombre").change(function(){
 		var id=$(this).val();
@@ -117,4 +120,25 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	$('#agregar').click(function(){
+		var municipio=$('#municipio').val();
+		var lugar_destino=$('#lugar_destino').val();
+		var municipio_text=$('[name="municipio_input"]').val();
+		if(municipio_text!="" && lugar_destino!="") {
+			var construct=$('#content_table').html();
+			var action=	'<a onClick="borrar_item(this)"><img src="'+base_url()+'img/ico_basura.png" width="25" height="25" align="absmiddle" title="Borrar item"/></a>';
+			var input='<input type="hidden" name="values[]" value="'+ municipio +'**'+ lugar_destino +'"/>';
+			construct+='<tr><td>'+ municipio_text +'</td><td>'+ lugar_destino +'</td><td align="center">'+ action +'</td>'+ input +'</tr>';
+			$('#content_table').html(construct);
+			$('#lugar_destino').val("");;
+		}
+		else {
+			alert("Los campos 'Municipio' y 'Lugar de destino' no pueden estar vacios");
+		}
+	});
 });
+
+function borrar_item(row){
+	$(row).parent().parent().remove();
+}
