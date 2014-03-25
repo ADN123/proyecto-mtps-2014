@@ -62,8 +62,9 @@ var requiere_motorista;
         <p>
         <label>Nombre</label>
         <?php
-		$re_mot = "<script> document.write(requiere_motorista) </script>";
-		if($re_mo==1)
+		/*$re_mot = "<script> document.write(requiere_motorista); </script>";*/
+		$re_mot=1;
+		if($re_mot==1)
 		{
         ?>
        <select name="motorista" id="motorista">
