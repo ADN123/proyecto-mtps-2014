@@ -49,7 +49,7 @@
     <legend align="left">Vehículos</legend>
         <p>
         <label>Información</label>
-       <select  name="vehiculo" id="vehiculo" onchange="motoristaf(this.value)">    
+       <select name="vehiculo" id="vehiculo" onchange="motoristaf(this.value)">    
        </select>
         </p>   
     </fieldset>
@@ -120,9 +120,12 @@ function dialogo1(id1){
 
 			for(i=0;i<json.length;i++){
 				
-				$('#vehiculo').append('<option value="'+json[i].id_vehiculo+'">'+json[i].placa+' - '+json[i].nombre+' - '+json[i].modelo+' - '+json[i].condicion+'</option>');
+				$('#vehiculo').append('<option value="'+json[i].id_vehiculo+'">'+json[i].placa+' - '+json[i].nombre+' - '+json[i].modelo+'</option>');
 				
 				}
+				
+				$('#vehiculo').kendoCombobox();
+				
 			},
 			
 		error:function(data){
@@ -133,8 +136,9 @@ function dialogo1(id1){
 	}
 	
 function motoristaf(id){
-
-
+		
+		$('#motorista').empty();
+		
 		$.ajax({
 		async:	true, 
 		url:	"<?php echo base_url()?>/index.php/transporte/verificar_motoristas/"+id,
@@ -146,7 +150,7 @@ function motoristaf(id){
 			for(i=0;i<json.length;i++)
 			{			
 				$('#motorista').append('<option value="'+json[i].id_empleado+'">'+json[i].nombre+'</option>');
-			}
+			}		
 		},
 			
 		error:function(data){

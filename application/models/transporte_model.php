@@ -222,21 +222,15 @@ WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
 inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)");
 		return $query->result();
 	}
-	////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
 	function consultar_motoristas($id)
 	{
-		$query=$this->db->query("SELECT t.id_empleado,CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre FROM tcm_vehiculo_motorista t inner join sir_empleado e on (t.id_empleado=e.id_empleado)
-where t.id_vehiculo='$id';");
-		return $query->result();
-	}
-	
-	function motoristas_disponibles()
-	{
-		$query=$this->db->query("SELECT t.id_empleado,CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre FROM tcm_vehiculo_motorista t
+		$query=$this->db->query("(SELECT t.id_empleado,CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre FROM tcm_vehiculo_motorista t inner join sir_empleado e on (t.id_empleado=e.id_empleado)
+where t.id_vehiculo='$id') union (SELECT t.id_empleado,CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre FROM tcm_vehiculo_motorista t
 inner join sir_empleado e on (t.id_empleado=e.id_empleado)
 inner join tcm_vehiculo v on (t.id_vehiculo=v.id_vehiculo)
-where (v.id_seccion=15 ||v.id_seccion=21 || v.id_seccion=32 || v.id_seccion=34 || v.id_seccion=113)
-order by e.primer_nombre asc;");
+where (v.id_seccion=21)
+order by e.primer_nombre ASC);");
 		return $query->result();
 	}
 	
