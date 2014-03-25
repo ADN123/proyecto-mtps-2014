@@ -83,9 +83,8 @@ var requiere_motorista;
         <label for="observacion" id="lobservacion">Observación</label>
         <textarea class="tam-4" id="observacion" tabindex="2" name="observacion"/></textarea>
     </p>
-    <br />
-    <p>
-    <button type="submit" id="asignar" name="asignar" onclick="enviar(3)">Asignar</button>
+    <p style="text-align: center;">
+    	<button type="submit" id="asignar" name="asignar" onclick="enviar(3)">Asignar</button>
     </p>
 	</form>
 
