@@ -160,16 +160,10 @@ class Transporte extends CI_Controller
 		if($data['id_permiso']>2)
 		{
 			
-			//$motorista_asignado=$this->transporte_model->consultar_motoristas($id_vehiculo);
+			$motoristas=$this->transporte_model->consultar_motoristas($id_vehiculo);
 			//////////consulta al motorista asignado al vehiculo.
 			
-		/*	foreach($motorista_asignado as $m)
-			{
-				$id_motorista=$m->id_empleado;
-			}
-			*/ //
-			$motoristas_disponibles=$this->transporte_model->motoristas_disponibles();//////////////////consulta los motoristas disponibles, pero no muestra al asignado
-			$j=json_encode($motoristas_disponibles);
+			$j=json_encode($motoristas);
 			echo $j;
 		}
 		else
@@ -194,7 +188,7 @@ function asignar_veh_mot()
 			
 			if($estado==3)
 			{
-				$this->transporte_model->asignar_veh_mot($id_solicitud,$id_empleado,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));						
+				$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));						
 				
 				ir_a("index.php/transporte/asignar_vehiculo_motorista");
 			
