@@ -74,20 +74,23 @@
 
 </div>
 <script>
+ var km =null;
+ 
 function info(id){
 $.ajax({
 		async:	true, 
 		url:	"<?php echo base_url()?>/index.php/transporte/infoSolicitud/"+id,
 		dataType:"json",
 		success: function(data){
-			
 
+		
 	 	var echo1="Solicitud numero:<strong>"+id+"</strong><br />"+
                    " Solicitante:<strong> "+data[0].nombre+"</strong><br />"+
                     "Hora de Salida:<strong>"+data[0].salida+"</strong><br />"+
                     "Hora de Regreso:<strong>"+data[0].regreso+"</strong><br />"+
                    " Vehiculo:<strong>"+data[0].modelo+"</strong><br />"+
-                    "Placa:<strong>"+data[0].placa+"</strong><br /> ";
+                    "Placa:<strong>"+data[0].placa+"</strong><br />"+
+					 "Kilometraje Recorrido:<strong>"+ km+"</strong>";
 			  
 			  			console.log(echo1);
 			document.getElementById('InfoMision').innerHTML=echo1;
@@ -113,6 +116,7 @@ function dialogo(id, val){
 	}
 	info(id);	
 }
+
 
 
 function tanque(val){
@@ -149,4 +153,6 @@ function tanque(val){
     update();
     
   });
+  
+
 </script>

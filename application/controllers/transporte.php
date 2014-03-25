@@ -310,6 +310,21 @@ function asignar_veh_mot()
 	function infoSolicitud($id){
 			
 			$d=$this->transporte_model->infoSolicitud($id);	
+			$j=json_encode($d);
+			echo $j;
+			
+			
+//			$d=(array)$d[0];			
+			$k= $d[0]['id_vehiculo'];
+			
+			$j=$this->transporte_model->KMfinal($k);	
+			$j=(array)$j[0];
+			$d[0]['KMfinal']=$j['KM'];
+			
+			$j=$this->transporte_model->KMinicial($k);	
+			$j=(array)$j[0];			
+			$d[0]['KMinicial']=$j['KM'];
+			
 			$d=json_encode($d);
 			echo $d;
 		
@@ -339,11 +354,5 @@ function asignar_veh_mot()
 		redirect('index.php/transporte/ver_solicitudes');
 	}
 	
-	function  KMayor($id){
-			$d=$this->transporte_model->infoSolicitud($id);	
-			$d=json_encode($d);
-			echo $d;
-			
-	}
 }
 ?>

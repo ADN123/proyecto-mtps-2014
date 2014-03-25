@@ -397,7 +397,8 @@ function infoSolicitud($id){
 		DATE_FORMAT(hora_salida,'%h:%i %p') salida,
 		DATE_FORMAT(hora_entrada,'%h:%i %p') regreso,
 		v.modelo,
-		v.placa			
+		v.placa,
+		v.id_vehiculo		
 	FROM tcm_asignacion_sol_veh_mot asi
 		INNER JOIN sir_empleado e ON e.id_empleado= asi.id_empleado
 		INNER JOIN tcm_solicitud_transporte s ON s.id_solicitud_transporte = asi.id_solicitud_transporte
@@ -462,16 +463,28 @@ function infoSolicitud($id){
 			);
 		}
 	}
-	function KMmayor($id){
+	function KMfinal($id){
 			$query="SELECT v.id_vehiculo, COALESCE(MAX(k.km_final), 0) AS KM 
 				FROM tcm_vehiculo  v 
 				LEFT JOIN tcm_vehiculo_kilometraje  K 
 				ON  V.id_vehiculo= K.id_vehiculo 
-				GROUP BY v.id_vehiculo HAVING v.id_vehiculo=".$km;
+				GROUP BY v.id_vehiculo HAVING v.id_vehiculo=".$id;
 		$q=$this->db->query($query);
 		return $q->result();
 
 	}
+
+		function KMinicial($id){
+			$query="SELECT v.id_vehiculo, COALESCE(MAX(k.km_inicial), 0) AS KM 
+				FROM tcm_vehiculo  v 
+				LEFT JOIN tcm_vehiculo_kilometraje  K 
+				ON  V.id_vehiculo= K.id_vehiculo 
+				GROUP BY v.id_vehiculo HAVING v.id_vehiculo=".$id;
+		$q=$this->db->query($query);
+		return $q->result();
+
+	}
+
 	function guardar_destinos($formuInfo) 
 	{
 		extract($formuInfo);
@@ -481,5 +494,6 @@ function infoSolicitud($id){
 					('$id_solicitud_transporte', '$id_municipio', '$lugar_destino')";
 		$this->db->query($sentencia);
 	}
+
 }
 ?>
