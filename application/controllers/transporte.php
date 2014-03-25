@@ -278,12 +278,14 @@ function asignar_veh_mot()
 		$destinos=$this->input->post('values');
 		for($i=0;$i<count($destinos);$i++) {
 			$campos=explode("**",$destinos[$i]);
-			$formuInfo = array(
-				'id_solicitud_transporte'=>$id_solicitud_transporte,
-				'id_municipio'=>$campos[0],
-				'lugar_destino'=>$campos[1]
-			);
-			$this->transporte_model->guardar_destinos($formuInfo);
+			if(isset($campos[1])) {
+				$formuInfo = array(
+					'id_solicitud_transporte'=>$id_solicitud_transporte,
+					'id_municipio'=>$campos[0],
+					'lugar_destino'=>$campos[1]
+				);
+				$this->transporte_model->guardar_destinos($formuInfo);
+			}
 		}
 		ir_a('index.php/transporte/solicitud');
 	}
@@ -335,6 +337,8 @@ function asignar_veh_mot()
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
 				case 1:
+					$empleado=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR']);
 					break;
 				case 2:
 					break;

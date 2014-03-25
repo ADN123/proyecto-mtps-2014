@@ -407,7 +407,7 @@ function infoSolicitud($id){
 		$q=$this->db->query($query);
 		return $q->result();
 	}
-	function buscar_solicitudes($id_seccion=NULL)
+	function buscar_solicitudes($id_empleado=NULL)
 	{
 		$sentencia="SELECT
 					tcm_solicitud_transporte.id_solicitud_transporte AS id,
@@ -417,12 +417,14 @@ function infoSolicitud($id){
 					tcm_solicitud_transporte.estado_solicitud_transporte AS estado
 					FROM
 					tcm_solicitud_transporte";
+		if($id_empleado!=NULL)
+			$sentencia.=" WHERE tcm_solicitud_transporte.id_empleado_solicitante='".$id_empleado."'";
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->result_array();
 		}
 		else {
-			return 0;
+			return (array)$query->result_array();
 		}
 	}
 	function eliminar_solicitud($id_solicitud)
