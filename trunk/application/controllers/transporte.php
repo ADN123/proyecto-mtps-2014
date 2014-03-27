@@ -68,7 +68,8 @@ class Transporte extends CI_Controller
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
 		if(isset($data['id_permiso'])) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-			$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);	
+			$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
+			$a=$this->transporte_model->acompanantes($id);
 			$j=json_encode($d);
 			echo $j;
 		}
