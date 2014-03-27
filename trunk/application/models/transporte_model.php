@@ -124,12 +124,16 @@ function todas_solicitudes_por_confirmar(){
    	return $query->result();
 		
 	}
+	/////FUNCION QUE RETORNA lAS SOlICITUDES QUE AÚN NO TIENEN UN VEHICUlO O MOTORISTA ASIGNADO
 	function solicitudes_por_asignar(){
-	  $query=$this->db->query("SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,date_format(hora_entrada,'%r') entrada, date_format(hora_salida,'%r') salida, m.municipio, lugar_destino lugar, mision_encomendada mision, requiere_motorista requiere 
-	  FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_municipio=m.id_municipio where (estado_solicitud_transporte=2)");
+	  $query=$this->db->query("SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,date_format(hora_entrada,'%r') entrada, date_format(hora_salida,'%r') salida, m.municipio, lugar_destino lugar, mision_encomendada mision, requiere_motorista FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_municipio=m.id_municipio where (estado_solicitud_transporte=2)");
+
    	return $query->result();
 		
 	}
+	////////////////////////////////////////////////////////////////////////////////////////
+	
+/////////FUNCION QUE RETORNA lA lOCAlIZACIÓN, FECHA Y HORARIOS DE UNA SOlICITUD EN ESPECÍFICO/////
 	function consultar_fecha_solicitud($id)
 	{
 		$query=$this->db->query("SELECT om.id_departamento_pais, st.fecha_mision AS fecha, st.hora_salida AS salida, st.hora_entrada AS entrada
@@ -138,6 +142,7 @@ INNER JOIN org_municipio AS om ON ( st.id_municipio = om.id_municipio )
 WHERE st.id_solicitud_transporte =  '$id';");
 		return $query->result();
 	}
+	///////////////////////////////////////////////////////////////////////////////////////
 	
 	///////////////////VEHICUlOS DISPONIBlES PARA MISIONES lOCAlES////////////////////////////////
 	function vehiculos_disponibles($fecha,$hentrada,$hsalida)
@@ -236,6 +241,16 @@ order by e.primer_nombre ASC);");
 	}
 	
 	///////////////////////////////////////////////////
+	
+	function acompanantes($id)
+	{
+		$query=$this->db->query("SELECT t.id_solicitud_transporte, CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada) as nombre, s.acompanante FROM sir_empleado e
+inner join tcm_acompanante t on (e.id_empleado=t.id_empleado)
+inner join tcm_solicitud_transporte s on (t.id_solicitud_transporte=s.id_solicitud_transporte)
+where t.id_solicitud_transporte='$id';");
+		
+		return $query->result();
+	}
 	
 	function asignar_veh_mot($id_solicitud,$id_empleado,$id_vehiculo,$estado,$fecha,$nr,$id_usuario)
 	{
