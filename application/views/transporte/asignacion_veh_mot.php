@@ -1,5 +1,5 @@
 <script>
-var requiere_motorista;
+var requiere_motorista=2;
 </script>
 <section>
     <h2>Asignación de Vehículo y Motorista</h2>
@@ -62,8 +62,9 @@ var requiere_motorista;
         <p>
         <label>Nombre</label>
         <?php
-		/*$re_mot = "<script> document.write(requiere_motorista); </script>";*/
+		//*$re_mot = "<script> document.write(requiere_motorista); <script>"*//;
 		$re_mot=1;
+		//echo $re_mot;
 		if($re_mot==1)
 		{
         ?>
@@ -74,7 +75,7 @@ var requiere_motorista;
 		else
 		{
 	   ?>
-       <input type="text" name="motorista" value=""/>
+       <input type="hidden" name="motorista" value=""/>
        <?php
 		}
 	   ?>
@@ -111,9 +112,10 @@ var echo2="Misión: <strong>"+data[0].mision+"</strong> <br>"+
 		   "Hora de Regreso: <strong>"+data[0].entrada+"</strong> <br>"+
 		   "Municipio: <strong>"+data[0].municipio+"</strong> <br>"+
 		   "Lugar: <strong>"+data[0].lugar+"</strong> <br>";
-			requiere_motorista=data[0].requiere_motorista;
+			requiere_motorista=data[0].req;
 			
 			//alert(requiere_motorista);
+			//document.getElementById('requiere_motorista').value=require_motorista;
 		//document.getElementById('empleado').innerHTML=echo1;
 		document.getElementById('mision').innerHTML=echo2;
 		
