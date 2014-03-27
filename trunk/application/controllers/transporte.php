@@ -36,6 +36,7 @@ class Transporte extends CI_Controller
 		$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
 		$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
 		$data['municipios']=$this->transporte_model->consultar_municipios();
+
 		//print_r($data);
 		pantalla('transporte/solicitud',$data);	
 	}
