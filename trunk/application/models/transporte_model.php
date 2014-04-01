@@ -193,7 +193,8 @@ SELECT id_solicitud_transporte id,
 	LOWER(CONCAT_WS(', ',d.departamento,m.municipio)) municipio,
 	lugar_destino lugar,
 	nombre_seccion seccion,
-	requiere_motorista req
+	requiere_motorista req,
+	acompanante
 FROM tcm_solicitud_transporte  s 
 INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
 INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio
@@ -242,11 +243,9 @@ order by e.primer_nombre ASC);");
 	
 	///////////////////////////////////////////////////
 	
-	function acompanantes($id)
+	function acompanantes_internos($id)
 	{
-		$query=$this->db->query("SELECT t.id_solicitud_transporte, LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) as nombre, s.acompanante FROM sir_empleado e
-inner join tcm_acompanante t on (e.id_empleado=t.id_empleado)
-inner join tcm_solicitud_transporte s on (t.id_solicitud_transporte=s.id_solicitud_transporte)
+		$query=$this->db->query("SELECT LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) as nombre FROM sir_empleado e inner join tcm_acompanante t on (e.id_empleado=t.id_empleado)
 where t.id_solicitud_transporte='$id';");
 		
 		return $query->result();
