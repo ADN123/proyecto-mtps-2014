@@ -32,7 +32,7 @@ class Transporte_model extends CI_Model {
 	{
 		$sentencia="SELECT
 					sir_empleado.id_empleado AS NR,
-					CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada) AS nombre
+					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre
 					FROM sir_empleado
 					WHERE sir_empleado.NR<>'".$nr."'";
 		$query=$this->db->query($sentencia);
@@ -48,7 +48,7 @@ class Transporte_model extends CI_Model {
 	{
 		$sentencia="SELECT
 					sir_empleado.id_empleado AS NR,
-					CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada) AS nombre
+					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre
 					FROM sir_empleado
 					WHERE sir_empleado.NR='".$nr."'";
 		$query=$this->db->query($sentencia);
@@ -81,7 +81,7 @@ class Transporte_model extends CI_Model {
 	{
 		$sentencia="SELECT
 					org_municipio.id_municipio AS id,
-					CONCAT_WS(', ', org_departamento.departamento, org_municipio.municipio) AS nombre
+					LOWER(CONCAT_WS(', ', org_departamento.departamento, org_municipio.municipio)) AS nombre
 					FROM
 					org_municipio
 					INNER JOIN org_departamento ON org_municipio.id_departamento_pais = org_departamento.id_departamento
@@ -184,13 +184,13 @@ order by v.id_vehiculo asc;");
 	function datos_de_solicitudes($id,$seccion){
 		  $query=$this->db->query("
 SELECT id_solicitud_transporte id, 
-	CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada) AS nombre,
+	LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
 	mision_encomendada mision, 
 	DATE_FORMAT(fecha_solicitud_transporte, '%d-%m-%Y') fechaS,
 	DATE_FORMAT(fecha_mision, '%d-%m-%Y')  fechaM,
 	DATE_FORMAT(hora_salida,'%h:%i %p') salida,
 	DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-	CONCAT_WS(', ',d.departamento,m.municipio) municipio,
+	LOWER(CONCAT_WS(', ',d.departamento,m.municipio)) municipio,
 	lugar_destino lugar,
 	nombre_seccion seccion,
 	requiere_motorista req
@@ -231,8 +231,8 @@ inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.
 	////////////////////////////////////////////////////////////////////////
 	function consultar_motoristas($id)
 	{
-		$query=$this->db->query("(SELECT t.id_empleado,CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre FROM tcm_vehiculo_motorista t inner join sir_empleado e on (t.id_empleado=e.id_empleado)
-where t.id_vehiculo='$id') union (SELECT t.id_empleado,CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada) AS nombre FROM tcm_vehiculo_motorista t
+		$query=$this->db->query("(SELECT t.id_empleado,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre FROM tcm_vehiculo_motorista t inner join sir_empleado e on (t.id_empleado=e.id_empleado)
+where t.id_vehiculo='$id') union (SELECT t.id_empleado,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre FROM tcm_vehiculo_motorista t
 inner join sir_empleado e on (t.id_empleado=e.id_empleado)
 inner join tcm_vehiculo v on (t.id_vehiculo=v.id_vehiculo)
 where (v.id_seccion=21)
@@ -244,7 +244,7 @@ order by e.primer_nombre ASC);");
 	
 	function acompanantes($id)
 	{
-		$query=$this->db->query("SELECT t.id_solicitud_transporte, CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada) as nombre, s.acompanante FROM sir_empleado e
+		$query=$this->db->query("SELECT t.id_solicitud_transporte, LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) as nombre, s.acompanante FROM sir_empleado e
 inner join tcm_acompanante t on (e.id_empleado=t.id_empleado)
 inner join tcm_solicitud_transporte s on (t.id_solicitud_transporte=s.id_solicitud_transporte)
 where t.id_solicitud_transporte='$id';");
@@ -329,7 +329,7 @@ where t.id_solicitud_transporte='$id';");
 	{
 		$sentencia="SELECT
 					sir_empleado.id_empleado AS NR,
-					CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada) AS nombre
+					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre
 					FROM
 					sir_empleado
 					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado
@@ -345,12 +345,12 @@ where t.id_solicitud_transporte='$id';");
 /*---------------------------------Control de salidas y entradas de Vehiculos------------------------------------*/
 	function salidas_entradas_vehiculos(){
 		$query=$this->db->query("SELECT s.id_solicitud_transporte id,
-	CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre,
-	e.primer_apellido,e.segundo_apellido,e.apellido_casada) AS nombre,
+	LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre,
+	e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
 	estado_solicitud_transporte estado,
 	DATE_FORMAT(hora_salida,'%h:%i %p') salida,
 	DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-	CONCAT_WS(', ',d.departamento,m.municipio) municipio,
+	LOWER(CONCAT_WS(', ',d.departamento,m.municipio)) municipio,
 	vh.placa	
 FROM tcm_solicitud_transporte  s 
 INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
@@ -411,7 +411,7 @@ function regreso_vehiculo($id, $km, $hora, $gas){
 function infoSolicitud($id){
 	$query="
 	SELECT  
-		CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada) AS nombre,
+		LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
 		DATE_FORMAT(hora_salida,'%h:%i %p') salida,
 		DATE_FORMAT(hora_entrada,'%h:%i %p') regreso,
 		v.modelo,
@@ -468,8 +468,6 @@ function infoSolicitud($id){
 					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS hora_salida,
 					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS hora_entrada,
 					tcm_solicitud_transporte.acompanante,
-					tcm_solicitud_transporte.id_municipio,
-					tcm_solicitud_transporte.lugar_destino,
 					tcm_solicitud_transporte.mision_encomendada
 					FROM tcm_solicitud_transporte
 					WHERE tcm_solicitud_transporte.id_solicitud_transporte='".$id_solicitud."'";
