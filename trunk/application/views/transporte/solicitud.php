@@ -61,7 +61,7 @@
                 <?php 
 					if($id_permiso>1) {
 				?>
-                    <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:75%">
+                    <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:40%">
                     <?php
                         foreach($empleados as $val) {
 							if($val['NR']==$solicitud['id_empleado_solicitante'])
@@ -117,13 +117,17 @@
             <p>
                  <label for="requiere_motorista" id="lrequiere_motorista">Requiere motorista </label>
                  <input type="checkbox" tabindex="8" id="requiere_motorista" name="requiere_motorista" value="1" title="S&iacute;"/>
+            </p> 
+            <p>
+                <label for="observaciones" id="lobservaciones" class="label_textarea">Observaciones</label>
+                <textarea class="tam-4" id="observaciones" tabindex="10" name="observaciones"/></textarea>
             </p>
       	</div>
         <div id="step-3">	
             <h2 class="StepTitle">Selecci&oacute;n de los destinos que tendr&aacute; el viaje</h2>
              <p>
                 <label for="municipio" id="lmunicipio">Municipio</label>
-                <select name="municipio" id="municipio" class="select" tabindex="6" placeholder="[Seleccione...]" style="width:50%;">
+                <select name="municipio" id="municipio" class="select" tabindex="6" placeholder="[Seleccione...]" style="width:40%;">
                 <?php
                      foreach($municipios as $val) {
                          echo '<option value="'.$val['id'].'">'.ucwords($val['nombre']).'</option>';
@@ -160,8 +164,8 @@
         <div id="step-4">	
             <h2 class="StepTitle">Selecci&oacute;n de las personas que ir&aacute;n en el veh&iacute;culo</h2>
             <p>
-                <label for="acompanantes" id="lacompanantes">Acompa&ntilde;antes</label>
-                <select name="acompanantes[]" id="acompanantes" class="multi" multiple="multiple" tabindex="9" placeholder="[Seleccione...]" style="width:400px;">
+                <label for="acompanantes" id="lacompanantes" style="vertical-align: text-bottom;">Acompa&ntilde;antes</label>
+                <select name="acompanantes[]" id="acompanantes" class="multi" multiple="multiple" tabindex="9" placeholder="[Seleccione...]" style="width:350px;">
                 <?php
                      foreach($acompanantes as $val) {
                          echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
@@ -170,8 +174,8 @@
                 </select>
             </p> 
             <p>
-                <label for="acompanantes2" id="lacompanantes2">Otros acompa&ntilde;antes</label>
-                <textarea class="tam-4" id="acompanantes2" tabindex="10" name="acompanantes2"/> <?php echo $solicitud['acompanante']; ?></textarea>
+                <label for="acompanantes2" id="lacompanantes2" class="label_textarea">Otros acompa&ntilde;antes</label>
+                <textarea class="tam-4" id="acompanantes2" tabindex="10" name="acompanantes2"/><?php echo $solicitud['acompanante']; ?></textarea>
             </p>
         </div>
     </div>
