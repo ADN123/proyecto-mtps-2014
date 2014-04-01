@@ -25,6 +25,10 @@ form label {
 	display: inline-block;
 	text-align: right;
 }
+.label_textarea {
+	vertical-align: top;
+	margin-top: 25px;
+}
 input[type="text"], input[type="password"], select, input[type="radio"], textarea {
 	height: 22px;
 	padding: 5px;
@@ -36,8 +40,8 @@ input[type="text"], input[type="password"], select, input[type="radio"], textare
 	box-sizing: initial !important;
 }
 textarea {
-	min-height: 70px;	
-	max-height: 70px;
+	min-height: 50px;	
+	max-height: 50px;
 } 
 button {
 	height: 34px !important;
