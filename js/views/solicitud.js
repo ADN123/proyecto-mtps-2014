@@ -2,11 +2,25 @@
 $(document).ready(function(){
 	$('#wizard').smartWizard();
 	
+	var tiempo = new Date();
+	
 	function startChange() {
 		var startTime = start.value();
-		if (startTime) {
+		var hor_rea = new Date(startTime);
+		fec_min=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours()+24, tiempo.getMinutes());
+		var fec = fec_soli.value();
+		fec = new Date(fec);
+		fec_rea=new Date(fec.getFullYear(), fec.getMonth(), fec.getDate(), hor_rea.getHours(), hor_rea.getMinutes());
+		
+		if(fec_min>fec_rea){
+			$('#resultado_fecha').html("Esta solicitud queda sujeta a disponibilidad de transporte");
+		}
+		else {
+			$('#resultado_fecha').html("");
+		}
+		startTime = start.value();
+		if (startTime!="" &&  this.options.interval) {
 			startTime = new Date(startTime);
-			end.max(startTime);
 			startTime.setMinutes(startTime.getMinutes() + this.options.interval);
 			end.min(startTime);
 			end.value(startTime);
@@ -16,56 +30,19 @@ $(document).ready(function(){
 		change: startChange
 	}).data("kendoTimePicker");
 	var end = $(".fin").kendoTimePicker().data("kendoTimePicker");
-	var tiempo = new Date();
-	if(permiso!=3) {
-		var hora=Number(tiempo.getHours());
-		var tipo="AM";
-		if(Number(tiempo.getHours())<=5 || Number(tiempo.getHours())>=18)
-			hora=5;
-		else 
-			if(Number(tiempo.getHours())>12) {
-				hora=Number(tiempo.getHours())-12;
-				tipo="PM";
-			}
-	}
 	start.min("5:00 AM");
 	start.max("5:30 PM");
 	end.min("5:30 AM");
 	end.max("6:00 PM");
+
+	newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours(), tiempo.getMinutes());
 	
-	function verificar_hora() {
-		if((tiempo.getDate()+1)<10)
-			d="0"+(tiempo.getDate()+1);
-		else
-			d=(tiempo.getDate()+1);
-		if((tiempo.getMonth()+1)<10)
-			m="0"+(tiempo.getMonth()+1);
-		else
-			m=(tiempo.getMonth()+1);
-		var fec=d+"/"+m+"/"+tiempo.getFullYear();
-		if($("#fecha_mision").val()==fec) {
-			start.min(hora+":00 "+tipo);
-			end.min(hora+":30 "+tipo);
-		}
-		else {
-			start.min("5:00 AM");
-			end.min("5:30 AM");
-		}
-	}
-	if(Number(tiempo.getHours())>=18)
-		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate()+2);
-	else
-		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate()+1);
-	
-	if(permiso==3) 
-		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate());
-	
-	$("#fecha_mision").kendoDatePicker({
+	var fec_soli=$("#fecha_mision").kendoDatePicker({
 		culture: "es-SV",
 		format: "dd/MM/yyyy",
 		min: newfec,
-		change: verificar_hora
-	});
+		change: startChange
+	}).data("kendoDatePicker");
 	
 	$("#fecha_mision").validacion({
 		valFecha: true
@@ -78,11 +55,14 @@ $(document).ready(function(){
 	});
 	$("#hora_salida").validacion();
 	$("#hora_regreso").validacion();
-	/*$("#municipio").validacion({
-		men: "Debe seleccionar un item"
+	$("#observaciones").validacion({
+		req: false,
+		lonMin: 10
 	});
-	$("#lugar_destino").validacion();*/
-	
+	$("#acompanantes2").validacion({
+		req: false,
+		lonMin: 10
+	});	
 	$("#nombre").change(function(){
 		var id=$(this).val();
 		$.ajax({

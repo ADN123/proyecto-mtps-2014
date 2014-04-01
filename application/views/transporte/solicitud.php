@@ -114,6 +114,9 @@
                 <label for="hora_regreso" id="lhora_regreso">Hora de regreso </label>
                 <input type="text" tabindex="5" class="fin" id="hora_regreso" name="hora_regreso" value="<?php echo $solicitud['hora_entrada']; ?>"/>
             </p>
+            <p style="text-align: center;">
+                <span id="resultado_fecha" style="color: #F00; font-size: 12px;"></span>
+            </p>
             <p>
                  <label for="requiere_motorista" id="lrequiere_motorista">Requiere motorista </label>
                  <input type="checkbox" tabindex="8" id="requiere_motorista" name="requiere_motorista" value="1" title="S&iacute;"/>
