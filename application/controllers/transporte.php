@@ -181,7 +181,7 @@ class Transporte extends CI_Controller
 				";
 				foreach($d as $datos)
 				{
-					$nombre=$datos->nombre;
+					$nombre=ucwords($datos->nombre);
 					$seccion=$datos->seccion;
 					$mision=$datos->mision;
 					$fechaS=$datos->fechaS;
@@ -191,7 +191,7 @@ class Transporte extends CI_Controller
 					$municipio=$datos->municipio;
 					$lugar=$datos->lugar;
 					$requiere=$datos->req;
-					$acompanante=$datos->acompanante;
+					$acompanante=ucwords($datos->acompanante);
 					$id_empleado=$datos->id_empleado_solicitante;
 				}
 				
@@ -203,10 +203,29 @@ class Transporte extends CI_Controller
 			Fecha de Misión: <strong>".$fechaM."</strong> <br>
 			Hora de Salida: <strong>".$salida."</strong> <br>
 			Hora de Regreso: <strong>".$entrada."</strong> <br>
-			Municipio: <strong>".$municipio."</strong> <br>
-			Lugar: <strong>".$lugar."</strong> <br>
 			
 			</fieldset>
+			<br />
+			
+			<fieldset>
+			<legend align='left'>Destinos</legend>
+			
+			<table cellspacing='0' align='center' class='table_design'>
+                    <thead>
+                        <th>
+                            Municipio
+                        </th>
+                        <th>
+                            Lugar de destino
+                        </th>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+			
+			</fieldset>
+			
 		   <br>
 		    <fieldset>
 				<legend align='left'>Acompañantes</legend>
@@ -214,7 +233,7 @@ class Transporte extends CI_Controller
 				";
 				foreach($a as $acompa)
 				{
-					echo "<strong>".$acompa->nombre."</strong> <br />";
+					echo "<strong>".ucwords($acompa->nombre)."</strong> <br />";
 				}
 				echo "<strong>".$acompanante."</strong><br />";
 			echo "
@@ -224,7 +243,7 @@ class Transporte extends CI_Controller
 			<legend align='left'>Vehículos</legend>
 				<p>
 				<label>Información</label>
-			   <select name='vehiculo' id='vehiculo' onchange='motoristaf(this.value)'>
+			   <select class='select' name='vehiculo' id='vehiculo' onchange='motoristaf(this.value)'>
 			   ";
 			   
 				foreach($vehiculos_disponibles as $v)
@@ -251,7 +270,7 @@ class Transporte extends CI_Controller
 			}
 			else
 			{
-				echo "<label>".$nombre."</label>";
+				echo "<strong>".$nombre."</strong>";
 				echo "<input type='hidden' name='motorista' value='".$id_empleado."'>";
 			}
 			echo "
@@ -267,50 +286,27 @@ class Transporte extends CI_Controller
 			</form>
 			";
 			
+			echo "<script>
+				$('select').prepend('<option value=\"\" selected=\"selected\"></option>');
+				$('.select').kendoComboBox({
+					autoBind: false,
+					filter: 'contains'
+				});
+				/*$('#motorista').kendoComboBox({
+					autoBind: false,
+					filter: 'contains'
+				})
+				var se=$('motorista').data('kendoComboBox');
+				se.destroy();*/
+			</script>";
+			
 		}
 		else
 		{
 			echo ' No tiene permiso';
 		}
 	}
-
-/////////////////Función para conocer los vehículos disponibles para las misiones oficiales
-	/*function verificar_fecha_hora($id_solicitud)
-	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['id_permiso']>2)
-		{
-			/*$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));////////consulta la seccion
-			
-			$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id_solicitud);
-			//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.
-									
-			foreach($solicitud_actual as $row)
-			{
-				$id_departamento=$row->id_departamento_pais;
-				$fecha=$row->fecha;
-				$entrada=$row->entrada;
-				$salida=$row->salida;		
-			}
-			
-			if($id_departamento=="00006")////Para misiones locales, el 6 significa departamento de San Salvador
-			{
-				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
-			}
-			else///////////////////////para misiones fuera de san salvador
-			{
-				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles2($fecha,$entrada,$salida);
-			}
-				
-			$j=json_encode($vehiculos_disponibles);
-			echo $j;
-		}
-		else
-		{
-			echo ' No tiene permiso';
-		}
-	}*/
-	////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	////////función para conocer el motorista que se ha de asignar a la misión oficial//////////
 	function verificar_motoristas($id_vehiculo)

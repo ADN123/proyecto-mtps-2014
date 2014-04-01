@@ -260,6 +260,15 @@ where t.id_solicitud_transporte='$id';");
 		
 		return $query;
 	}
+	////////////////////////////FUNCION DE DESTINOS/////////////////
+	function destinos($id)
+	{
+		$query=$this->db->query("select m.municipio, d.lugar_destino as destino from tcm_destino_mision as d
+inner join org_municipio as m on (d.id_municipio=m.id_municipio)
+inner join tcm_solicitud_transporte as s on (d.id_solicitud_transporte=s.id_solicitud_transporte)
+where s.id_solicitud_transporte='$id'");
+	}
+	///////////////////////////////////////////////////////////////
 	
 	/////////////////////////////////////////////////
 	function info_adicional($id_empleado=0)
@@ -342,6 +351,7 @@ where t.id_solicitud_transporte='$id';");
 			return 0;
 		}
 	}
+	
 /*---------------------------------Control de salidas y entradas de Vehiculos------------------------------------*/
 	function salidas_entradas_vehiculos(){
 		$query=$this->db->query("SELECT s.id_solicitud_transporte id,
