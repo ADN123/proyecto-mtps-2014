@@ -68,7 +68,7 @@
 							 	$sel='selected="selected"';
 							else
 								$sel="";
-                            echo '<option '.$sel.' value="'.$val['NR'].'">'.$val['nombre'].'</option>';
+                            echo '<option '.$sel.' value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
                         }
                     ?>
                     </select>
@@ -76,7 +76,7 @@
 					} 
 					else {
 						foreach($empleados as $val) {
-							echo '<strong>'.$val['nombre'].'</strong>';
+							echo '<strong>'.ucwords($val['nombre']).'</strong>';
 				?>
                 			<input type="hidden" id="nombre" name="nombre" value="<?php echo $val['NR']; ?>" />
                 <?php
@@ -126,7 +126,7 @@
                 <select name="municipio" id="municipio" class="select" tabindex="6" placeholder="[Seleccione...]" style="width:50%;">
                 <?php
                      foreach($municipios as $val) {
-                         echo '<option value="'.$val['id'].'">'.$val['nombre'].'</option>';
+                         echo '<option value="'.$val['id'].'">'.ucwords($val['nombre']).'</option>';
                      }
                 ?>
                 </select>
@@ -164,7 +164,7 @@
                 <select name="acompanantes[]" id="acompanantes" class="multi" multiple="multiple" tabindex="9" placeholder="[Seleccione...]" style="width:400px;">
                 <?php
                      foreach($acompanantes as $val) {
-                         echo '<option value="'.$val['NR'].'">'.$val['nombre'].'</option>';
+                         echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
                      }
                 ?>
                 </select>
