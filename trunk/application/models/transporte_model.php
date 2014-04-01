@@ -156,7 +156,7 @@ where v.id_vehiculo not in
   (select avm.id_vehiculo from tcm_solicitud_transporte as st
   inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
   where st.fecha_mision='$fecha' and (st.hora_salida='$hsalida' or st.hora_entrada='$hentrada'))
-  and id_seccion=21
+  and (id_seccion=21 or id_seccion=113)
 order by v.id_vehiculo asc;");
 		return $query->result();
 	}
@@ -175,7 +175,7 @@ where v.id_vehiculo not in
   (select avm.id_vehiculo from tcm_solicitud_transporte as st
   inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
   where st.fecha_mision='$fecha' and (st.hora_salida>='$hsalida' and st.hora_entrada<='$hentrada'))
-  and id_seccion=21
+  and (id_seccion=21 or id_seccion=113)
 order by v.id_vehiculo asc;");
 		return $query->result();
 	}
