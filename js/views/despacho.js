@@ -1,4 +1,4 @@
-function info(id){
+function info(id,val){
 $.ajax({
 		async:	true, 
 		url:	base_url()+"/index.php/transporte/infoSolicitud/"+id,
@@ -13,12 +13,13 @@ $.ajax({
 						dataType:"json",
 						success: function(date){
 							console.log(date);
-	
-						 document.getElementById('kmf').value=date[0].KMFinal;
-						 document.getElementById('kmi').value=date[0].KMinicial;
-							datos(data);
-									document.getElementById('km').setAttribute("min",1000);
 
+							if(val==4){
+							document.getElementById('kmi').value=date[0].KMinicial;
+									}else{
+							document.getElementById('kmi').value=date[0].KMFinal;
+									}
+							datos(data);
 							}
 					});				
 
@@ -40,7 +41,7 @@ console.log(id);
 			}else{
 		$('#dere').show();
 	}
-info(id);	
+info(id,val);	
 }
 
 function datos(data){ //carga informacion en el cuadro de dialogo
