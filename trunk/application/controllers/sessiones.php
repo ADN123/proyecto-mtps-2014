@@ -6,13 +6,29 @@ class Sessiones extends CI_Controller {
         parent::__construct();
 		$this->load->model('seguridad_model');
     }
-
+	
+	/*
+	*	Nombre: index
+	*	Obejtivo: Carga la vista que contiene el formulario de login
+	*	Hecha por: Jhonatan
+	*	Modificada por: Leonel
+	*	Ultima Modificacion: 15/03/2014
+	*	Observaciones: Ninguna
+	*/
 	function index(){
 	  	$this->load->view('encabezadoLogin.php'); 
 	  	$this->load->view('login.php'); 
 		$this->load->view('piePagina.php');
 	}
-
+	
+	/*
+	*	Nombre: iniciar_session
+	*	Obejtivo: Verificar que el nick y password introducidos por el usuario sean correctos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Leonel
+	*	Ultima Modificacion: 01/04/2014
+	*	Observaciones: La variable de session "id_seccion" no la deberiamos ocupar, deberiamos ir a buscar el registro actual del usuario logueado cada vez que se requiera
+	*/
 	function iniciar_session()
 	{
 		$login =$this->input->post('user');
@@ -43,6 +59,14 @@ class Sessiones extends CI_Controller {
 		}
 	}
 	
+	/*
+	*	Nombre: cerrar_session
+	*	Obejtivo: Cerrar la sesion de un usuario
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Ultima Modificacion: 15/03/2014
+	*	Observaciones: Ninguna
+	*/
 	function cerrar_session()
 	{
 		

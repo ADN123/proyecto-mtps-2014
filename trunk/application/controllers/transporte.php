@@ -16,29 +16,44 @@ class Transporte extends CI_Controller
 		$this->solicitud();
   	}
 	
+	/*
+	*	Nombre: solicitud
+	*	Obejtivo: Carga la vista para la creacion del solicitudes de transporte
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Ultima Modificacion: 01/04/2014
+	*	Observaciones: Ninguna
+	*/
 	function solicitud($id_solicitud=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['id_permiso']>1) {
-			if($data['id_permiso']>2)//nivel 3
-				$data['empleados']=$this->transporte_model->consultar_empleados();
-			else {//nivel 2
-				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-				$data['empleados']=$this->transporte_model->consultar_empleados_seccion($id_seccion['id_seccion']);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
+		
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+					$data['empleados']=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
+					foreach($data['empleados'] as $val) {
+						$data['info']=$this->transporte_model->info_adicional($val['NR']);
+					}
+					break;
+				case 2:
+					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+					$data['empleados']=$this->transporte_model->consultar_empleados_seccion($id_seccion['id_seccion']);
+					break;
+				case 3:
+					$data['empleados']=$this->transporte_model->consultar_empleados();
+					break;
 			}
-		}
-		else {//nivel 1
-			$data['empleados']=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
-			foreach($data['empleados'] as $val) {
-				$data['info']=$this->transporte_model->info_adicional($val['NR']);
-			}
-		}
-		$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
-		$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
-		$data['municipios']=$this->transporte_model->consultar_municipios();
+			
+			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
+			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
+			$data['municipios']=$this->transporte_model->consultar_municipios();
 
-		//print_r($data);
-		pantalla('transporte/solicitud',$data);	
+			pantalla('transporte/solicitud',$data);	
+		}
+		else {
+			echo ' No tiene permisos para acceder';
+		}
 	}
 	
 	function control_solicitudes()
@@ -209,7 +224,14 @@ function asignar_veh_mot()
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-
+	/*
+	*	Nombre: buscar_info_adicional
+	*	Obejtivo: Mostrar la informacion del puesto del empleado que necesita el transporte
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Ultima Modificacion: 15/03/2014
+	*	Observaciones: Ninguna
+	*/
 	function buscar_info_adicional()
 	{
 		$id_empleado=$this->input->post('id_empleado');
@@ -232,68 +254,83 @@ function asignar_veh_mot()
 		echo json_encode($json);
 	}
 	
+	/*
+	*	Nombre: guardar_solicitud
+	*	Obejtivo: Guardar el formulario de solicitud de transporte
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Ultima Modificacion: 01/04/2014
+	*	Observaciones: Ninguna
+	*/
 	function guardar_solicitud()
 	{	
-		$fec=str_replace("/","-",$this->input->post('fecha_mision'));
-		$fecha_solicitud_transporte=date('Y-m-d');
-		$id_empleado_solicitante=(int)$this->input->post('nombre');
-		$mision_encomendada=$this->input->post('mision_encomendada');
-		$fecha_mision=date("Y-m-d", strtotime($fec));
-		$hora_salida=date("H:i:s", strtotime($this->input->post('hora_salida')));
-		$hora_entrada=date("H:i:s", strtotime($this->input->post('hora_regreso')));
-		$id_municipio=(int)$this->input->post('municipio');
-		$lugar_destino=$this->input->post('lugar_destino');
-		if($this->input->post('requiere_motorista')!="")
-			$requiere_motorista=$this->input->post('requiere_motorista');
-		else
-			$requiere_motorista=0;
-		$observaciones=$this->input->post('observaciones');
-		$acompanante=$this->input->post('acompanantes2');
-		$id_usuario_crea=$this->session->userdata('id_usuario');
-		$fecha_creacion=date('Y-m-d H:i:s');
-		$estado_solicitud_transporte=1;
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
 		
-		$formuInfo = array(
-			'fecha_solicitud_transporte'=>$fecha_solicitud_transporte,
-			'id_empleado_solicitante'=>$id_empleado_solicitante,
-			'mision_encomendada'=>$mision_encomendada,
-			'fecha_mision'=>$fecha_mision,
-			'hora_salida'=>$hora_salida,
-			'hora_entrada'=>$hora_entrada,
-			'id_municipio'=>$id_municipio,
-			'lugar_destino'=>$lugar_destino,
-			'requiere_motorista'=>$requiere_motorista,
-			'acompanante'=>$acompanante,
-			'id_usuario_crea'=>$id_usuario_crea,
-			'fecha_creacion'=>$fecha_creacion,
-			'estado_solicitud_transporte'=>$estado_solicitud_transporte
-		);
-		
-		$id_solicitud_transporte=$this->transporte_model->guardar_solicitud($formuInfo);
-		$acompanantes=$this->input->post('acompanantes');
-		for($i=0;$i<count($acompanantes);$i++) {
+		if($data['id_permiso']!=NULL) {
+			$fec=str_replace("/","-",$this->input->post('fecha_mision'));
+			$fecha_solicitud_transporte=date('Y-m-d');
+			$id_empleado_solicitante=(int)$this->input->post('nombre');
+			$mision_encomendada=$this->input->post('mision_encomendada');
+			$fecha_mision=date("Y-m-d", strtotime($fec));
+			$hora_salida=date("H:i:s", strtotime($this->input->post('hora_salida')));
+			$hora_entrada=date("H:i:s", strtotime($this->input->post('hora_regreso')));
+			$id_municipio=(int)$this->input->post('municipio');
+			$lugar_destino=$this->input->post('lugar_destino');
+			if($this->input->post('requiere_motorista')!="")
+				$requiere_motorista=$this->input->post('requiere_motorista');
+			else
+				$requiere_motorista=0;
+			$observaciones=$this->input->post('observaciones');
+			$acompanante=$this->input->post('acompanantes2');
+			$id_usuario_crea=$this->session->userdata('id_usuario');
+			$fecha_creacion=date('Y-m-d H:i:s');
+			$estado_solicitud_transporte=1;
+			
 			$formuInfo = array(
-				'id_solicitud_transporte'=>$id_solicitud_transporte,
-				'id_empleado'=>$acompanantes[$i]
+				'fecha_solicitud_transporte'=>$fecha_solicitud_transporte,
+				'id_empleado_solicitante'=>$id_empleado_solicitante,
+				'mision_encomendada'=>$mision_encomendada,
+				'fecha_mision'=>$fecha_mision,
+				'hora_salida'=>$hora_salida,
+				'hora_entrada'=>$hora_entrada,
+				'id_municipio'=>$id_municipio,
+				'lugar_destino'=>$lugar_destino,
+				'requiere_motorista'=>$requiere_motorista,
+				'acompanante'=>$acompanante,
+				'id_usuario_crea'=>$id_usuario_crea,
+				'fecha_creacion'=>$fecha_creacion,
+				'estado_solicitud_transporte'=>$estado_solicitud_transporte
 			);
-			$this->transporte_model->guardar_acompanantes($formuInfo);
-		}
-		$destinos=$this->input->post('values');
-		for($i=0;$i<count($destinos);$i++) {
-			$campos=explode("**",$destinos[$i]);
-			if(isset($campos[1])) {
+			
+			$id_solicitud_transporte=$this->transporte_model->guardar_solicitud($formuInfo); /*Guardando la solicitud*/
+			$acompanantes=$this->input->post('acompanantes');
+			for($i=0;$i<count($acompanantes);$i++) {
 				$formuInfo = array(
 					'id_solicitud_transporte'=>$id_solicitud_transporte,
-					'id_municipio'=>$campos[0],
-					'lugar_destino'=>$campos[1]
+					'id_empleado'=>$acompanantes[$i]
 				);
-				$this->transporte_model->guardar_destinos($formuInfo);
+				$this->transporte_model->guardar_acompanantes($formuInfo); /*Guardando acompañantes*/
 			}
+			$destinos=$this->input->post('values');
+			for($i=0;$i<count($destinos);$i++) {
+				$campos=explode("**",$destinos[$i]);
+				if(isset($campos[1])) {
+					$formuInfo = array(
+						'id_solicitud_transporte'=>$id_solicitud_transporte,
+						'id_municipio'=>$campos[0],
+						'lugar_destino'=>$campos[1]
+					);
+					$this->transporte_model->guardar_destinos($formuInfo); /*Guardando destinos*/
+				}
+			}
+			
+			$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones); /*Guardando observaciones*/
+			
+			ir_a('index.php/transporte/solicitud');
 		}
-		
-		$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones);
-		
-		ir_a('index.php/transporte/solicitud');
+		else {
+			echo "No tiene permisos para acceder";
+		}
 	}
 	function control_salidas_entradas(){
 	$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
@@ -329,9 +366,19 @@ function asignar_veh_mot()
 			echo $j;
 				
 	}
+	
+	/*
+	*	Nombre: ver_solicitudes
+	*	Obejtivo: Ver el estado actual de las solicitudes. Permite editar o eliminar solicitudes
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Ultima Modificacion: 15/03/2014
+	*	Observaciones: Ninguna
+	*/
 	function ver_solicitudes()
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),61);
+		
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
 				case 1:
@@ -345,6 +392,7 @@ function asignar_veh_mot()
 				case 3:
 					$data['solicitudes']=$this->transporte_model->buscar_solicitudes();
 			}
+			
 			pantalla("transporte/ver_solicitudes",$data);	
 		}
 		else {
@@ -352,15 +400,38 @@ function asignar_veh_mot()
 		}
 	}
 	
+	/*
+	*	Nombre: eliminar_solicitud
+	*	Obejtivo: Elimina (desactiva) una solicitud de transporte
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Ultima Modificacion: 15/03/2014
+	*	Observaciones: Ninguna
+	*/
 	function eliminar_solicitud($id_solicitud)
 	{
-		$this->transporte_model->eliminar_solicitud($id_solicitud);
-		redirect('index.php/transporte/ver_solicitudes');
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),61);
+		
+		if($data['id_permiso']!=NULL) {
+			$this->transporte_model->eliminar_solicitud($id_solicitud);
+			redirect('index.php/transporte/ver_solicitudes');
+		}
+		else {
+			echo "No tiene permisos para acceder";
+		}
 	}
 	
+	/*
+	*	Nombre: reporte_solicitud
+	*	Obejtivo: Muestra solicitudes que ya tienen asignado vehiculo y motorista. Permite exportar a pdf
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Ultima Modificacion: 01/04/2014
+	*	Observaciones: Ninguna
+	*/
 	function reporte_solicitud()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),61);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),66);
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
 				case 1:
@@ -381,5 +452,17 @@ function asignar_veh_mot()
 		}
 	}
 	
+	/*
+	*	Nombre: solicitud_pdf
+	*	Obejtivo: Genera una archivo pdf de una solicitud
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Ultima Modificacion: 01/04/2014
+	*	Observaciones: Ninguna
+	*/
+	function solicitud_pdf($id) 
+	{
+		echo $id;
+	}
 }
 ?>
