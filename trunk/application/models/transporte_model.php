@@ -194,7 +194,8 @@ SELECT id_solicitud_transporte id,
 	lugar_destino lugar,
 	nombre_seccion seccion,
 	requiere_motorista req,
-	acompanante
+	acompanante,
+	id_empleado_solicitante
 FROM tcm_solicitud_transporte  s 
 INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
 INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio

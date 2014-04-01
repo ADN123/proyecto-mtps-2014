@@ -192,6 +192,7 @@ class Transporte extends CI_Controller
 					$lugar=$datos->lugar;
 					$requiere=$datos->req;
 					$acompanante=$datos->acompanante;
+					$id_empleado=$datos->id_empleado_solicitante;
 				}
 				
 			
@@ -228,7 +229,7 @@ class Transporte extends CI_Controller
 			   
 				foreach($vehiculos_disponibles as $v)
 				{
-					echo "<option value='".$v->id_vehiculo."' data-motorista='".."'>".$v->placa." - ".$v->nombre." - ".$v->modelo."</option>";
+					echo "<option value='".$v->id_vehiculo."'>".$v->placa." - ".$v->nombre." - ".$v->modelo."</option>";
 				}
 			   
 			   echo "    
@@ -251,6 +252,7 @@ class Transporte extends CI_Controller
 			else
 			{
 				echo "<label>".$nombre."</label>";
+				echo "<input type='hidden' name='motorista' value='".$id_empleado."'>";
 			}
 			echo "
 			</p>
@@ -273,12 +275,12 @@ class Transporte extends CI_Controller
 	}
 
 /////////////////Función para conocer los vehículos disponibles para las misiones oficiales
-	function verificar_fecha_hora($id_solicitud)
+	/*function verificar_fecha_hora($id_solicitud)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		if($data['id_permiso']>2)
 		{
-			/*$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));*////////consulta la seccion
+			/*$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));////////consulta la seccion
 			
 			$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id_solicitud);
 			//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.
@@ -307,7 +309,7 @@ class Transporte extends CI_Controller
 		{
 			echo ' No tiene permiso';
 		}
-	}
+	}*/
 	////////////////////////////////////////////////////////////////////////////////////////////
 	
 	////////función para conocer el motorista que se ha de asignar a la misión oficial//////////

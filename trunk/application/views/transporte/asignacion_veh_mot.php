@@ -36,6 +36,11 @@ var requiere_motorista;
 </div>
 
 <script language="javascript" >
+function dialogo(id)
+{
+	$('#ventana').load('cargar_datos_solicitud/'+id);
+	return false;
+}
 /*
 function dialogo(id){
 
