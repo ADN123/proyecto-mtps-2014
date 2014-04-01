@@ -196,6 +196,16 @@
             </td>
         </tr>
     </table>
+    <table align="center" class="tabla" cellspacing="0" width="800" style="font-size: 12px">
+    	<tr>
+        	<td>
+            	<strong>USO EXCLUSIVO SERVICIOS GENERALES</strong>
+            </td>
+        	<td>
+            	<strong>USO EXCLUSIVO PORTERO</strong>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
 
