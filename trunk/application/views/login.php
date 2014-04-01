@@ -3,7 +3,7 @@
     <h2>Inicio de sesi&oacute;n</h2>
 </section>
 <div id="contenedor">
-    <form name="form1" id="form1" action="<?php echo base_url();?>index.php/sessiones/iniciar_session"  method="post"> 
+    <form name="form1" id="form1" action="<?php echo base_url();?>index.php/sessiones/iniciar_session"  method="post" name="form1"> 
         <p>
             <input type="hidden" name="ir" />
         </p>
