@@ -78,14 +78,23 @@
 </div>
 
 <script type="text/javascript" language="javascript">
- $("#timepicker").kendoTimePicker();
+$("#timepicker").kendoTimePicker({
+  animation: {
+   close: {
+     effects: "zoom:out",
+     duration: 300
+   }
+  }
+});
  $("#timepicker").validacion({
 			men: "Por Ingrese la Hora",
-			req: true 
+			req: true
+			
  });
  $("#km").validacion({
 			men: "Por Ingrese el kilometraje",
-			req: true
+			req: true,
+			numMin: 0
 	});
 	
 

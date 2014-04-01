@@ -397,16 +397,16 @@ function regreso_vehiculo($id, $km, $hora, $gas){
 		id_solicitud_transporte = '$id' ;
 		";
 		
-		//$r1=$this->db->query($q);
+		$r1=$this->db->query($q);
 		
 		$q="
 		UPDATE tcm_solicitud_transporte SET
 		estado_solicitud_transporte = '5'  
 		WHERE	id_solicitud_transporte = '$id' ;
 		";
-		//$r2=$this->db->query($q);
+		$r2=$this->db->query($q);
 		
-		//return ($r1 AND $r2);		
+		return ($r1 AND $r2);		
 	}
 function infoSolicitud($id){
 	$query="
