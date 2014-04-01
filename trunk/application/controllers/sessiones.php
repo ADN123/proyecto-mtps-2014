@@ -1,12 +1,13 @@
 <?php 
 class Sessiones extends CI_Controller {
-	
+		
 	function Sessiones()
 	{
         parent::__construct();
 		$this->load->model('seguridad_model');
+		$this->load->helper('cookie');
     }
-	
+
 	/*
 	*	Nombre: index
 	*	Obejtivo: Carga la vista que contiene el formulario de login
@@ -32,27 +33,35 @@ class Sessiones extends CI_Controller {
 	function iniciar_session()
 	{
 
-		$login =$this->input->post('user');
-		$clave =$this->input->post('pass');
+	$login =$this->input->post('user');
+	$clave =$this->input->post('pass');
 	
 	
-					//añadimos 1 a la sesión
-			$_SESSION['intentos']++ ;
+				
+	if(isset($_SESSION['intentos'])){
+			$_SESSION['intentos']=0;
+			set_cookie('intentos',0);
+		}	//añadimos 1 a la sesión
+
+
 			//Comprobamos intentos
-			if ($_SESSION['intentos'] <3)
-			{
+			if ($_SESSION['intentos']<=3)
+			{	$_SESSION['intentos']++;
+				set_cookie('intentos',0);
+				
 
 				$v=$this->seguridad_model->consultar_usuario($login,$clave);
 		
 				if($v['id_usuario']==0) {
 					$json =array(
 						'estado'=>"0",
-						'msj'=>"Error al intentar ingresar al sistema: "
+						'msj'=>"Datos incorrectos "
 					);
 					echo json_encode($json);
 					//redirect('index.php/sessiones');
 				}
 				else {
+					$_SESSION['intentos']=0;
 					$this->session->set_userdata('nombre', $v['nombre_completo']);
 					$this->session->set_userdata('id_usuario', $v['id_usuario']);
 					$this->session->set_userdata('usuario', $v['usuario']);

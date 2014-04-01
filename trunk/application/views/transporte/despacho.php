@@ -47,7 +47,6 @@
     	<div id="izq"  style=" width:50%; float:left;" type="text"> 
                  <input type="hidden" name="estado" id="estado" />
 				<input type="hidden" name="id" id="id" />
-                	<input type="hidden" id="kmf" />
 				<input type="hidden" id="kmi" />
 
     	           <div id="InfoMision" style="font-size:12px;">
@@ -86,6 +85,11 @@ $("#timepicker").kendoTimePicker({
    }
   }
 });
+var timepicker = $("#timepicker").data("kendoTimePicker");
+timepicker.min("5:00 AM");
+timepicker.max("8:00 PM");
+
+
  $("#timepicker").validacion({
 			men: "Por Ingrese la Hora",
 			req: true

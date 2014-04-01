@@ -6,11 +6,15 @@ $(document).ready(function() {
 			return false;
 		}
 	 	else {
+			var user=document.getElementById('user') 
+			var pass=document.getElementById('pass')
+			
+			
 			var formu = $('#form1').serializeArray();
 			$.ajax({
 				type:  "post",  
 				async:	true, 
-				url:	base_url()+"index.php/sessiones/iniciar_session",
+				url:	base_url()+"index.php/sessiones/iniciar_session/"+user.value+"/"+pass.value,
 				data:   formu,
 				dataType: "json",
 				success: function(data) { /////funcion ejecutada si la respuesta fue satictatoria
@@ -22,7 +26,7 @@ $(document).ready(function() {
 						setTimeout('location.href="'+base_url()+'"',1000);
 					}
 				}else{
-						if(data['intentos']==3){alert(data['msj'])}
+						alert(data['msj']);
 						ele=document.getElementById('user') 
 						ele.disabled=true;
 						

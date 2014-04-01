@@ -180,7 +180,7 @@ order by v.id_vehiculo asc;");
 		return $query->result();
 	}
 	
-	//////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////Informacion del cuadro de dialogo de aprobacion de solicitudes////////////////////////////////////////////////
 	function datos_de_solicitudes($id,$seccion){
 		  $query=$this->db->query("
 SELECT id_solicitud_transporte id, 
