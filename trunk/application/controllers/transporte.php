@@ -247,6 +247,7 @@ function asignar_veh_mot()
 			$requiere_motorista=$this->input->post('requiere_motorista');
 		else
 			$requiere_motorista=0;
+		$observaciones=$this->input->post('observaciones');
 		$acompanante=$this->input->post('acompanantes2');
 		$id_usuario_crea=$this->session->userdata('id_usuario');
 		$fecha_creacion=date('Y-m-d H:i:s');
@@ -289,6 +290,9 @@ function asignar_veh_mot()
 				$this->transporte_model->guardar_destinos($formuInfo);
 			}
 		}
+		
+		$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones);
+		
 		ir_a('index.php/transporte/solicitud');
 	}
 	function control_salidas_entradas(){
