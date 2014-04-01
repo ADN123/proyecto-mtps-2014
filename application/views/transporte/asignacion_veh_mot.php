@@ -133,7 +133,7 @@ function motoristaf(id){
 			
 			for(i=0;i<json.length;i++)
 			{			
-				$('#motorista').append('<option value="'+json[i].id_empleado+'">'+json[i].nombre+'</option>');
+				$('#motorista').append('<option value="'+json[i].id_empleado+'">'+json[i].nombre.capitalize()+'</option>');
 			}		
 		},
 			
@@ -147,4 +147,12 @@ function motoristaf(id){
 	function enviar(v){
 		document.getElementById('resp').value=v;
 	}
+	
+	String.prototype.capitalize = function()
+	{
+		return this.replace(/\w+/g, function(a)
+		{
+			return a.charAt(0).toUpperCase() + a.slice(1).toLowerCase();
+		});
+	};
 </script>
