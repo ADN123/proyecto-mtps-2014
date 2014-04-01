@@ -134,6 +134,144 @@ class Transporte extends CI_Controller
 	
 ///////////////////////////////////////////////////////////////////////////////////////
 
+/////////////función para cargar datos de solicitudes////////////////////////////////////
+	function cargar_datos_solicitud($id)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		if($data['id_permiso']>2)
+		{
+			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
+			$a=$this->transporte_model->acompanantes_internos($id);
+			
+			$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id);
+			//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.
+									
+			foreach($solicitud_actual as $row)
+			{
+				$id_departamento=$row->id_departamento_pais;
+				$fecha=$row->fecha;
+				$entrada=$row->entrada;
+				$salida=$row->salida;		
+			}
+			
+			if($id_departamento=="00006")////Para misiones locales, el 6 significa departamento de San Salvador
+			{
+				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
+			}
+			else///////////////////////para misiones fuera de san salvador
+			{
+				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles2($fecha,$entrada,$salida);
+			}
+			
+			echo 
+			"
+			<div id='signup-header'>
+			<h2>Asignaci&oacute;n de Veh&iacute;culos y Motoristas</h2>
+			<a class='modal_close'></a>
+			</div>
+			
+			<form id='form' action='".base_url()."index.php/transporte/asignar_veh_mot' method='post'>
+			<input type='hidden'   id='id_solicitud' name='id_solicitud'/>
+			<input type='hidden' id='resp' name='resp' />
+			<input type='hidden' name='id_mot' value='id_mot' />
+			
+			<fieldset>      
+				<legend align='left'>Información de la Solicitud</legend>
+				";
+				foreach($d as $datos)
+				{
+					$nombre=$datos->nombre;
+					$seccion=$datos->seccion;
+					$mision=$datos->mision;
+					$fechaS=$datos->fechaS;
+					$fechaM=$datos->fechaM;
+					$salida=$datos->salida;
+					$entrada=$datos->entrada;
+					$municipio=$datos->municipio;
+					$lugar=$datos->lugar;
+					$requiere=$datos->req;
+					$acompanante=$datos->acompanante;
+				}
+				
+			
+			echo "Nombre: <strong>".$nombre."</strong> <br>
+			Sección: <strong>".$seccion."</strong> <br>
+			Misión: <strong>".$mision."</strong> <br>
+			Fecha de Solicitud: <strong>".$fechaS."</strong> <br>
+			Fecha de Misión: <strong>".$fechaM."</strong> <br>
+			Hora de Salida: <strong>".$salida."</strong> <br>
+			Hora de Regreso: <strong>".$entrada."</strong> <br>
+			Municipio: <strong>".$municipio."</strong> <br>
+			Lugar: <strong>".$lugar."</strong> <br>
+			
+			</fieldset>
+		   <br>
+		    <fieldset>
+				<legend align='left'>Acompañantes</legend>
+				
+				";
+				foreach($a as $acompa)
+				{
+					echo "<strong>".$acompa->nombre."</strong> <br />";
+				}
+				echo "<strong>".$acompanante."</strong><br />";
+			echo "
+		    </fieldset>
+			<br>
+			<fieldset>
+			<legend align='left'>Vehículos</legend>
+				<p>
+				<label>Información</label>
+			   <select name='vehiculo' id='vehiculo' onchange='motoristaf(this.value)'>
+			   ";
+			   
+				foreach($vehiculos_disponibles as $v)
+				{
+					echo "<option value='".$v->id_vehiculo."' data-motorista='".."'>".$v->placa." - ".$v->nombre." - ".$v->modelo."</option>";
+				}
+			   
+			   echo "    
+			   </select>
+				</p>   
+			</fieldset>
+			<br>
+			<fieldset>
+				<legend align='left'>Motorista</legend>
+					<p>
+					<label>Nombre:</label>
+			";
+			if($requiere==1)
+			{
+			echo "
+				   <select name='motorista' id='motorista'>
+				   </select>
+				";
+			}
+			else
+			{
+				echo "<label>".$nombre."</label>";
+			}
+			echo "
+			</p>
+				</fieldset>
+			 <p>
+				<label for='observacion' id='lobservacion'>Observación</label>
+				<textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
+			</p>
+			<p style='text-align: center;'>
+				<button type='submit' id='asignar' name='asignar' onclick='enviar(3)'>Asignar</button>
+			</p>
+			</form>
+			";
+			
+		}
+		else
+		{
+			echo ' No tiene permiso';
+		}
+	}
+
 /////////////////Función para conocer los vehículos disponibles para las misiones oficiales
 	function verificar_fecha_hora($id_solicitud)
 	{
