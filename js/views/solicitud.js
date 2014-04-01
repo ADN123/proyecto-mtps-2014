@@ -3,20 +3,29 @@ $(document).ready(function(){
 	$('#wizard').smartWizard();
 	
 	var tiempo = new Date();
+	newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours(), tiempo.getMinutes());
 	
 	function startChange() {
 		var startTime = start.value();
+		
 		var hor_rea = new Date(startTime);
 		fec_min=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours()+24, tiempo.getMinutes());
 		var fec = fec_soli.value();
 		fec = new Date(fec);
 		fec_rea=new Date(fec.getFullYear(), fec.getMonth(), fec.getDate(), hor_rea.getHours(), hor_rea.getMinutes());
 		
-		if(fec_min>fec_rea){
-			$('#resultado_fecha').html("Esta solicitud queda sujeta a disponibilidad de transporte");
+		if(permiso!=3)
+			if(fec_min>fec_rea){
+				$('#resultado_fecha').html("Esta solicitud queda sujeta a disponibilidad de transporte");
+			}
+			else {
+				$('#resultado_fecha').html("");
+			}
+		if(newfec>=fec_rea) {
+				start.min(newfec);
 		}
 		else {
-			$('#resultado_fecha').html("");
+			start.min("5:00 AM");
 		}
 		startTime = start.value();
 		if (startTime!="" &&  this.options.interval) {
@@ -30,12 +39,11 @@ $(document).ready(function(){
 		change: startChange
 	}).data("kendoTimePicker");
 	var end = $(".fin").kendoTimePicker().data("kendoTimePicker");
-	start.min("5:00 AM");
+	start.min(newfec);
 	start.max("5:30 PM");
 	end.min("5:30 AM");
 	end.max("6:00 PM");
 
-	newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours(), tiempo.getMinutes());
 	
 	var fec_soli=$("#fecha_mision").kendoDatePicker({
 		culture: "es-SV",
