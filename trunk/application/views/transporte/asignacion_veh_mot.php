@@ -1,5 +1,5 @@
 <script>
-var requiere_motorista=2;
+var requiere_motorista;
 </script>
 <section>
     <h2>Asignación de Vehículo y Motorista</h2>
@@ -33,71 +33,15 @@ var requiere_motorista=2;
 </table>
 
 <div id="ventana">
-    
-    <div id="signup-header">
-        <h2>Asignaci&oacute;n de Veh&iacute;culos y Motoristas</h2>
-        <a class="modal_close"></a>
-    </div>
-    <form id="form" action="<?php echo base_url()?>index.php/transporte/asignar_veh_mot" method="post">
-    <input type="hidden"   id="id_solicitud" name="id_solicitud"/>
-    <input type="hidden" id="resp" name="resp" />
-    <input type="hidden" name="id_mot" value="id_mot" />
-    
-    <fieldset>      
-        <legend align="left">Información de la Solicitud</legend>
-        <div  id="mision" style="font-size:14px;"></div>
-    </fieldset>
-   
-    <fieldset>
-    <legend align="left">Vehículos</legend>
-        <p>
-        <label>Información</label>
-       <select name="vehiculo" id="vehiculo" onchange="motoristaf(this.value)">    
-       </select>
-        </p>   
-    </fieldset>
-    
-    <fieldset>
-    <legend align="left">Motorista</legend>
-        <p>
-        <label>Nombre</label>
-        <?php
-		//*$re_mot = "<script> document.write(requiere_motorista); <script>"*//;
-		$re_mot=1;
-		//echo $re_mot;
-		if($re_mot==1)
-		{
-        ?>
-       <select name="motorista" id="motorista">
-       </select>
-       <?php
-		}
-		else
-		{
-	   ?>
-       <input type="hidden" name="motorista" value=""/>
-       <?php
-		}
-	   ?>
-        </p>
-    </fieldset>
-     <p>
-        <label for="observacion" id="lobservacion">Observación</label>
-        <textarea class="tam-4" id="observacion" tabindex="2" name="observacion"/></textarea>
-    </p>
-    <p style="text-align: center;">
-    	<button type="submit" id="asignar" name="asignar" onclick="enviar(3)">Asignar</button>
-    </p>
-	</form>
-
 </div>
-<script language="javascript" >
 
+<script language="javascript" >
+/*
 function dialogo(id){
 
 	$.ajax({
 	async:	true,
-	url:	"<?php echo base_url()?>/index.php/transporte/datos_de_solicitudes/"+id,
+	url:	"base_url()/index.php/transporte/datos_de_solicitudes/"+id,
 	dataType:"json",
 	success: function(data){
 		console.log(data);
@@ -113,6 +57,11 @@ var echo2="Misión: <strong>"+data[0].mision+"</strong> <br>"+
 		   "Municipio: <strong>"+data[0].municipio+"</strong> <br>"+
 		   "Lugar: <strong>"+data[0].lugar+"</strong> <br>";
 			requiere_motorista=data[0].req;
+				document.getElementById('motorista').style("display: none");
+			if(requiere_motorista==0)
+			{
+					alert()
+			}
 			
 			//alert(requiere_motorista);
 			//document.getElementById('requiere_motorista').value=require_motorista;
@@ -137,12 +86,12 @@ var echo2="Misión: <strong>"+data[0].mision+"</strong> <br>"+
 		$('#motorista').append('<option value="3">Oscar</option>');
 	}
 	dialogo(id_s);
-}*/
+}
 
 function dialogo1(id1){
 		$.ajax({
 		async:	true, 
-		url:	"<?php echo base_url()?>/index.php/transporte/verificar_fecha_hora/"+id1,
+		url:	"base_url()/index.php/transporte/verificar_fecha_hora/"+id1,
 		dataType:"json",
 		success: function(data){
 		document.getElementById('id_solicitud').value=id1;
@@ -163,7 +112,7 @@ function dialogo1(id1){
 		
 			}
 		});
-}
+}*/
 	
 function motoristaf(id){
 		
