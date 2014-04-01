@@ -267,6 +267,8 @@ where t.id_solicitud_transporte='$id';");
 inner join org_municipio as m on (d.id_municipio=m.id_municipio)
 inner join tcm_solicitud_transporte as s on (d.id_solicitud_transporte=s.id_solicitud_transporte)
 where s.id_solicitud_transporte='$id'");
+		
+		return $query->result();
 	}
 	///////////////////////////////////////////////////////////////
 	
