@@ -202,7 +202,6 @@ INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio
 INNER JOIN org_departamento d ON d.id_departamento= m.id_departamento_pais,
 org_seccion sec
 WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
-	
 		return $query->result();
 	}	
 	function aprobar($id, $estado, $nr, $iduse){
@@ -476,12 +475,16 @@ function infoSolicitud($id){
 		$sentencia="SELECT
 					tcm_solicitud_transporte.id_solicitud_transporte,
 					tcm_solicitud_transporte.id_empleado_solicitante,
+					LOWER(CONCAT_WS(' ',e1.primer_nombre, e1.segundo_nombre, e1.tercer_nombre, e1.primer_apellido, e1.segundo_apellido, e1.apellido_casada)) AS nombre,
+					LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido, e2.segundo_apellido, e2.apellido_casada)) AS nombre2,
 					DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d/%m/%Y') AS fecha_mision,
 					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS hora_salida,
 					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS hora_entrada,
 					tcm_solicitud_transporte.acompanante,
 					tcm_solicitud_transporte.mision_encomendada
 					FROM tcm_solicitud_transporte
+					INNER JOIN sir_empleado AS e1 ON tcm_solicitud_transporte.id_empleado_solicitante=e1.id_empleado
+					LEFT JOIN sir_empleado AS e2 ON tcm_solicitud_transporte.id_empleado_autoriza=e2.id_empleado
 					WHERE tcm_solicitud_transporte.id_solicitud_transporte='".$id_solicitud."'";
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {

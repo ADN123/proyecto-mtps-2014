@@ -365,29 +365,40 @@ function asignar_veh_mot()
 	*	Obejtivo: Mostrar la informacion del puesto del empleado que necesita el transporte
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
-	*	Ultima Modificacion: 15/03/2014
+	*	Ultima Modificacion: 01/04/2014
 	*	Observaciones: Ninguna
 	*/
 	function buscar_info_adicional()
 	{
-		$id_empleado=$this->input->post('id_empleado');
-		$data=$this->transporte_model->info_adicional($id_empleado);
-		if($data['nr']!='0') {
-			$json =array(
-				'estado'=>1,
-				'nr'=>$data['nr'],
-				'id_seccion'=>$data['id_seccion'],
-				'funcional'=>$data['funcional'],
-				'nivel_1'=>$data['nivel_1'],
-				'nivel_2'=>$data['nivel_2'],
-				'nivel_3'=>$data['nivel_3']
-			);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
+		
+		if($data['id_permiso']!=NULL) {
+			$id_empleado=$this->input->post('id_empleado');
+			$data=$this->transporte_model->info_adicional($id_empleado);
+			if($data['nr']!='0') {
+				$json =array(
+					'estado'=>1,
+					'nr'=>$data['nr'],
+					'id_seccion'=>$data['id_seccion'],
+					'funcional'=>$data['funcional'],
+					'nivel_1'=>$data['nivel_1'],
+					'nivel_2'=>$data['nivel_2'],
+					'nivel_3'=>$data['nivel_3']
+				);
+			}
+			else {
+				$json =array(
+					'estado'=>0
+				);
+			}
+			echo json_encode($json);
 		}
 		else {
 			$json =array(
 				'estado'=>0
-			);}
-		echo json_encode($json);
+			);
+			echo json_encode($json);
+		}
 	}
 	
 	/*
@@ -598,7 +609,13 @@ function asignar_veh_mot()
 	*/
 	function solicitud_pdf($id) 
 	{
-		echo $id;
+		$data['info_solicitud']=$this->transporte_model->consultar_solicitud($id);
+		$id_solicitud_transporte=$data['info_solicitud']['id_solicitud_transporte'];
+		$id_empleado_solicitante=$data['info_solicitud']['id_empleado_solicitante'];
+		$data['info_empleado']=$this->transporte_model->info_adicional($id_empleado_solicitante);
+		$data['acompanantes']=$this->transporte_model->acompanantes_internos($id_solicitud_transporte);
+		$data['destinos']=$this->transporte_model->destinos($id_solicitud_transporte);
+		$this->load->view('transporte/solicitud_pdf.php',$data);
 	}
 }
 ?>
