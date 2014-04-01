@@ -39,6 +39,7 @@ var requiere_motorista;
 function dialogo(id)
 {
 	$('#ventana').load('cargar_datos_solicitud/'+id);
+				
 	return false;
 }
 /*
@@ -134,7 +135,8 @@ function motoristaf(id){
 			for(i=0;i<json.length;i++)
 			{			
 				$('#motorista').append('<option value="'+json[i].id_empleado+'">'+json[i].nombre.capitalize()+'</option>');
-			}		
+			}	
+					
 		},
 			
 		error:function(data){
