@@ -31,32 +31,51 @@ class Sessiones extends CI_Controller {
 	*/
 	function iniciar_session()
 	{
+
 		$login =$this->input->post('user');
 		$clave =$this->input->post('pass');
-			
-		$v=$this->seguridad_model->consultar_usuario($login,$clave);
+	
+	
+					//añadimos 1 a la sesión
+			$_SESSION['intentos']++ ;
+			//Comprobamos intentos
+			if ($_SESSION['intentos'] <3)
+			{
 
-		if($v['id_usuario']==0) {
-			$json =array(
-				'estado'=>"0",
-				'msj'=>"Error al intentar ingresar al sistema: Los datos ingresados son incorrectos"
-			);
-		 	echo json_encode($json);
-			//redirect('index.php/sessiones');
+				$v=$this->seguridad_model->consultar_usuario($login,$clave);
+		
+				if($v['id_usuario']==0) {
+					$json =array(
+						'estado'=>"0",
+						'msj'=>"Error al intentar ingresar al sistema: "
+					);
+					echo json_encode($json);
+					//redirect('index.php/sessiones');
+				}
+				else {
+					$this->session->set_userdata('nombre', $v['nombre_completo']);
+					$this->session->set_userdata('id_usuario', $v['id_usuario']);
+					$this->session->set_userdata('usuario', $v['usuario']);
+					$this->session->set_userdata('nr', $v['NR']);			
+					$this->session->set_userdata('id_seccion', $v['id_seccion']);			
+					$json =array(
+						'estado'=>1,
+						'msj'=>"Iniciando Session...."
+					);
+					echo json_encode($json);
+					//redirect('index.php'); 
+				}
+	}else{
+					$json =array(
+						'estado'=>"3",
+						'msj'=>"Demasiados intentos. Sistema bloqueado",
+						'intentos'=>$_SESSION['intentos']
+					);
+					echo json_encode($json);
+		
+		
 		}
-		else {
-			$this->session->set_userdata('nombre', $v['nombre_completo']);
-			$this->session->set_userdata('id_usuario', $v['id_usuario']);
-			$this->session->set_userdata('usuario', $v['usuario']);
-			$this->session->set_userdata('nr', $v['NR']);			
-			$this->session->set_userdata('id_seccion', $v['id_seccion']);			
-			$json =array(
-				'estado'=>1,
-				'msj'=>"Iniciando Session...."
-			);
-			echo json_encode($json);
-			//redirect('index.php'); 
-		}
+		
 	}
 	
 	/*
