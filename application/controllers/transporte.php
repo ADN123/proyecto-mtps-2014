@@ -186,9 +186,7 @@ class Transporte extends CI_Controller
 				</div>
 				
 				<form id='form' action='".base_url()."index.php/transporte/asignar_veh_mot' method='post'>
-				<input type='hidden'   id='id_solicitud' name='id_solicitud'/>
 				<input type='hidden' id='resp' name='resp' />
-				<input type='hidden' name='id_mot' value='id_mot' />
 				
 				<fieldset>      
 					<legend align='left'>Información de la Solicitud</legend>
@@ -266,7 +264,7 @@ class Transporte extends CI_Controller
 				<fieldset>
 				<legend align='left'>Vehículos</legend>
 					<p>
-					<label>Información</label>
+					<label>Información:</label>
 				   <select class='select' name='vehiculo' id='vehiculo' onchange='motoristaf(this.value)'>
 				   ";
 				   
@@ -337,14 +335,17 @@ class Transporte extends CI_Controller
 	function verificar_motoristas($id_vehiculo)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['id_permiso']>2)
+		if($data['id_permiso']!=NULL)
 		{
-			
-			$motoristas=$this->transporte_model->consultar_motoristas($id_vehiculo);
-			//////////consulta al motorista asignado al vehiculo.
-			
-			$j=json_encode($motoristas);
-			echo $j;
+			if($data['id_permiso']>2)
+			{
+				
+				$motoristas=$this->transporte_model->consultar_motoristas($id_vehiculo);
+				//////////consulta al motorista asignado al vehiculo.
+				
+				$j=json_encode($motoristas);
+				echo $j;
+			}
 		}
 		else
 		{
@@ -357,25 +358,29 @@ class Transporte extends CI_Controller
 function asignar_veh_mot()
 	{
 		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['permiso']>=2)
+		
+		if($data['permiso']!=NULL)
 		{
-			$id_solicitud=$this->input->post('id_solicitud');//id_solicitud
-			$id_vehiculo=$this->input->post('vehiculo'); //id_vehiculo
-			$id_motorista=$this->input->post('motorista'); //estado de la solicitud
-			$estado=$this->input->post('resp');//futurp estado de la solicitud
-			$fecha_m=date('Y-m-d H:i:s');
-			$nr=$this->session->userdata('nr'); //NR del usuario Logueado
-			
-			if($estado==3)
+			if($data['permiso']>=2)
 			{
-				$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));						
+				$id_solicitud=$this->input->post('id_solicitud');//id_solicitud
+				$id_vehiculo=$this->input->post('vehiculo'); //id_vehiculo
+				$id_motorista=$this->input->post('motorista'); //estado de la solicitud
+				$estado=$this->input->post('resp');//futurp estado de la solicitud
+				$fecha_m=date('Y-m-d H:i:s');
+				$nr=$this->session->userdata('nr'); //NR del usuario Logueado
 				
-				ir_a("index.php/transporte/asignar_vehiculo_motorista");
-			
-			}
-			else
-			{
-				echo'Datos corruptos';
+				if($estado==3)
+				{
+					$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));						
+					
+					ir_a("index.php/transporte/asignar_vehiculo_motorista");
+				
+				}
+				else
+				{
+					echo'Datos corruptos';
+				}
 			}
 		}
 		else
