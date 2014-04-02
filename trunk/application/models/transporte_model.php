@@ -125,8 +125,12 @@ function todas_solicitudes_por_confirmar(){
 		
 	}
 	/////FUNCION QUE RETORNA lAS SOlICITUDES QUE AÚN NO TIENEN UN VEHICUlO O MOTORISTA ASIGNADO
-	function solicitudes_por_asignar(){
-	  $query=$this->db->query("SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,date_format(hora_entrada,'%r') entrada, date_format(hora_salida,'%r') salida, m.municipio, lugar_destino lugar, mision_encomendada mision, requiere_motorista FROM tcm_solicitud_transporte  t INNER JOIN org_municipio m  ON t.id_municipio=m.id_municipio where (estado_solicitud_transporte=2)");
+	function solicitudes_por_asignar($seccion){
+	  $query=$this->db->query("SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,date_format(hora_entrada,'%r') entrada, date_format(hora_salida,'%r') salida, requiere_motorista, o.nombre_seccion seccion, LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre FROM tcm_solicitud_transporte  t
+inner join sir_empleado s on (s.id_empleado=t.id_empleado_solicitante)
+inner join sir_empleado_informacion_laboral i on (i.id_empleado=s.id_empleado)
+inner join org_seccion o on (i.id_seccion=o.id_seccion)
+where (estado_solicitud_transporte=2)");
 
    	return $query->result();
 		
@@ -138,7 +142,8 @@ function todas_solicitudes_por_confirmar(){
 	{
 		$query=$this->db->query("SELECT om.id_departamento_pais, st.fecha_mision AS fecha, st.hora_salida AS salida, st.hora_entrada AS entrada
 FROM tcm_solicitud_transporte AS st
-INNER JOIN org_municipio AS om ON ( st.id_municipio = om.id_municipio ) 
+INNER JOIN tcm_destino_mision as dm on (st.id_solicitud_transporte=dm.id_solicitud_transporte)
+INNER JOIN org_municipio AS om ON ( dm.id_municipio = om.id_municipio ) 
 WHERE st.id_solicitud_transporte =  '$id';");
 		return $query->result();
 	}
@@ -185,21 +190,16 @@ order by v.id_vehiculo asc;");
 		  $query=$this->db->query("
 SELECT id_solicitud_transporte id, 
 	LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
-	mision_encomendada mision, 
 	DATE_FORMAT(fecha_solicitud_transporte, '%d-%m-%Y') fechaS,
 	DATE_FORMAT(fecha_mision, '%d-%m-%Y')  fechaM,
 	DATE_FORMAT(hora_salida,'%h:%i %p') salida,
 	DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-	LOWER(CONCAT_WS(', ',d.departamento,m.municipio)) municipio,
-	lugar_destino lugar,
 	nombre_seccion seccion,
 	requiere_motorista req,
 	acompanante,
 	id_empleado_solicitante
 FROM tcm_solicitud_transporte  s 
-INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
-INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio
-INNER JOIN org_departamento d ON d.id_departamento= m.id_departamento_pais,
+INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado,
 org_seccion sec
 WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
 		return $query->result();
@@ -262,7 +262,7 @@ where t.id_solicitud_transporte='$id';");
 	////////////////////////////FUNCION DE DESTINOS/////////////////
 	function destinos($id)
 	{
-		$query=$this->db->query("select m.municipio, d.lugar_destino as destino from tcm_destino_mision as d
+		$query=$this->db->query("select m.municipio, d.lugar_destino destino, d.mision_encomendada mision,direccion_destino as direccion from tcm_destino_mision as d
 inner join org_municipio as m on (d.id_municipio=m.id_municipio)
 inner join tcm_solicitud_transporte as s on (d.id_solicitud_transporte=s.id_solicitud_transporte)
 where s.id_solicitud_transporte='$id'");
