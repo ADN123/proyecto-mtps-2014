@@ -187,6 +187,7 @@ class Transporte extends CI_Controller
 				
 				<form id='form' action='".base_url()."index.php/transporte/asignar_veh_mot' method='post'>
 				<input type='hidden' id='resp' name='resp' />
+				<input type='hidden' name='id_solicitud' value='".$id."' />
 				
 				<fieldset>      
 					<legend align='left'>Información de la Solicitud</legend>
@@ -369,10 +370,13 @@ function asignar_veh_mot()
 				$estado=$this->input->post('resp');//futurp estado de la solicitud
 				$fecha_m=date('Y-m-d H:i:s');
 				$nr=$this->session->userdata('nr'); //NR del usuario Logueado
+				$observaciones=$this->input->post('observacion');//observación, si es que hay
 				
 				if($estado==3)
 				{
-					$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));						
+					$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));
+					
+					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones);						
 					
 					ir_a("index.php/transporte/asignar_vehiculo_motorista");
 				
