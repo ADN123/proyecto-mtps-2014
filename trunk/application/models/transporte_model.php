@@ -132,11 +132,18 @@ FROM tcm_solicitud_transporte  t
 	}
 	/////FUNCION QUE RETORNA lAS SOlICITUDES QUE AÚN NO TIENEN UN VEHICUlO O MOTORISTA ASIGNADO
 	function solicitudes_por_asignar($seccion){
-	  $query=$this->db->query("SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,date_format(hora_entrada,'%r') entrada, date_format(hora_salida,'%r') salida, requiere_motorista, o.nombre_seccion seccion, LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre FROM tcm_solicitud_transporte  t
-inner join sir_empleado s on (s.id_empleado=t.id_empleado_solicitante)
-inner join sir_empleado_informacion_laboral i on (i.id_empleado=s.id_empleado)
-inner join org_seccion o on (i.id_seccion=o.id_seccion)
-where (estado_solicitud_transporte=2)");
+	  $query=$this->db->query("SELECT id_solicitud_transporte id, 
+	DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+	DATE_FORMAT(hora_entrada,'%r') entrada, 
+	DATE_FORMAT(hora_salida,'%r') salida, 
+	requiere_motorista, 
+	COALESCE(o.nombre_seccion, 'No hay registro') seccion, 
+	LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre 
+FROM tcm_solicitud_transporte  t
+LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+WHERE (estado_solicitud_transporte=2)");
 
    	return $query->result();
 		
