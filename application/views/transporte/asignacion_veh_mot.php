@@ -70,11 +70,5 @@ function motoristaf(id){
 		document.getElementById('resp').value=v;
 	}
 	
-	String.prototype.capitalize = function()
-	{
-		return this.replace(/\w+/g, function(a)
-		{
-			return a.charAt(0).toUpperCase() + a.slice(1).toLowerCase();
-		});
-	};
+
 </script>

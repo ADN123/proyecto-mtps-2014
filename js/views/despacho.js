@@ -48,7 +48,7 @@ function datos(data){ //carga informacion en el cuadro de dialogo
 	var id=  document.getElementById('id').value;
 	var minKM=document.getElementById('kmi').value;
 		 	var echo1="Solicitud numero:<strong>"+id+"</strong><br />"+
-                   " Solicitante:<strong> "+data[0].nombre+"</strong><br />"+
+                   " Solicitante:<strong> "+data[0].nombre.capitalize()+"</strong><br />"+
                     "Hora de Salida:<strong>"+data[0].salida+"</strong><br />"+
                     "Hora de Regreso:<strong>"+data[0].regreso+"</strong><br />"+
                    " Vehiculo:<strong>"+data[0].modelo+"</strong><br />"+
