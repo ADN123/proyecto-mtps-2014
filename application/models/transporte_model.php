@@ -238,7 +238,7 @@ inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.
 	////////////////////////////////////////////////////////////////////////
 	function consultar_motoristas($id)
 	{
-		$query=$this->db->query("(SELECT t.id_empleado,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre FROM tcm_vehiculo_motorista t inner join sir_empleado e on (t.id_empleado=e.id_empleado)
+		$query=$this->db->query("(SELECT t.id_empleado, IF(t.id_empleado!=0,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)),'No tiene asignado') as nombre FROM tcm_vehiculo_motorista t left join sir_empleado e on (t.id_empleado=e.id_empleado)
 where t.id_vehiculo='$id') union (SELECT t.id_empleado,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre FROM tcm_vehiculo_motorista t
 inner join sir_empleado e on (t.id_empleado=e.id_empleado)
 inner join tcm_vehiculo v on (t.id_vehiculo=v.id_vehiculo)
