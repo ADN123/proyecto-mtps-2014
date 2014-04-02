@@ -304,9 +304,9 @@ where s.id_solicitud_transporte='$id'");
 	{
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_solicitud_transporte
-					(fecha_solicitud_transporte, id_empleado_solicitante, mision_encomendada, fecha_mision, hora_salida, hora_entrada, id_municipio, lugar_destino, requiere_motorista, acompanante, id_usuario_crea, fecha_creacion, estado_solicitud_transporte) 
+					(fecha_solicitud_transporte, id_empleado_solicitante, fecha_mision, hora_salida, hora_entrada, requiere_motorista, acompanante, id_usuario_crea, fecha_creacion, estado_solicitud_transporte) 
 					VALUES 
-					('$fecha_solicitud_transporte', '$id_empleado_solicitante', '$mision_encomendada', '$fecha_mision', '$hora_salida', '$hora_entrada', '$id_municipio', '$lugar_destino', '$requiere_motorista', '$acompanante', '$id_usuario_crea', '$fecha_creacion', '$estado_solicitud_transporte')";
+					('$fecha_solicitud_transporte', '$id_empleado_solicitante', '$fecha_mision', '$hora_salida', '$hora_entrada', '$requiere_motorista', '$acompanante', '$id_usuario_crea', '$fecha_creacion', '$estado_solicitud_transporte')";
 		$this->db->query($sentencia);
 		return $this->db->insert_id();
 	}
@@ -517,9 +517,9 @@ function infoSolicitud($id){
 	{
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_destino_mision
-					(id_solicitud_transporte, id_municipio, lugar_destino) 
+					(id_solicitud_transporte, id_municipio, lugar_destino, direccion_destino, mision_encomendada) 
 					VALUES 
-					('$id_solicitud_transporte', '$id_municipio', '$lugar_destino')";
+					('$id_solicitud_transporte', '$id_municipio', '$lugar_destino', '$direccion_destino', '$mision_encomendada')";
 		$this->db->query($sentencia);
 	}
 	

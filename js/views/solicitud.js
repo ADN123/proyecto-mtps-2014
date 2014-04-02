@@ -128,7 +128,7 @@ $(document).ready(function(){
 		if(municipio_text!="" && lugar_destino!="" && mision_encomendada!="") {
 			var construct=$('#content_table').html();
 			var action=	'<a onClick="borrar_item(this)"><img src="'+base_url()+'img/ico_basura.png" width="25" height="25" align="absmiddle" title="Borrar item"/></a>';
-			var input='<input type="hidden" name="values[]" value="'+ municipio +'**'+ lugar_destino +'**'+ mision_encomendada +'**'+ direccion_empresa +'"/>';
+			var input='<input type="hidden" name="values[]" value="'+ municipio +'**'+ lugar_destino +'**'+ direccion_empresa +'**'+ mision_encomendada +'"/>';
 			construct+='<tr><td>'+ municipio_text +'</td><td>'+ lugar_destino +'</td><td>'+ direccion_empresa +'</td><td>'+ mision_encomendada +'</td><td align="center">'+ action +'</td>'+ input +'</tr>';
 			$('#content_table').html(construct);
 			$('#lugar_destino').val("");
