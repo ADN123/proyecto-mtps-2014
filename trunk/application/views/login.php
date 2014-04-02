@@ -16,7 +16,7 @@
             <input type="password" tabindex="2" style="width: 225px;" name="pass" id="pass" />
         </p>
         <p style="text-align: center;">
-            <button type="button" class="button tam-1 boton_validador" tabindex="3" id="entrar" name="entrar"> Entrar</button>
+            <button type="submit" class="button tam-1 boton_validador" tabindex="3" id="entrar" name="entrar"> Entrar</button>
         </p>
     </form>
 </div>

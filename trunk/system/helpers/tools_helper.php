@@ -64,6 +64,22 @@
 				</script>';
 		
 		}	
+	function alerta($msj,$url){
+		echo'<script language="JavaScript" type="text/javascript">
+				var pagina="'.base_url().$url.'"
+				function redireccionar() 
+				{
+				alert("'.$msj.'");
+				setTimeout("partB()",2000)
+				} 
+				function partB() 
+				{
+				location.href=pagina
+				} 
+				setTimeout ("redireccionar()",1000);			
+		</script>';
+		
+		}	
 
 
 
