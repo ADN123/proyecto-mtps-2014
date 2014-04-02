@@ -58,12 +58,22 @@ $(document).ready(function(){
 	$("#nombre").validacion({
 		men: "Debe seleccionar un item"
 	});
-	$("#mision_encomendada").validacion({
-		valNombre: true
-	});
 	$("#hora_salida").validacion();
 	$("#hora_regreso").validacion();
 	$("#observaciones").validacion({
+		req: false,
+		lonMin: 10
+	});
+	$("#mision_encomendada").validacion({
+		valNombre: true
+	});
+	$("#lugar_destino").validacion({
+		valNombre: true
+	});
+	$("#municipio").validacion({
+		men: "Debe seleccionar un item"
+	});
+	$("#direccion_empresa").validacion({
 		req: false,
 		lonMin: 10
 	});
@@ -120,9 +130,6 @@ $(document).ready(function(){
 			construct+='<tr><td>'+ municipio_text +'</td><td>'+ lugar_destino +'</td><td align="center">'+ action +'</td>'+ input +'</tr>';
 			$('#content_table').html(construct);
 			$('#lugar_destino').val("");;
-		}
-		else {
-			alert("Los campos 'Municipio' y 'Lugar de destino' no pueden estar vacios");
 		}
 	});
 });

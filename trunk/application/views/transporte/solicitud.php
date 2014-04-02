@@ -99,10 +99,6 @@
         </div>
         <div id="step-2">	
             <h2 class="StepTitle">Ingreso de datos del viaje</h2>
-             <p>
-                 <label for="mision_encomendada" id="lmision_encomendada">Mision encomendada </label>
-                 <input type="text" tabindex="2" class="tam-3" id="mision_encomendada" name="mision_encomendada" value="<?php echo $solicitud['mision_encomendada']; ?>"/>
-            </p>
             <p>
                 <label for="fecha_mision" id="lfecha_mision">Fecha Misi&oacute;n </label>
                 <input type="text" tabindex="3" id="fecha_mision" name="fecha_mision" value="<?php echo $solicitud['fecha_mision']; ?>"/>
@@ -118,8 +114,8 @@
                 <span id="resultado_fecha" style="color: #F00; font-size: 12px;"></span>
             </p>
             <p>
-                 <label for="requiere_motorista" id="lrequiere_motorista">Requiere motorista </label>
-                 <input type="checkbox" tabindex="8" id="requiere_motorista" name="requiere_motorista" value="1" title="S&iacute;"/>
+				<label for="requiere_motorista" id="lrequiere_motorista">Requiere motorista </label>
+          		<input type="checkbox" tabindex="8" id="requiere_motorista" name="requiere_motorista" value="1" title="S&iacute;"/>
             </p> 
             <p>
                 <label for="observaciones" id="lobservaciones" class="label_textarea">Observaciones</label>
@@ -128,22 +124,8 @@
       	</div>
         <div id="step-3">	
             <h2 class="StepTitle">Selecci&oacute;n de los destinos que tendr&aacute; el viaje</h2>
-             <p>
-                <label for="municipio" id="lmunicipio">Municipio</label>
-                <select name="municipio" id="municipio" class="select" tabindex="6" placeholder="[Seleccione...]" style="width:40%;">
-                <?php
-                     foreach($municipios as $val) {
-                         echo '<option value="'.$val['id'].'">'.ucwords($val['nombre']).'</option>';
-                     }
-                ?>
-                </select>
-            </p> 
             <p>
-             <label for="lugar_destino" id="llugar_destino">Lugar de destino </label>
-             <input type="text" tabindex="7" class="tam-3" id="lugar_destino" name="lugar_destino" value="<?php echo $solicitud['lugar_destino']; ?>"/>
-            </p>
-            <p style="text-align: center;">
-            	<button type="button" id="agregar">Agregar</button>
+            	Para agregar un nuevo destino de click <a title="Agregar destino" rel="leanModal" href="#ventana">aqu&iacute;</a>
             </p>
             <p>
             	<table cellspacing="0" align="center" class="table_design">
@@ -183,3 +165,39 @@
         </div>
     </div>
 </form>
+<div id="ventana" style="height:390px">
+	<div id="signup-header">
+        <h2>Agregar destino</h2>
+        <a class="modal_close"></a>
+    </div>
+    <form id="formu_destino" name="formu_destino" method="post">
+        <fieldset>
+            <legend align="left">Información del Destino</legend>
+            <p>
+            	<label for="mision_encomendada" id="lmision_encomendada">Misi&oacute;n </label>
+				<input type="text" tabindex="2"  style="width:263px;" id="mision_encomendada" name="mision_encomendada" value="<?php echo $solicitud['mision_encomendada']; ?>"/>
+          	</p> 
+            <p>
+                <label for="lugar_destino" id="llugar_destino">Lugar de destino </label>
+             	<input type="text" tabindex="7" class="tam-2" id="lugar_destino" name="lugar_destino" value="<?php echo $solicitud['lugar_destino']; ?>"/>
+            </p>
+            <p>
+                <label for="direccion_empresa" id="ldireccion_empresa" class="label_textarea">Direcci&oacute;n</label>
+                <textarea class="tam-4" id="direccion_empresa" tabindex="10" name="direccion_empresa"/><?php echo $solicitud['acompanante']; ?></textarea>
+            </p>
+            <p>
+                <label for="municipio" id="lmunicipio">Municipio</label>
+                <select name="municipio" id="municipio" class="select" tabindex="6" placeholder="[Seleccione...]" style="width:275px;">
+                <?php
+                     foreach($municipios as $val) {
+                         echo '<option value="'.$val['id'].'">'.ucwords($val['nombre']).'</option>';
+                     }
+                ?>
+                </select>
+         	</p>
+		</fieldset>
+        <p style="text-align: center;">
+            <button type="button" id="agregar" class="boton_validador">Agregar</button>
+        </p>
+  	</form>
+</div>
