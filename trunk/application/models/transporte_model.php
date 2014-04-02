@@ -113,12 +113,11 @@ class Transporte_model extends CI_Model {
 function todas_solicitudes_por_confirmar(){
 
 	  $query=$this->db->query("
- SELECT id_solicitud_transporte AS id, 
- 	 CONCAT_WS(' ',DATE_FORMAT(fecha_mision, '%d-%m-%Y'),DATE_FORMAT(hora_salida,'%h:%i %p')) AS fecha, 
- 	 lugar_destino AS lugar, 
- 	 mision_encomendada  mision 
- FROM tcm_solicitud_transporte s
- WHERE estado_solicitud_transporte = 1");
+ SELECT id_solicitud_transporte id, date_format(fecha_mision,'%d-%m-%Y') fecha,date_format(hora_entrada,'%r') entrada, date_format(hora_salida,'%r') salida, requiere_motorista, o.nombre_seccion seccion, LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre FROM tcm_solicitud_transporte  t
+inner join sir_empleado s on (s.id_empleado=t.id_empleado_solicitante)
+inner join sir_empleado_informacion_laboral i on (i.id_empleado=s.id_empleado)
+inner join org_seccion o on (i.id_seccion=o.id_seccion)
+where (estado_solicitud_transporte=1)");
  
  
    	return $query->result();
