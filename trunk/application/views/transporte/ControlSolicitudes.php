@@ -23,7 +23,7 @@
   <tr>
     <td><?php echo $fila->fecha?></td>
     <td><?php echo $fila->seccion?></td>
-    <td><?php echo $fila->nombre?></td>
+    <td><?php echo ucwords($fila->nombre)?></td>
     <td><a title="Ver solicitud" title="Asignar Vehículo" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
 	</td>
   </tr>
@@ -69,7 +69,7 @@ function dialogo(id){
 		dataType:"json",
 		success: function(data){
 			console.log(data);
-			 document.getElementById('ids').value=id;
+		/*	 document.getElementById('ids').value=id;
 
  	var echo1="Nombre: <strong>"+data[0].nombre+"</strong> <br>" +
 		       "Sección: <strong>"+data[0].seccion+"</strong> <br>";
@@ -84,7 +84,7 @@ function dialogo(id){
 			
 			document.getElementById('empleado').innerHTML=echo1;
 			document.getElementById('mision').innerHTML=echo2;
-						
+				*/		
 			},
 		error:function(data){
 			 alert('Error al cargar datos');
