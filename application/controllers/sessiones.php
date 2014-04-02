@@ -17,9 +17,13 @@ class Sessiones extends CI_Controller {
 	*	Observaciones: Ninguna
 	*/
 	function index(){
+		
+		
 	  	$this->load->view('encabezadoLogin.php'); 
 	  	$this->load->view('login.php'); 
 		$this->load->view('piePagina.php');
+		
+		
 	}
 	
 	/*
@@ -32,36 +36,23 @@ class Sessiones extends CI_Controller {
 	*/
 	function iniciar_session()
 	{
-
-	$login =$this->input->post('user');
-	$clave =$this->input->post('pass');
-	
-	
-				
-	if(isset($_SESSION['intentos'])){
-			$_SESSION['intentos']=0;
-			set_cookie('intentos',0);
-		}	//añadimos 1 a la sesión
-
-
-			//Comprobamos intentos
-			if ($_SESSION['intentos']<=3)
-			{	$_SESSION['intentos']++;
-				set_cookie('intentos',0);
-				
-
-				$v=$this->seguridad_model->consultar_usuario($login,$clave);
+		$in=$this->verificar();
+		sleep (1);//es nesesario pausar debido a que se tiene que crear la cookie
+		if ($in<=3){				
 		
-				if($v['id_usuario']==0) {
-					$json =array(
-						'estado'=>"0",
-						'msj'=>"Datos incorrectos "
-					);
-					echo json_encode($json);
-					//redirect('index.php/sessiones');
-				}
-				else {
-					$_SESSION['intentos']=0;
+					$login =$this->input->post('user');
+					$clave =$this->input->post('pass');			
+					$v=$this->seguridad_model->consultar_usuario($login,$clave);  //Verificación en base de datos
+				
+				
+					if($v['id_usuario']==0) {
+						$json =array(
+							'estado'=>"0",
+							'msj'=>"Datos incorrectos "
+						);
+						echo json_encode($json);
+						//redirect('index.php/sessiones');
+					}else {
 					$this->session->set_userdata('nombre', $v['nombre_completo']);
 					$this->session->set_userdata('id_usuario', $v['id_usuario']);
 					$this->session->set_userdata('usuario', $v['usuario']);
@@ -73,18 +64,16 @@ class Sessiones extends CI_Controller {
 					);
 					echo json_encode($json);
 					//redirect('index.php'); 
-				}
-	}else{
-					$json =array(
-						'estado'=>"3",
-						'msj'=>"Demasiados intentos. Sistema bloqueado",
-						'intentos'=>$_SESSION['intentos']
-					);
-					echo json_encode($json);
-		
-		
+					}
+		}else{//
+			$json =array(
+				'estado'=>"3",
+				'msj'=>"Demasiados intentos. Sistema bloqueado",
+				'intentos'=>$_COOKIE['contador']
+			);
+			echo json_encode($json);		
 		}
-		
+		 
 	}
 	
 	/*
@@ -105,8 +94,16 @@ class Sessiones extends CI_Controller {
 		
 	   	redirect('index.php/sessiones/');
 	}
-		
-
-
+	
+	function verificar(){
+				
+		  if(!isset($_COOKIE['contador']))
+		  { 		// Caduca en 15 minutos y se ajusta a uno la primera vez
+			 setcookie('contador', 1, time() + 15* 60); 			
+		  }else{ 
+		  // si existe cookie procede a contar  
+			setcookie('contador', $_COOKIE['contador'] + 1, time() + 15 * 60); 
+		  }//fin else de intentos		
+	}
 }
 ?>

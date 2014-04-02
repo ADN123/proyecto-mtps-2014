@@ -28,13 +28,17 @@ $(document).ready(function() {
 				}else{
 						alert(data['msj']);
 						ele=document.getElementById('user') 
+						ele.value="";
 						ele.disabled=true;
 						
 						ele=document.getElementById('pass') 
 						ele.disabled=true;
+						ele.value="";
 						
 						ele=document.getElementById('entrar') 
 						ele.disabled=true;
+						ele.value="";
+						document.close();
 						
 					}
 				},
