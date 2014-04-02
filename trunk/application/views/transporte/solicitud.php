@@ -124,8 +124,8 @@
       	</div>
         <div id="step-3">	
             <h2 class="StepTitle">Selecci&oacute;n de los destinos que tendr&aacute; el viaje</h2>
-            <p>
-            	Para agregar un nuevo destino de click <a title="Agregar destino" rel="leanModal" href="#ventana">aqu&iacute;</a>
+            <p style="margin-left: 5%; width:90%;">
+            	Para agregar un nuevo destino de click  en la imagen <a title="Agregar destino" rel="leanModal" href="#ventana"><img src="<?php echo base_url()?>img/mapa.mini.png" /></a>
             </p>
             <p>
             	<table cellspacing="0" align="center" class="table_design">
@@ -135,6 +135,12 @@
                         </th>
                         <th>
                             Lugar de destino
+                        </th>  
+                        <th>
+                            Direcci&oacute;n
+                        </th>
+                        <th>
+                            Misi&oacute;n Encomendada
                         </th>                    
                         <th width="40">
                             Acci&oacute;n
@@ -167,7 +173,7 @@
 </form>
 <div id="ventana" style="height:390px">
 	<div id="signup-header">
-        <h2>Agregar destino</h2>
+        <h2>Agregar Destino</h2>
         <a class="modal_close"></a>
     </div>
     <form id="formu_destino" name="formu_destino" method="post">
