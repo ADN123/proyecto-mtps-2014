@@ -480,8 +480,7 @@ function infoSolicitud($id){
 					DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d/%m/%Y') AS fecha_mision,
 					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS hora_salida,
 					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS hora_entrada,
-					tcm_solicitud_transporte.acompanante,
-					tcm_solicitud_transporte.mision_encomendada
+					tcm_solicitud_transporte.acompanante
 					FROM tcm_solicitud_transporte
 					INNER JOIN sir_empleado AS e1 ON tcm_solicitud_transporte.id_empleado_solicitante=e1.id_empleado
 					LEFT JOIN sir_empleado AS e2 ON tcm_solicitud_transporte.id_empleado_autoriza=e2.id_empleado
