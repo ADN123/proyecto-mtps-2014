@@ -9,11 +9,10 @@
 <table  class="grid">
 <thead>
   <tr>
-    <th>Empleado</th>
     <th>Salida</th>
     <th>Regreso</th>
     <th>Vehiculo</th>
-    <th>Municipio</th>
+    <th>Empleado</th>
     <th>Opción</th>
   </tr>
  </thead>
@@ -25,11 +24,10 @@
 										
 ?>
   <tr>
-    <td><?=$fila->nombre?></td>
     <td><?=$fila->salida?></td>
     <td><?=$fila->entrada?></td>
     <td><?=$fila->placa?></td>
-	<td><?=$fila->municipio?></td>
+	<td><?php echo ucwords($fila->nombre)?></td>
     <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>,<?=$fila->estado?>)"><img  src="<?=base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a>
 	</td>
   </tr>

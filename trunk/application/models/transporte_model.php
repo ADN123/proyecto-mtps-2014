@@ -201,20 +201,20 @@ order by v.id_vehiculo asc;");
 	//////////////////////////////////Informacion del cuadro de dialogo de aprobacion de solicitudes////////////////////////////////////////////////
 	function datos_de_solicitudes($id,$seccion){
 		  $query=$this->db->query("
-SELECT id_solicitud_transporte id, 
-	LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
-	DATE_FORMAT(fecha_solicitud_transporte, '%d-%m-%Y') fechaS,
-	DATE_FORMAT(fecha_mision, '%d-%m-%Y')  fechaM,
-	DATE_FORMAT(hora_salida,'%h:%i %p') salida,
-	DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-	nombre_seccion seccion,
-	requiere_motorista req,
-	acompanante,
-	id_empleado_solicitante
-FROM tcm_solicitud_transporte  s 
-INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado,
-org_seccion sec
-WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
+				SELECT id_solicitud_transporte id, 
+					LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
+					DATE_FORMAT(fecha_solicitud_transporte, '%d-%m-%Y') fechaS,
+					DATE_FORMAT(fecha_mision, '%d-%m-%Y')  fechaM,
+					DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+					DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
+					nombre_seccion seccion,
+					requiere_motorista req,
+					acompanante,
+					id_empleado_solicitante
+				FROM tcm_solicitud_transporte  s 
+				INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado,
+				org_seccion sec
+				WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
 		return $query->result();
 	}	
 	function aprobar($id, $estado, $nr, $iduse){
@@ -374,12 +374,9 @@ where s.id_solicitud_transporte='$id'");
 	estado_solicitud_transporte estado,
 	DATE_FORMAT(hora_salida,'%h:%i %p') salida,
 	DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-	LOWER(CONCAT_WS(', ',d.departamento,m.municipio)) municipio,
 	vh.placa	
 FROM tcm_solicitud_transporte  s 
 INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
-INNER JOIN  org_municipio m ON m.id_municipio= s.id_municipio
-INNER JOIN org_departamento d ON d.id_departamento= m.id_departamento_pais
 INNER JOIN  tcm_asignacion_sol_veh_mot asi ON asi.id_solicitud_transporte=s.id_solicitud_transporte
 INNER JOIN tcm_vehiculo vh ON vh.id_vehiculo= asi.id_vehiculo
 WHERE  s.fecha_mision= CURDATE() AND (estado_solicitud_transporte=3 OR estado_solicitud_transporte=4)");
