@@ -124,13 +124,19 @@ class Transporte extends CI_Controller
 	function asignar_vehiculo_motorista()
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['id_permiso']>=2)
+		if($data['id_permiso']!=NULL)
 		{
-			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-			$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion);
-			pantalla('transporte/asignacion_veh_mot',$data);
+			if($data['id_permiso']>=2)
+			{
+				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion);
+				pantalla('transporte/asignacion_veh_mot',$data);
+			}
 		}
-		//echo $data['id_permiso'];
+		else
+		{
+			echo "No tiene permiso";
+		}
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -139,183 +145,186 @@ class Transporte extends CI_Controller
 	function cargar_datos_solicitud($id)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['id_permiso']>2)
+		if($data['id_permiso']!=NULL)
 		{
-			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-			$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
-			$a=$this->transporte_model->acompanantes_internos($id);
-			$f=$this->transporte_model->destinos($id);
-			
-			$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id);
-			//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.
-			$bandera=0;					
-			foreach($solicitud_actual as $row)
+			if($data['id_permiso']>2)
 			{
-				$id_departamento=$row->id_departamento_pais;
-				if($id_departamento!="00006")
+				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+				$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
+				$a=$this->transporte_model->acompanantes_internos($id);
+				$f=$this->transporte_model->destinos($id);
+				
+				$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id);
+				//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.
+				$bandera=0;					
+				foreach($solicitud_actual as $row)
 				{
-					$bandera=1;
-				}
-				$fecha=$row->fecha;
-				$entrada=$row->entrada;
-				$salida=$row->salida;		
-			}
-			
-			if($bandera==0)////Para misiones locales, el 0 significa departamento de San Salvador
-			{
-				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
-			}
-			else if($bandera==1)///////////////////////para misiones fuera de san salvador
-			{
-				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles2($fecha,$entrada,$salida);
-			}
-			
-			echo 
-			"
-			<div id='signup-header'>
-			<h2>Asignaci&oacute;n de Veh&iacute;culos y Motoristas</h2>
-			<a class='modal_close'></a>
-			</div>
-			
-			<form id='form' action='".base_url()."index.php/transporte/asignar_veh_mot' method='post'>
-			<input type='hidden'   id='id_solicitud' name='id_solicitud'/>
-			<input type='hidden' id='resp' name='resp' />
-			<input type='hidden' name='id_mot' value='id_mot' />
-			
-			<fieldset>      
-				<legend align='left'>Información de la Solicitud</legend>
-				";
-				foreach($d as $datos)
-				{
-					$nombre=ucwords($datos->nombre);
-					$seccion=$datos->seccion;
-					$fechaS=$datos->fechaS;
-					$fechaM=$datos->fechaM;
-					$salida=$datos->salida;
-					$entrada=$datos->entrada;
-					$requiere=$datos->req;
-					$acompanante=ucwords($datos->acompanante);
-					$id_empleado=$datos->id_empleado_solicitante;
+					$id_departamento=$row->id_departamento_pais;
+					if($id_departamento!="00006")
+					{
+						$bandera=1;
+					}
+					$fecha=$row->fecha;
+					$entrada=$row->entrada;
+					$salida=$row->salida;		
 				}
 				
-			
-			echo "Nombre: <strong>".$nombre."</strong> <br>
-			Sección: <strong>".$seccion."</strong> <br>
-			Fecha de Solicitud: <strong>".$fechaS."</strong> <br>
-			Fecha de Misión: <strong>".$fechaM."</strong> <br>
-			Hora de Salida: <strong>".$salida."</strong> <br>
-			Hora de Regreso: <strong>".$entrada."</strong> <br>
-			
-			</fieldset>
-			<br />
-			
-			<fieldset>
-			<legend align='left'>Destinos</legend>
-			
-			<table cellspacing='0' align='center' class='table_design'>
-                    <thead>
-                        <th>
-                            Municipio
-                        </th>
-                        <th>
-                            Lugar de destino
-                        </th>
-						<th>
-							Dirección
-						</th>
-						<th>
-							Misión Encomendada
-						</th>
-                    </thead>
-                    <tbody>
-                        ";
-						foreach($f as $r)
-						{
-							echo "<tr><td>".$r->municipio."</td>";
-							echo "<td>".$r->destino."</td>";
-							echo "<td>".$r->direccion."</td>";
-							echo "<td>".$r->mision."</td></tr>";
-						}
-					echo "
-                    </tbody>
-                </table>
-			
-			</fieldset>
-			
-		   <br>
-		    <fieldset>
-				<legend align='left'>Acompañantes</legend>
+				if($bandera==0)////Para misiones locales, el 0 significa departamento de San Salvador
+				{
+					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
+				}
+				else if($bandera==1)///////////////////////para misiones fuera de san salvador
+				{
+					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles2($fecha,$entrada,$salida);
+				}
 				
-				";
-				foreach($a as $acompa)
-				{
-					echo "<strong>".ucwords($acompa->nombre)."</strong> <br />";
-				}
-				echo "<strong>".$acompanante."</strong><br />";
-			echo "
-		    </fieldset>
-			<br>
-			<fieldset>
-			<legend align='left'>Vehículos</legend>
-				<p>
-				<label>Información</label>
-			   <select class='select' name='vehiculo' id='vehiculo' onchange='motoristaf(this.value)'>
-			   ";
-			   
-				foreach($vehiculos_disponibles as $v)
-				{
-					echo "<option value='".$v->id_vehiculo."'>".$v->placa." - ".$v->nombre." - ".$v->modelo."</option>";
-				}
-			   
-			   echo "    
-			   </select>
-				</p>   
-			</fieldset>
-			<br>
-			<fieldset>
-				<legend align='left'>Motorista</legend>
-					<p>
-					<label>Nombre:</label>
-			";
-			if($requiere==1)
-			{
-			echo "
-				   <select name='motorista' id='motorista'>
-				   </select>
-				";
-			}
-			else
-			{
-				echo "<strong>".$nombre."</strong>";
-				echo "<input type='hidden' name='motorista' value='".$id_empleado."'>";
-			}
-			echo "
-			</p>
+				echo 
+				"
+				<div id='signup-header'>
+				<h2>Asignaci&oacute;n de Veh&iacute;culos y Motoristas</h2>
+				<a class='modal_close'></a>
+				</div>
+				
+				<form id='form' action='".base_url()."index.php/transporte/asignar_veh_mot' method='post'>
+				<input type='hidden'   id='id_solicitud' name='id_solicitud'/>
+				<input type='hidden' id='resp' name='resp' />
+				<input type='hidden' name='id_mot' value='id_mot' />
+				
+				<fieldset>      
+					<legend align='left'>Información de la Solicitud</legend>
+					";
+					foreach($d as $datos)
+					{
+						$nombre=ucwords($datos->nombre);
+						$seccion=$datos->seccion;
+						$fechaS=$datos->fechaS;
+						$fechaM=$datos->fechaM;
+						$salida=$datos->salida;
+						$entrada=$datos->entrada;
+						$requiere=$datos->req;
+						$acompanante=ucwords($datos->acompanante);
+						$id_empleado=$datos->id_empleado_solicitante;
+					}
+					
+				
+				echo "Nombre: <strong>".$nombre."</strong> <br>
+				Sección: <strong>".$seccion."</strong> <br>
+				Fecha de Solicitud: <strong>".$fechaS."</strong> <br>
+				Fecha de Misión: <strong>".$fechaM."</strong> <br>
+				Hora de Salida: <strong>".$salida."</strong> <br>
+				Hora de Regreso: <strong>".$entrada."</strong> <br>
+				
 				</fieldset>
-			 <p>
-				<label for='observacion' id='lobservacion'>Observación</label>
-				<textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
-			</p>
-			<p style='text-align: center;'>
-				<button type='submit' id='asignar' name='asignar' onclick='enviar(3)'>Asignar</button>
-			</p>
-			</form>
-			";
-			
-			echo "<script>
-				$('select').prepend('<option value=\"\" selected=\"selected\"></option>');
-				$('.select').kendoComboBox({
-					autoBind: false,
-					filter: 'contains'
-				});
-				/*$('#motorista').kendoComboBox({
-					autoBind: false,
-					filter: 'contains'
-				})
-				var se=$('motorista').data('kendoComboBox');
-				se.destroy();*/
-			</script>";
-			
+				<br />
+				
+				<fieldset>
+				<legend align='left'>Destinos</legend>
+				
+				<table cellspacing='0' align='center' class='table_design'>
+						<thead>
+							<th>
+								Municipio
+							</th>
+							<th>
+								Lugar de destino
+							</th>
+							<th>
+								Dirección
+							</th>
+							<th>
+								Misión Encomendada
+							</th>
+						</thead>
+						<tbody>
+							";
+							foreach($f as $r)
+							{
+								echo "<tr><td>".$r->municipio."</td>";
+								echo "<td>".$r->destino."</td>";
+								echo "<td>".$r->direccion."</td>";
+								echo "<td>".$r->mision."</td></tr>";
+							}
+						echo "
+						</tbody>
+					</table>
+				
+				</fieldset>
+				
+			   <br>
+				<fieldset>
+					<legend align='left'>Acompañantes</legend>
+					
+					";
+					foreach($a as $acompa)
+					{
+						echo "<strong>".ucwords($acompa->nombre)."</strong> <br />";
+					}
+					echo "<strong>".$acompanante."</strong><br />";
+				echo "
+				</fieldset>
+				<br>
+				<fieldset>
+				<legend align='left'>Vehículos</legend>
+					<p>
+					<label>Información</label>
+				   <select class='select' name='vehiculo' id='vehiculo' onchange='motoristaf(this.value)'>
+				   ";
+				   
+					foreach($vehiculos_disponibles as $v)
+					{
+						echo "<option value='".$v->id_vehiculo."'>".$v->placa." - ".$v->nombre." - ".$v->modelo."</option>";
+					}
+				   
+				   echo "    
+				   </select>
+					</p>   
+				</fieldset>
+				<br>
+				<fieldset>
+					<legend align='left'>Motorista</legend>
+						<p>
+						<label>Nombre:</label>
+				";
+				if($requiere==1)
+				{
+				echo "
+					   <select name='motorista' id='motorista'>
+					   </select>
+					";
+				}
+				else
+				{
+					echo "<strong>".$nombre."</strong>";
+					echo "<input type='hidden' name='motorista' value='".$id_empleado."'>";
+				}
+				echo "
+				</p>
+					</fieldset>
+				 <p>
+					<label for='observacion' id='lobservacion'>Observación</label>
+					<textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
+				</p>
+				<p style='text-align: center;'>
+					<button type='submit' id='asignar' name='asignar' onclick='enviar(3)'>Asignar</button>
+				</p>
+				</form>
+				";
+				
+				echo "<script>
+					$('select').prepend('<option value=\"\" selected=\"selected\"></option>');
+					$('.select').kendoComboBox({
+						autoBind: false,
+						filter: 'contains'
+					});
+					/*$('#motorista').kendoComboBox({
+						autoBind: false,
+						filter: 'contains'
+					})
+					var se=$('motorista').data('kendoComboBox');
+					se.destroy();*/
+				</script>";
+				
+			}
 		}
 		else
 		{
