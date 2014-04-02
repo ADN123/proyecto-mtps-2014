@@ -442,12 +442,9 @@ function asignar_veh_mot()
 			$fec=str_replace("/","-",$this->input->post('fecha_mision'));
 			$fecha_solicitud_transporte=date('Y-m-d');
 			$id_empleado_solicitante=(int)$this->input->post('nombre');
-			$mision_encomendada=$this->input->post('mision_encomendada');
 			$fecha_mision=date("Y-m-d", strtotime($fec));
 			$hora_salida=date("H:i:s", strtotime($this->input->post('hora_salida')));
 			$hora_entrada=date("H:i:s", strtotime($this->input->post('hora_regreso')));
-			$id_municipio=(int)$this->input->post('municipio');
-			$lugar_destino=$this->input->post('lugar_destino');
 			if($this->input->post('requiere_motorista')!="")
 				$requiere_motorista=$this->input->post('requiere_motorista');
 			else
@@ -461,12 +458,9 @@ function asignar_veh_mot()
 			$formuInfo = array(
 				'fecha_solicitud_transporte'=>$fecha_solicitud_transporte,
 				'id_empleado_solicitante'=>$id_empleado_solicitante,
-				'mision_encomendada'=>$mision_encomendada,
 				'fecha_mision'=>$fecha_mision,
 				'hora_salida'=>$hora_salida,
 				'hora_entrada'=>$hora_entrada,
-				'id_municipio'=>$id_municipio,
-				'lugar_destino'=>$lugar_destino,
 				'requiere_motorista'=>$requiere_motorista,
 				'acompanante'=>$acompanante,
 				'id_usuario_crea'=>$id_usuario_crea,
@@ -490,7 +484,10 @@ function asignar_veh_mot()
 					$formuInfo = array(
 						'id_solicitud_transporte'=>$id_solicitud_transporte,
 						'id_municipio'=>$campos[0],
-						'lugar_destino'=>$campos[1]
+						'lugar_destino'=>$campos[1],
+						'direccion_destino'=>$campos[2],
+						'mision_encomendada'=>$campos[3]
+
 					);
 					$this->transporte_model->guardar_destinos($formuInfo); /*Guardando destinos*/
 				}
