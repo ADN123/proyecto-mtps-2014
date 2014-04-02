@@ -5,49 +5,6 @@ $(document).ready(function() {
 			alert('por favor llene los datos');
 			return false;
 		}
-	 	else {
-			var user=document.getElementById('user') 
-			var pass=document.getElementById('pass')
-			
-			
-			var formu = $('#form1').serializeArray();
-			$.ajax({
-				type:  "post",  
-				async:	true, 
-				url:	base_url()+"index.php/sessiones/iniciar_session/"+user.value+"/"+pass.value,
-				data:   formu,
-				dataType: "json",
-				success: function(data) { /////funcion ejecutada si la respuesta fue satictatoria
-				if(data['estado']!=3){
-					if(data['estado']==0) {
-							alert(data['msj']);
-					}
-					else {	
-						setTimeout('location.href="'+base_url()+'"',1000);
-					}
-				}else{
-						alert(data['msj']);
-						ele=document.getElementById('user') 
-						ele.value="";
-						ele.disabled=true;
-						
-						ele=document.getElementById('pass') 
-						ele.disabled=true;
-						ele.value="";
-						
-						ele=document.getElementById('entrar') 
-						ele.disabled=true;
-						ele.value="";
-						document.close();
-						
-					}
-				},
-				error:function(data) { //////funcion ejecutada si hay error
-					alert('Error al intentar ingresar al sistema: No se pudo conectar al servidor');
-					console.log(data.resposeText);
-					return false;
-				}
-			}); 
-	 	}
+	 
 	});
 });

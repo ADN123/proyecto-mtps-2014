@@ -17,13 +17,20 @@ class Sessiones extends CI_Controller {
 	*	Observaciones: Ninguna
 	*/
 	function index(){
+	
+		$in=$this->verificar();
+		if($in<=3){
+			$this->load->view('encabezadoLogin.php'); 
+			$this->load->view('login.php'); 
+			$this->load->view('piePagina.php');		
+		}else{
+		//echo"Sistema Bloqueado";
+		$this->load->view('encabezadoLogin.php'); 
+		$this->load->view('lock.php'); 
+		$this->load->view('piePagina.php');		
+
 		
-		
-	  	$this->load->view('encabezadoLogin.php'); 
-	  	$this->load->view('login.php'); 
-		$this->load->view('piePagina.php');
-		
-		
+		}
 	}
 	
 	/*
@@ -37,7 +44,7 @@ class Sessiones extends CI_Controller {
 	function iniciar_session()
 	{
 		$in=$this->verificar();
-		sleep (1);//es nesesario pausar debido a que se tiene que crear la cookie
+		error_reporting(0);
 		if ($in<=3){				
 		
 					$login =$this->input->post('user');
@@ -46,34 +53,23 @@ class Sessiones extends CI_Controller {
 				
 				
 					if($v['id_usuario']==0) {
-						$json =array(
-							'estado'=>"0",
-							'msj'=>"Datos incorrectos "
-						);
-						echo json_encode($json);
-						//redirect('index.php/sessiones');
+							alerta("Datos Incorrectos",'index.php/sessiones');
+						
 					}else {
 					$this->session->set_userdata('nombre', $v['nombre_completo']);
 					$this->session->set_userdata('id_usuario', $v['id_usuario']);
 					$this->session->set_userdata('usuario', $v['usuario']);
 					$this->session->set_userdata('nr', $v['NR']);			
-					$this->session->set_userdata('id_seccion', $v['id_seccion']);			
-					$json =array(
-						'estado'=>1,
-						'msj'=>"Iniciando Session...."
-					);
-					echo json_encode($json);
-					//redirect('index.php'); 
+					$this->session->set_userdata('id_seccion', $v['id_seccion']);
+					setcookie('contador', 1, time() + 15* 60);			
+					ir_a('index.php/inicio'); 
 					}
 		}else{//
-			$json =array(
-				'estado'=>"3",
-				'msj'=>"Demasiados intentos. Sistema bloqueado",
-				'intentos'=>$_COOKIE['contador']
-			);
-			echo json_encode($json);		
+			alerta($in." intentos. terminal bloqueada",'index.php/sessiones');
+		
 		}
-		 
+	
+		
 	}
 	
 	/*
@@ -96,14 +92,21 @@ class Sessiones extends CI_Controller {
 	}
 	
 	function verificar(){
-				
+		$in;
+				 	
 		  if(!isset($_COOKIE['contador']))
 		  { 		// Caduca en 15 minutos y se ajusta a uno la primera vez
-			 setcookie('contador', 1, time() + 15* 60); 			
+
+			 setcookie('contador', 1, time() + 15* 60); 
+//			 sleep (2); //es nesesario pausar debido a que se tiene que crear la cookie
+			 	return 1;
 		  }else{ 
 		  // si existe cookie procede a contar  
 			setcookie('contador', $_COOKIE['contador'] + 1, time() + 15 * 60); 
-		  }//fin else de intentos		
+			 sleep (1); //es nesesario pausar debido a que se tiene que crear la cookie
+				return $_COOKIE['contador'];
+		  }//fin else de intentos
+	
 	}
 }
 ?>
