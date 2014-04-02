@@ -11,9 +11,9 @@
     </colgroup>
 	<thead>
   		<tr>
-            <th>Fecha y Hora</th>
-            <th>Destino</th>
-            <th>Mision Encomendada</th>
+            <th>Fecha</th>
+            <th>Salida</th>
+            <th>Entrada</th>
             <th>Estado Solicitud</th>
             <th>Opción</th>
   		</tr>
@@ -43,8 +43,8 @@
 	?>
   		<tr>
             <td><?php echo $val['fecha']?></td>
-            <td><?php echo $val['lugar']?></td>
-            <td><?php echo $val['mision']?></td>
+            <td><?php echo $val['salida']?></td>
+            <td><?php echo $val['entrada']?></td>
             <td><?php echo $estado?></td>
             <td>
             	<?php if($val['estado']<=1) {?>

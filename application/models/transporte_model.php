@@ -98,13 +98,19 @@ class Transporte_model extends CI_Model {
 	function solicitudes_por_confirmar($seccion){
 
 	  $query=$this->db->query("
- SELECT id_solicitud_transporte AS id, 
-  	CONCAT_WS(' ',DATE_FORMAT(fecha_mision, '%d-%m-%Y'),DATE_FORMAT(hora_salida,'%h:%i %p')) AS fecha, 
-    lugar_destino AS lugar, 
-    mision_encomendada  mision 
- FROM tcm_solicitud_transporte s
- INNER JOIN sir_empleado_informacion_laboral i ON s.id_empleado_solicitante  = i.id_empleado 
- WHERE estado_solicitud_transporte = 1 AND i.id_seccion =".$seccion);
+ 	   SELECT id_solicitud_transporte id,
+		estado_solicitud_transporte,
+		 id_empleado_solicitante,
+		  DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+		  DATE_FORMAT(hora_entrada,'%r') entrada, 
+		  DATE_FORMAT(hora_salida,'%r') salida, requiere_motorista, 
+		  COALESCE(o.nombre_seccion, 'No hay registro') seccion, 
+		  LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre 
+		FROM tcm_solicitud_transporte  t
+			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+			WHERE (estado_solicitud_transporte=1 AND i.id_seccion = '".$seccion."')");
  
  
    	return $query->result();
@@ -369,17 +375,17 @@ where s.id_solicitud_transporte='$id'");
 /*---------------------------------Control de salidas y entradas de Vehiculos------------------------------------*/
 	function salidas_entradas_vehiculos(){
 		$query=$this->db->query("SELECT s.id_solicitud_transporte id,
-	LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre,
-	e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
-	estado_solicitud_transporte estado,
-	DATE_FORMAT(hora_salida,'%h:%i %p') salida,
-	DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-	vh.placa	
-FROM tcm_solicitud_transporte  s 
-INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
-INNER JOIN  tcm_asignacion_sol_veh_mot asi ON asi.id_solicitud_transporte=s.id_solicitud_transporte
-INNER JOIN tcm_vehiculo vh ON vh.id_vehiculo= asi.id_vehiculo
-WHERE  s.fecha_mision= CURDATE() AND (estado_solicitud_transporte=3 OR estado_solicitud_transporte=4)");
+				LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre,
+				e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
+				estado_solicitud_transporte estado,
+				DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+				DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
+				vh.placa	
+			FROM tcm_solicitud_transporte  s 
+			INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
+			INNER JOIN  tcm_asignacion_sol_veh_mot asi ON asi.id_solicitud_transporte=s.id_solicitud_transporte
+			INNER JOIN tcm_vehiculo vh ON vh.id_vehiculo= asi.id_vehiculo
+			WHERE  s.fecha_mision= CURDATE() AND (estado_solicitud_transporte=3 OR estado_solicitud_transporte=4)");
 		return $query->result();
 		
 		}
@@ -450,9 +456,9 @@ function infoSolicitud($id){
 	{
 		$sentencia="SELECT
 					tcm_solicitud_transporte.id_solicitud_transporte AS id,
-					CONCAT_WS(' ',DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d-%m-%Y'),DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p')) AS fecha,
-					tcm_solicitud_transporte.lugar_destino AS lugar,
-					tcm_solicitud_transporte.mision_encomendada AS mision,
+					CONCAT_WS(' ',DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d-%m-%Y')) AS fecha,
+					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS salida,
+					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS entrada,
 					tcm_solicitud_transporte.estado_solicitud_transporte AS estado
 					FROM
 					tcm_solicitud_transporte";
