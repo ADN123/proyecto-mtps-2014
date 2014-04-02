@@ -82,12 +82,20 @@ class Transporte extends CI_Controller
 	function datos_de_solicitudes($id)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
-		if(isset($data['id_permiso'])) {
-				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+		if(isset($data['id_permiso'])&&$data['id_permiso']>=2 ) {
+		/*	$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
-			$a=$this->transporte_model->acompanantes($id);
+			$a=$this->transporte_model->acompanantes_internos($id);
 			$j=json_encode($d);
-			echo $j;
+			echo $j;*/
+				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+				$datos['d']=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
+				$datos['a']=$this->transporte_model->acompanantes_internos($id);
+				$datos['f']=$this->transporte_model->destinos($id);
+				$datos['id']=$id;
+				$this->load->view('transporte/dialogoAprobacion',$datos);
+				
+				
 		}
 		else {
 			echo ' No tiene permiso';
