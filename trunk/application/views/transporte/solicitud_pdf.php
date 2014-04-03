@@ -16,10 +16,10 @@
 	</style>
 </head>
 <body>
-    <table align="center" border="0" cellspacing="0" width="800">
+    <table align="center" border="0" cellspacing="0" style="width:100%;">
         <tr>
-            <td align="left">
-                <img src="<?php echo base_url()?>img/mtps.jpg" />
+            <td align="left" style="width:40%;">
+                <img src="img/mtps.jpg" />
             </td>
             <td align="right">
                 <h3>SOLICITUD DE USO DE VEHICULO</h3>
@@ -31,7 +31,7 @@
             </td>
         </tr>
   	</table>
-    <table align="center" class="tabla" cellspacing="0" width="800" style="font-size: 12px">    
+    <table align="center" class="tabla" cellspacing="0" style="width:100%; font-size: 12px">    
         <tr>
         	<td colspan="2" align="center">
             	<?php 
@@ -84,12 +84,12 @@
             </td>
         </tr>
         <tr>
-        	<td align="left" width="400">
+        	<td align="left" style="width:50%;">
             </td>
         	<td align="left">
             	<table>
                 	<tr>
-                    	<td>
+                    	<td style="width: 50%;">
                         </td>
                     	<td class="titu" align="center">
                         	SEG&Uacute;N SOLICITADO
@@ -136,12 +136,12 @@
         </tr>
         <tr>
         	<td colspan="2">
-            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Depto.: <strong><?php echo $info_empleado['nivel_2'] ?></strong>
+            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Departamento: <strong><?php echo $info_empleado['nivel_2'] ?></strong>
             </td>
         </tr>
         <tr>
         	<td colspan="2">
-            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Secció&oacute;n: <strong><?php echo $info_empleado['nivel_1'] ?></strong>
+            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Secci&oacute;n: <strong><?php echo $info_empleado['nivel_1'] ?></strong>
             </td>
         </tr>
         <tr>
@@ -196,7 +196,7 @@
             </td>
         </tr>
     </table>
-    <table align="center" class="tabla" cellspacing="0" width="800" style="font-size: 12px">
+    <table align="center" class="tabla" cellspacing="0" style="width:100%; font-size: 12px">
     	<tr>
         	<td>
             	<strong>USO EXCLUSIVO SERVICIOS GENERALES</strong>
