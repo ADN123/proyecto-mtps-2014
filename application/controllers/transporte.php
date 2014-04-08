@@ -165,24 +165,26 @@ class Transporte extends CI_Controller
 				
 				$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id);
 				//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.
-				$bandera=0;					
+				$cont=0;
+				$cont1=0;					
 				foreach($solicitud_actual as $row)
 				{
 					$id_departamento=$row->id_departamento_pais;
-					if($id_departamento!="00006")
+					if($id_departamento=="00006")
 					{
-						$bandera=1;
+						$cont++;
 					}
 					$fecha=$row->fecha;
 					$entrada=$row->entrada;
-					$salida=$row->salida;		
+					$salida=$row->salida;
+					$cont1++;		
 				}
 				
-				if($bandera==0)////Para misiones locales, el 0 significa departamento de San Salvador
+				if($cont==$cont1)////Para misiones locales, el 0 significa departamento de San Salvador
 				{
 					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
 				}
-				else if($bandera==1)///////////////////////para misiones fuera de san salvador
+				else if($cont!=$cont1)///////////////////////para misiones fuera de san salvador
 				{
 					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles2($fecha,$entrada,$salida);
 				}
