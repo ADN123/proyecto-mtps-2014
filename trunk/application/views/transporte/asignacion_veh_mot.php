@@ -43,7 +43,6 @@ function dialogo(id)
 function motoristaf(id){
 		
 		$('#motorista').empty();
-		
 		$.ajax({
 		async:	true, 
 		url:	"<?php echo base_url()?>/index.php/transporte/verificar_motoristas/"+id,

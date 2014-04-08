@@ -165,31 +165,17 @@ class Transporte extends CI_Controller
 				$f=$this->transporte_model->destinos($id);
 				
 				$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id);
-				//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.
-				$cont=0;
-				$cont1=0;					
+				//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.					
 				foreach($solicitud_actual as $row)
 				{
-					$id_departamento=$row->id_departamento_pais;
-					if($id_departamento=="00006")
-					{
-						$cont++;
-					}
 					$fecha=$row->fecha;
 					$entrada=$row->entrada;
 					$salida=$row->salida;
-					$cont1++;		
 				}
 				
-				if($cont==$cont1)////Para misiones locales, el 0 significa departamento de San Salvador
-				{
-					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
-				}
-				else if($cont!=$cont1)///////////////////////para misiones fuera de san salvador
-				{
-					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles2($fecha,$entrada,$salida);
-				}
-				
+				/*aquí se comparan la fecha, hora de entrada y de salida de la solicitud actual con las que ya tiene vehículo asignado, para mostrar únicamente los posibles vehiculos a utilizar */
+				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
+								
 				echo 
 				"
 				<div id='signup-header'>
@@ -352,7 +338,6 @@ class Transporte extends CI_Controller
 		{
 			if($data['id_permiso']>2)
 			{
-				
 				$motoristas=$this->transporte_model->consultar_motoristas($id_vehiculo);
 				//////////consulta al motorista asignado al vehiculo.
 				
