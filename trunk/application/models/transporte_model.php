@@ -200,12 +200,28 @@ WHERE st.id_solicitud_transporte =  '$id';");
 			 and st.estado_solicitud_transporte=3
 		)
 		and st.estado_solicitud_transporte=3
+		and dm.id_municipio<>97
 	)
 	and (id_seccion=21 or id_seccion=113)
-order by v.id_vehiculo asc;");
+	order by v.id_vehiculo asc;");
 		return $query->result();
 	}
 	/////////////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////VEHICUlOS EN MISION lOCAl/////////////////////////////////
+	
+	function vehiculo_en_mision_local($id)
+	{
+		$query=$this->db->query("
+		SELECT st.fecha_mision AS fecha, st.hora_salida AS salida, st.hora_entrada AS entrada
+		FROM tcm_solicitud_transporte AS st
+		INNER JOIN tcm_asignacion_sol_veh_mot as avm
+		on (avm.id_solicitud_transporte=st.id_solicitud_transporte)
+		WHERE avm.id_vehiculo='$id' and st.estado_solicitud_transporte=3;");
+		return $query->result();
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////
 	
 	//////////////////////////////////Informacion del cuadro de dialogo de aprobacion de solicitudes////////////////////////////////////////////////
 	function datos_de_solicitudes($id,$seccion){

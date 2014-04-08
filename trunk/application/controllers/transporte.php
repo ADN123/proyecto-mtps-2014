@@ -359,6 +359,15 @@ class Transporte extends CI_Controller
 		{
 			if($data['id_permiso']>2)
 			{
+				$mensaje=$this->transporte_model->vehiculo_en_mision_local($id_vehiculo);
+				$cont=0;
+				foreach($mensaje as $m)
+				{
+					$cont++;
+				}
+				
+				if($cont!=0) echo "El vehículo seleccionado se encuentra en Misión Oficial";
+				
 				$motoristas=$this->transporte_model->consultar_motoristas($id_vehiculo);
 				//////////consulta al motorista asignado al vehiculo.
 				
