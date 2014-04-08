@@ -570,9 +570,10 @@ function asignar_veh_mot()
 			if($estado==4){
 			$gas=$this->input->post('gas');
 			$this->transporte_model->regreso_vehiculo($id, $km, $hora, $gas);		
+			
 			}
 		}
-		ir_a('index.php/transporte/control_salidas_entradas');
+//		ir_a('index.php/transporte/control_salidas_entradas');
 		}
 		
 		/*
