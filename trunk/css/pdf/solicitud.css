@@ -1,0 +1,28 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+.tabla, .tabla2 {
+	width:100%; 
+	font-size: 12px
+}
+.tabla, .titu {
+	border: 1px solid #000;
+}
+.tabla tr {
+	height: 25px;
+}
+#imagen {
+	 width:40%;
+}
+#titulo {
+	font-size:13px
+}
+.firma {
+	 height: 1205px;
+}
+#xxx {
+}
+#xxx {
+}
+#xxx {
+}

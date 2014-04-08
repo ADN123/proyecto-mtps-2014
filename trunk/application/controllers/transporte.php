@@ -6,7 +6,8 @@ class Transporte extends CI_Controller
 	{
         parent::__construct();
 		$this->load->model('transporte_model');
-		$this->load->library('html2pdf');
+		/*$this->load->library('html2pdf');*/
+		$this->load->library("mpdf");
     	if(!$this->session->userdata('id_usuario')){
 		 redirect('index.php/sessiones');
 		}
@@ -651,7 +652,7 @@ function asignar_veh_mot()
 	*/
 	function solicitud_pdf($id) 
 	{
-		$dir='./archivos/';
+		/*$dir='./archivos/';
 		$nom='test.pdf';
 		
 		if(!is_dir($dir))
@@ -659,7 +660,8 @@ function asignar_veh_mot()
 		
 		$this->html2pdf->folder($dir);
         $this->html2pdf->filename($nom);
-        $this->html2pdf->paper('a4', 'portrait');
+        $this->html2pdf->paper('a4', 'portrait');*/
+		
 		
 		$data['info_solicitud']=$this->transporte_model->consultar_solicitud($id);
 		$id_solicitud_transporte=$data['info_solicitud']['id_solicitud_transporte'];
@@ -668,12 +670,27 @@ function asignar_veh_mot()
 		$data['acompanantes']=$this->transporte_model->acompanantes_internos($id_solicitud_transporte);
 		$data['destinos']=$this->transporte_model->destinos($id_solicitud_transporte);
 		//$this->load->view('transporte/solicitud_pdf.php',$data);
-		$this->html2pdf->html(utf8_decode($this->load->view('transporte/solicitud_pdf.php', $data, true)));
+		
+		$this->mpdf->mPDF('utf-8','A4');
+        //PASAMOS LA RUTA DONDE ESTA EL ESTILO
+        $stylesheet = file_get_contents('css/pdf/solicitud.css');
+        //cargamos el estilo CSS
+        $this->mpdf->WriteHTML($stylesheet,1);
+        //CARGAMOS LOS PARAMETROS
+        $data['nombre'] = "Renatto NL";
+        //OBTENEMOS LA VISTA EN HTML
+        $html = $this->load->view('transporte/solicitud_pdf.php', $data, true);
+        //ESCRIBIMOS AL PDF
+        $this->mpdf->WriteHTML($html,2);
+        //SALIDA DE NUESTRO PDF
+        $this->mpdf->Output();
+		
+		/*$this->html2pdf->html(utf8_decode($this->load->view('transporte/solicitud_pdf.php', $data, true)));
 		$this->html2pdf->create('save');
-		$this->downloadPdf();
+		$this->downloadPdf();*/
 	}
 	
-	public function show()
+	/*public function show()
     {
 		$dir='archivos/';
         if(is_dir($dir))
@@ -703,7 +720,7 @@ function asignar_veh_mot()
                 header("Content-Transfer-Encoding: binary"); 
                 header('Content-Length: '. filesize($route)); 
                 readfile($route);
-    }
+    }*/
 }
 /*
 		$this->load->library('Pdf');

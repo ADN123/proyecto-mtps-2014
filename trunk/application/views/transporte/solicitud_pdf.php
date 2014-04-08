@@ -2,23 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Solicitud de Transporte - PDF</title>
-    <style>
-		body {
-			font-family: Arial, Helvetica, sans-serif;
-		}
-		.tabla, .titu {
-			border: 1px solid #000;
-		}
-		.tabla tr {
-			height: 25px;
-		}
-	</style>
 </head>
 <body>
     <table align="center" border="0" cellspacing="0" style="width:100%;">
         <tr>
-            <td align="left" style="width:40%;">
+            <td align="left" id="imagen">
                 <img src="img/mtps.jpg" />
             </td>
             <td align="right">
@@ -27,11 +15,11 @@
         </tr>
         <tr>
         	<td colspan="2" align="center">
-            	<strong style="font-size:13px">DATOS DEL SOLICITANTE</strong>
+            	<strong id="titulo">DATOS DEL SOLICITANTE</strong>
             </td>
         </tr>
   	</table>
-    <table align="center" class="tabla" cellspacing="0" style="width:100%; font-size: 12px">    
+    <table align="center" class="tabla" cellspacing="0">    
         <tr>
         	<td colspan="2" align="center">
             	<?php 
@@ -84,17 +72,17 @@
             </td>
         </tr>
         <tr>
-        	<td align="left" style="width:50%;">
+        	<td align="left">
             </td>
         	<td align="left">
-            	<table>
+            	<table align="right">
                 	<tr>
-                    	<td style="width: 50%;">
+                    	<td width="125">
                         </td>
-                    	<td class="titu" align="center">
+                    	<td class="titu" align="center" width="90">
                         	SEG&Uacute;N SOLICITADO
                         </td>
-                    	<td class="titu" align="center">
+                    	<td class="titu" align="center" width="90">
                         	DATOS REALES
                         </td>
                     </tr>
@@ -106,7 +94,7 @@
                         	<strong><?php echo $info_solicitud['fecha_mision'] ?></strong>
                         </td>
                     	<td align="center">
-                        	<?php  ?>
+                        	<strong><?php ?></strong>
                         </td>
                     </tr>
                 	<tr>
@@ -117,7 +105,7 @@
                         	<strong><?php echo $info_solicitud['hora_salida'] ?></strong>
                         </td>
                     	<td align="center">
-                        	<?php  ?>
+                        	<strong><?php  ?></strong>
                         </td>
                     </tr>
                 	<tr>
@@ -128,7 +116,7 @@
                         	<strong><?php echo $info_solicitud['hora_entrada'] ?></strong>
                         </td>
                     	<td align="center">
-                        	<?php  ?>
+                        	<strong><?php ?></strong>
                         </td>
                     </tr>
                 </table>
@@ -185,23 +173,25 @@
             	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Misi&oacute;n encomendada: <strong><?php echo $info_solicitud['mision_encomendada'] ?></strong>
             </td>
         </tr>
-        <tr style="height: 125px;">
-        	<td align="center">
+        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr>
+        	<td align="center" style="width:50%">
             	f. _____________________________________________<br />
-            	Solicitado Por <strong><?php echo ucwords($info_solicitud['nombre']) ?></strong>
+            	Solicitado Por <strong><?php echo ucwords($info_solicitud['nombre']) ?></strong><br />&nbsp;
             </td>
-        	<td align="center">
+        	<td align="center" style="width:50%">
             	f. _____________________________________________<br />
-            	Autorizado Por <strong><?php echo ucwords($info_solicitud['nombre2']) ?></strong><br />
+            	Autorizado Por <strong><?php echo ucwords($info_solicitud['nombre2']) ?></strong><br />Jefe de Departamento o Sección
             </td>
         </tr>
     </table>
-    <table align="center" class="tabla" cellspacing="0" style="width:100%; font-size: 12px">
+    <table align="center" class="tabla2" cellspacing="0">
+    	<tr><td colspan="2">&nbsp;</td></tr>
     	<tr>
-        	<td>
+        	<td align="center" style="width:50%">
             	<strong>USO EXCLUSIVO SERVICIOS GENERALES</strong>
             </td>
-        	<td>
+        	<td align="center" style="width:50%">
             	<strong>USO EXCLUSIVO PORTERO</strong>
             </td>
         </tr>
