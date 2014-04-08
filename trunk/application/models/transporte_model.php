@@ -433,6 +433,10 @@ function salida_vehiculo($id, $km_inicial,$hora_salida){
 	}
 
 function regreso_vehiculo($id, $km, $hora, $gas){
+
+
+	$this->db->trans_start();
+	
 	$q="UPDATE tcm_vehiculo_kilometraje 
 	SET
 		km_final = '$km' , 
@@ -443,16 +447,26 @@ function regreso_vehiculo($id, $km, $hora, $gas){
 		id_solicitud_transporte = '$id' ;
 		";
 		
-		$r1=$this->db->query($q);
+		$this->db->query($q);
 		
 		$q="
 		UPDATE tcm_solicitud_transporte SET
 		estado_solicitud_transporte = '5'  
 		WHERE	id_solicitud_transporte = '$id' ;
 		";
-		$r2=$this->db->query($q);
+		$this->db->query($q);
 		
-		return ($r1 AND $r2);		
+		$this->db->trans_complete();
+		
+		if ($this->db->trans_status() === FALSE)
+		{
+		// generate an error... or use the log_message() function to log your error
+		echo"Error";
+
+		}else{
+			echo"Ok";
+		}
+
 	}
 function infoSolicitud($id){
 	$query="

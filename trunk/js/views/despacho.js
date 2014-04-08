@@ -9,7 +9,7 @@ $.ajax({
 			
 					$.ajax({
 						async:	true, 
-						url:	base_url()+"/index.php/transporte/kilometraje/"+id_vehiculo,
+						url:	base_url()+"index.php/transporte/kilometraje/"+id_vehiculo,
 						dataType:"json",
 						success: function(date){
 							
