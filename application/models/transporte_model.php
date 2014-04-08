@@ -388,7 +388,7 @@ where s.id_solicitud_transporte='$id'");
 			INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
 			INNER JOIN  tcm_asignacion_sol_veh_mot asi ON asi.id_solicitud_transporte=s.id_solicitud_transporte
 			INNER JOIN tcm_vehiculo vh ON vh.id_vehiculo= asi.id_vehiculo
-			WHERE  s.fecha_mision= CURDATE() AND (estado_solicitud_transporte=3 OR estado_solicitud_transporte=4)");
+			WHERE  (s.fecha_mision= CURDATE() AND (estado_solicitud_transporte=3) OR estado_solicitud_transporte=4)");
 		return $query->result();
 		
 		}
@@ -559,6 +559,18 @@ function infoSolicitud($id){
     	$query=$this->db->query($sentencia);
 		return (array)$query->result_array();
 		
+	}
+function accesorios(){
+		$query="SELECT 	id_accesorio, 
+	nombre, 
+	descrip,  
+	estado	 
+	FROM 
+	tcm_accesorios ";
+		$q=$this->db->query($query);
+		return $q->result();
+	
+	
 	}
 
 }

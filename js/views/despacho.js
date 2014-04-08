@@ -12,8 +12,7 @@ $.ajax({
 						url:	base_url()+"/index.php/transporte/kilometraje/"+id_vehiculo,
 						dataType:"json",
 						success: function(date){
-							console.log(date);
-
+							
 							if(val==4){
 							document.getElementById('kmi').value=date[0].KMinicial;
 									}else{
@@ -32,7 +31,7 @@ $.ajax({
 }
 
 function dialogo(id, val){ //carga la informacion si la 
-console.log(id);
+
 	$('#id').val(id);
 	$('#estado').val(val);
 
@@ -112,5 +111,14 @@ function update() { //funcion para que se actualisce el valor <.ya estaba hecha.
 		
   event.preventDefault();
 });
+
+function chekear(k){
+var obj = $('.cheke');
+var ban= $(k).prop('checked');
+
+	for(i=0;i<obj.length;i++){
+		obj[i].checked=ban;
+	}
+}
 
  

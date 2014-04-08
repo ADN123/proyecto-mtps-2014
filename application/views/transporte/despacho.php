@@ -54,6 +54,7 @@
                      Kilometraje actual:
                     <input id="km"  name="km"   class="tam-2"  autofocus="autofocus" />
                   </p>
+
                    <p>
                     Hora:
                     <input id="timepicker"  name="hora" />
@@ -69,7 +70,32 @@
 			<input id="gas"  name="gas"  onchange="tanque(this.value)" type="range" min="10" max="100" step="10"   value="50"/>        
          </div>
      </div>
-           <button type="submit"  id="aprobar">Guardar</button>
+						<h4 align="center">Accesorios</h3>  
+              
+     <table cellspacing='0' align='center' class='table_design'>
+						<thead>
+							<th>
+								Objeto
+							</th>
+							<th>
+								A bordo
+							</th>
+						</thead>
+						<tbody>
+                        
+               <? $s="";
+			   foreach($accesorios as $as){
+					$s.='<tr title="'.$as->descrip.'" >
+                            <td>'.$as->nombre.'</td>
+                            <td><input type="checkbox"   name="ac'.$as->id_accesorio.'" id="ac'.$as->id_accesorio.'" class="cheke"></td>                        
+                        </tr>';
+			 }
+			 echo$s;
+			 ?>       
+                         </tbody>
+                      </table>
+Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)">
+<p align="center"> <button type="submit"  id="aprobar">Guardar</button></p>    
   </form>
 
 </div>

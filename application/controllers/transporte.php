@@ -20,7 +20,7 @@ class Transporte extends CI_Controller
 	
 	/*
 	*	Nombre: solicitud
-	*	Obejtivo: Carga la vista para la creacion del solicitudes de transporte
+	*	Objetivo: Carga la vista para la creacion del solicitudes de transporte
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Ultima Modificacion: 01/04/2014
@@ -57,6 +57,14 @@ class Transporte extends CI_Controller
 			echo ' No tiene permisos para acceder';
 		}
 	}
+	/*
+	*	Nombre: control_solicitudes
+	*	Objetivo: Control 
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Ultima Modificacion: 08/04/2014
+	*	Observaciones: 
+	*/
 	
 	function control_solicitudes()
 	{
@@ -80,16 +88,21 @@ class Transporte extends CI_Controller
 
 	
 	}
+	/*
+	*	Nombre: datos_de_solictudes
+	*	Objetivo: Mostrar informacion General de una mision, a fin de que el Jefe de Unidad o Departamento
+			tenga una aplia vision para aprobar o denegar un solicitud
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Ultima Modificacion: 08/04/2014
+	*	Observaciones: Cargada mediante Ajax desde la pantalla de control de solicitudes
+	*/
 	
 	function datos_de_solicitudes($id)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
 		if(isset($data['id_permiso'])&&$data['id_permiso']>=2 ) {
-		/*	$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-			$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
-			$a=$this->transporte_model->acompanantes_internos($id);
-			$j=json_encode($d);
-			echo $j;*/
+	
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$datos['d']=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
 				$datos['a']=$this->transporte_model->acompanantes_internos($id);
@@ -103,6 +116,14 @@ class Transporte extends CI_Controller
 			echo ' No tiene permiso';
 		}
 	}
+/*
+	*	Nombre: aprobar _solicitud
+	*	Objetivo: Registrar la aprobacion hecha por un Jefe de Unidad o Departamento
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Ultima Modificacion: 5/03/2014
+	*	Observaciones: Ninguna
+	*/
 	
 	function aprobar_solicitud()
 	{
@@ -393,7 +414,7 @@ function asignar_veh_mot()
 
 	/*
 	*	Nombre: buscar_info_adicional
-	*	Obejtivo: Mostrar la informacion del puesto del empleado que necesita el transporte
+	*	Objetivo: Mostrar la informacion del puesto del empleado que necesita el transporte
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Ultima Modificacion: 01/04/2014
@@ -434,7 +455,7 @@ function asignar_veh_mot()
 	
 	/*
 	*	Nombre: guardar_solicitud
-	*	Obejtivo: Guardar el formulario de solicitud de transporte
+	*	Objetivo: Guardar el formulario de solicitud de transporte
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Ultima Modificacion: 01/04/2014
@@ -507,10 +528,27 @@ function asignar_veh_mot()
 			echo "No tiene permisos para acceder";
 		}
 	}
+	/*
+	*	Nombre: control de entradas y salidas
+	*	Objetivo: Mostrar la salida o ingreso de un vehiculo
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Ultima Modificacion: 08/04/2014
+	*	Observaciones: Posee un simulador de medidor de tanque hecho con canvas
+	*/
 	function control_salidas_entradas(){
 	$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
+	$data['accesorios']=$this->transporte_model->accesorios();
 	pantalla("transporte/despacho",$data);	
 	}
+	/*
+	*	Nombre: guardar_despacho
+	*	Objetivo: Registrar la salida o ingreso de un vehiculo
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Ultima Modificacion: 08/04/2014
+	*	Observaciones: Ninguna
+	*/
 	function guardar_despacho(){
 
 		$estado=$this->input->post('estado');
@@ -527,6 +565,16 @@ function asignar_veh_mot()
 		}
 		ir_a('index.php/transporte/control_salidas_entradas');
 		}
+		
+		/*
+	*	Nombre: infoSolicitud
+	*	Objetivo: Ver datos de interes para el encargado de despacho sobre la mision
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Ultima Modificacion: 23/03/2014
+	*	Observaciones: Funcion invocada desde la pantanlla de control de entradas y salidas atravez de ajax
+	*/
+		
 	function infoSolicitud($id){
 			
 			$d=$this->transporte_model->infoSolicitud($id);	
@@ -534,6 +582,15 @@ function asignar_veh_mot()
 			echo $j;
 				
 	}
+		/*
+	*	Nombre: kilometraje
+	*	Objetivo: Extraer el kilometraje recorrido de un vehiculo
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Ultima Modificacion: 26/03/2014
+	*	Observaciones: Esta funcion es invocada por ajax desde la pantalla de control de salidas y entradas de vehiculo
+	*/
+	
 	function kilometraje($id){
 			
 			$d=$this->transporte_model->kilometraje($id);	
@@ -544,7 +601,7 @@ function asignar_veh_mot()
 	
 	/*
 	*	Nombre: ver_solicitudes
-	*	Obejtivo: Ver el estado actual de las solicitudes. Permite editar o eliminar solicitudes
+	*	Objetivo: Ver el estado actual de las solicitudes. Permite editar o eliminar solicitudes
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Ultima Modificacion: 15/03/2014
@@ -577,7 +634,7 @@ function asignar_veh_mot()
 	
 	/*
 	*	Nombre: eliminar_solicitud
-	*	Obejtivo: Elimina (desactiva) una solicitud de transporte
+	*	Objetivo: Elimina (desactiva) una solicitud de transporte
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Ultima Modificacion: 15/03/2014
@@ -598,7 +655,7 @@ function asignar_veh_mot()
 	
 	/*
 	*	Nombre: reporte_solicitud
-	*	Obejtivo: Muestra solicitudes que ya tienen asignado vehiculo y motorista. Permite exportar a pdf
+	*	Objetivo: Muestra solicitudes que ya tienen asignado vehiculo y motorista. Permite exportar a pdf
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Ultima Modificacion: 01/04/2014
@@ -629,7 +686,7 @@ function asignar_veh_mot()
 	
 	/*
 	*	Nombre: solicitud_pdf
-	*	Obejtivo: Genera una archivo pdf de una solicitud
+	*	Objetivo: Genera una archivo pdf de una solicitud
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Ultima Modificacion: 02/04/2014
