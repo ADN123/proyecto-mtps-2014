@@ -318,7 +318,14 @@
         </tr>
     </table>
     <p>
-    	Observaciones: <strong><?php ?></strong>
+    	Observaciones: 
+        <ul>
+        	<?php
+				foreach($observaciones as $val) {
+					echo "<li>".$val['observacion'].".</li>";					
+				}
+			?>
+        </ul>
     </p>
 </body>
 </html>

@@ -631,5 +631,15 @@ function accesorios(){
 		
 		return (array)$query->row();
 	}
+	function observaciones($id_solicitud_transporte)
+	{
+		$sentencia="SELECT
+					tcm_observacion.observacion
+					FROM tcm_observacion
+					WHERE id_solicitud_transporte='".$id_solicitud_transporte."'";
+		$query=$this->db->query($sentencia);
+		
+		return (array)$query->result_array();
+	}
 }
 ?>
