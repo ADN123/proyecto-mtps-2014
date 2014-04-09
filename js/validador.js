@@ -152,7 +152,7 @@
 		/*Funcion para validar que la longitud del objeto sea mayor que un numero dado*/
 		this.mayL = function(){
 			if(settings.lonMin!=null) {
-				if(Number($objeto.val().length) <= Number(settings.lonMin) && $objeto.val()!="") {
+				if(Number($objeto.val().length) < Number(settings.lonMin) && $objeto.val()!="") {
 					if(settings.men==null || settings.men=="") 
 						to="Debe contener al menos "+settings.lonMin+" caracteres";
 					else

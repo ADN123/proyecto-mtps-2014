@@ -40,12 +40,12 @@ function dialogo(id)
 	return false;
 }
 
-function motoristaf(id){
+function motoristaf(id,id2){
 		
 		$('#motorista').empty();
 		$.ajax({
 		async:	true, 
-		url:	"<?php echo base_url()?>/index.php/transporte/verificar_motoristas/"+id,
+		url:	"<?php echo base_url()?>/index.php/transporte/verificar_motoristas/"+id+"/"+id2,
 		dataType:"json",
 		success: function(data)
 		{
