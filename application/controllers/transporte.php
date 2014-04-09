@@ -699,8 +699,8 @@ function asignar_veh_mot()
 	*	Objetivo: Genera una archivo pdf de una solicitud
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
-	*	Ultima Modificacion: 02/04/2014
-	*	Observaciones: Esta a la mitad, falta cargar librerias para el pdf
+	*	Ultima Modificacion: 09/04/2014
+	*	Observaciones: Ninguna
 	*/
 	function solicitud_pdf($id) 
 	{
