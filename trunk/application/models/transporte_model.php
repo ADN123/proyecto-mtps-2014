@@ -300,7 +300,7 @@ where t.id_solicitud_transporte='$id';");
 	////////////////////////////FUNCION DE DESTINOS/////////////////
 	function destinos($id)
 	{
-		$query=$this->db->query("select m.municipio, d.lugar_destino destino, d.mision_encomendada mision,direccion_destino as direccion from tcm_destino_mision as d
+		$query=$this->db->query("select LOWER(m.municipio) AS municipio, d.lugar_destino destino, d.mision_encomendada mision,direccion_destino as direccion from tcm_destino_mision as d
 inner join org_municipio as m on (d.id_municipio=m.id_municipio)
 inner join tcm_solicitud_transporte as s on (d.id_solicitud_transporte=s.id_solicitud_transporte)
 where s.id_solicitud_transporte='$id'");
