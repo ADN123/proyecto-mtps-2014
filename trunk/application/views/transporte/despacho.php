@@ -87,14 +87,13 @@
 			   foreach($accesorios as $as){
 					$s.='<tr title="'.$as->descrip.'" >
                             <td>'.$as->nombre.'</td>
-                            <td><input type="checkbox"   name="ac'.$as->id_accesorio.'" id="ac'.$as->id_accesorio.'" class="cheke"></td>                        
-                        </tr>';
+                            <td><input type="checkbox"   name="ac'.$as->id_accesorio.'" id="ac'.$as->id_accesorio.'" class="cheke"  value="'.$as->id_accesorio.'"></td>                        </tr>';
 			 }
 			 echo$s;
 			 ?>       
                          </tbody>
                       </table>
-Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)">
+Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)" >
 <p align="center"> <button type="submit"  id="aprobar">Guardar</button></p>    
   </form>
 

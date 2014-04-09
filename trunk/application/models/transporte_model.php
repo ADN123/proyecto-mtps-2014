@@ -159,10 +159,11 @@ WHERE (estado_solicitud_transporte=2)");
 /////////FUNCION QUE RETORNA lA lOCAlIZACIÓN, FECHA Y HORARIOS DE UNA SOlICITUD EN ESPECÍFICO/////
 	function consultar_fecha_solicitud($id)
 	{
-		$query=$this->db->query("SELECT dm.id_municipio, st.fecha_mision AS fecha, st.hora_salida AS salida, st.hora_entrada AS entrada
-FROM tcm_solicitud_transporte AS st
-INNER JOIN tcm_destino_mision as dm on (st.id_solicitud_transporte=dm.id_solicitud_transporte) 
-WHERE st.id_solicitud_transporte =  '$id';");
+		$query=$this->db->query("
+		SELECT st.fecha_mision AS fecha, st.hora_salida AS salida, st.hora_entrada AS entrada
+		FROM tcm_solicitud_transporte AS st
+		WHERE st.id_solicitud_transporte =  '$id';
+		");
 		return $query->result();
 	}
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -210,15 +211,31 @@ WHERE st.id_solicitud_transporte =  '$id';");
 	
 	//////////////////////VEHICUlOS EN MISION lOCAl/////////////////////////////////
 	
-	function vehiculo_en_mision_local($id)
+	function vehiculo_en_mision_local($fecha,$hsalida,$hentrada,$id_veh)
 	{
 		$query=$this->db->query("
-		SELECT st.fecha_mision AS fecha, st.hora_salida AS salida, st.hora_entrada AS entrada
-		FROM tcm_solicitud_transporte AS st
-		INNER JOIN tcm_asignacion_sol_veh_mot as avm
-		on (avm.id_solicitud_transporte=st.id_solicitud_transporte)
-		WHERE avm.id_vehiculo='$id' and st.estado_solicitud_transporte=3;");
-		return $query->result();
+		select avm.id_vehiculo
+		from tcm_solicitud_transporte as st
+		inner join tcm_asignacion_sol_veh_mot as avm
+		on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
+		where st.fecha_mision='$fecha' and 
+		(
+			(st.hora_salida>='$hsalida' and st.hora_salida<='$hentrada')
+			 or (st.hora_entrada>='$hsalida' and st.hora_entrada<='$hentrada')
+			 or (st.hora_salida<='$hsalida' and st.hora_entrada>='$hentrada')
+		)
+		and st.estado_solicitud_transporte=3
+		and avm.id_vehiculo='$id_veh'
+		");
+		
+		if($query->num_rows>0)
+		{
+			return $query->result();
+		}
+		else
+		{
+			return 0;
+		}
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////
@@ -408,7 +425,9 @@ where s.id_solicitud_transporte='$id'");
 		return $query->result();
 		
 		}
-function salida_vehiculo($id, $km_inicial,$hora_salida){
+function salida_vehiculo($id, $km_inicial,$hora_salida,$acces){
+		$this->db->trans_start();
+		
 		$q="INSERT INTO tcm_vehiculo_kilometraje (
 					id_solicitud_transporte, 
 					id_vehiculo, 
@@ -422,17 +441,36 @@ function salida_vehiculo($id, $km_inicial,$hora_salida){
 					CONCAT_WS(' ',CURDATE(),'".$hora_salida."'), 
 					CONCAT_WS(' ',CURDATE(),CURTIME())
 				);";
-		$r1=$this->db->query($q);
+		$this->db->query($q);
+
+				foreach($acces as  $row)://insert de accesorio
+
+
+			$this->db->query("INSERT INTO mtps.tcm_chekeo_accesorio(id_solicitud_transporte, 
+							id_accesorio, salida)
+							VALUES
+							($id, $row, 1 );");
+			
+		endforeach;
 		
 		$q="UPDATE tcm_solicitud_transporte SET
 		estado_solicitud_transporte = '4' 
 		WHERE	id_solicitud_transporte = '$id' ;";
-		$r2=$this->db->query($q);
+		$this->db->query($q);
 		
-		return ($r1 AND $r2);
+		$this->db->trans_complete();
+		
+		if ($this->db->trans_status())
+		{
+			echo"Ok";
+
+		}else{	// Error en tra
+		echo"Error";
+			
+		}
 	}
 
-function regreso_vehiculo($id, $km, $hora, $gas){
+function regreso_vehiculo($id, $km, $hora, $gas,$acces){
 
 
 	$this->db->trans_start();
@@ -449,6 +487,12 @@ function regreso_vehiculo($id, $km, $hora, $gas){
 		
 		$this->db->query($q);
 		
+		foreach($acces as  $row)://insert de accesorio
+		
+		$this->db->query("UPDATE tcm_chekeo_accesorio SET regreso = 1	
+				WHERE id_solicitud_transporte = $id AND id_accesorio = $row ;");
+			
+		endforeach;
 		$q="
 		UPDATE tcm_solicitud_transporte SET
 		estado_solicitud_transporte = '5'  
@@ -456,15 +500,16 @@ function regreso_vehiculo($id, $km, $hora, $gas){
 		";
 		$this->db->query($q);
 		
+		//Finde transacion
 		$this->db->trans_complete();
 		
-		if ($this->db->trans_status() === FALSE)
+		if ($this->db->trans_status())
 		{
-		// generate an error... or use the log_message() function to log your error
-		echo"Error";
-
-		}else{
 			echo"Ok";
+
+		}else{	// Error en transacion
+		echo"Error";
+			
 		}
 
 	}
@@ -590,18 +635,15 @@ function infoSolicitud($id){
 		return (array)$query->result_array();
 		
 	}
-function accesorios(){
-		$query="SELECT 	id_accesorio, 
-	nombre, 
-	descrip,  
-	estado	 
-	FROM 
-	tcm_accesorios ";
+	
+	function accesorios(){
+					$query="SELECT 	id_accesorio, nombre,  descrip, estado	 
+							FROM  tcm_accesorios ";
+							
 		$q=$this->db->query($query);
 		return $q->result();
-	
-	
-	}
+		
+		}
 	function datos_motorista_vehiculo($id_solicitud_transporte) 
 	{
 		$sentencia="SELECT
@@ -641,5 +683,6 @@ function accesorios(){
 		
 		return (array)$query->result_array();
 	}
+
 }
 ?>

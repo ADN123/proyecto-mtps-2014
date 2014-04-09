@@ -65,10 +65,10 @@ $(document).ready(function(){
 		lonMin: 10
 	});
 	$("#mision_encomendada").validacion({
-		valNombre: true
+		lonMin: 5
 	});
 	$("#lugar_destino").validacion({
-		valNombre: true
+		lonMin: 5
 	});
 	$("#municipio").validacion({
 		men: "Debe seleccionar un item"
