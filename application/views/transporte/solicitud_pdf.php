@@ -124,12 +124,12 @@
         </tr>
         <tr>
         	<td colspan="2">
-            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Departamento: <strong><?php echo $info_empleado['nivel_2'] ?></strong>
+            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Departamento: <strong><?php if($info_empleado['nivel_2']!="") echo $info_empleado['nivel_2']."."; else echo "_____________________________________________________________________________________________________";?></strong>
             </td>
         </tr>
         <tr>
         	<td colspan="2">
-            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Secci&oacute;n: <strong><?php echo $info_empleado['nivel_1'] ?></strong>
+            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Secci&oacute;n: <strong><?php if($info_empleado['nivel_1']!="") echo $info_empleado['nivel_1']."."; else echo "____________________________________________________________________________________________________________";?></strong>
             </td>
         </tr>
         <tr>
@@ -138,15 +138,22 @@
                 <strong>
 					<?php 
                         $i=0;
+						$cadena="";
                         foreach($acompanantes as $val) {
+							$x=substr(ucwords($val->nombre), 0, -1);
                             if($i==1)
-                                echo ", ";
-                            echo ucwords($val->nombre);
+                                $cadena.=", ";
+                            $cadena.=$x;
                             $i=1;
                         }
+						echo $cadena;
                         if($i==1 && $info_solicitud['acompanante']!="")
                             echo ", ";
                         echo $info_solicitud['acompanante'];
+						if($i==1 || $info_solicitud['acompanante']!="")
+							echo ".";
+						else
+							echo "Ninguno.";
                     ?>
                 </strong>
             </td>
@@ -157,11 +164,11 @@
                 <strong>
 					<?php 
                         if(count($destinos)>1) {
-                            echo "<strong>Ver atr&aacute;s</strong>";
+                            echo "Ver atr&aacute;s.";
                         }
                         else {
                             foreach($destinos as $val) {
-                                echo $val->destino.". ". $val->municipio;
+                                echo $val->destino.", ".ucwords($val->municipio).".";
                             }
                         }
                     ?>
@@ -170,8 +177,20 @@
         </tr>
         <tr>
         	<td colspan="2">
-            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Misi&oacute;n encomendada: <strong><?php echo $info_solicitud['mision_encomendada'] ?></strong>
-            </td>
+            	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Misi&oacute;n encomendada:  
+                <strong>
+					<?php 
+                        if(count($destinos)>1) {
+                            echo "Ver atr&aacute;s.";
+                        }
+                        else {
+                            foreach($destinos as $val) {
+                                echo $val->mision.".";
+                            }
+                        }
+                    ?>
+                </strong>
+        	</td>
         </tr>
         <tr><td colspan="2">&nbsp;</td></tr>
         <tr>
