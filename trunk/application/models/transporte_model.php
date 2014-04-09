@@ -602,6 +602,34 @@ function accesorios(){
 	
 	
 	}
-
+	function datos_motorista_vehiculo($id_solicitud_transporte) 
+	{
+		$sentencia="SELECT
+					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre,
+					tcm_vehiculo.placa,
+					LOWER(tcm_vehiculo_clase.nombre_clase) AS nombre_clase
+					FROM tcm_vehiculo
+					INNER JOIN tcm_vehiculo_clase ON tcm_vehiculo_clase.id_vehiculo_clase = tcm_vehiculo.id_clase
+					INNER JOIN tcm_asignacion_sol_veh_mot ON tcm_asignacion_sol_veh_mot.id_vehiculo = tcm_vehiculo.id_vehiculo
+					INNER JOIN sir_empleado ON tcm_asignacion_sol_veh_mot.id_empleado = sir_empleado.id_empleado
+					WHERE id_solicitud_transporte='".$id_solicitud_transporte."'";
+		$query=$this->db->query($sentencia);
+		
+		return (array)$query->row();
+	}
+	function datos_salida_entrada_real($id_solicitud_transporte)
+	{
+		$sentencia="SELECT
+					tcm_vehiculo_kilometraje.km_inicial,
+					tcm_vehiculo_kilometraje.km_final,
+					tcm_vehiculo_kilometraje.combustible,
+					DATE_FORMAT(tcm_vehiculo_kilometraje.hora_salida,'%h:%i %p') AS hora_salida,
+					DATE_FORMAT(tcm_vehiculo_kilometraje.hora_entrada,'%h:%i %p') AS hora_entrada
+					FROM tcm_vehiculo_kilometraje
+					WHERE id_solicitud_transporte='".$id_solicitud_transporte."'";
+		$query=$this->db->query($sentencia);
+		
+		return (array)$query->row();
+	}
 }
 ?>
