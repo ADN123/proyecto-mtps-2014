@@ -23,8 +23,8 @@ class Transporte extends CI_Controller
 	*	Objetivo: Carga la vista para la creacion del solicitudes de transporte
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
-	*	Última Modificación: 01/04/2014
-	*	Observaciones: Ninguna
+	*	Última Modificación: 13/04/2014
+	*	Observaciones: Ya no se podrá utilizar esta funcion para modificar (A menos que sepa como mandarle dos variables desde la barra de direcciones).
 	*/
 	function solicitud($estado_transaccion=NULL)
 	{
@@ -54,9 +54,10 @@ class Transporte extends CI_Controller
 			pantalla('transporte/solicitud',$data);	
 		}
 		else {
-			echo ' No tiene permisos para acceder';
+			echo 'No tiene permisos para acceder';
 		}
 	}
+	
 	/*
 	*	Nombre: control_solicitudes
 	*	Objetivo: Control 
@@ -65,58 +66,51 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 08/04/2014
 	*	Observaciones: 
 	*/
-	
 	function control_solicitudes()
 	{
  		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
 		
-		echo $data['id_permiso'];
+		//echo $data['id_permiso'];
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 			if($data['id_permiso']>2){//nivel 3
 				$data['datos']=$this->transporte_model->todas_solicitudes_por_confirmar();
-			}else {//nivel 2
+			}
+			else {//nivel 2
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$data['datos']=$this->transporte_model->solicitudes_por_confirmar($id_seccion['id_seccion']);			
 			}	 
 			pantalla('transporte/ControlSolicitudes',$data);
-		
-		}else{//nivel 1
-				echo "No Autorizado";
-
 		}
-
-
-	
+		else {//nivel 1
+			echo " No tiene permisos para acceder";
+		}
 	}
+	
 	/*
 	*	Nombre: datos_de_solictudes
-	*	Objetivo: Mostrar informacion General de una mision, a fin de que el Jefe de Unidad o Departamento
-			tenga una aplia vision para aprobar o denegar un solicitud
+	*	Objetivo: Mostrar informacion General de una mision, a fin de que el Jefe de Unidad o Departamento tenga una aplia vision para aprobar o denegar un solicitud
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
 	*	Última Modificación: 08/04/2014
 	*	Observaciones: Cargada mediante Ajax desde la pantalla de control de solicitudes
 	*/
-	
 	function datos_de_solicitudes($id)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
 		if(isset($data['id_permiso'])&&$data['id_permiso']>=2 ) {
-	
-				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-				$datos['d']=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
-				$datos['a']=$this->transporte_model->acompanantes_internos($id);
-				$datos['f']=$this->transporte_model->destinos($id);
-				$datos['id']=$id;
-				$this->load->view('transporte/dialogoAprobacion',$datos);
-				
-				
+			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			$datos['d']=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
+			$datos['a']=$this->transporte_model->acompanantes_internos($id);
+			$datos['f']=$this->transporte_model->destinos($id);
+			$datos['id']=$id;
+			$this->load->view('transporte/dialogoAprobacion',$datos);
 		}
 		else {
 			echo ' No tiene permiso';
 		}
 	}
-/*
+	
+	/*
 	*	Nombre: aprobar _solicitud
 	*	Objetivo: Registrar la aprobacion hecha por un Jefe de Unidad o Departamento
 	*	Hecha por: Jhonatan
@@ -124,7 +118,6 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 5/03/2014
 	*	Observaciones: Ninguna
 	*/
-	
 	function aprobar_solicitud()
 	{
 		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
@@ -136,17 +129,16 @@ class Transporte extends CI_Controller
 			
 			if($estado ==2 || $estado== 0){
 				$this->transporte_model->aprobar($id,$estado, $nr,$this->session->userdata('id_usuario'));
-					if($descrip!="")
-						$this->transporte_model->insertar_descripcion($id,$descrip);
-						
-				
+				if($descrip!="")
+					$this->transporte_model->insertar_descripcion($id,$descrip);
 				ir_a("index.php/transporte/control_solicitudes");
-			
-			}else {
+			}
+			else {
 				echo'Datos corruptos';
 			}
-		}else {
-			echo ' No tiene permisos para acceder';
+		}
+		else {
+			echo 'No tiene permisos para acceder';
 		}	
 	}
 	
@@ -161,10 +153,8 @@ class Transporte extends CI_Controller
 	function asignar_vehiculo_motorista()
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['id_permiso']!=NULL)
-		{
-			if($data['id_permiso']>=2)
-			{
+		if($data['id_permiso']!=NULL) {
+			if($data['id_permiso']>=2) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion);
 				pantalla('transporte/asignacion_veh_mot',$data);
@@ -172,10 +162,9 @@ class Transporte extends CI_Controller
 		}
 		else
 		{
-			echo "No tiene permiso";
+			echo "No tiene permisos para acceder";
 		}
 	}
-
 
 	/*
 	*	Nombre: cargar_datos_solicitud
@@ -188,10 +177,8 @@ class Transporte extends CI_Controller
 	function cargar_datos_solicitud($id)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['id_permiso']!=NULL)
-		{
-			if($data['id_permiso']>2)
-			{
+		if($data['id_permiso']!=NULL) {
+			if($data['id_permiso']>2) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
 				$a=$this->transporte_model->acompanantes_internos($id);
@@ -199,8 +186,7 @@ class Transporte extends CI_Controller
 				
 				$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id);
 				//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.					
-				foreach($solicitud_actual as $row)
-				{
+				foreach($solicitud_actual as $row) {
 					$fecha=$row->fecha;
 					$entrada=$row->entrada;
 					$salida=$row->salida;
@@ -235,7 +221,6 @@ class Transporte extends CI_Controller
 						$acompanante=ucwords($datos->acompanante);
 						$id_empleado=$datos->id_empleado_solicitante;
 					}
-					
 				
 				echo "Nombre: <strong>".$nombre."</strong> <br>
 				Sección: <strong>".$seccion."</strong> <br>
@@ -315,15 +300,13 @@ class Transporte extends CI_Controller
 						<p>
 						<label>Nombre:</label>
 				";
-				if($requiere==1)
-				{
+				if($requiere==1) {
 				echo "
 					   <select name='motorista' id='motorista'>
 					   </select>
 					";
 				}
-				else
-				{
+				else {
 					echo "<strong>".$nombre."</strong>";
 					echo "<input type='hidden' name='motorista' value='".$id_empleado."'>";
 				}
@@ -353,7 +336,6 @@ class Transporte extends CI_Controller
 					var se=$('motorista').data('kendoComboBox');
 					se.destroy();*/
 				</script>";
-				
 			}
 		}
 		else
@@ -370,18 +352,14 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 09/04/2014
 	*	Observaciones: Ninguna
 	*/
-	
 	function verificar_motoristas($id_vehiculo,$id_solicitud_actual)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
-		if($data['id_permiso']!=NULL)
-		{
-			if($data['id_permiso']>2)
-			{
+		if($data['id_permiso']!=NULL) {
+			if($data['id_permiso']>2) {
 				$datos_actual=$this->transporte_model->consultar_fecha_solicitud($id_solicitud_actual);
 				
-				foreach($datos_actual as $da)
-				{
+				foreach($datos_actual as $da) {
 					$fecha==$da->fecha;
 					$salida==$da->salida;
 					$entrada==$da->entrada;
@@ -389,8 +367,7 @@ class Transporte extends CI_Controller
 				
 				$vehiculo_mision_local=$this->transporte_model->vehiculo_en_mision_local($fecha,$salida,$entrada,$id_vehiculo);
 				
-				if($vehiculo_mision_local!=0)///el vehiculo se encuentra en mision local
-				{
+				if($vehiculo_mision_local!=0) { ///el vehiculo se encuentra en mision local
 					echo "El vehículo se encuentra reservado para esta hora";
 				}
 				
@@ -401,8 +378,7 @@ class Transporte extends CI_Controller
 				echo $j;
 			}
 		}
-		else
-		{
+		else {
 			echo ' No tiene permiso';
 		}
 	}
@@ -415,8 +391,8 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 01/04/2014
 	*	Observaciones: Ninguna
 	*/
-
-function asignar_veh_mot()
+	
+	function asignar_veh_mot()
 	{
 		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		
@@ -449,7 +425,7 @@ function asignar_veh_mot()
 		}
 		else
 		{
-			echo ' No tiene permisos para acceder';
+			echo 'No tiene permisos para acceder';
 		}	
 	}
 
@@ -622,7 +598,7 @@ function asignar_veh_mot()
 		ir_a('index.php/transporte/control_salidas_entradas');
 		}
 		
-		/*
+	/*
 	*	Nombre: infoSolicitud
 	*	Objetivo: Ver datos de interes para el encargado de despacho sobre la mision
 	*	Hecha por: Jhonatan
@@ -638,7 +614,7 @@ function asignar_veh_mot()
 			echo $j;
 				
 	}
-		/*
+	/*
 	*	Nombre: kilometraje
 	*	Objetivo: Extraer el kilometraje recorrido de un vehiculo
 	*	Hecha por: Jhonatan
@@ -701,8 +677,10 @@ function asignar_veh_mot()
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),61);
 		
 		if($data['id_permiso']!=NULL) {
+			$this->db->trans_start();
 			$this->transporte_model->eliminar_solicitud($id_solicitud);
-			redirect('index.php/transporte/ver_solicitudes');
+			$this->db->trans_complete();
+			redirect('index.php/transporte/ver_solicitudes/'.$this->db->trans_status());
 		}
 		else {
 			echo "No tiene permisos para acceder";
@@ -751,50 +729,56 @@ function asignar_veh_mot()
 	*/
 	function solicitud_pdf($id) 
 	{
-		/*$dir='./archivos/';
-		$nom='test.pdf';
-		
-		if(!is_dir($dir))
-            mkdir($dir, 0777);
-		
-		$this->html2pdf->folder($dir);
-        $this->html2pdf->filename($nom);
-        $this->html2pdf->paper('a4', 'portrait');*/
-		
-		
-		$data['info_solicitud']=$this->transporte_model->consultar_solicitud($id);
-		$id_solicitud_transporte=$data['info_solicitud']['id_solicitud_transporte'];
-		$id_empleado_solicitante=$data['info_solicitud']['id_empleado_solicitante'];
-		$data['info_empleado']=$this->transporte_model->info_adicional($id_empleado_solicitante);
-		$data['acompanantes']=$this->transporte_model->acompanantes_internos($id_solicitud_transporte);
-		$data['destinos']=$this->transporte_model->destinos($id_solicitud_transporte);
-		$data['salida_entrada_real']=$this->transporte_model->datos_salida_entrada_real($id_solicitud_transporte);
-		$data['motorista_vehiculo']=$this->transporte_model->datos_motorista_vehiculo($id_solicitud_transporte);
-		$data['observaciones']=$this->transporte_model->observaciones($id_solicitud_transporte);
-		//$this->load->view('transporte/solicitud_pdf.php',$data);
-		
-		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9);
-        //PASAMOS LA RUTA DONDE ESTA EL ESTILO
-        $stylesheet = file_get_contents('css/pdf/solicitud.css');
-        //cargamos el estilo CSS
-        $this->mpdf->WriteHTML($stylesheet,1);
-        //CARGAMOS LOS PARAMETROS
-        $data['nombre'] = "Renatto NL";
-        //OBTENEMOS LA VISTA EN HTML
-        $html = $this->load->view('transporte/solicitud_pdf.php', $data, true);
-        //ESCRIBIMOS AL PDF
-        $this->mpdf->WriteHTML($html,2);
-		if(count($data['destinos'])>1) {
-			$this->mpdf->AddPage();
-			$html = $this->load->view('transporte/reverso_solicitud_pdf.php', $data, true);
-        	$this->mpdf->WriteHTML($html,2);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),66);
+		if($data['id_permiso']!=NULL) {
+			/*$dir='./archivos/';
+			$nom='test.pdf';
+			
+			if(!is_dir($dir))
+				mkdir($dir, 0777);
+			
+			$this->html2pdf->folder($dir);
+			$this->html2pdf->filename($nom);
+			$this->html2pdf->paper('a4', 'portrait');*/
+			
+			
+			$data['info_solicitud']=$this->transporte_model->consultar_solicitud($id);
+			$id_solicitud_transporte=$data['info_solicitud']['id_solicitud_transporte'];
+			$id_empleado_solicitante=$data['info_solicitud']['id_empleado_solicitante'];
+			$data['info_empleado']=$this->transporte_model->info_adicional($id_empleado_solicitante);
+			$data['acompanantes']=$this->transporte_model->acompanantes_internos($id_solicitud_transporte);
+			$data['destinos']=$this->transporte_model->destinos($id_solicitud_transporte);
+			$data['salida_entrada_real']=$this->transporte_model->datos_salida_entrada_real($id_solicitud_transporte);
+			$data['motorista_vehiculo']=$this->transporte_model->datos_motorista_vehiculo($id_solicitud_transporte);
+			$data['observaciones']=$this->transporte_model->observaciones($id_solicitud_transporte);
+			//$this->load->view('transporte/solicitud_pdf.php',$data);
+			
+			$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9);
+			//PASAMOS LA RUTA DONDE ESTA EL ESTILO
+			$stylesheet = file_get_contents('css/pdf/solicitud.css');
+			//cargamos el estilo CSS
+			$this->mpdf->WriteHTML($stylesheet,1);
+			//CARGAMOS LOS PARAMETROS
+			$data['nombre'] = "Renatto NL";
+			//OBTENEMOS LA VISTA EN HTML
+			$html = $this->load->view('transporte/solicitud_pdf.php', $data, true);
+			//ESCRIBIMOS AL PDF
+			$this->mpdf->WriteHTML($html,2);
+			if(count($data['destinos'])>1) {
+				$this->mpdf->AddPage();
+				$html = $this->load->view('transporte/reverso_solicitud_pdf.php', $data, true);
+				$this->mpdf->WriteHTML($html,2);
+			}
+			//SALIDA DE NUESTRO PDF
+			$this->mpdf->Output();
+			
+			/*$this->html2pdf->html(utf8_decode($this->load->view('transporte/solicitud_pdf.php', $data, true)));
+			$this->html2pdf->create('save');
+			$this->downloadPdf();*/
 		}
-        //SALIDA DE NUESTRO PDF
-        $this->mpdf->Output();
-		
-		/*$this->html2pdf->html(utf8_decode($this->load->view('transporte/solicitud_pdf.php', $data, true)));
-		$this->html2pdf->create('save');
-		$this->downloadPdf();*/
+		else {
+			echo "No tiene permisos para acceder";
+		}
 	}
 	
 	/*public function show()
