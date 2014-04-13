@@ -5,7 +5,20 @@
  *  Febrero 27 de 2014
  */
  var multi;
+ var estado_transaccion="";
+ var estado_correcto="La transacción fue ejecutada exitosamente";
+ var estado_incorrecto="Error en la transacción: No se pudo conectar al servidor";
 $(document).ready(function() {
+	if(estado_transaccion!="") {
+		if(Number(estado_transaccion)==1) {
+			//alertify.alert(estado_correcto);
+			alertify.success(estado_correcto);
+		}
+		else {
+			//alertify.alert(estado_incorrecto); 
+			alertify.error(estado_incorrecto);
+		}
+	}
 	var f = new Date();
 	$("select").prepend('<option value="" selected="selected"></option>');
 	$(".select").kendoComboBox({

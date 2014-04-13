@@ -26,7 +26,7 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 01/04/2014
 	*	Observaciones: Ninguna
 	*/
-	function solicitud($id_solicitud=NULL)
+	function solicitud($estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
 		
@@ -46,8 +46,8 @@ class Transporte extends CI_Controller
 					$data['empleados']=$this->transporte_model->consultar_empleados();
 					break;
 			}
-			
-			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
+			$data['estado_transaccion']=$estado_transaccion;
+			//$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
 			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
 			$data['municipios']=$this->transporte_model->consultar_municipios();
 
@@ -508,6 +508,7 @@ function asignar_veh_mot()
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
 		
 		if($data['id_permiso']!=NULL) {
+			$this->db->trans_start();
 			$fec=str_replace("/","-",$this->input->post('fecha_mision'));
 			$fecha_solicitud_transporte=date('Y-m-d');
 			$id_empleado_solicitante=(int)$this->input->post('nombre');
@@ -564,7 +565,8 @@ function asignar_veh_mot()
 			
 			$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones); /*Guardando observaciones*/
 			
-			ir_a('index.php/transporte/solicitud');
+			$this->db->trans_complete();
+			ir_a('index.php/transporte/solicitud/'.$this->db->trans_status());
 		}
 		else {
 			echo "No tiene permisos para acceder";
