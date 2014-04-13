@@ -26,7 +26,7 @@ function dialogo(id){
 						
 			},
 		error:function(data){
-			 alert('Error al cargar datos');
+			 alertify.alert('Error al cargar datos');
 			console.log(data);
 			}
 		});	
