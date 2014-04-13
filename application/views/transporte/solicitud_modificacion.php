@@ -1,8 +1,5 @@
 <script>
-	var permiso=<?php echo $id_permiso?>;
-	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='La solicitud se han almacenado exitosamente.';
-	estado_incorrecto='Error al intentar guardar la solicitud: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+	 var permiso=<?php echo $id_permiso?>;
 </script>
 <script src="<?php echo base_url()?>js/views/solicitud.js" type="text/javascript"></script>
 <section>
@@ -67,7 +64,11 @@
                     <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:40%">
                     <?php
                         foreach($empleados as $val) {
-                            echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
+							if($val['NR']==$solicitud['id_empleado_solicitante'])
+							 	$sel='selected="selected"';
+							else
+								$sel="";
+                            echo '<option '.$sel.' value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
                         }
                     ?>
                     </select>
@@ -100,14 +101,14 @@
             <h2 class="StepTitle">Ingreso de datos del viaje</h2>
             <p>
                 <label for="fecha_mision" id="lfecha_mision">Fecha Misi&oacute;n </label>
-                <input type="text" tabindex="3" id="fecha_mision" name="fecha_mision"/>
+                <input type="text" tabindex="3" id="fecha_mision" name="fecha_mision" value="<?php echo $solicitud['fecha_mision']; ?>"/>
             </p>
             <p>
                 <label for="hora_salida" id="lhora_salida">Hora de salida </label>
-                <input type="text" tabindex="4" class="inicio" id="hora_salida" name="hora_salida"/>
+                <input type="text" tabindex="4" class="inicio" id="hora_salida" name="hora_salida" value="<?php echo $solicitud['hora_salida']; ?>"/>
 
                 <label for="hora_regreso" id="lhora_regreso">Hora de regreso </label>
-                <input type="text" tabindex="5" class="fin" id="hora_regreso" name="hora_regreso"/>
+                <input type="text" tabindex="5" class="fin" id="hora_regreso" name="hora_regreso" value="<?php echo $solicitud['hora_entrada']; ?>"/>
             </p>
             <p style="text-align: center;">
                 <span id="resultado_fecha" style="color: #F00; font-size: 12px;"></span>
@@ -165,7 +166,7 @@
             </p> 
             <p>
                 <label for="acompanantes2" id="lacompanantes2" class="label_textarea">Otros acompa&ntilde;antes</label>
-                <textarea class="tam-4" id="acompanantes2" tabindex="10" name="acompanantes2"/></textarea>
+                <textarea class="tam-4" id="acompanantes2" tabindex="10" name="acompanantes2"/><?php echo $solicitud['acompanante']; ?></textarea>
             </p>
         </div>
     </div>
@@ -180,15 +181,15 @@
             <legend align="left">Información del Destino</legend>
             <p>
             	<label for="mision_encomendada" id="lmision_encomendada">Misi&oacute;n </label>
-				<input type="text" tabindex="2"  style="width:263px;" id="mision_encomendada" name="mision_encomendada"/>
+				<input type="text" tabindex="2"  style="width:263px;" id="mision_encomendada" name="mision_encomendada" value="<?php echo $solicitud['mision_encomendada']; ?>"/>
           	</p> 
             <p>
                 <label for="lugar_destino" id="llugar_destino">Lugar de destino </label>
-             	<input type="text" tabindex="7" class="tam-2" id="lugar_destino" name="lugar_destino"/>
+             	<input type="text" tabindex="7" class="tam-2" id="lugar_destino" name="lugar_destino" value="<?php echo $solicitud['lugar_destino']; ?>"/>
             </p>
             <p>
                 <label for="direccion_empresa" id="ldireccion_empresa" class="label_textarea">Direcci&oacute;n</label>
-                <textarea class="tam-4" id="direccion_empresa" tabindex="10" name="direccion_empresa"/></textarea>
+                <textarea class="tam-4" id="direccion_empresa" tabindex="10" name="direccion_empresa"/><?php echo $solicitud['acompanante']; ?></textarea>
             </p>
             <p>
                 <label for="municipio" id="lmunicipio">Municipio</label>

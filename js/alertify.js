@@ -236,9 +236,13 @@
 				this.bind(elem, "click", function () {
 					elLog.removeChild(elem);
 				});
-				setTimeout(function () {
+				/*
+				*	MODIFICADO POR LEONEL
+				*	Comente la funcion "setTimeout" para que la alerte no desaparezca de la pantalla
+				*/
+				/*setTimeout(function () {
 					if (typeof elem !== "undefined" && elem.parentNode === elLog) elLog.removeChild(elem);
-				}, timer);
+				}, timer);*/
 			},
 
 			/**
