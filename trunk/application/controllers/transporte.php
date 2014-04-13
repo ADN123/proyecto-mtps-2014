@@ -780,8 +780,10 @@ class Transporte extends CI_Controller
 			echo "No tiene permisos para acceder";
 		}
 	}
-	
-	/*public function show()
+}
+
+/*	
+	public function show()
     {
 		$dir='archivos/';
         if(is_dir($dir))
@@ -811,8 +813,7 @@ class Transporte extends CI_Controller
                 header("Content-Transfer-Encoding: binary"); 
                 header('Content-Length: '. filesize($route)); 
                 readfile($route);
-    }*/
-}
+}*/
 /*
 		$this->load->library('Pdf');
         $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
