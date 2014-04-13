@@ -59,7 +59,7 @@ function motoristaf(id,id2){
 		},
 			
 		error:function(data){
-			 alert('Error al cargar los datos de los motoristas');
+			 alertify.alert('Error al cargar los datos de los motoristas');
 		
 			}
 		});	

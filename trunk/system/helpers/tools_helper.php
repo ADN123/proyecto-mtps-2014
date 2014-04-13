@@ -69,7 +69,7 @@
 				var pagina="'.base_url().$url.'"
 				function redireccionar() 
 				{
-				alert("'.$msj.'");
+				alertify.alert("'.$msj.'");
 				setTimeout("partB()",2000)
 				} 
 				function partB() 

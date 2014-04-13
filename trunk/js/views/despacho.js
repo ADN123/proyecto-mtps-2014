@@ -24,7 +24,7 @@ $.ajax({
 
 			},
 		error:function(data){
-			 alert('Error al cargar datos');
+			 alertify.alert('Error al cargar datos');
 			console.log(data);
 			}
 		});	
@@ -107,7 +107,7 @@ function update() { //funcion para que se actualisce el valor <.ya estaba hecha.
   
   
  $( "#datos" ).submit(function( event ) { //validaciones antes de enviar el formulario
-	//	alert("obligado");
+	//	alertify.alert("obligado");
 		
   event.preventDefault();
 });

@@ -2,7 +2,7 @@
 $(document).ready(function() {
 	$('#entrar').click(function entrar() {
 		if (document.form1.user.value=="" || document.form1.pass.value=="") { 
-			alert('por favor llene los datos');
+			alertify.alert('Por favor ingrese un usuario y una clave.');
 			return false;
 		}
 	 

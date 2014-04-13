@@ -65,7 +65,7 @@
         });
         $("#guardar").click(function(){
             if($("#formu").data("ok"))
-                alert("Se va");         
+                alertify.alert("Se va");         
         });
     });
 </script>

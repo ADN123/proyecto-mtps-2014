@@ -13,6 +13,8 @@
         <link href="<?php echo base_url()?>css/kendo.dataviz.bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url()?>css/tooltipster.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url()?>css/smart_wizard.css" rel="stylesheet" type="text/css">
+		<link href="<?php echo base_url()?>css/alertify.core.css" rel="stylesheet" />
+		<link href="<?php echo base_url()?>css/alertify.default.css" rel="stylesheet" />
         <link href="<?php echo base_url()?>css/style-base.css" rel="stylesheet" type="text/css" />
         <script src="<?php echo base_url()?>js/jquery-1.8.2.js"></script>
         <!--<script src="<?php echo base_url()?>js/jquery-ui-1.9.0.custom.js"></script>-->
@@ -22,6 +24,7 @@
         <script src="<?php echo base_url()?>js/jquery.leanModal.min.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/waypoints.min.js"></script>
 		<script src="<?php echo base_url()?>js/jquery.smartWizard-2.0.min.js" type="text/javascript"></script>
+        <script src="<?php echo base_url()?>js/alertify.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/funciones.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/validador.js" type="text/javascript"></script>
         <script type="text/javascript">

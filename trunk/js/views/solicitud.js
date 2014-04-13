@@ -110,11 +110,13 @@ $(document).ready(function(){
 					$("#info_adicional").html(html);
 				}
 				else {	
-					alert('Error al intentar buscar empleado: No se encuentra el registro');
+					alertify.alert('Error al intentar buscar empleado: No se encuentra el registro');
+					$("#info_adicional").html("");
 				}
 			},
 			error:function(data) { 
-				alert('Error al intentar buscar empleado: No se pudo conectar al servidor');
+				alertify.alert('Error al intentar buscar empleado: No se pudo conectar al servidor');
+				$("#info_adicional").html("");
 			}
 		});
 	});
