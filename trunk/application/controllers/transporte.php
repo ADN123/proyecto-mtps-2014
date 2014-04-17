@@ -101,6 +101,7 @@ class Transporte extends CI_Controller
 			$datos['d']=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
 			$datos['a']=$this->transporte_model->acompanantes_internos($id);
 			$datos['f']=$this->transporte_model->destinos($id);
+			$datos['observaciones']=$this->transporte_model->observaciones($id);
 			$datos['id']=$id;
 			$this->load->view('transporte/dialogoAprobacion',$datos);
 		}
@@ -129,7 +130,7 @@ class Transporte extends CI_Controller
 			if($estado ==2 || $estado== 0){
 				$this->transporte_model->aprobar($id,$estado, $nr,$this->session->userdata('id_usuario'));
 				if($descrip!="")
-					$this->transporte_model->insertar_descripcion($id,$descrip);
+					$this->transporte_model->insertar_descripcion($id,$descrip,2);
 				ir_a("index.php/transporte/control_solicitudes");
 			}
 			else {
@@ -182,6 +183,7 @@ class Transporte extends CI_Controller
 				$d=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
 				$a=$this->transporte_model->acompanantes_internos($id);
 				$f=$this->transporte_model->destinos($id);
+				$observaciones=$this->transporte_model->observaciones($id);
 				
 				$solicitud_actual=$this->transporte_model->consultar_fecha_solicitud($id);
 				//////////consulta la fecha, hora de entrada, y hora de salida de la solicitud actual, para luego compararla con otras solicitudes ya aprobadas.					
@@ -196,11 +198,6 @@ class Transporte extends CI_Controller
 								
 				echo 
 				"
-				<div id='signup-header'>
-				<h2>Asignaci&oacute;n de Veh&iacute;culos y Motoristas</h2>
-				<a class='cerrar-modal'></a>
-				</div>
-				<div id='contenido-ventana'>
 				<form id='form' action='".base_url()."index.php/transporte/asignar_veh_mot' method='post'>
 				<input type='hidden' id='resp' name='resp' />
 				<input type='hidden' name='id_solicitud' value='".$id."' />
@@ -229,7 +226,35 @@ class Transporte extends CI_Controller
 				Hora de Regreso: <strong>".$entrada."</strong> <br>
 				
 				</fieldset>
-				<br />
+				<br />";
+	?>
+    	<fieldset>
+        <legend align='left'>Observaciones</legend>
+		<?php
+            if(count($observaciones)!=0)
+            foreach($observaciones as $val) {
+                switch($val['quien_realiza']) {
+                    case 1:
+                        $quien="Por parte del solicitante";
+                        break;
+                    case 2:
+                        $quien="Por parte del Jefe de Departamento o Secci&oacute;n";
+                        break;
+                    case 3:
+                        $quien="Por parte del Jefe de Servicios Generales";
+                        break;
+                    default:
+                        $quien="General";
+                }
+                echo $quien.":<br><li><strong>".$val['observacion'].".</strong></li><br>";					
+            }
+            if(count($observaciones)==0)
+                echo "<strong>(No hay observaciones)</strong>";
+		?>
+        </fieldset>
+	<?php
+            
+    echo "<br />
 				
 				<fieldset>
 				<legend align='left'>Destinos</legend>
@@ -264,7 +289,8 @@ class Transporte extends CI_Controller
 				
 				</fieldset>
 				
-			   <br>
+			    <br />
+			   
 				<fieldset>
 					<legend align='left'>Acompañantes</legend>
 					
@@ -325,7 +351,6 @@ class Transporte extends CI_Controller
 					<button type='submit' id='asignar' name='asignar' onclick='enviar(3)'>Asignar</button>
 				</p>
 				</form>
-				</div>
 				";
 				
 				echo "<script>
@@ -333,9 +358,6 @@ class Transporte extends CI_Controller
 					$('.select').kendoComboBox({
 						autoBind: false,
 						filter: 'contains'
-					});
-					$('.cerrar-modal').click(function(){
-						$('.modal_close').click();
 					});
 					/*$('#motorista').kendoComboBox({
 						autoBind: false,
@@ -420,7 +442,7 @@ class Transporte extends CI_Controller
 				{
 					$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));
 					
-					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones);						
+					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);						
 					
 					ir_a("index.php/transporte/asignar_vehiculo_motorista");
 				
@@ -547,7 +569,8 @@ class Transporte extends CI_Controller
 				}
 			}
 			
-			$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones); /*Guardando observaciones*/
+			if($observaciones!="")
+				$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones, 1); /*Guardando observaciones*/
 			
 			$this->db->trans_complete();
 			ir_a('index.php/transporte/solicitud/'.$this->db->trans_status());

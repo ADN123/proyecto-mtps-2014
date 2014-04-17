@@ -24,14 +24,19 @@
     </tbody>
 </table>
 
-<a class="modal_close"></a>
 <div id="ventana" style="height:600px">
+    <div id='signup-header'>
+        <h2>Aprobacion de solicitud de Misión Oficial</h2>
+        <a class="modal_close"></a>
+    </div>
+    <div id='contenido-ventana'>
+    </div>>
 </div>
 
 <script language="javascript" >
 	function dialogo(id)
 	{
-		$('#ventana').load('cargar_datos_solicitud/'+id);
+		$('#contenido-ventana').load('cargar_datos_solicitud/'+id);
 		return false;
 	}
 
