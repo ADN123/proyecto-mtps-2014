@@ -377,13 +377,14 @@ where s.id_solicitud_transporte='$id'");
 		$this->db->query($sentencia);
 	}
 	
-	function insertar_descripcion($id,$descrip)
+	function insertar_descripcion($id,$descrip,$quien=NULL)
 	{
 		$q="INSERT INTO mtps.tcm_observacion 
-				(id_solicitud_transporte, observacion)
+				(id_solicitud_transporte, observacion, quien_realiza)
 			VALUES
 				('".$id."', 
-				'".$descrip."'
+				'".$descrip."', 
+				".$quien."
 				);";
 		
 		$query=$this->db->query($q);	
@@ -676,7 +677,8 @@ function infoSolicitud($id){
 	function observaciones($id_solicitud_transporte)
 	{
 		$sentencia="SELECT
-					tcm_observacion.observacion
+					tcm_observacion.observacion,
+					tcm_observacion.quien_realiza
 					FROM tcm_observacion
 					WHERE id_solicitud_transporte='".$id_solicitud_transporte."'";
 		$query=$this->db->query($sentencia);
