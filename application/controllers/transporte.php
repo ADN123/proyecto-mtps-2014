@@ -198,7 +198,7 @@ class Transporte extends CI_Controller
 				"
 				<div id='signup-header'>
 				<h2>Asignaci&oacute;n de Veh&iacute;culos y Motoristas</h2>
-				<a class='modal_close'></a>
+				<a class='cerrar-modal'></a>
 				</div>
 				
 				<form id='form' action='".base_url()."index.php/transporte/asignar_veh_mot' method='post'>
@@ -327,6 +327,9 @@ class Transporte extends CI_Controller
 					$('.select').kendoComboBox({
 						autoBind: false,
 						filter: 'contains'
+					});
+					$('.cerrar-modal').click(function(){
+						$('.modal_close').click();
 					});
 					/*$('#motorista').kendoComboBox({
 						autoBind: false,
