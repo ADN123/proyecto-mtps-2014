@@ -151,7 +151,7 @@ button {
 }
 #lean_overlay {
 	position: fixed;
-	z-index:100;
+	z-index:1000000;
 	top: 0px;
 	left: 0px;
 	height:100%;
@@ -201,7 +201,7 @@ button {
 	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5); 
 	text-shadow: none; 
 }
-.modal_close { 
+.modal_close, .cerrar-modal { 
 	position: absolute; 
 	top: 12px; 
 	right: 12px; 

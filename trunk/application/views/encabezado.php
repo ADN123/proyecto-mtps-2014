@@ -136,9 +136,9 @@
 	<body>
         <header id="ha-header" class="ha-header ha-header-subshow">
             <div class="ha-header-perspective">
-                <div class="ha-header-front" style="height: 65%;">
+                <div class="ha-header-front" style="height: 98px;">
                 </div>
-                <div class="ha-header-bottom" style="height: 35%;">
+                <div class="ha-header-bottom" style="height: 52px;">
                     <nav class="cl-effect-12">
                         <a id="verMenu1"><img src="<?php echo base_url()?>img/menu.png"> Men&uacute; <span>Principal</span></a>
                         <a style="float: right;margin-right: 20px;"><img src="<?php echo base_url()?>img/usuario.png"> <?php echo $nick?> <span>- <?php echo $nombre?><span></a>
