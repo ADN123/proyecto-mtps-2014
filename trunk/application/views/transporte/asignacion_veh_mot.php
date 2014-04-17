@@ -25,7 +25,7 @@
 </table>
 
 <a class="modal_close"></a>
-<div id="ventana">
+<div id="ventana" style="height:600px">
 </div>
 
 <script language="javascript" >

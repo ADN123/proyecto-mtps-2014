@@ -2,7 +2,7 @@
     <h2>Aprobacion de solicitud de Misión Oficial</h2>
     <a class='cerrar-modal'></a>
 </div>
-<div id="contenido-ventana" style="height: 440px; overflow: auto;">
+<div id='contenido-ventana'>
     <form id='form' action="<?php echo base_url()?>index.php/transporte/aprobar_solicitud" method='post'>
     	<input type='hidden' id='resp' name='resp' />
     	<input type='hidden' name='ids' value="<?php echo $id?>" />

@@ -200,7 +200,7 @@ class Transporte extends CI_Controller
 				<h2>Asignaci&oacute;n de Veh&iacute;culos y Motoristas</h2>
 				<a class='cerrar-modal'></a>
 				</div>
-				
+				<div id='contenido-ventana'>
 				<form id='form' action='".base_url()."index.php/transporte/asignar_veh_mot' method='post'>
 				<input type='hidden' id='resp' name='resp' />
 				<input type='hidden' name='id_solicitud' value='".$id."' />
@@ -273,7 +273,9 @@ class Transporte extends CI_Controller
 					{
 						echo "<strong>".ucwords($acompa->nombre)."</strong> <br />";
 					}
-					echo "<strong>".$acompanante."</strong><br />";
+					echo "<strong>".$acompanante."</strong>";
+					if(count($acompa)==0 && $acompanante=="")
+						echo "<strong>(No hay acompa&ntilde;antes)</strong>";
 				echo "
 				</fieldset>
 				<br>
@@ -312,14 +314,18 @@ class Transporte extends CI_Controller
 				echo "
 				</p>
 					</fieldset>
-				 <p>
-					<label for='observacion' id='lobservacion'>Observación</label>
+				 
+       	<br>
+		<fieldset>
+			<legend align='left'>Adicional</legend>
+					<label for='observacion' id='lobservacion' class='label_textarea'>Observación</label>
 					<textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
-				</p>
+				</fieldset>
 				<p style='text-align: center;'>
 					<button type='submit' id='asignar' name='asignar' onclick='enviar(3)'>Asignar</button>
 				</p>
 				</form>
+				</div>
 				";
 				
 				echo "<script>
