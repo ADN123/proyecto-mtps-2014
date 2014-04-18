@@ -208,7 +208,7 @@ class Transporte extends CI_Controller
 					foreach($d as $datos)
 					{
 						$nombre=ucwords($datos->nombre);
-						$seccion=$datos->seccion;
+						$seccion=ucwords($datos->seccion);
 						$fechaS=$datos->fechaS;
 						$fechaM=$datos->fechaM;
 						$salida=$datos->salida;
@@ -306,15 +306,15 @@ class Transporte extends CI_Controller
 				</fieldset>
 				<br>
 				<fieldset>
-				<legend align='left'>Vehículos</legend>
+				<legend align='left'>Informaci&oacute;n del Vehículo</legend>
 					<p>
-					<label>Información:</label>
-				   <select class='select' name='vehiculo' id='vehiculo' onchange='motoristaf(this.value,".$id.")'>
+					<label>N&deg; Placa</label>
+				   <select class='select' name='vehiculo' id='vehiculo' style='width:100px;' onchange='motoristaf(this.value,".$id.")'>
 				   ";
 				   
-					foreach($vehiculos_disponibles as $v)
-					{
-						echo "<option value='".$v->id_vehiculo."'>".$v->placa." - ".$v->nombre." - ".$v->modelo."</option>";
+					foreach($vehiculos_disponibles as $v) {
+						/*echo "<option value='".$v->id_vehiculo."'>".$v->placa." - ".$v->nombre." - ".$v->modelo."</option>";*/
+						echo "<option value='".$v->id_vehiculo."'>".$v->placa."</option>";
 					}
 				   
 				   echo "    
@@ -324,26 +324,26 @@ class Transporte extends CI_Controller
 				<br>
 				<fieldset>
 					<legend align='left'>Motorista</legend>
-						<p>
-						<label>Nombre:</label>
 				";
 				if($requiere==1) {
 				echo "
-					   <select name='motorista' id='motorista'>
-					   </select>
+						<label>Nombre</label>
+						<div id='cont-select' style='width:350px;display:inline-block;'>
+							<select name='motorista' id='motorista'>
+							</select>
+						</div>
 					";
 				}
 				else {
-					echo "<strong>".$nombre."</strong>";
+					echo "Nombre: <strong>".$nombre."</strong>";
 					echo "<input type='hidden' name='motorista' value='".$id_empleado."'>";
 				}
 				echo "
-				</p>
 					</fieldset>
 				 
        	<br>
 		<fieldset>
-			<legend align='left'>Adicional</legend>
+			<legend align='left'>Informaci&oacute;n  Adicional</legend>
 					<label for='observacion' id='lobservacion' class='label_textarea'>Observación</label>
 					<textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
 				</fieldset>
@@ -359,11 +359,11 @@ class Transporte extends CI_Controller
 						autoBind: false,
 						filter: 'contains'
 					});
-					/*$('#motorista').kendoComboBox({
+					$('#motorista').kendoComboBox({
 						autoBind: false,
 						filter: 'contains'
-					})
-					var se=$('motorista').data('kendoComboBox');
+					});
+					/*var se=$('motorista').data('kendoComboBox');
 					se.destroy();*/
 				</script>";
 			}

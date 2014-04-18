@@ -94,13 +94,13 @@ $(document).ready(function(){
 			success: function(data) { 
 				if(data['estado']==1) {
 					if(data['funcional']==null)
-						data['funcional']="(No se encuentro este registro)";
+						data['funcional']="(No se encuentró este registro)";
 					if(data['nivel_1']==null)
-						data['nivel_1']="(No se encuentro este registro)";
+						data['nivel_1']="(No se encuentró este registro)";
 					if(data['nivel_2']==null)
-						data['nivel_2']="(No se encuentro este registro)";
+						data['nivel_2']="(No se encuentró este registro)";
 					if(data['nivel_3']==null)
-						data['nivel_3']="(No se encuentro este registro)";
+						data['nivel_3']="(No se encuentró este registro)";
 					var html=	"<br>"+
 								"<p><label>NR</label> <strong>"+data['nr']+"</strong></p>"+
 								"<p><label>Cargo</label> <strong>"+data['funcional']+"</strong></p>"+

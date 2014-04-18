@@ -16,7 +16,7 @@
     ?>
         <tr>
             <td><?php echo $fila->fecha?>&nbsp;&nbsp;<?php echo $fila->salida?></td>
-            <td><?php echo $fila->seccion?></td>
+            <td><?php echo ucwords($fila->seccion)?></td>
             <td><?php echo ucwords($fila->nombre)?></td>
             <td><a rel="leanModal" title="Ver solicitud" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a></td>
         </tr>
@@ -26,7 +26,7 @@
 
 <div id="ventana" style="height:600px">
     <div id='signup-header'>
-        <h2>Aprobacion de solicitud de Misión Oficial</h2>
+        <h2>Asignación de Vehículo y Motorista para Misión Oficial</h2>
         <a class="modal_close"></a>
     </div>
     <div id='contenido-ventana'>
@@ -42,19 +42,24 @@
 
 	function motoristaf(id,id2)
 	{
-		$('#motorista').empty();
+		$('#cont-select').html("");
 		$.ajax({
 			async:	true, 
 			url:	"<?php echo base_url()?>/index.php/transporte/verificar_motoristas/"+id+"/"+id2,
 			dataType:"json",
 			success: function(data) {
 				json = data;
-				
-				for(i=0;i<json.length;i++)
-				{			
-					$('#motorista').append('<option value="'+json[i].id_empleado+'">'+json[i].nombre.capitalize()+'</option>');
+				var cont='';
+				cont=cont+'<select name="motorista" id="motorista">';
+				for(i=0;i<json.length;i++) {			
+					cont=cont+'<option value="'+json[i].id_empleado+'">'+json[i].nombre.capitalize()+'</option>';
 				}	
-						
+				cont=cont+'</select>';
+				$('#cont-select').html(cont);
+				$('#motorista').kendoComboBox({
+					autoBind: false,
+					filter: 'contains'
+				});
 			},
 			error:function(data) {
 				 alertify.alert('Error al cargar los datos de los motoristas');

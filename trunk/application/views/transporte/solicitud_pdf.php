@@ -318,14 +318,24 @@
         </tr>
     </table>
     <p>
-    	Observaciones: 
-        <ul>
-        	<?php
-				foreach($observaciones as $val) {
-					echo "<li>".$val['observacion'].".</li>";					
-				}
-			?>
-        </ul>
+        <?php
+            foreach($observaciones as $val) {
+                switch($val['quien_realiza']) {
+                    case 1:
+                        $quien="Observaciones por parte del solicitante";
+                        break;
+                    case 2:
+                        $quien="Observaciones por parte del Jefe de Departamento o Secci&oacute;n";
+                        break;
+                    case 3:
+                        $quien="Observaciones por parte del Jefe de Servicios Generales";
+                        break;
+                    default:
+                        $quien="General";
+                }
+                echo $quien.":<br><ul><li><strong>".$val['observacion'].".</strong></li></ul>";					
+            }
+		?>
     </p>
 </body>
 </html>
