@@ -21,8 +21,8 @@
 										
 ?>
   <tr>
-    <td><?php echo $fila->fecha?></td>
-    <td><?php echo $fila->seccion?></td>
+    <td><?php echo $fila->fecha." ".$fila->entrada?></td>
+    <td><?php echo ucwords($fila->seccion)?></td>
     <td><?php echo ucwords($fila->nombre)?></td>
     <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
 	</td>

@@ -8,7 +8,7 @@
                 foreach($d as $datos)
                 {
                     $nombre=ucwords($datos->nombre);
-                    $seccion=$datos->seccion;
+                    $seccion=ucwords($datos->seccion);
                     $fechaS=$datos->fechaS;
                     $fechaM=$datos->fechaM;
                     $salida=$datos->salida;
@@ -29,7 +29,6 @@
     	<fieldset>
         <legend align='left'>Observaciones</legend>
 		<?php
-            if(count($observaciones)!=0)
             foreach($observaciones as $val) {
                 switch($val['quien_realiza']) {
                     case 1:
@@ -100,7 +99,7 @@
     </fieldset>
     <br>
     <fieldset>
-        <legend align='left'>Adicional</legend>
+        <legend align='left'>Informaci&oacute;n  Adicional</legend>
         <label for="observacion" id="lobservacion" class="label_textarea">Observaciones</label>
         <textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
     </fieldset>

@@ -124,7 +124,7 @@ estado_solicitud_transporte,
   DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
   DATE_FORMAT(hora_entrada,'%r') entrada, 
   DATE_FORMAT(hora_salida,'%r') salida, requiere_motorista, 
-  COALESCE(o.nombre_seccion, 'No hay registro') seccion, 
+  LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion, 
   LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre 
 FROM tcm_solicitud_transporte  t
 	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
@@ -143,7 +143,7 @@ FROM tcm_solicitud_transporte  t
 	DATE_FORMAT(hora_entrada,'%r') entrada, 
 	DATE_FORMAT(hora_salida,'%r') salida, 
 	requiere_motorista, 
-	COALESCE(o.nombre_seccion, 'No hay registro') seccion, 
+	LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion, 
 	LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre 
 FROM tcm_solicitud_transporte  t
 LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
@@ -242,7 +242,14 @@ WHERE (estado_solicitud_transporte=2)");
 	
 	//////////////////////////////////Informacion del cuadro de dialogo de aprobacion de solicitudes////////////////////////////////////////////////
 	function datos_de_solicitudes($id,$seccion){
-		  $query=$this->db->query("
+		/*
+		*	Cambie este query porque el id_seccion 
+		*	que esta recibiendo esta funcion es el 
+		*	del usuario logueado, no el del solicitante,
+		*	por eso no mostraba la seccion real a la que pertenece
+		*	el empleado solicitante
+		*/
+		/*$query=$this->db->query("
 				SELECT id_solicitud_transporte id, 
 					LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
 					DATE_FORMAT(fecha_solicitud_transporte, '%d-%m-%Y') fechaS,
@@ -256,7 +263,22 @@ WHERE (estado_solicitud_transporte=2)");
 				FROM tcm_solicitud_transporte  s 
 				INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado,
 				org_seccion sec
-				WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);
+				WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);*/
+		$query=$this->db->query("SELECT id_solicitud_transporte id, 
+								LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
+								DATE_FORMAT(fecha_solicitud_transporte, '%d-%m-%Y') fechaS,
+								DATE_FORMAT(fecha_mision, '%d-%m-%Y')  fechaM,
+								DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+								DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
+								LOWER(COALESCE(nombre_seccion, 'No hay registro')) seccion,
+								requiere_motorista req,
+								acompanante,
+								id_empleado_solicitante
+								FROM tcm_solicitud_transporte  s 
+								INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
+								LEFT JOIN sir_empleado_informacion_laboral i ON e.id_empleado = i.id_empleado
+								LEFT JOIN org_seccion sec ON i.id_seccion = sec.id_seccion
+								WHERE id_solicitud_transporte=".$id);
 		return $query->result();
 	}	
 	function aprobar($id, $estado, $nr, $iduse){
