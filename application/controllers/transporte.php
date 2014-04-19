@@ -323,7 +323,7 @@ class Transporte extends CI_Controller
 				</fieldset>
 				<br>
 				<fieldset>
-					<legend align='left'>Motorista</legend>
+					<legend align='left'>Informaci&oacute;n del Motorista</legend>
 				";
 				if($requiere==1) {
 				echo "
@@ -348,7 +348,7 @@ class Transporte extends CI_Controller
 					<textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
 				</fieldset>
 				<p style='text-align: center;'>
-					<button type='submit' id='asignar' name='asignar' onclick='enviar(3)'>Asignar</button>
+					<button type='submit' id='asignar' name='asignar' class='boton_validador' onclick='enviar(3)'>Asignar</button>
 				</p>
 				</form>
 				";
@@ -359,12 +359,22 @@ class Transporte extends CI_Controller
 						autoBind: false,
 						filter: 'contains'
 					});
-					$('#motorista').kendoComboBox({
-						autoBind: false,
-						filter: 'contains'
+					$('#vehiculo').validacion({
+						men: 'Debe seleccionar un item'
+					});";
+				if($requiere==1)
+					echo "$('#motorista').kendoComboBox({
+							autoBind: false,
+							filter: 'contains'
+						});
+						$('#motorista').validacion({
+							men: 'Debe seleccionar un item'
+						});";
+
+				echo "$('#observacion').validacion({
+						req: false,
+						lonMin: 10
 					});
-					/*var se=$('motorista').data('kendoComboBox');
-					se.destroy();*/
 				</script>";
 			}
 		}
