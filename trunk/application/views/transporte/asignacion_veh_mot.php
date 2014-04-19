@@ -42,6 +42,7 @@
 
 	function motoristaf(id,id2)
 	{
+		$('#motorista').destruirValidacion();
 		$('#cont-select').html("");
 		$.ajax({
 			async:	true, 
@@ -60,6 +61,9 @@
 					autoBind: false,
 					filter: 'contains'
 				});
+				/*$('#motorista').validacion({
+					men: 'Debe seleccionar un item'
+				});*/
 			},
 			error:function(data) {
 				 alertify.alert('Error al cargar los datos de los motoristas');

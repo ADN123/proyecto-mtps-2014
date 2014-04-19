@@ -294,7 +294,7 @@
 /*------------------------------------------------------------------------------------------------------------------------		
 ---------SELECCION DE EVENTO DISPARADOR DE LAS VALIDACIONES---------------------------------------------------------------		
 ------------------------------------------------------------------------------------------------------------------------*/		
-		
+		if($objeto)
 		/*Verificacion de que tipo de evento va a disparar la validacion*/		
 		if($objeto[0].tagName=="INPUT" || $objeto[0].tagName=="TEXTAREA") {
 			if($objeto.data("role")=="datepicker" || $objeto.data("role")=="timepicker") {
@@ -367,7 +367,7 @@
 			$obj = $objeto, /*Objeto al que se le aplica el diseño de validacion*/
 			$form = $objeto.parents('form'), /*Form al que pertenece el objeto*/
 			$self = this
-			
+
 		$objeto.removeClass("validar"); /*Se quita el identificador al objeto*/
 		$objeto.removeClass("tooltipster"); /*Se quita el identificador al objeto*/
 		$objeto.removeData("ok");
