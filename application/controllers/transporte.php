@@ -365,10 +365,8 @@ class Transporte extends CI_Controller
 				if($requiere==1)
 					echo "$('#motorista').kendoComboBox({
 							autoBind: false,
-							filter: 'contains'
-						});
-						$('#motorista').validacion({
-							men: 'Debe seleccionar un item'
+							filter: 'contains',
+							enable: false
 						});";
 
 				echo "$('#observacion').validacion({
