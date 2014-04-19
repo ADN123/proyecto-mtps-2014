@@ -61,9 +61,9 @@
 					autoBind: false,
 					filter: 'contains'
 				});
-				/*$('#motorista').validacion({
+				$('#motorista').validacion({
 					men: 'Debe seleccionar un item'
-				});*/
+				});
 			},
 			error:function(data) {
 				 alertify.alert('Error al cargar los datos de los motoristas');
