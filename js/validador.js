@@ -224,6 +224,8 @@
 			else {
 				mensaje="<span class='mensaje-tooltip'><img src='"+base_url()+"img/error.png' width='12' width='12'/> "+to+"</span><br/>";
 				$obj.tooltipster('enable');
+				if($('#wizard').length)
+					$('#wizard').smartWizard('showMessage','Por favor, corrija los errores para poder guardar el registro');
 			}
 			$obj.tooltipster('content', $(mensaje));
 			finalRes = resultado;
@@ -344,7 +346,7 @@
 			$objeto.data("ok",finalRes);
 			
 			$camposValidar=$form.find(".validar");
-				$form.data("ok",true);
+			$form.data("ok",true);
 			
 			/*Verifica cada uno de los elementos que se estan validando, 
 			si alguno resulta false el envio del formulario al que pertenece se denegado*/
@@ -355,10 +357,12 @@
 			});
 			
 			$form.submit(function() {
-				if(($form.data("ok")))
+				if(($form.data("ok"))) {
 					return true;
-				else
+				}
+				else {
 					return false;
+				}
 			});
 		});
 	};
