@@ -275,3 +275,10 @@ button {
 	background: -moz-linear-gradient(100% 25% 90deg, #fefefe, #f9f9f9);
 	background: -webkit-gradient(linear, 0% 0%, 0% 25%, from(#f9f9f9), to(#fefefe));
 }
+
+canvas {
+	margin: -20px auto !important;
+	display: block;
+	top: -10px;
+	position: relative;
+}

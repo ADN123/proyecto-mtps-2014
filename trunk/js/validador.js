@@ -355,15 +355,14 @@
 					$form.data("ok",false);
 				}
 			});
-			
-			$form.submit(function() {
-				if(($form.data("ok"))) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			});
+			/*if($boton.attr("type")=="submit")
+				$form.submit();*/
+		});
+		$form.submit(function() {
+			if(($form.data("ok"))) 
+				return true;
+			else 
+				return false;
 		});
 	};
 	$.fn.destruirValidacion = function(options) {

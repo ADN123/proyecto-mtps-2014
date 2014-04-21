@@ -46,13 +46,13 @@ info(id,val);
 function datos(data){ //carga informacion en el cuadro de dialogo
 	var id=  document.getElementById('id').value;
 	var minKM=document.getElementById('kmi').value;
-		 	var echo1="Solicitud numero:<strong>"+id+"</strong><br />"+
-                   " Solicitante:<strong> "+data[0].nombre.capitalize()+"</strong><br />"+
-                    "Hora de Salida:<strong>"+data[0].salida+"</strong><br />"+
-                    "Hora de Regreso:<strong>"+data[0].regreso+"</strong><br />"+
-                   " Vehiculo:<strong>"+data[0].modelo+"</strong><br />"+
-                    "Placa:<strong>"+data[0].placa+"</strong><br />"+
-					 "Kilometraje Recorrido:<strong>"+ minKM+"</strong>";
+		 	/* echo1="Solicitud numero:<strong>"+id+"</strong><br />"+*/
+            var echo1=" Solicitante:<strong> "+data[0].nombre.capitalize()+"</strong><br />"+
+                    "Hora de Salida:<strong> "+data[0].salida+"</strong><br />"+
+                    "Hora de Regreso:<strong> "+data[0].regreso+"</strong><br />"+
+                   " Vehiculo:<strong> "+data[0].modelo+"</strong><br />"+
+                    "Placa:<strong> "+data[0].placa+"</strong><br />"+
+					 "Kilometraje Recorrido:<strong> "+ minKM+" Kms</strong>";
 			 
 					document.getElementById('InfoMision').innerHTML=echo1;
 					$('#km').destruirValidacion();
