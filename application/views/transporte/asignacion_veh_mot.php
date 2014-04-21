@@ -30,7 +30,7 @@
         <a class="modal_close"></a>
     </div>
     <div id='contenido-ventana'>
-    </div>>
+    </div>
 </div>
 
 <script language="javascript" >
@@ -61,9 +61,9 @@
 					autoBind: false,
 					filter: 'contains'
 				});
-				$('#motorista').validacion({
+				/*$('#motorista').validacion({
 					men: 'Debe seleccionar un item'
-				});
+				});*/
 			},
 			error:function(data) {
 				 alertify.alert('Error al cargar los datos de los motoristas');

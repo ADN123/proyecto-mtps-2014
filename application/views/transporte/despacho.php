@@ -2,128 +2,122 @@
 <script src="<?php echo base_url()?>js/gauge.js"></script>
 <script src="<?php echo base_url()?>/js/views/despacho.js"></script>
 
-
 <section>
     <h2>Control de Entradas y Salidas</h2>
 </section>
 <table  class="grid">
-<thead>
-  <tr>
-    <th>Salida</th>
-    <th>Regreso</th>
-    <th>Vehiculo</th>
-    <th>Empleado</th>
-    <th>Opción</th>
-  </tr>
- </thead>
- <tbody>
-<?
-
-	foreach ($datos as $fila)
-	{
-										
-?>
-  <tr>
-    <td><?=$fila->salida?></td>
-    <td><?=$fila->entrada?></td>
-    <td><?=$fila->placa?></td>
-	<td><?php echo ucwords($fila->nombre)?></td>
-    <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>,<?=$fila->estado?>)"><img  src="<?=base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a>
-	</td>
-  </tr>
-<? } ?>
-</tbody>
+	<thead>
+  		<tr>
+    		<th>Salida</th>
+    		<th>Regreso</th>
+            <th>Vehiculo</th>
+            <th>Empleado</th>
+            <th>Opción</th>
+  		</tr>
+ 	</thead>
+ 	<tbody>
+		<?php
+            foreach ($datos as $fila) {
+        ?>
+  		<tr>
+            <td><?=$fila->salida?></td>
+            <td><?=$fila->entrada?></td>
+            <td><?=$fila->placa?></td>
+            <td><?php echo ucwords($fila->nombre)?></td>
+            <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>,<?=$fila->estado?>)"><img  src="<?=base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a></td>
+  		</tr>
+		<?php } ?>
+	</tbody>
 </table> 
 
-<div id="ventana">
+<div id="ventana" style="height: 600px;">
 	<div id="signup-header">
         <h2>Control de Entradas y Salidas</h2>
         <a class="modal_close"></a>
     </div>
-    <form name="datos" method="post" action="<? echo base_url()?>index.php/transporte/guardar_despacho" id="datos">
-    <div id="formulario"> 
-    	<div id="izq"  style=" width:50%; float:left;" type="text"> 
-                 <input type="hidden" name="estado" id="estado" />
-				<input type="hidden" name="id" id="id" />
-				<input type="hidden" id="kmi" />
-
-    	           <div id="InfoMision" style="font-size:12px;">
-                   
-                  </div> 
-                  <p>
-                     Kilometraje actual:
-                    <input id="km"  name="km"   class="tam-2"  autofocus="autofocus" />
-                  </p>
-
-                   <p>
-                    Hora:
-                    <input id="timepicker"  name="hora" />
-	              </p>       
-
-        </div>
-     
-     	<div id="dere" style="width:50%; float:left;">
-			<div id="preview" >
-        	    <canvas  id="canvas-preview"></canvas>
-    			<div id="preview-textfield"></div>% Combustible
-         	</div>    
-			<input id="gas"  name="gas"  onchange="tanque(this.value)" type="range" min="10" max="100" step="10"   value="50"/>        
-         </div>
-     </div>
-						<h4 align="center">Accesorios</h3>  
-              
-     <table cellspacing='0' align='center' class='table_design'>
-						<thead>
-							<th>
-								Objeto
-							</th>
-							<th>
-								A bordo
-							</th>
-						</thead>
-						<tbody>
-                        
-               <? $s="";
-			   foreach($accesorios as $as){
-					$s.='<tr title="'.$as->descrip.'" >
-                            <td>'.$as->nombre.'</td>
-                            <td><input type="checkbox"   name="ac'.$as->id_accesorio.'" id="ac'.$as->id_accesorio.'" class="cheke"  value="'.$as->id_accesorio.'"></td>                        </tr>';
-			 }
-			 echo$s;
-			 ?>       
-                         </tbody>
-                      </table>
-Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)" >
-<p align="center"> <button type="submit"  id="aprobar">Guardar</button></p>    
-  </form>
-
+    <div id='contenido-ventana'>
+        <form name="datos" method="post" action="<?php echo base_url()?>index.php/transporte/guardar_despacho" id="datos">
+            <input type="hidden" name="estado" id="estado" />
+            <input type="hidden" name="id" id="id" />
+            <input type="hidden" id="kmi" />
+            <fieldset>
+                <legend align='left'>Información de la Misión Oficial</legend>
+                <div id="InfoMision"></div>
+            </fieldset>
+            <br />
+            <fieldset>
+                <legend align='left'>Información del veh&iacute;culo</legend>
+                <div style="width: 48%; float:left; vertical-align: top;">
+                    <p>
+                        <label for="km" id="lkm" style="min-width: 120px;">Kilometraje actual </label>
+                        <input type="text" id="km"  name="km"  class="tam-2"  autofocus="autofocus" />
+                    </p>
+                    <p>
+                        <label for="timepicker" id="ltimepicker" style="min-width: 120px;">Hora </label>
+                        <input id="timepicker" name="hora"/>
+                    </p>  
+                    <p>
+                        <label for="gas" id="lgas" style="min-width: 120px;">Porcentaje Gasolina </label>
+                		<input id="gas" name="gas"  onchange="tanque(this.value)" type="range" min="0" max="100" step="5" value="50" style="vertical-align: middle;"/>  
+                    </p>  
+              	</div>   
+                <div id="preview" style="text-align: center; width: 48%; float: right; min-width: 245px;">
+                    <canvas id="canvas-preview" style="margin: 0 auto; display: block;"></canvas>
+                    <div id="preview-textfield" style="display:inline-block"></div><div style="display:inline-block">% Combustible</div>
+                </div>  
+            </fieldset>   
+            <br />       
+            <fieldset>
+                <legend align='left'>Accesorios</legend>  
+                <table cellspacing='0' align='center' class='table_design'>
+                    <thead>
+                    	<tr>
+                            <th>Objeto</th>
+                            <th width="100">A bordo</th>
+                       	</tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                            $s="";
+                            foreach($accesorios as $as) {
+                                $s.='<tr title="'.$as->descrip.'" >
+                                    <td>'.$as->nombre.'</td>
+                                    <td align="center"><input type="checkbox"   name="ac'.$as->id_accesorio.'" id="ac'.$as->id_accesorio.'" class="cheke"  value="'.$as->id_accesorio.'"></td>                        </tr>';
+                            }
+                            echo $s;
+                        ?>       
+                    </tbody>
+                </table>
+                Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)" >
+          	</fieldset>
+            <br />
+   	 		<p align="center"> 
+            	<button type="submit" id="aprobar" class="boton_validador">Guardar</button>
+           	</p>    
+      	</form>
+	</div>
 </div>
 
 <script type="text/javascript" language="javascript">
-$("#timepicker").kendoTimePicker({
-  animation: {
-   close: {
-     effects: "zoom:out",
-     duration: 300
-   }
-  }
-});
-var timepicker = $("#timepicker").data("kendoTimePicker");
-timepicker.min("5:00 AM");
-timepicker.max("8:00 PM");
-
-
- $("#timepicker").validacion({
-			men: "Por Ingrese la Hora",
-			req: true
-			
- });
- $("#km").validacion({
-			men: "Por Ingrese el kilometraje",
-			req: true,
-			numMin: 0
+	$("#timepicker").kendoTimePicker({
+  		animation: {
+			close: {
+				effects: "zoom:out",
+				duration: 300
+			}
+		}
 	});
 	
+	var timepicker = $("#timepicker").data("kendoTimePicker");
+	timepicker.min("5:00 AM");
+	timepicker.max("8:00 PM");
 
-
+	$("#timepicker").validacion({
+		men: "Porfavor ingrese la Hora"
+ 	});
+	
+ 	$("#km").validacion({
+		men: "Por Ingrese el kilometraje",
+		numMin: 0
+	});
 </script>
