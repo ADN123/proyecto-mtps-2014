@@ -44,7 +44,7 @@ textarea {
 	max-height: 50px;
 } 
 button {
-	height: 34px !important;
+	/*height: 34px !important;*/
 }
 .required {
 	border: solid 1px #f00 !important;
