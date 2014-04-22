@@ -7,8 +7,8 @@ class Transporte extends CI_Controller
         parent::__construct();
 		$this->load->model('transporte_model');
 		$this->load->library("mpdf");
-    	if(!$this->session->userdata('id_usuario')){
-		 redirect('index.php/sessiones');
+    	if(!$this->session->userdata('id_usuario')) {
+			redirect('index.php/sessiones');
 		}
     }
 	
@@ -63,7 +63,7 @@ class Transporte extends CI_Controller
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
 	*	Última Modificación: 08/04/2014
-	*	Observaciones: 
+	*	Observaciones: Ninguna
 	*/
 	function control_solicitudes($estado_transaccion=NULL,$accion=NULL)
 	{
@@ -111,7 +111,7 @@ class Transporte extends CI_Controller
 			$this->load->view('transporte/dialogoAprobacion',$datos);
 		}
 		else {
-			echo ' No tiene permiso';
+			echo 'No tiene permisos para acceder';
 		}
 	}
 	
@@ -387,7 +387,7 @@ class Transporte extends CI_Controller
 		}
 		else
 		{
-			echo ' No tiene permiso';
+			echo 'No tiene permisos para acceder';
 		}
 	}
 	
@@ -426,7 +426,7 @@ class Transporte extends CI_Controller
 			}
 		}
 		else {
-			echo ' No tiene permiso';
+			echo 'No tiene permisos para acceder';
 		}
 	}
 
@@ -667,13 +667,13 @@ class Transporte extends CI_Controller
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
 	*	Última Modificación: 23/03/2014
-	*	Observaciones: Funcion invocada desde la pantanlla de control de entradas y salidas atravez de ajax
+	*	Observaciones: Falta llevar el control de permiso para ver esta informacion
 	*/
 	function infoSolicitud($id)
 	{		
-			$d=$this->transporte_model->infoSolicitud($id);	
-			$j=json_encode($d);
-			echo $j;
+		$d=$this->transporte_model->infoSolicitud($id);	
+		$j=json_encode($d);
+		echo $j;
 	}
 	
 	/*
@@ -682,13 +682,13 @@ class Transporte extends CI_Controller
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
 	*	Última Modificación: 26/03/2014
-	*	Observaciones: Esta funcion es invocada por ajax desde la pantalla de control de salidas y entradas de vehiculo
+	*	Observaciones: Falta llevar el control de permiso para ver esta informacion
 	*/
 	function kilometraje($id)
 	{
-			$d=$this->transporte_model->kilometraje($id);	
-			$j=json_encode($d);
-			echo $j;				
+		$d=$this->transporte_model->kilometraje($id);	
+		$j=json_encode($d);
+		echo $j;				
 	}
 	
 	/*
