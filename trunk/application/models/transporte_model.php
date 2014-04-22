@@ -449,7 +449,7 @@ where s.id_solicitud_transporte='$id'");
 		
 		}
 function salida_vehiculo($id, $km_inicial,$hora_salida,$acces){
-		$this->db->trans_start();
+		/*$this->db->trans_start();*/
 		
 		$q="INSERT INTO tcm_vehiculo_kilometraje (
 					id_solicitud_transporte, 
@@ -481,7 +481,7 @@ function salida_vehiculo($id, $km_inicial,$hora_salida,$acces){
 		WHERE	id_solicitud_transporte = '$id' ;";
 		$this->db->query($q);
 		
-		$this->db->trans_complete();
+/*		$this->db->trans_complete();
 		
 		if ($this->db->trans_status())
 		{
@@ -490,13 +490,13 @@ function salida_vehiculo($id, $km_inicial,$hora_salida,$acces){
 		}else{	// Error en tra
 		echo"Error";
 			
-		}
+		}*/
 	}
 
 function regreso_vehiculo($id, $km, $hora, $gas,$acces){
 
 
-	$this->db->trans_start();
+	/*$this->db->trans_start();*/
 	
 	$q="UPDATE tcm_vehiculo_kilometraje 
 	SET
@@ -523,7 +523,7 @@ function regreso_vehiculo($id, $km, $hora, $gas,$acces){
 		";
 		$this->db->query($q);
 		
-		//Finde transacion
+		/*//Finde transacion
 		$this->db->trans_complete();
 		
 		if ($this->db->trans_status())
@@ -533,7 +533,7 @@ function regreso_vehiculo($id, $km, $hora, $gas,$acces){
 		}else{	// Error en transacion
 		echo"Error";
 			
-		}
+		}*/
 
 	}
 function infoSolicitud($id){

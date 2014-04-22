@@ -65,7 +65,7 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 08/04/2014
 	*	Observaciones: 
 	*/
-	function control_solicitudes()
+	function control_solicitudes($estado_transaccion=NULL,$accion=NULL)
 	{
  		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
 		
@@ -77,11 +77,16 @@ class Transporte extends CI_Controller
 			else {//nivel 2
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$data['datos']=$this->transporte_model->solicitudes_por_confirmar($id_seccion['id_seccion']);			
-			}	 
+			}
+			$data['estado_transaccion']=$estado_transaccion;
+			if($accion==0)
+				$data['accion']="denega";
+			if($accion==2)
+				$data['accion']="aproba";	 
 			pantalla('transporte/ControlSolicitudes',$data);
 		}
 		else {//nivel 1
-			echo " No tiene permisos para acceder";
+			echo "No tiene permisos para acceder";
 		}
 	}
 	
@@ -96,7 +101,7 @@ class Transporte extends CI_Controller
 	function datos_de_solicitudes($id)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
-		if(isset($data['id_permiso'])&&$data['id_permiso']>=2 ) {
+		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$datos['d']=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
 			$datos['a']=$this->transporte_model->acompanantes_internos($id);
@@ -121,7 +126,8 @@ class Transporte extends CI_Controller
 	function aprobar_solicitud()
 	{
 		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
-		if($data['permiso']>=2){
+		if($data['permiso']>=2 && $data['permiso']!=NULL){
+			$this->db->trans_start();
 			$id=$this->input->post('ids'); //id solicitud
 			$estado=$this->input->post('resp'); //estado de la solicitud
 			$descrip=$this->input->post('observacion'); //Observacion
@@ -131,10 +137,12 @@ class Transporte extends CI_Controller
 				$this->transporte_model->aprobar($id,$estado, $nr,$this->session->userdata('id_usuario'));
 				if($descrip!="")
 					$this->transporte_model->insertar_descripcion($id,$descrip,2);
-				ir_a("index.php/transporte/control_solicitudes");
+				$this->db->trans_complete();
+				ir_a("index.php/transporte/control_solicitudes/".$this->db->trans_status()."/".$estado);
 			}
 			else {
-				echo'Datos corruptos';
+				$this->db->trans_complete();
+				ir_a("index.php/transporte/control_solicitudes/0/0");
 			}
 		}
 		else {
@@ -150,13 +158,14 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 01/04/2014
 	*	Observaciones: Ninguna
 	*/
-	function asignar_vehiculo_motorista()
+	function asignar_vehiculo_motorista($estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		if($data['id_permiso']!=NULL) {
 			if($data['id_permiso']>=2) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion);
+				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion);	
+				$data['estado_transaccion']=$estado_transaccion;
 				pantalla('transporte/asignacion_veh_mot',$data);
 			}
 		}
@@ -434,10 +443,9 @@ class Transporte extends CI_Controller
 	{
 		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		
-		if($data['permiso']!=NULL)
-		{
-			if($data['permiso']>=2)
-			{
+		if($data['permiso']!=NULL) {
+			if($data['permiso']>=2) {
+				$this->db->trans_start();
 				$id_solicitud=$this->input->post('id_solicitud');//id_solicitud
 				$id_vehiculo=$this->input->post('vehiculo'); //id_vehiculo
 				$id_motorista=$this->input->post('motorista'); //estado de la solicitud
@@ -446,23 +454,19 @@ class Transporte extends CI_Controller
 				$nr=$this->session->userdata('nr'); //NR del usuario Logueado
 				$observaciones=$this->input->post('observacion');//observación, si es que hay
 				
-				if($estado==3)
-				{
+				if($estado==3) {
 					$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));
 					
-					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);						
-					
-					ir_a("index.php/transporte/asignar_vehiculo_motorista");
-				
+					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
+					$this->db->trans_complete();
+					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$this->db->trans_status());
 				}
-				else
-				{
-					echo'Datos corruptos';
+				else {
+					ir_a("index.php/transporte/asignar_vehiculo_motorista/0");
 				}
 			}
 		}
-		else
-		{
+		else {
 			echo 'No tiene permisos para acceder';
 		}	
 	}
@@ -593,12 +597,25 @@ class Transporte extends CI_Controller
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
 	*	Última Modificación: 08/04/2014
-	*	Observaciones: Posee un simulador de medidor de tanque hecho con canvas
+	*	Observaciones: Falta mostrar datos segun el permiso que posea
 	*/
-	function control_salidas_entradas(){
-	$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
-	$data['accesorios']=$this->transporte_model->accesorios();
-	pantalla("transporte/despacho",$data);	
+	function control_salidas_entradas($estado_transaccion=NULL,$accion=NULL)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),67);
+		
+		if($data['id_permiso']!=NULL) {
+			$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
+			$data['accesorios']=$this->transporte_model->accesorios();
+			$data['estado_transaccion']=$estado_transaccion;
+			if($accion==3)
+				$data['accion']="salida";
+			if($accion==4)
+				$data['accion']="entrada";	 
+			pantalla("transporte/despacho",$data);	
+		}
+		else {
+			echo "No tiene permisos para acceder";
+		}
 	}
 	/*
 	*	Nombre: guardar_despacho
@@ -608,34 +625,41 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 08/04/2014
 	*	Observaciones: Ninguna
 	*/
-	function guardar_despacho(){
-
-		$estado=$this->input->post('estado');
-		$id=$this->input->post('id');
-		$km=$this->input->post('km');
-		$gas=$this->input->post('gas');
-		$hora=date("H:i:s", strtotime($this->input->post('hora')));
-
-//remuevo de post los datos para que solo queden los accesorios
-				$acces=$_POST;
+	function guardar_despacho()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),67);
+		
+		if($data['id_permiso']!=NULL) {
+			$this->db->trans_start();
+			$estado=$this->input->post('estado');
+			$id=$this->input->post('id');
+			$km=$this->input->post('km');
+			$gas=$this->input->post('gas');
+			$hora=date("H:i:s", strtotime($this->input->post('hora')));
+	
+			/*remuevo de post los datos para que solo queden los accesorios*/
+			$acces=$_POST;
 			unset($acces['estado']);
 			unset($acces['gas']);
 			unset($acces['id']);
 			unset($acces['km']);
 			unset($acces['hora']);
-		
-		if($estado==3){
-			$this->transporte_model->salida_vehiculo($id, $km,$hora,$acces);
-		}else{
-			if($estado==4){
 			
-			$this->transporte_model->regreso_vehiculo($id, $km, $hora, $gas,$acces);		
-			
+			if($estado==3){
+				$this->transporte_model->salida_vehiculo($id, $km,$hora,$acces);
 			}
+			else {
+				if($estado==4) {
+					$this->transporte_model->regreso_vehiculo($id, $km, $hora, $gas,$acces);		
+				}
+			}
+			$this->db->trans_complete();
+			ir_a('index.php/transporte/control_salidas_entradas/'.$this->db->trans_status()."/".$estado);
 		}
-		
-		ir_a('index.php/transporte/control_salidas_entradas');
+		else {
+			echo "No tiene permisos para acceder";
 		}
+	}
 		
 	/*
 	*	Nombre: infoSolicitud
@@ -645,14 +669,13 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 23/03/2014
 	*	Observaciones: Funcion invocada desde la pantanlla de control de entradas y salidas atravez de ajax
 	*/
-		
-	function infoSolicitud($id){
-			
+	function infoSolicitud($id)
+	{		
 			$d=$this->transporte_model->infoSolicitud($id);	
 			$j=json_encode($d);
 			echo $j;
-				
 	}
+	
 	/*
 	*	Nombre: kilometraje
 	*	Objetivo: Extraer el kilometraje recorrido de un vehiculo
@@ -661,13 +684,11 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 26/03/2014
 	*	Observaciones: Esta funcion es invocada por ajax desde la pantalla de control de salidas y entradas de vehiculo
 	*/
-	
-	function kilometraje($id){
-			
+	function kilometraje($id)
+	{
 			$d=$this->transporte_model->kilometraje($id);	
 			$j=json_encode($d);
-			echo $j;
-				
+			echo $j;				
 	}
 	
 	/*

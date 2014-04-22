@@ -15,8 +15,10 @@ $(document).ready(function() {
 			alertify.success(estado_correcto);
 		}
 		else {
-			//alertify.alert(estado_incorrecto); 
-			alertify.error(estado_incorrecto);
+			if(Number(estado_transaccion)==0) {
+				//alertify.alert(estado_incorrecto); 
+				alertify.error(estado_incorrecto);
+			}
 		}
 	}
 	var f = new Date();

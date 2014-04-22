@@ -1,3 +1,10 @@
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	<?php if($accion!="") {?>
+	estado_correcto='La <?php echo $accion?> de la Misión Oficial de ha almacenado exitosamente.';
+	estado_incorrecto='Error al intentar almacenar la <?php echo $accion?> de la Misión Oficial: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+	<?php }?>
+</script>
 <script type="text/javascript" src="<?php echo base_url()?>js/prettify.js"></script>
 <script src="<?php echo base_url()?>js/gauge.js"></script>
 <script src="<?php echo base_url()?>/js/views/despacho.js"></script>
@@ -18,13 +25,17 @@
  	<tbody>
 		<?php
             foreach ($datos as $fila) {
+				if($fila->estado==3)
+					$mensaje="Dar salida a Misi&oacute;n Oficial";
+				else
+					$mensaje="Dar entrada a Misi&oacute;n Oficial";
         ?>
   		<tr>
             <td><?=$fila->salida?></td>
             <td><?=$fila->entrada?></td>
             <td><?=$fila->placa?></td>
             <td><?php echo ucwords($fila->nombre)?></td>
-            <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>,<?=$fila->estado?>)"><img  src="<?=base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a></td>
+            <td><a title="<?=$mensaje?>" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>,<?=$fila->estado?>)"><img  src="<?=base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a></td>
   		</tr>
 		<?php } ?>
 	</tbody>
