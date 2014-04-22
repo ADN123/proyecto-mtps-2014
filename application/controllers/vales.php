@@ -7,18 +7,13 @@ class Vales extends CI_Controller
         parent::__construct();
 		$this->load->model('transporte_model');
     	if(!$this->session->userdata('id_usuario')){
-		 redirect('index.php/sessiones');
+			redirect('index.php/sessiones');
 		}
     }
 	
 	function index()
 	{
-			pantalla("Vales/ingreso");
+		pantalla("vales/ingreso");
   	}
-
-
-	
-
-	
 }
 ?>

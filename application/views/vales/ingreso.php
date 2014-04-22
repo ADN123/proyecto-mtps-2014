@@ -1,70 +1,93 @@
 <section>
-    <h2>Ingresos de vales de combustible</h2>
+    <h2>Ingreso de vales de combustible</h2>
 </section>
 <form name="formu" id="formu" action="index.php" method="post">
-    <p>
-        <label for="cantidad" id="lcantidad">Cantidad de Vales: </label>
-        <input type="text"  size="5" tabindex="1" id="cantidad" name="cantidad"/> 
-    </p>
-    <p>
-        <label for="valor" id="valor">Valor nominal: $</label>
-        <input type="text" size="5" tabindex="1" id="nombre2" name="nombre2"/>
-
-    </p >
-
-    <p>
-        <label for="inicio" id="linicio">Correlativos: Inicio</label>
-        <input  id="inicio" tabindex="2" name="inicio" type="text" size="5"/>
-       <label for="final" id="lfinal">Final</label>
-        <input  size="5" id="final" tabindex="2" name="final" type="text"/>
-    </p>
-    <p>
-        <label for="desingnacion" id="ldesingnacion">Desingnacion</label>
-        <select tabindex="4" id="desingnacion" name="desingnacion">
-            <option value="1">Servicio General</option>
-            <option value="2">Banco Mundial</option>
-        </select>
-    </p>
-    <p>
-        <label for="Proveedor" id="lProveedor">Proveedor</label>
-        <select tabindex="4" id="Proveedor" name="Proveedor">
-            <option value="1">Texaco</option>
-            <option value="2">Puma</option>
-        </select>
-    </p>
-    <p>
-        <button type="submit"  class="button tam-1 boton_validador" tabindex="8" id="guardar" name="guardar">Guardar</button>
-    </p>
+	<div id="wizard" class="swMain">
+        <ul>
+            <li>
+                <a href="#step-1">
+                    <span class="stepNumber">1<small>er</small></span>
+                    <span class="stepDesc">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
+                        <small>&nbsp;Datos de los vales</small>
+                    </span>
+                </a>
+            </li>
+        </ul>
+        <div id="step-1" style="text-align: center;">	
+            <h2 class="StepTitle">Ingreso de la informaci&oacute;n de los vales de combustible</h2>
+            <br />
+            <div style="width: 40%; display: inline-block; margin-left: 9%; text-align: left;">
+                <p>
+                    <label for="fecha_recibido" id="lfecha_recibido" style="width:35%;">Fecha recibidos </label>
+                    <input type="text" id="fecha_recibido" name="fecha_recibido"/>
+                </p>
+                <p>
+                    <label for="cantidad" id="lcantidad" style="width:35%;">Cantidad de vales </label>
+                    <input type="text"  size="5" tabindex="1" id="cantidad" name="cantidad"/> 
+                </p>
+                <p>
+                    <label for="inicio" id="linicio" style="width:35%;">N&uacute;mero inicial </label>
+                    <input  id="inicio" name="inicio" type="text" size="5"/>
+                </p>
+                <p>
+                    <label for="tipo_vehiculo" id="ltipo_vehiculo" style="width:35%;">Desingnacion</label>
+                    <select class="select" id="tipo_vehiculo" name="tipo_vehiculo" style="width:175px">
+                    
+                    </select>
+                </p>
+           	</div>
+            <div style="width: 40%; display: inline-block; margin-right: 9%; text-align: left;">
+            	<p style="height:34px">&nbsp;</p>
+                <p>
+                    <label for="valor_nominal" id="lvalor_nominal" style="width:35%;">Valor nominal </label>
+                    $ <input type="text" size="5" id="valor_nominal" name="valor_nominal"/> US
+            
+                </p>
+                <p style="height:34px">
+                    <label for="final" id="lfinal" style="width:35%;">N&uacute;mero final</label>
+                </p>
+                <p>
+                    <label for="id_gasolinera" id="lid_gasolinera" style="width:35%;">Proveedor</label>
+                    <select class="select" id="id_gasolinera" name="id_gasolinera" style="width:175px">
+    
+                    </select>
+                </p>
+            </div>
+        </div>
+    </div>
 </form>
 <script type="text/javascript">
-    $(document).ready(function(){
-       $("#cantidad").validacion({
-            min:10
+    $(document).ready(function() {
+		var tiempo = new Date();
+		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours(), tiempo.getMinutes());
+		
+		$('#wizard').smartWizard();
+		
+		var fec_soli=$("#fecha_recibido").kendoDatePicker({
+			culture: "es-SV",
+			format: "dd/MM/yyyy",
+			min: newfec
+		}).data("kendoDatePicker");
+	
+		$("#fecha_recibido").validacion({
+			valFecha: true
+		});
+       	$("#cantidad").validacion({
+            numMin:1,
+			ent: true
         });
-        $("#valor").validacion({
+        $("#valor_nominal").validacion({
 			valPrecio: true
         });
         $("#inicio").validacion({
-            req: false,
-            lonMin: 10
+            ent: true
         });
-        $("#precio").validacion({
-            valPrecio: true
-        });
-        $("#select").validacion({
+        $("#tipo_vehiculo").validacion({
             men: "Debe seleccionar un item"
         });
-        $("#telefono").validacion({
-            req: false,
-            valTelefono: true
-        });
-        $("#correo").validacion({
-            valCorreo: true,
-            verOk: true
-        });
-        $("#guardar").click(function(){
-            if($("#formu").data("ok"))
-                alertify.alert("Se va");         
-        });
+        $("#id_gasolinera").validacion({
+            men: "Debe seleccionar un item"        
+		});
     });
 </script>
