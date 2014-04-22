@@ -1,8 +1,13 @@
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	<?php if($accion!="") {?>
+	estado_correcto='La solicitud se ha <?php echo $accion?>do exitosamente.';
+	estado_incorrecto='Error al intentar <?php echo $accion?>r la solicitud: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+	<?php }?>
+</script>
 <section>
     <h2>Control de Solicitudes</h2>
 </section>
-
-<?php  //print_r($datos); ?>
 <table  class="grid">
 <thead>
   <tr>
@@ -14,11 +19,7 @@
  </thead>
  <tbody>
 <?php
-
-
-	foreach ($datos as $fila)
-	{
-										
+	foreach ($datos as $fila) {
 ?>
   <tr>
     <td><?php echo $fila->fecha." ".$fila->entrada?></td>
@@ -40,14 +41,14 @@
     </div>
 </div>
 <script language="javascript" >
-
-function dialogo(id){
-
-	$('#contenido-ventana').load('datos_de_solicitudes/'+id);
-				
-	return false;
-}	
-	function Enviar(v){
+	function dialogo(id)
+	{
+		$('#contenido-ventana').load(base_url()+'index.php/transporte/datos_de_solicitudes/'+id);
+		return false;
+	}	
+	
+	function Enviar(v)
+	{
 		document.getElementById('resp').value=v;
 	}
 </script>

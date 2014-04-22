@@ -1,3 +1,8 @@
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='La asignación de vehículo/motorista se ha realizado exitosamente.';
+	estado_incorrecto='Error al intentar asignar vehículo/motorista: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+</script>
 <section>
     <h2>Asignación de Vehículo y Motorista</h2>
 </section>
@@ -36,7 +41,7 @@
 <script language="javascript" >
 	function dialogo(id)
 	{
-		$('#contenido-ventana').load('cargar_datos_solicitud/'+id);
+		$('#contenido-ventana').load(base_url()+'index.php/transporte/cargar_datos_solicitud/'+id);
 		return false;
 	}
 
