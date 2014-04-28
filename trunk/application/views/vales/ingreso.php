@@ -1,7 +1,13 @@
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='El registro de vales se ha almacenado exitosamente.';
+	estado_incorrecto='Error al intentar guardar el registro de vales: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+</script>
+<script src="<?php echo base_url()?>js/views/ingreso_vales.js" type="text/javascript"></script>
 <section>
     <h2>Ingreso de vales de combustible</h2>
 </section>
-<form name="formu" id="formu" action="index.php" method="post">
+<form name="formu" id="formu" action="<?=base_url()?>/index.php/vales/guardar_vales" method="post">
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -46,6 +52,7 @@
                 </p>
                 <p style="height:34px">
                     <label for="final" id="lfinal" style="width:35%;">N&uacute;mero final</label>
+                    <span><strong id="final"></strong></span>
                 </p>
                 <p>
                     <label for="id_gasolinera" id="lid_gasolinera" style="width:35%;">Proveedor</label>
@@ -57,37 +64,3 @@
         </div>
     </div>
 </form>
-<script type="text/javascript">
-    $(document).ready(function() {
-		var tiempo = new Date();
-		newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours(), tiempo.getMinutes());
-		
-		$('#wizard').smartWizard();
-		
-		var fec_soli=$("#fecha_recibido").kendoDatePicker({
-			culture: "es-SV",
-			format: "dd/MM/yyyy",
-			min: newfec
-		}).data("kendoDatePicker");
-	
-		$("#fecha_recibido").validacion({
-			valFecha: true
-		});
-       	$("#cantidad").validacion({
-            numMin:1,
-			ent: true
-        });
-        $("#valor_nominal").validacion({
-			valPrecio: true
-        });
-        $("#inicio").validacion({
-            ent: true
-        });
-        $("#tipo_vehiculo").validacion({
-            men: "Debe seleccionar un item"
-        });
-        $("#id_gasolinera").validacion({
-            men: "Debe seleccionar un item"        
-		});
-    });
-</script>

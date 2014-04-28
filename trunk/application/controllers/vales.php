@@ -13,10 +13,15 @@ class Vales extends CI_Controller
 	
 	function index()
 	{
-		pantalla("vales/ingreso");
+		$this->ingreso_vales();
   	}
 
 	
+	function ingreso_vales($estado_transaccion=NULL) 
+	{
+		$data['estado_transaccion']=$estado_transaccion;
+		pantalla("vales/ingreso",$data);		
+	}
 	
 		function requisicion()
 	{
