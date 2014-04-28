@@ -7,7 +7,7 @@
 <section>
     <h2>Ingreso de vales de combustible</h2>
 </section>
-<form name="formu" id="formu" action="<?=base_url()?>/index.php/vales/guardar_vales" method="post">
+<form name="formu" id="formu" action="<?=base_url()?>index.php/vales/guardar_vales" method="post">
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -33,31 +33,36 @@
                     <input type="text"  size="5" tabindex="1" id="cantidad" name="cantidad"/> 
                 </p>
                 <p>
-                    <label for="inicio" id="linicio" style="width:35%;">N&uacute;mero inicial </label>
-                    <input  id="inicio" name="inicio" type="text" size="5"/>
+                    <label for="inicial" id="linicial" style="width:35%;">N&uacute;mero inicial </label>
+                    <input  id="inicial" name="inicial" type="text" size="10"/>
                 </p>
                 <p>
                     <label for="tipo_vehiculo" id="ltipo_vehiculo" style="width:35%;">Desingnacion</label>
                     <select class="select" id="tipo_vehiculo" name="tipo_vehiculo" style="width:175px">
-                    
+                    	<option value="1">Normal</option>
+                        <option value="2">Banco Mundial</option>
                     </select>
                 </p>
            	</div>
             <div style="width: 40%; display: inline-block; margin-right: 9%; text-align: left;">
-            	<p style="height:34px">&nbsp;</p>
+            	<p style="height:20px; margin-top: 10px !important; margin-bottom: 10px !important;">&nbsp;</p>
                 <p>
                     <label for="valor_nominal" id="lvalor_nominal" style="width:35%;">Valor nominal </label>
                     $ <input type="text" size="5" id="valor_nominal" name="valor_nominal"/> US
             
                 </p>
-                <p style="height:34px">
+                <p style="height:20px; margin-top: 10px !important; margin-bottom: 10px !important;">
                     <label for="final" id="lfinal" style="width:35%;">N&uacute;mero final</label>
                     <span><strong id="final"></strong></span>
                 </p>
                 <p>
                     <label for="id_gasolinera" id="lid_gasolinera" style="width:35%;">Proveedor</label>
                     <select class="select" id="id_gasolinera" name="id_gasolinera" style="width:175px">
-    
+						<?php
+                             foreach($gasolineras as $val) {
+                                 echo '<option value="'.$val['id_gasolinera'].'">'.$val['nombre'].'</option>';
+                             }
+                        ?>
                     </select>
                 </p>
             </div>

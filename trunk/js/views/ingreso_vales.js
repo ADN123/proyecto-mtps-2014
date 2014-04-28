@@ -21,7 +21,7 @@ $(document).ready(function() {
 	$("#valor_nominal").validacion({
 		valPrecio: true
 	});
-	$("#inicio").validacion({
+	$("#inicial").validacion({
 		ent: true
 	});
 	$("#tipo_vehiculo").validacion({
@@ -31,9 +31,9 @@ $(document).ready(function() {
 		men: "Debe seleccionar un item"        
 	});
 	
-	$("#cantidad,#inicio").blur(function(){
-		if($("#cantidad").hasClass("correct") && $("#inicio").hasClass("correct")) {
-			var final=Number($("#cantidad").val())+Number($("#inicio").val())-1;
+	$("#cantidad,#inicial").blur(function(){
+		if($("#cantidad").hasClass("correct") && $("#inicial").hasClass("correct")) {
+			var final=Number($("#cantidad").val())+Number($("#inicial").val())-1;
 			$("#final").html(final);
 		}
 	});
