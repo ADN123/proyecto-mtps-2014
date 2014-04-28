@@ -296,7 +296,14 @@ WHERE (estado_solicitud_transporte=2)");
 	
 	function consultar_vehiculos()
 	{
-		$query=$this->db->query("select * from tcm_vehiculo");
+		$query=$this->db->query("
+		select v.id_vehiculo id, v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
+		from tcm_vehiculo as v
+		inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+		inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+		inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+		inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+		");
 		return $query->result();
 	}
 	
