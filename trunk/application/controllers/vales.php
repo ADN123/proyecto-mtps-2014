@@ -117,8 +117,9 @@ class Vales extends CI_Controller
 		}
 	}
 
+	function ingreso_requisicion()
+	{
 	
-
-
+	}
 }
 ?>
