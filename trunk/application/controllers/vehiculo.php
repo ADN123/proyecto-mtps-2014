@@ -33,5 +33,11 @@ class Vehiculo extends CI_Controller
 		$data['datos']=$this->transporte_model->consultar_vehiculos();
 		pantalla('mantenimiento/vehiculos',$data);
 	}
+	
+	function nuevo_vehiculo()
+	{
+		$data['motoristas']=$this->transporte_model->consultar_motoristas2();
+		pantalla("mantenimiento/nuevo_vehiculo",$data);
+	}
 }
 ?>

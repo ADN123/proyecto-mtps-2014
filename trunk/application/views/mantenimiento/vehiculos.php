@@ -4,7 +4,7 @@
 	estado_incorrecto='Error al intentar asignar vehículo/motorista: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 </script>
 <section>
-    <h2>Asignación de Vehículo y Motorista</h2>
+    <h2>Catálogo de Vehículos</h2>
 </section>
 <table  class="grid">
     <thead>
