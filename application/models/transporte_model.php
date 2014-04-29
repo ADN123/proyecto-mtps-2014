@@ -325,6 +325,14 @@ order by e.primer_nombre ASC);");
 		return $query->result();
 	}
 	
+	///////////////////////////CONSUlTAR MOTORISTAS 2//////////////////////////////////
+	
+	function consultar_motoristas2()
+	{
+		$query=$this->db->query("SELECT e.id_empleado, LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) as nombre FROM sir_empleado as e");
+		return $query->result();
+	}
+	
 	///////////////////////////////////////////////////
 	
 	function acompanantes_internos($id)
