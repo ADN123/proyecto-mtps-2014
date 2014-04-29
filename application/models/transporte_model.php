@@ -307,6 +307,60 @@ WHERE (estado_solicitud_transporte=2)");
 		return $query->result();
 	}
 	
+	//////////////////////////////CONSUlTAR MARCAS//////////////////////////////
+	function consultar_marcas()
+	{
+		$query=$this->db->query("select * from tcm_vehiculo_marca");
+		return $query->result();
+	}
+	////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////CONSUlTAR MODElOS//////////////////////////////
+	function consultar_modelos()
+	{
+		$query=$this->db->query("select * from tcm_vehiculo_modelo");
+		return $query->result();
+	}
+	////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////CONSUlTAR ClASES//////////////////////////////
+	function consultar_clases()
+	{
+		$query=$this->db->query("select * from tcm_vehiculo_clase");
+		return $query->result();
+	}
+	////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////CONSUlTAR CONDICIONES//////////////////////////////
+	function consultar_condiciones()
+	{
+		$query=$this->db->query("select * from tcm_vehiculo_condicion");
+		return $query->result();
+	}
+	////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////CONSUlTAR SECCIONES//////////////////////////////
+	function consultar_secciones()
+	{
+		$query=$this->db->query("select * from org_seccion");
+		return $query->result();
+	}
+	////////////////////////////////////////////////////////////////////////////
+	
+	function consultar_datos_vehiculos($id)
+	{
+		$query=$this->db->query("
+		select v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
+		from tcm_vehiculo as v
+		inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+		inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+		inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+		inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+		where v.id_vehiculo='$id'
+		");
+		return $query->result();
+	}
+	
 	function validar_fecha_hora()
 	{
 		$query=$this->db->query("select st.id_solicitud_transporte,st.fecha_mision, st.hora_salida, st.hora_entrada, avm.id_vehiculo from tcm_solicitud_transporte as st
