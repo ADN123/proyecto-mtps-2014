@@ -310,7 +310,7 @@ WHERE (estado_solicitud_transporte=2)");
 	//////////////////////////////CONSUlTAR MARCAS//////////////////////////////
 	function consultar_marcas()
 	{
-		$query=$this->db->query("select * from tcm_vehiculo_marca");
+		$query=$this->db->query("select id_vehiculo_marca, lower(nombre) as nombre  from tcm_vehiculo_marca");
 		return $query->result();
 	}
 	////////////////////////////////////////////////////////////////////////////
@@ -318,7 +318,7 @@ WHERE (estado_solicitud_transporte=2)");
 	//////////////////////////////CONSUlTAR MODElOS//////////////////////////////
 	function consultar_modelos()
 	{
-		$query=$this->db->query("select * from tcm_vehiculo_modelo");
+		$query=$this->db->query("select id_vehiculo_modelo, lower(modelo) as modelo from tcm_vehiculo_modelo");
 		return $query->result();
 	}
 	////////////////////////////////////////////////////////////////////////////
@@ -326,7 +326,7 @@ WHERE (estado_solicitud_transporte=2)");
 	//////////////////////////////CONSUlTAR ClASES//////////////////////////////
 	function consultar_clases()
 	{
-		$query=$this->db->query("select * from tcm_vehiculo_clase");
+		$query=$this->db->query("select id_vehiculo_clase, lower(nombre_clase) as nombre_clase from tcm_vehiculo_clase");
 		return $query->result();
 	}
 	////////////////////////////////////////////////////////////////////////////
@@ -334,7 +334,7 @@ WHERE (estado_solicitud_transporte=2)");
 	//////////////////////////////CONSUlTAR CONDICIONES//////////////////////////////
 	function consultar_condiciones()
 	{
-		$query=$this->db->query("select * from tcm_vehiculo_condicion");
+		$query=$this->db->query("select id_vehiculo_condicion, lower(condicion) as condicion from tcm_vehiculo_condicion");
 		return $query->result();
 	}
 	////////////////////////////////////////////////////////////////////////////
@@ -342,7 +342,7 @@ WHERE (estado_solicitud_transporte=2)");
 	//////////////////////////////CONSUlTAR SECCIONES//////////////////////////////
 	function consultar_secciones()
 	{
-		$query=$this->db->query("select * from org_seccion");
+		$query=$this->db->query("select id_seccion, lower(nombre_seccion) as seccion from org_seccion");
 		return $query->result();
 	}
 	////////////////////////////////////////////////////////////////////////////
