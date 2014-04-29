@@ -4,16 +4,16 @@
 	estado_correcto='La requisición se ha guardado correctamente';
 	estado_incorrecto='Error al intentar guardar la requisición: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 </script>
-<script src="<?php echo base_url()?>js/views/solicitud.js" type="text/javascript"></script>
+<script src="<?php echo base_url()?>js/views/entrega_vales.js" type="text/javascript"></script>
 <section>
-    <h2>Ingreso de Requisición</h2>
+    <h2>Ingreso de Requisición de Combustible</h2>
 </section>
 <style>
 .k-multiselect {
 	display: inline-block;
 }
 </style>
-<form name="form_mision" method="post" action="<?php echo base_url()?>index.php/transporte/guardar_solicitud">
+<form name="form_mision" method="post" action="<?php echo base_url()?>index.php/vales/guardar_requisicion">
 	<div id="wizard" class="swMain">
         <ul>
             <li>
