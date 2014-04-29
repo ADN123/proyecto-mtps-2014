@@ -39,5 +39,15 @@ class Vehiculo extends CI_Controller
 		$data['motoristas']=$this->transporte_model->consultar_motoristas2();
 		pantalla("mantenimiento/nuevo_vehiculo",$data);
 	}
+	
+	function guardar_vehiculo()
+	{
+		$placa=$this->input->post('placa');
+		$marca=$this->input->post('marca');
+		$clase=$this->input->post('clase');
+		$condicion=$this->input->post('condicion');
+		$id_seccion=$this->input->post('seccion');
+		$id_empleado=$this->input->post('motorista');
+	}
 }
 ?>
