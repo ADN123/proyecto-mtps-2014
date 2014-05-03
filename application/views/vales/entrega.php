@@ -21,7 +21,7 @@
                     <span class="stepNumber">1<small>er</small></span>
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Cantidad y justificación</small>
+                        <small>&nbsp;Datos vales</small>
                     </span>
                 </a>
             </li>
@@ -30,43 +30,36 @@
                     <span class="stepNumber">2<small>do</small></span>
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Vehiculos de destino</small>
+                        <small>&nbsp;Selección de vehículos</small>
                     </span>
                 </a>
             </li>
         </ul>
         <div id="step-1">	
-            <h2 class="StepTitle">Ingreso de datos de Vales</h2>
+            <h2 class="StepTitle">Ingrese los de datos de los vales de combustible</h2>
             <p> 
-            <label for="cantidad" id="lcantidad">Cantidad Solicitada</label>
-             <input type="text" tabindex="3" id="cantidad" name="cantidad" onchange="ultimoVale()"/>
-             
-                 <label for="select" id="lselect">Tipo de vehiculo</label>
-            <select class="tam-1" tabindex="4" id="select" name="select"  onchange="ultimoVale()">
-                <option value="1">Uso General</option>
-                <option value="2">Donado por Banco</option>
-            </select>
+                <label for="cantidad_solicitada" id="lcantidad_solicitada">Cantidad Solicitada </label>
+                <input style="width:100px;" type="text" tabindex="1" id="cantidad_solicitada" name="cantidad_solicitada"/>
+                 
+                <label for="tipo_requisicion" id="ltipo_requisicion">Tipo de vehiculo </label>
+                <select class="select" style="width:200px;" tabindex="2" id="tipo_requisicion" name="tipo_requisicion">
+                    <option value="1">Uso General</option>
+                    <option value="2">Donado por Banco</option>
+                </select>
             </p>
-             <p>
-        
-		    </p>
-            <p> <label for="numInicial" id="lnumInicial">Numero inicial</label>
-              <input type="text" tabindex="4"  id="numInicial" name="numInicial"  onchange="ultimoVale()"/>
+            <p>
+            	<label for="justificacion" id="ljustificacion" class="label_textarea">Justificación </label>
+              	<textarea class="tam-4" id="justificacion" tabindex="3" name="justificacion"/></textarea>
+            </p>
+            <p>
+            	<label for="servicio_de" id="lservicio_de">Al servicio de </label>
+                <select class="select" style="width:200px;" tabindex="4" id="servicio_de" name="servicio_de">
 
-                <label for="hora_regreso" id="lhora_regreso">Numero final	</label>
-                <span id="numero final">0</span>
-            </p>
-            <p style="text-align: center;">
-            <span id="resultado_fecha" style="color: #F00; font-size: 12px;"></span></p>
-            <p><label for="observacion" class="label_textarea">Justificación</label>
-              <textarea class="tam-4" id="observaciones" tabindex="10" name="observaciones"/></textarea>
+                </select>
             </p>
       	</div>
         <div id="step-2">	
-            <h2 class="StepTitle">Selecci&oacute;n los vehiculos </h2>
-            <p style="margin-left: 5%; width:90%;">
-            	Chequee los vehículos a los cuales se aplicaran los vales solicitados   
-            </p>
+            <h2 class="StepTitle">Selecci&oacute;n los vehiculos a los que se aplicarán los vales</h2>
             <p>
             	<table cellspacing="0" align="center" class="table_design">
                     <thead>
