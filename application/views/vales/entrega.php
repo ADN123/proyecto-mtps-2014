@@ -38,6 +38,10 @@
         <div id="step-1">	
             <h2 class="StepTitle">Ingrese los de datos de los vales de combustible</h2>
             <p> 
+                <label for="seccion" id="lseccion">Unidad o Sección: </label>
+                
+          	</p>
+            <p> 
                 <label for="cantidad_solicitada" id="lcantidad_solicitada">Cantidad Solicitada </label>
                 <input style="width:100px;" type="text" tabindex="1" id="cantidad_solicitada" name="cantidad_solicitada"/>
                  
@@ -53,9 +57,29 @@
             </p>
             <p>
             	<label for="servicio_de" id="lservicio_de">Al servicio de </label>
-                <select class="select" style="width:200px;" tabindex="4" id="servicio_de" name="servicio_de">
-
-                </select>
+                <?php 
+					if($id_permiso==3) {
+				?>
+                    <select class="select" style="width:300px;" tabindex="4" id="servicio_de" name="servicio_de">
+                        <?php
+							foreach($oficinas as $val) {
+						?>
+                        		<option value="<?php echo $val['id_ofi'] ?>"><?php echo $val['nom_ofi'] ?></option>
+                        <?php	
+							}
+						?>
+                    </select>
+             	<?php 
+					} 
+					else {
+						foreach($oficinas as $val) {
+							echo '<strong>'.ucwords($val['nom_ofi']).'</strong>';
+				?>
+                			<input type="hidden" id="servicio_de" name="servicio_de" value="<?php echo $val['id_ofi']; ?>" />
+                <?php
+						}
+					}
+				?>
             </p>
       	</div>
         <div id="step-2">	
