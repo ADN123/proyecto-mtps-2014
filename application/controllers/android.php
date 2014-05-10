@@ -22,9 +22,9 @@ class Android extends CI_Controller {
 	function index()
 	{
 		
-		$v=$this->android_model->salida_entrada(); 
-//		print_r($v);
-		$j=json_encode($v);
+//		$v=$this->android_model->salida_entrada(); 
+$v=$this->transporte_model->salidas_entradas_vehiculos();
+	$j=json_encode($v);
 		echo $j;
 	}
 	
@@ -39,6 +39,12 @@ class Android extends CI_Controller {
 		echo "POST ok:";
 		print_r($_POST);
 		
+		}
+	function kilometraje($placa){
+		$j=$this->android_model->kilometraje($placa);
+		$j=json_encode($j);
+		echo $j;
+			
 		}
 
 }
