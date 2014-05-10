@@ -27,6 +27,19 @@ class Android_model extends CI_Model {
 	return $query->result();
 	
 	}
+	function kilometraje($placa)
+	{
+		$sentencia="SELECT v.id_vehiculo, COALESCE(MAX(k.km_inicial), 0) AS KMinicial, COALESCE(MAX(k.km_Final), 0) AS KMFinal
+				FROM tcm_vehiculo  v 
+				LEFT JOIN tcm_vehiculo_kilometraje  K 
+				ON  V.id_vehiculo= K.id_vehiculo
+				GROUP BY v.placa HAVING placa LIKE '$placa'";
+		$query=$this->db->query($sentencia);
+	
+		
+	return $query->result();
+	
+	}
 	
 	
 }
