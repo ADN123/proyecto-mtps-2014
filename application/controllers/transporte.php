@@ -155,7 +155,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Carga la vista de Asignaciones de vehículos y Motoristas
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 01/04/2014
+	*	Última Modificación: 10/05/2014
 	*	Observaciones: Ninguna
 	*/
 	function asignar_vehiculo_motorista($estado_transaccion=NULL)
@@ -166,7 +166,8 @@ class Transporte extends CI_Controller
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion);	
 				$data['estado_transaccion']=$estado_transaccion;
-				pantalla('transporte/asignacion_veh_mot',$data);
+				$data['n']=count($data['datos']);
+				pantalla('transporte/asignacion_veh_mot',$data,$n);
 			}
 		}
 		else
