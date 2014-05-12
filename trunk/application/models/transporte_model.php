@@ -15,7 +15,8 @@ class Transporte_model extends CI_Model {
 					org_usuario
 					LEFT JOIN sir_empleado ON org_usuario.nr = sir_empleado.nr
 					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado
-					WHERE org_usuario.nr like '".$nr."'";
+					WHERE org_usuario.nr like '".$nr."' 
+					ORDER BY sir_empleado_informacion_laboral.id_empleado_informacion_laboral DESC LIMIT 0,1";
 		$query=$this->db->query($sentencia);
 	
 		if($query->num_rows>0) {
