@@ -17,11 +17,8 @@
      </thead>
      <tbody>
     <?php    
-	//echo $n;
 	$array = json_decode(json_encode($datos), true);
-	//print_r($array);
         for($i=0;$i<$n;$i++) {
-//		$a=$i+1;
 			if($i==0)
 			{
 	?>
