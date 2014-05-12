@@ -606,7 +606,6 @@ class Transporte extends CI_Controller
 		
 		if($data['id_permiso']!=NULL) {
 			$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
-			$data['accesorios']=$this->transporte_model->accesorios();
 			$data['estado_transaccion']=$estado_transaccion;
 			if($accion==3)
 				$data['accion']="salida";
@@ -618,6 +617,30 @@ class Transporte extends CI_Controller
 			echo "No tiene permisos para acceder";
 		}
 	}
+	/*
+	*	Nombre: Cargar Accesorios
+	*	Objetivo: cargar una lista de cheakbox para selccionar los accesorios que un vehiculo lleva
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 10/05/2014
+	*	Observaciones: Falta mostrar datos segun el permiso que posea
+	*/
+	function accesoriosABordo($id_solicitud_transporte,$estado)
+	{
+		if ($estado==3) {//en caso de salida se puede seleccionar todos los accesorios
+			$data['accesorios']=$this->transporte_model->accesorios();					
+		} else {
+			if ($estado==4) {//si viene de regrese unicamente muestra los accesorios con los que salio
+					$data['accesorios']=$this->transporte_model->accesoriosABordo($id_solicitud_transporte);					
+				}	
+		}
+		
+
+			$this->load->view("transporte/accesorios",$data);
+		
+
+	}
+
 	/*
 	*	Nombre: guardar_despacho
 	*	Objetivo: Registrar la salida o ingreso de un vehiculo
@@ -639,6 +662,8 @@ class Transporte extends CI_Controller
 			$hora=date("H:i:s", strtotime($this->input->post('hora')));
 	
 			/*remuevo de post los datos para que solo queden los accesorios*/
+
+			print_r($_POST);
 			$acces=$_POST;
 			unset($acces['estado']);
 			unset($acces['gas']);
@@ -648,14 +673,18 @@ class Transporte extends CI_Controller
 			
 			if($estado==3){
 				$this->transporte_model->salida_vehiculo($id, $km,$hora,$acces);
+
 			}
 			else {
+				
 				if($estado==4) {
-					$this->transporte_model->regreso_vehiculo($id, $km, $hora, $gas,$acces);		
+				$this->transporte_model->regreso_vehiculo($id, $km, $hora, $gas,$acces);		
+			  
+
 				}
 			}
 			$this->db->trans_complete();
-			ir_a('index.php/transporte/control_salidas_entradas/'.$this->db->trans_status()."/".$estado);
+			ir_a('index.php/transporte/control_salidas_entradas/'.$this->db->trans_status()."/".$estado);	
 		}
 		else {
 			echo "No tiene permisos para acceder";

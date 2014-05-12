@@ -154,8 +154,8 @@ FROM tcm_solicitud_transporte  t
 		WHERE (estado_solicitud_transporte=2)
     	order by id ASC, i.id_empleado_informacion_laboral DESC");
 
-   	return $query->result();
-		
+	   	return $query->result();
+			
 	}
 	////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -175,40 +175,40 @@ FROM tcm_solicitud_transporte  t
 	function vehiculos_disponibles($fecha,$hentrada,$hsalida)
 	{
 		$query=$this->db->query("
-	select v.id_vehiculo, v.placa, vm.nombre, vmo.modelo, vc.nombre_clase, vcon.condicion
-	from tcm_vehiculo as v
-	inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
-	inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
-	inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
-	inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
-	where v.id_vehiculo not in
-	(
-		select avm.id_vehiculo
-		from tcm_solicitud_transporte as st
-		inner join tcm_destino_mision as dm
-		on (dm.id_solicitud_transporte=st.id_solicitud_transporte)
-		inner join tcm_asignacion_sol_veh_mot as avm
-		on (avm.id_solicitud_transporte=st.id_solicitud_transporte)
-		where avm.id_vehiculo in
-		(
-			select avm.id_vehiculo
-			from tcm_solicitud_transporte as st
-			inner join tcm_asignacion_sol_veh_mot as avm
-			on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
-			where st.fecha_mision='$fecha' and 
+			select v.id_vehiculo, v.placa, vm.nombre, vmo.modelo, vc.nombre_clase, vcon.condicion
+			from tcm_vehiculo as v
+			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+			where v.id_vehiculo not in
 			(
-				(st.hora_salida>='$hsalida' and st.hora_salida<='$hentrada')
-				 or (st.hora_entrada>='$hsalida' and st.hora_entrada<='$hentrada')
-				 or (st.hora_salida<='$hsalida' and st.hora_entrada>='$hentrada')
-			 )
-			 and st.estado_solicitud_transporte=3
-		)
-		and st.estado_solicitud_transporte=3
-		and dm.id_municipio<>97
-	)
-	and (id_seccion=21 or id_seccion=113)
-	order by v.id_vehiculo asc;");
-		return $query->result();
+				select avm.id_vehiculo
+				from tcm_solicitud_transporte as st
+				inner join tcm_destino_mision as dm
+				on (dm.id_solicitud_transporte=st.id_solicitud_transporte)
+				inner join tcm_asignacion_sol_veh_mot as avm
+				on (avm.id_solicitud_transporte=st.id_solicitud_transporte)
+				where avm.id_vehiculo in
+				(
+					select avm.id_vehiculo
+					from tcm_solicitud_transporte as st
+					inner join tcm_asignacion_sol_veh_mot as avm
+					on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
+					where st.fecha_mision='$fecha' and 
+					(
+						(st.hora_salida>='$hsalida' and st.hora_salida<='$hentrada')
+						 or (st.hora_entrada>='$hsalida' and st.hora_entrada<='$hentrada')
+						 or (st.hora_salida<='$hsalida' and st.hora_entrada>='$hentrada')
+					 )
+					 and st.estado_solicitud_transporte=3
+				)
+				and st.estado_solicitud_transporte=3
+				and dm.id_municipio<>97
+			)
+			and (id_seccion=21 or id_seccion=113)
+			order by v.id_vehiculo asc;");
+				return $query->result();
 	}
 	/////////////////////////////////////////////////////////////////////////////////////
 	
@@ -520,9 +520,23 @@ where s.id_solicitud_transporte='$id'");
 		return $query->result();
 		
 		}
+
+	function accesoriosABordo($id_solicitud)
+{
+	$sentencia=" SELECT
+			ca.id_solicitud_transporte,
+			a.nombre, a.id_accesorio
+				FROM
+					tcm_accesorios  a
+				INNER JOIN	tcm_chekeo_accesorio ca ON a.id_accesorio=ca.id_accesorio
+				WHERE ca.id_solicitud_transporte = '$id_solicitud'";
+	$query=$this->db->query($sentencia);
+	return $query->result();
+}
+
+
 function salida_vehiculo($id, $km_inicial,$hora_salida,$acces){
-		/*$this->db->trans_start();*/
-		
+			
 		$q="INSERT INTO tcm_vehiculo_kilometraje (
 					id_solicitud_transporte, 
 					id_vehiculo, 
@@ -552,24 +566,11 @@ function salida_vehiculo($id, $km_inicial,$hora_salida,$acces){
 		estado_solicitud_transporte = '4' 
 		WHERE	id_solicitud_transporte = '$id' ;";
 		$this->db->query($q);
-		
-/*		$this->db->trans_complete();
-		
-		if ($this->db->trans_status())
-		{
-			echo"Ok";
-
-		}else{	// Error en tra
-		echo"Error";
-			
-		}*/
 	}
+
 
 function regreso_vehiculo($id, $km, $hora, $gas,$acces){
 
-
-	/*$this->db->trans_start();*/
-	
 	$q="UPDATE tcm_vehiculo_kilometraje 
 	SET
 		km_final = '$km' , 
@@ -583,9 +584,10 @@ function regreso_vehiculo($id, $km, $hora, $gas,$acces){
 		$this->db->query($q);
 		
 		foreach($acces as  $row)://insert de accesorio
-		
+
 		$this->db->query("UPDATE tcm_chekeo_accesorio SET regreso = 1	
-				WHERE id_solicitud_transporte = $id AND id_accesorio = $row ;");
+				WHERE id_solicitud_transporte = $id AND id_accesorio = $row ;"); 
+
 			
 		endforeach;
 		$q="
@@ -595,18 +597,6 @@ function regreso_vehiculo($id, $km, $hora, $gas,$acces){
 		";
 		$this->db->query($q);
 		
-		/*//Finde transacion
-		$this->db->trans_complete();
-		
-		if ($this->db->trans_status())
-		{
-			echo"Ok";
-
-		}else{	// Error en transacion
-		echo"Error";
-			
-		}*/
-
 	}
 function infoSolicitud($id){
 	$query="

@@ -28,6 +28,8 @@ $.ajax({
 			console.log(data);
 			}
 		});	
+$('#divAccesorios').load(base_url()+"index.php/transporte/accesoriosABordo/"+id+"/"+val);
+console.log('cargado');
 }
 
 function dialogo(id, val){ //carga la informacion si la 
