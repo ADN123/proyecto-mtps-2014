@@ -111,7 +111,9 @@ class Transporte_model extends CI_Model {
 			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
 			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
 			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-			WHERE (estado_solicitud_transporte=1 AND i.id_seccion = '".$seccion."')");
+			WHERE (estado_solicitud_transporte=1 AND i.id_seccion = '".$seccion."')
+			order by id ASC, i.id_empleado_informacion_laboral DESC
+			");
  
  
    	return $query->result();
@@ -131,7 +133,9 @@ FROM tcm_solicitud_transporte  t
 	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
 	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
 	LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-	WHERE estado_solicitud_transporte=1");
+	WHERE estado_solicitud_transporte=1
+	order by id ASC, i.id_empleado_informacion_laboral DESC
+	");
  
  
    	return $query->result();

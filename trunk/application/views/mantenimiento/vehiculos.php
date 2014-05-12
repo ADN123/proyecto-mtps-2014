@@ -6,6 +6,7 @@
 <section>
     <h2>Catálogo de Vehículos</h2>
 </section>
+<input class="button" type="button" name="Agregar" value="Agregar" onclick="window.open('<?php echo base_url() ?>index.php/vehiculo/nuevo_vehiculo','_parent')" />
 <table  class="grid">
     <thead>
       <tr>

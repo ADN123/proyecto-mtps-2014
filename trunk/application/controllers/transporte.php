@@ -61,8 +61,8 @@ class Transporte extends CI_Controller
 	*	Nombre: control_solicitudes
 	*	Objetivo: Control 
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 08/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 11/05/2014
 	*	Observaciones: Ninguna
 	*/
 	function control_solicitudes($estado_transaccion=NULL,$accion=NULL)
@@ -82,7 +82,9 @@ class Transporte extends CI_Controller
 			if($accion==0)
 				$data['accion']="denega";
 			if($accion==2)
-				$data['accion']="aproba";	 
+				$data['accion']="aproba";
+				
+			$data['n']=count($data['datos']);	 
 			pantalla('transporte/ControlSolicitudes',$data);
 		}
 		else {//nivel 1
@@ -167,7 +169,7 @@ class Transporte extends CI_Controller
 				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion);	
 				$data['estado_transaccion']=$estado_transaccion;
 				$data['n']=count($data['datos']);
-				pantalla('transporte/asignacion_veh_mot',$data,$n);
+				pantalla('transporte/asignacion_veh_mot',$data);
 			}
 		}
 		else

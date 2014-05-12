@@ -1,5 +1,5 @@
 <script>
-	estado_transaccion='<?php echo $estado_transaccion?>';
+	/*estado_transaccion='<?php echo $estado_transaccion?>';*/
 	estado_correcto='Se ha registrado un nuevo vehículo exitosamente.';
 	estado_incorrecto='Error al registrar un nuevo vehículo: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 </script>
@@ -45,7 +45,7 @@
             </p>
             <p>
                 <label>Marca:</label>
-                 <select name="marca">
+                 <select name="marca" id="marca" class="select" style="width:150px">
                 <?php
                 
                 foreach($marca as $mar)
@@ -53,11 +53,13 @@
                     echo "<option value='".$mar->id_vehiculo_marca."'>".ucwords($mar->nombre)."</option>";
                 }
                 ?>
+                <option value="0">Otra</option>
                 </select>
+                <input type="text" name="nmarca" id="nmarca" disabled="disabled"/>
             </p>
             <p>
                 <label>Modelo:</label>
-                 <select name="modelo">
+                 <select name="modelo" id="modelo" class="select" style="width:200px">
                 <?php
                 
                 foreach($modelo as $model)
@@ -65,11 +67,13 @@
                     echo "<option value='".$model->id_vehiculo_modelo."'>".ucwords($model->modelo)."</option>";
                 }
                 ?>
+                <option value="0">Otro</option>
                 </select>
+                <input type="text" name="nmodelo" id="nmodelo" disabled="disabled"/>
             </p>
             <p>
                 <label>Clase:</label>
-                 <select name="clase">
+                 <select name="clase" id="clase" class="select" style="width:150px">
                 <?php
                 
                 foreach($clase as $cla)
@@ -77,7 +81,9 @@
                     echo "<option value='".$cla->id_vehiculo_clase."'>".ucwords($cla->nombre_clase)."</option>";
                 }
                 ?>
+                <option value="0">Otra</option>
                 </select>
+                <input type="text" name="nclase" id="nclase" disabled="disabled"/>
             </p>
             <p>
                 <label>Fotografía:</label>
@@ -88,14 +94,14 @@
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n de adquisición de los vehículos</h2>
             <p>
                 <label>Tipo:</label>
-                <select name="tipo">
+                <select name="tipo" id="tipo" class="select">
                     <option>Propio</option>
                     <option>Donado por Banco Mundial</option>
                 </select>
             </p>
             <p>
                 <label>Condición:</label>
-                 <select name="condicion">
+                 <select name="condicion" id="condicion" class="select">
                 <?php
                 
                 foreach($condicion as $con)
@@ -115,7 +121,7 @@
                 
                 foreach($seccion as $sec)
                 {
-                    echo "<option value='".$sec->id_seccion."'>".ucwords($sec->nombre_seccion)."</option>";
+                    echo "<option value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
                 }
                 ?>
                 </select>
@@ -139,5 +145,49 @@
 <script>
 $(document).ready(function(){
 	$('#wizard').smartWizard();
+	$('#marca').change(
+		function()
+		{
+			if(Number($(this).val())==0)
+			{
+				$("#nmarca").attr("disabled",false);
+			}
+			else
+			{
+				$("#nmarca").attr("disabled",true);
+				$("#nmarca").val("");
+			}
+		}
+	);
+	$('#modelo').change(
+		function()
+		{
+			if(Number($(this).val())==0)
+			{
+				$("#nmodelo").attr("disabled",false);
+			}
+			else
+			{
+				$("#nmodelo").attr("disabled",true);
+				$("#nmodelo").val("");
+			}
+		}
+	);
+	$('#clase').change(
+		function()
+		{
+			if(Number($(this).val())==0)
+			{
+				$("#nclase").attr("disabled",false);
+			}
+			else
+			{
+				$("#nclase").attr("disabled",true);
+				$("#nclase").val("");
+			}
+		}
+	);
 });
+
+
 </script>

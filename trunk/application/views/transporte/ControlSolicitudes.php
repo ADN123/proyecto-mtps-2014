@@ -18,17 +18,32 @@
   </tr>
  </thead>
  <tbody>
-<?php
-	foreach ($datos as $fila) {
-?>
-  <tr>
-    <td><?php echo $fila->fecha." ".$fila->entrada?></td>
-    <td><?php echo ucwords($fila->seccion)?></td>
-    <td><?php echo ucwords($fila->nombre)?></td>
-    <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
-	</td>
-  </tr>
-<?php } ?>
+<?php    
+	$array = json_decode(json_encode($datos), true);
+        for($i=0;$i<$n;$i++) {
+			if($i==0)
+			{
+	?>
+		<tr>
+			<td><?php echo $array[$i]['fecha']?>&nbsp;&nbsp;<?php echo $array[$i]['salida']?></td>
+			<td><?php echo ucwords($array[$i]['seccion'])?></td>
+			<td><?php echo ucwords($array[$i]['nombre'])?></td>
+			<td><a rel="leanModal" title="Ver solicitud" href="#ventana" onclick="dialogo(<?php echo $array[$i]['id']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a></td>
+		</tr>
+	<?php
+			}
+			else if($array[$i]['id']!=$array[($i-1)]['id'])
+			{
+	?>
+		<tr>
+			<td><?php echo $array[$i]['fecha']?>&nbsp;&nbsp;<?php echo $array[$i]['salida']?></td>
+			<td><?php echo ucwords($array[$i]['seccion'])?></td>
+			<td><?php echo ucwords($array[$i]['nombre'])?></td>
+			<td><a rel="leanModal" title="Ver solicitud" href="#ventana" onclick="dialogo(<?php echo $array[$i]['id']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a></td>
+		</tr>
+	<?php
+			}
+	} ?>
 </tbody>
 </table>
 
