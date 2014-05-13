@@ -62,7 +62,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Control 
 	*	Hecha por: Jhonatan
 	*	Modificada por: Oscar
-	*	Última Modificación: 11/05/2014
+	*	Última Modificación: 13/05/2014
 	*	Observaciones: Ninguna
 	*/
 	function control_solicitudes($estado_transaccion=NULL,$accion=NULL)
@@ -83,8 +83,7 @@ class Transporte extends CI_Controller
 				$data['accion']="denega";
 			if($accion==2)
 				$data['accion']="aproba";
-				
-			$data['n']=count($data['datos']);	 
+					 
 			pantalla('transporte/ControlSolicitudes',$data);
 		}
 		else {//nivel 1
@@ -157,7 +156,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Carga la vista de Asignaciones de vehículos y Motoristas
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 10/05/2014
+	*	Última Modificación: 13/05/2014
 	*	Observaciones: Ninguna
 	*/
 	function asignar_vehiculo_motorista($estado_transaccion=NULL)
@@ -168,7 +167,6 @@ class Transporte extends CI_Controller
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion);	
 				$data['estado_transaccion']=$estado_transaccion;
-				$data['n']=count($data['datos']);
 				pantalla('transporte/asignacion_veh_mot',$data);
 			}
 		}
