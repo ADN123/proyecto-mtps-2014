@@ -14,7 +14,7 @@
                     <span class="stepNumber">1<small>er</small></span>
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Información de los vehículos</small>
+                        <small>&nbsp;Información del vehículo</small>
                     </span>
                 </a>
             </li>
@@ -23,7 +23,7 @@
                     <span class="stepNumber">2<small>do</small></span>
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Adquisición de los vehículos</small>
+                        <small>&nbsp;Adquisición del vehículo</small>
                     </span>
                 </a>
             </li>
@@ -32,13 +32,13 @@
                     <span class="stepNumber">3<small>er</small></span>
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Asignación de los vehículos</small>
+                        <small>&nbsp;Asignación del vehículo</small>
                     </span>
                 </a>
             </li>
         </ul>
         <div id="step-1">	
-            <h2 class="StepTitle">Ingreso de la informaci&oacute;n de los vehículos</h2>
+            <h2 class="StepTitle">Ingreso de la informaci&oacute;n del vehículo</h2>
 			<p>
                 <label>Número de Placa:</label>
                 <input type="text" name="placa" size="10" />
@@ -86,22 +86,26 @@
                 <input type="text" name="nclase" id="nclase" disabled="disabled"/>
             </p>
             <p>
+            	<label>A&ntilde;o</label>
+                <input type="text" name="anio" size="10" />
+            </p>
+            <p>
                 <label>Fotografía:</label>
                 <input type="file" name="imagen" />
             </p>
         </div>
         <div id="step-2">	
-            <h2 class="StepTitle">Ingreso de la informaci&oacute;n de adquisición de los vehículos</h2>
+            <h2 class="StepTitle">Ingreso de la informaci&oacute;n de adquisición del vehículo</h2>
             <p>
-                <label>Tipo:</label>
-                <select name="tipo" id="tipo" class="select">
-                    <option>Propio</option>
-                    <option>Donado por Banco Mundial</option>
+                <label>Adquisición:</label>
+                <select name="adquisicion" id="adquisicion" class="select" style="width:250px">
+                    <option value="GOES">Propio</option>
+                    <option value="Banco Mundial">Donado por Banco Mundial</option>
                 </select>
             </p>
             <p>
                 <label>Condición:</label>
-                 <select name="condicion" id="condicion" class="select">
+                 <select name="condicion" id="condicion" class="select" style="width:250px">
                 <?php
                 
                 foreach($condicion as $con)
@@ -113,10 +117,29 @@
             </p>
         </div>
         <div id="step-3">	
-            <h2 class="StepTitle">Informaci&oacute;n de asignación de motorista y sección de los vehículos</h2>
+            <h2 class="StepTitle">Informaci&oacute;n de asignación de motorista, oficina y sección del vehículo</h2>
+            <p>
+            	<label>Oficina</label>
+                <select name="oficina" class="select" style="width:300px">
+                	<option value="6">Oficina Central (San Salvador)</option>
+                    <option value="12">Oficina Regional de Oriente (San Miguel)</option>
+                    <option value="2">Oficina Regional de Occidente (Santa Ana)</option>
+                    <option value="8">Oficina Paracentral (La Paz)</option>
+                	<option value="1">Oficina Departamental de Ahuachapán</option>
+                    <option value="9">Oficina Departamental de Cabañas</option>
+                    <option value="4">Oficina Departamental de Chalatenango</option>
+                    <option value="7">Oficina Departamental de Cuscatlán</option>
+                    <option value="5">Oficina Departamental de La Libertad</option>
+                    <option value="14">Oficina Departamental de La Unión</option>
+                    <option value="13">Oficina Departamental de Morazán</option>
+                    <option value="10">Oficina Departamental de San Vicente</option>
+                    <option value="3">Oficina Departamental de Sonsonate</option>
+                    <option value="11">Oficina Departamental de Usulután</option>
+                </select>
+            </p>
             <p>
                 <label>Sección:</label>
-                <select name="seccion">
+                <select name="seccion" class="select" style="width:350px">
                 <?php
                 
                 foreach($seccion as $sec)
@@ -128,7 +151,7 @@
             </p>
             <p>
                 <label>Motorista:</label>
-                <select name="motorista">
+                <select name="motorista" class="select" style="width:300px">
                 <?php
                 
                 foreach($motoristas as $mot)
