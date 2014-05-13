@@ -122,7 +122,7 @@ DATE_FORMAT(hora_entrada,'%r') entrada,
 DATE_FORMAT(hora_salida,'%r') salida,
 requiere_motorista,
 LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
-LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
+LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido, s.segundo_apellido, s.apellido_casada)) AS nombre
 FROM tcm_solicitud_transporte  t
 	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
 	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
@@ -194,7 +194,7 @@ FROM tcm_solicitud_transporte  t
 	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
 	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
 	LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-WHERE (estado_solicitud_transporte=2)
+WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
 	and (t.id_empleado_solicitante not in
 	(select id_empleado from sir_empleado_informacion_laboral))
 
@@ -211,7 +211,7 @@ FROM tcm_solicitud_transporte  t
 	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
 	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
 	LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-WHERE (estado_solicitud_transporte=2)
+WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
 	and (i.id_empleado_informacion_laboral in
 		(SELECT max(id_empleado_informacion_laboral) as id
 		FROM sir_empleado_informacion_laboral
@@ -451,7 +451,20 @@ order by e.primer_nombre ASC);");
 	
 	function consultar_motoristas2()
 	{
-		$query=$this->db->query("SELECT e.id_empleado, LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) as nombre FROM sir_empleado as e");
+		$query=$this->db->query("select
+		s.id_empleado,
+		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
+		from sir_empleado as s
+		inner join sir_empleado_informacion_laboral as i on (i.id_empleado=s.id_empleado)
+		inner join sir_cargo_funcional as c on (c.id_cargo_funcional=i.id_cargo_funcional)
+		inner join sir_cargo_nominal as n on (n.id_cargo_nominal=i.id_cargo_nominal)
+		where
+			(i.id_cargo_funcional=241 || i.id_cargo_nominal=101 || i.id_cargo_nominal=102 || i.id_cargo_nominal=103)
+			and i.id_empleado_informacion_laboral in
+			(SELECT max(id_empleado_informacion_laboral) as id
+				FROM sir_empleado_informacion_laboral
+				group by id_empleado
+				having count(id_empleado)>=1)");
 		return $query->result();
 	}
 	

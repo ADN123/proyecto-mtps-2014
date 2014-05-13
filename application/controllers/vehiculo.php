@@ -65,8 +65,11 @@ class Vehiculo extends CI_Controller
 	{
 		$placa=$this->input->post('placa');
 		$id_marca=$this->input->post('marca');
+		$id_modelo=$this->input->post('modelo');
 		$id_clase=$this->input->post('clase');
+		$anio=$this->input->post('anio');
 		$id_condicion=$this->input->post('condicion');
+		$id_departamento=$this->input->post('oficina');
 		$id_seccion=$this->input->post('seccion');
 		$id_empleado=$this->input->post('motorista');
 		$id_tipo=$this->input->post('tipo');
