@@ -165,7 +165,7 @@ class Transporte extends CI_Controller
 		if($data['id_permiso']!=NULL) {
 			if($data['id_permiso']>=2) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion);	
+				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion['id_seccion']);	
 				$data['estado_transaccion']=$estado_transaccion;
 				pantalla('transporte/asignacion_veh_mot',$data);
 			}
