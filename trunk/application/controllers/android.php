@@ -1,6 +1,7 @@
 <?php 
+
+
 class Android extends CI_Controller {
-		
 	function Android()
 	{
         parent::__construct();
@@ -11,23 +12,32 @@ class Android extends CI_Controller {
 
 	
 	
-	/*
-	*	Nombre: iniciar_session
-	*	Obejtivo: Verificar que el nick y password introducidos por el usuario sean correctos
-	*	Hecha por: Jhonatan
-	*	Modificada por: Leonel
-	*	Ultima Modificacion: 01/04/2014
-	*	Observaciones: La variable de session "id_seccion" no la deberiamos ocupar, deberiamos ir a buscar el registro actual del usuario logueado cada vez que se requiera
-	*/
 	function index()
-	{
+	{		$v=$this->transporte_model->salidas_entradas_vehiculos();
+			$j=json_encode($v);
+				echo $j;}
+		/*
+	*	Nombre: lista
+	*	Obejtivo: Mostrar la lista de misiones listas para salir o en proceso correspondiente a cada oficina o departamento 
+	*	Hecha por: Jhonatan
+	*	Ultima Modificacion: 13/05/2014
+	*	Observaciones: 	*/
+
+	function lista($lugar){
+
 		
-//		$v=$this->android_model->salida_entrada(); 
-$v=$this->transporte_model->salidas_entradas_vehiculos();
-	$j=json_encode($v);
-		echo $j;
+		$v=$this->transporte_model->salidas_entradas_vehiculos();
+			$j=json_encode($v);
+				echo $j;
+
 	}
-	
+	/*
+	*	Nombre: accesorios
+	*	Obejtivo: devolver una lista de accesorios que posee un vehiculo ($id) se basa en lo que llevo en la ultima salida
+	* 	en caso contrario de que se nueva mision muestra todos los objetos
+	*	Hecha por: Jhonatan
+	*	Ultima Modificacion: 3/05/2014
+	*	Observaciones: 	*/
 	function accesorios($estado, $id){
 		
 		if ($estado==4) {
@@ -40,7 +50,12 @@ $v=$this->transporte_model->salidas_entradas_vehiculos();
 		$j=json_encode($j);
 		echo $j;
 		}
-		
+	/*
+	*	Nombre: kilometraje
+	*	Obejtivo: Recibe una placa y devuleve dos valores de kilometraje: entrada y salida respectivamente
+	*	Hecha por: Jhonatan
+	*	Ultima Modificacion: 3/05/2014
+	*	Observaciones: 	*/	
 
 	function kilometraje($placa){
 		$j=$this->android_model->kilometraje($placa);
@@ -48,9 +63,16 @@ $v=$this->transporte_model->salidas_entradas_vehiculos();
 		echo $j;
 			
 		}
+	/*
+	*	Nombre: registrar
+	*	Obejtivo: registrar la salida o entrada de vehiculo
+	*	Hecha por: Jhonatan
+	*	Ultima Modificacion: 13/05/2014
+	*	Observaciones: 	*/
 
 	function registrar(){
-	
+		error_reporting(0);	
+//	print_r($_POST);
 		$this->db->trans_start();
 			$estado=$this->input->post('estado');
 			$id=$this->input->post('id');
@@ -73,10 +95,24 @@ $v=$this->transporte_model->salidas_entradas_vehiculos();
 				}
 			}
 		$this->db->trans_complete();			
-			echo $this->db->trans_status();	
+			$resp= $this->db->trans_status();	
+
+			if(resp){
+				echo 1;
+			}else{
+				echo 0;
+			}
 		
 		
 		}
+
+	/*
+	*	Nombre: iniciar_session
+	*	Obejtivo: Verificar que el nick y password introducidos por el usuario sean correctos
+	*	Hecha por: Jhonatan
+	*	Ultima Modificacion: 13/05/2014
+	*	Observaciones: 	*/
+
 	function iniciar_session(){
 		error_reporting(0);
 
@@ -96,8 +132,6 @@ $v=$this->transporte_model->salidas_entradas_vehiculos();
 						}else{
 								echo 1; //logeado pero sin permisos
 						}
-					
-
 						
 					//falta verificar si tiene permiso para usar la app movil
 					
@@ -105,7 +139,14 @@ $v=$this->transporte_model->salidas_entradas_vehiculos();
 			
 	}
 
-	function getSession($login, $clave)
+	/*
+	*	Nombre: getSession
+	*	Obejtivo: Enviar datos de session
+	*	Hecha por: Jhonatan
+	*	Ultima Modificacion: 13/05/2014
+	*	Observaciones: 	*/
+
+	function getSession()
 	{
 		///datos de session 
 	/*
@@ -118,8 +159,7 @@ $v=$this->transporte_model->salidas_entradas_vehiculos();
 		$clave =$this->input->post('pass');			
 	*/
 
-		$v=$this->seguridad_model->consultar_usuario($login,$clave);  //Verificación en base de datos
-		echo json_encode($v);
+echo 568;
 	}
 
 

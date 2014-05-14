@@ -700,8 +700,8 @@ function infoSolicitud($id){
 		v.placa,
 		v.id_vehiculo		
 	FROM tcm_asignacion_sol_veh_mot asi
-		INNER JOIN sir_empleado e ON e.id_empleado= asi.id_empleado
 		INNER JOIN tcm_solicitud_transporte s ON s.id_solicitud_transporte = asi.id_solicitud_transporte
+		INNER JOIN sir_empleado e ON e.id_empleado= s.id_empleado_solicitante
 		INNER JOIN tcm_vehiculo_datos v ON v.id_vehiculo = asi.id_vehiculo
 	WHERE asi.id_solicitud_transporte =".$id;
 		$q=$this->db->query($query);
