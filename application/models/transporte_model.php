@@ -415,6 +415,17 @@ WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
 	}
 	////////////////////////////////////////////////////////////////////////////
 	
+	/////////////////CONSULTAR LAS FUENTES DE FONDO DE LOS VEHÍCULOS//////////////////
+	
+	function consultar_fuente_fondo()
+	{
+		$query=$this->db->query("select id_fuente_fondo,nombre_fuente_fondo as fuente from tcm_fuente_fondo");
+		return $query->result();
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////Consultar los datos de los vehículos//////////////////
 	function consultar_datos_vehiculos($id)
 	{
 		$query=$this->db->query("
@@ -424,7 +435,7 @@ WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
 		inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
 		inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
 		inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
-		where v.id_vehiculo='$id'
+		where v.id_vehiculo='$id' and v.estado=1;
 		");
 		return $query->result();
 	}
@@ -436,6 +447,8 @@ inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.
 		return $query->result();
 	}
 	////////////////////////////////////////////////////////////////////////
+	
+	///////////////CONSULTAR MOTORISTAS: CARGA LOS MOTORISTAS CORRESPONDIENTES A LOS VEHICULOS/////////////////////////////////
 	function consultar_motoristas($id)
 	{
 		$query=$this->db->query("(SELECT t.id_empleado, IF(t.id_empleado!=0,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)),'No tiene asignado') as nombre FROM tcm_vehiculo_motorista t left join sir_empleado e on (t.id_empleado=e.id_empleado)
@@ -446,8 +459,9 @@ where (v.id_seccion=21)
 order by e.primer_nombre ASC);");
 		return $query->result();
 	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	///////////////////////////CONSUlTAR MOTORISTAS 2//////////////////////////////////
+	////////////CONSULTAR MOTORISTAS 2: CARGA LOS EMPLEADOS CUYO CARGO NOMINAL O FUNCIONAL ES MOTORISTA////////////
 	
 	function consultar_motoristas2()
 	{

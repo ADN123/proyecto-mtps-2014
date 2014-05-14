@@ -40,11 +40,11 @@
         <div id="step-1">	
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n del vehículo</h2>
 			<p>
-                <label>Número de Placa:</label>
+                <label>Número de Placa: </label>
                 <input type="text" name="placa" size="10" />
             </p>
             <p>
-                <label>Marca:</label>
+                <label>Marca: </label>
                  <select name="marca" id="marca" class="select" style="width:150px">
                 <?php
                 
@@ -58,7 +58,7 @@
                 <input type="text" name="nmarca" id="nmarca" disabled="disabled"/>
             </p>
             <p>
-                <label>Modelo:</label>
+                <label>Modelo: </label>
                  <select name="modelo" id="modelo" class="select" style="width:200px">
                 <?php
                 
@@ -72,7 +72,7 @@
                 <input type="text" name="nmodelo" id="nmodelo" disabled="disabled"/>
             </p>
             <p>
-                <label>Clase:</label>
+                <label>Clase: </label>
                  <select name="clase" id="clase" class="select" style="width:150px">
                 <?php
                 
@@ -86,28 +86,33 @@
                 <input type="text" name="nclase" id="nclase" disabled="disabled"/>
             </p>
             <p>
-            	<label>A&ntilde;o</label>
+            	<label>A&ntilde;o: </label>
                 <input type="text" name="anio" size="10" />
             </p>
             <p>
-                <label>Fotografía:</label>
+                <label>Fotografía: </label>
                 <input type="file" name="imagen" />
             </p>
         </div>
         <div id="step-2">	
-            <h2 class="StepTitle">Ingreso de la informaci&oacute;n de adquisición del vehículo</h2>
+            <h2 class="StepTitle">Ingreso de la informaci&oacute;n de fuente de fondo del vehículo</h2>
             <p>
-                <label>Adquisición:</label>
-                <select name="adquisicion" id="adquisicion" class="select" style="width:250px">
-                    <option value="GOES">Propio</option>
-                    <option value="Banco Mundial">Donado por Banco Mundial</option>
+                <label>Fuente de Fondo: </label>
+                <select name="fuente" id="fuente" class="select" style="width:250px">
+                <?php                
+					foreach($fuente_fondo as $fue)
+					{
+						echo "<option value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
+					}
+                ?>
+                <option value="0">Otra</option>
                 </select>
+                <input type="text" name="nfuente" id="nfuente" disabled="disabled"/>
             </p>
             <p>
-                <label>Condición:</label>
-                 <select name="condicion" id="condicion" class="select" style="width:250px">
+                <label>Condición: </label>
+                 <select name="condicion" id="condicion" class="select" style="width:175px">
                 <?php
-                
                 foreach($condicion as $con)
                 {
                     echo "<option value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
@@ -119,17 +124,17 @@
         <div id="step-3">	
             <h2 class="StepTitle">Informaci&oacute;n de asignación de motorista, oficina y sección del vehículo</h2>
             <p>
-            	<label>Oficina</label>
-                <select name="oficina" class="select" style="width:300px">
+            	<label>Oficina: </label>
+                <select name="oficina" class="select" style="width:350px">
                 	<option value="6">Oficina Central (San Salvador)</option>
                     <option value="12">Oficina Regional de Oriente (San Miguel)</option>
                     <option value="2">Oficina Regional de Occidente (Santa Ana)</option>
-                    <option value="8">Oficina Paracentral (La Paz)</option>
+                    <option value="8">Oficina Paracentral (Zacatecoluca, La Paz)</option>
                 	<option value="1">Oficina Departamental de Ahuachapán</option>
-                    <option value="9">Oficina Departamental de Cabañas</option>
+                    <option value="9">Oficina Departamental de Sensuntepeque, Cabañas</option>
                     <option value="4">Oficina Departamental de Chalatenango</option>
-                    <option value="7">Oficina Departamental de Cuscatlán</option>
-                    <option value="5">Oficina Departamental de La Libertad</option>
+                    <option value="7">Oficina Departamental de Cojutepeque, Cuscatlán</option>
+                    <option value="5">Oficina Departamental de Santa Tecla, La Libertad</option>
                     <option value="14">Oficina Departamental de La Unión</option>
                     <option value="13">Oficina Departamental de Morazán</option>
                     <option value="10">Oficina Departamental de San Vicente</option>
@@ -138,7 +143,7 @@
                 </select>
             </p>
             <p>
-                <label>Sección:</label>
+                <label>Sección: </label>
                 <select name="seccion" class="select" style="width:350px">
                 <?php
                 
@@ -150,7 +155,7 @@
                 </select>
             </p>
             <p>
-                <label>Motorista:</label>
+                <label>Motorista: </label>
                 <select name="motorista" class="select" style="width:300px">
                 <?php
                 
@@ -207,6 +212,20 @@ $(document).ready(function(){
 			{
 				$("#nclase").attr("disabled",true);
 				$("#nclase").val("");
+			}
+		}
+	);
+	$('#fuente').change(
+		function()
+		{
+			if(Number($(this).val())==0)
+			{
+				$("#nfuente").attr("disabled",false);
+			}
+			else
+			{
+				$("#nfuente").attr("disabled",true);
+				$("#nfuente").val("");
 			}
 		}
 	);

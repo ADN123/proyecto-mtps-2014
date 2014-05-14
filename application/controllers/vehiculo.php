@@ -39,7 +39,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga la vista para el Registro de un nuevo Vehículo a la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 28/04/2014
+	*	Última Modificación: 13/05/2014
 	*	Observaciones: Ninguna
 	*/
 	function nuevo_vehiculo()
@@ -50,6 +50,7 @@ class Vehiculo extends CI_Controller
 		$data['clase']=$this->transporte_model->consultar_clases();
 		$data['condicion']=$this->transporte_model->consultar_condiciones();
 		$data['seccion']=$this->transporte_model->consultar_secciones();
+		$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
 		pantalla("mantenimiento/nuevo_vehiculo",$data);
 	}
 	
@@ -58,7 +59,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Registra los datos de un nuevo vehículo en la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 28/04/2014
+	*	Última Modificación: 14/05/2014
 	*	Observaciones: Ninguna
 	*/
 	function guardar_vehiculo()
@@ -72,10 +73,18 @@ class Vehiculo extends CI_Controller
 		$id_departamento=$this->input->post('oficina');
 		$id_seccion=$this->input->post('seccion');
 		$id_empleado=$this->input->post('motorista');
-		$id_tipo=$this->input->post('tipo');
+		$id_fuente_fondo=$this->input->post('fuente');
 		$imagen=$this->input->post('imagen');
 		
+		$nmarca=$this->input->post('nmarca');
+		$nmodelo=$this->input->post('nmodelo');
+		$nclase=$this->input->post('nclase');
+		$nfuente=$this->input->post('nfuente');
 		
+		if($id_marca!=0 && $id_modelo!=0 && $id_clase!=0 && $id_fuente_fondo!=0)
+		{
+			
+		}
 	}
 	
 	/*
