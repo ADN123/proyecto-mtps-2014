@@ -222,6 +222,47 @@ function todas_solicitudes_por_confirmar(){
 	   	return $query->result();
 			
 	}
+function todas_solicitudes_por_asignar(){
+	  $query=$this->db->query("
+SELECT id_solicitud_transporte id,
+DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+DATE_FORMAT(hora_entrada,'%r') entrada,
+DATE_FORMAT(hora_salida,'%r') salida,
+requiere_motorista,
+LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
+LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
+FROM tcm_solicitud_transporte  t
+	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+	LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+WHERE (estado_solicitud_transporte=2)
+	and (t.id_empleado_solicitante not in
+	(select id_empleado from sir_empleado_informacion_laboral))
+
+UNION
+
+SELECT id_solicitud_transporte id,
+DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+DATE_FORMAT(hora_entrada,'%r') entrada,
+DATE_FORMAT(hora_salida,'%r') salida,
+requiere_motorista,
+LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
+LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
+FROM tcm_solicitud_transporte  t
+	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+	LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+WHERE (estado_solicitud_transporte=2)
+	and (i.id_empleado_informacion_laboral in
+		(SELECT max(id_empleado_informacion_laboral) as id
+		FROM sir_empleado_informacion_laboral
+		group by id_empleado
+		having count(id_empleado)>=1))
+		");
+
+	   	return $query->result();
+			
+	}
 	////////////////////////////////////////////////////////////////////////////////////////
 	
 /////////FUNCION QUE RETORNA FECHA Y HORARIOS DE UNA SOlICITUD EN ESPECÍFICO/////
