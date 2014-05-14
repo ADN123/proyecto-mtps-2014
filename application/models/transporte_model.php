@@ -428,7 +428,7 @@ WHERE (estado_solicitud_transporte=2)
 	function nueva_marca($marca)
 	{
 		$query=$this->db->query("insert into tcm_vehiculo_marca(nombre) values('$marca')");
-		$query2=$this->db->query("select max(id_vehiculo_marca) as id tcm_vehiculo_marca");
+		$query2=$this->db->query("select max(id_vehiculo_marca) as id from tcm_vehiculo_marca");
 		
 		$vm=$query2->result();
 		foreach($vm as $v)
@@ -447,11 +447,41 @@ WHERE (estado_solicitud_transporte=2)
 	}
 	////////////////////////////////////////////////////////////////////////////
 	
+	//////////////////////////////REGISTRAR MODELOS//////////////////////////////
+	function nuevo_modelo($modelo)
+	{
+		$query=$this->db->query("insert into tcm_vehiculo_modelo(modelo) values('$modelo')");
+		$query2=$this->db->query("select max(id_vehiculo_modelo) as id from tcm_vehiculo_modelo");
+		
+		$vm=$query2->result();
+		foreach($vm as $v)
+		{
+			$id=$v->id;
+		}
+		return $id;
+	}
+	////////////////////////////////////////////////////////////////////////////
+	
 	//////////////////////////////CONSUlTAR ClASES//////////////////////////////
 	function consultar_clases()
 	{
 		$query=$this->db->query("select id_vehiculo_clase, lower(nombre_clase) as nombre_clase from tcm_vehiculo_clase");
 		return $query->result();
+	}
+	////////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////REGISTRAR CLASES//////////////////////////////
+	function nueva_clase($clase)
+	{
+		$query=$this->db->query("insert into tcm_vehiculo_clase(nombre_clase) values('$clase')");
+		$query2=$this->db->query("select max(id_vehiculo_clase) as id from tcm_vehiculo_clase");
+		
+		$vm=$query2->result();
+		foreach($vm as $v)
+		{
+			$id=$v->id;
+		}
+		return $id;
 	}
 	////////////////////////////////////////////////////////////////////////////
 	
@@ -463,7 +493,7 @@ WHERE (estado_solicitud_transporte=2)
 	}
 	////////////////////////////////////////////////////////////////////////////
 	
-	//////////////////////////////CONSUlTAR SECCIONES//////////////////////////////
+	//////////////////////////////CONSULTAR SECCIONES//////////////////////////////
 	function consultar_secciones()
 	{
 		$query=$this->db->query("select id_seccion, lower(nombre_seccion) as seccion from org_seccion");
@@ -480,6 +510,21 @@ WHERE (estado_solicitud_transporte=2)
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////
+	
+	//////////////////////////////REGISTRAR FUENTES DE FONDO//////////////////////////////
+	function nueva_fuente($fuente)
+	{
+		$query=$this->db->query("insert into tcm_fuente_fondo(nombre_fuente_fondo) values('$fuente')");
+		$query2=$this->db->query("select max(id_fuente_fondo) as id from tcm_fuente_fondo");
+		
+		$vm=$query2->result();
+		foreach($vm as $v)
+		{
+			$id=$v->id;
+		}
+		return $id;
+	}
+	////////////////////////////////////////////////////////////////////////////
 	
 	//////////////////////Consultar los datos de los vehículos//////////////////
 	function consultar_datos_vehiculos($id)
