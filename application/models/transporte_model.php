@@ -99,40 +99,40 @@ class Transporte_model extends CI_Model {
 	function solicitudes_por_confirmar($seccion){
 
 	  $query=$this->db->query("
-SELECT id_solicitud_transporte id,
-DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
-DATE_FORMAT(hora_entrada,'%r') entrada,
-DATE_FORMAT(hora_salida,'%r') salida,
-requiere_motorista,
-LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
-LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
-FROM tcm_solicitud_transporte  t
-	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
-	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
-	LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
-	and (t.id_empleado_solicitante not in
-	(select id_empleado from sir_empleado_informacion_laboral))
-
-UNION
-
-SELECT id_solicitud_transporte id,
-DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
-DATE_FORMAT(hora_entrada,'%r') entrada,
-DATE_FORMAT(hora_salida,'%r') salida,
-requiere_motorista,
-LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
-LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido, s.segundo_apellido, s.apellido_casada)) AS nombre
-FROM tcm_solicitud_transporte  t
-	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
-	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
-	LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
-	and (i.id_empleado_informacion_laboral in
-		(SELECT max(id_empleado_informacion_laboral) as id
-		FROM sir_empleado_informacion_laboral
-		group by id_empleado
-		having count(id_empleado)>=1))
+		SELECT id_solicitud_transporte id,
+		DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+		DATE_FORMAT(hora_entrada,'%r') entrada,
+		DATE_FORMAT(hora_salida,'%r') salida,
+		requiere_motorista,
+		LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
+		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
+		FROM tcm_solicitud_transporte  t
+			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+		WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
+			and (t.id_empleado_solicitante not in
+			(select id_empleado from sir_empleado_informacion_laboral))
+		
+		UNION
+		
+		SELECT id_solicitud_transporte id,
+		DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+		DATE_FORMAT(hora_entrada,'%r') entrada,
+		DATE_FORMAT(hora_salida,'%r') salida,
+		requiere_motorista,
+		LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
+		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido, s.segundo_apellido, s.apellido_casada)) AS nombre
+		FROM tcm_solicitud_transporte  t
+			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+		WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
+			and (i.id_empleado_informacion_laboral in
+				(SELECT max(id_empleado_informacion_laboral) as id
+				FROM sir_empleado_informacion_laboral
+				group by id_empleado
+				having count(id_empleado)>=1))
 			");
  
  
@@ -156,8 +156,51 @@ function todas_solicitudes_por_confirmar(){
 		WHERE (estado_solicitud_transporte=1)
         and (t.id_empleado_solicitante not in
         (select id_empleado from sir_empleado_informacion_laboral))
-union
-SELECT id_solicitud_transporte id,
+		union
+		SELECT id_solicitud_transporte id,
+				DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+				DATE_FORMAT(hora_entrada,'%r') entrada,
+				DATE_FORMAT(hora_salida,'%r') salida,
+				requiere_motorista,
+				LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
+				LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
+				FROM tcm_solicitud_transporte  t
+				LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+				LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+				LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+				WHERE (estado_solicitud_transporte=1)
+				and (i.id_empleado_informacion_laboral in
+				  (SELECT max(id_empleado_informacion_laboral) as id
+				  FROM sir_empleado_informacion_laboral
+				  group by id_empleado
+				  having count(id_empleado)>=1))
+	");
+ 
+ 
+   	return $query->result();
+		
+	}
+	/////FUNCION QUE RETORNA lAS SOlICITUDES QUE AÚN NO TIENEN UN VEHICUlO O MOTORISTA ASIGNADO//////////////////////////////
+	function solicitudes_por_asignar($seccion){
+	  $query=$this->db->query("
+		SELECT id_solicitud_transporte id,
+		DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+		DATE_FORMAT(hora_entrada,'%r') entrada,
+		DATE_FORMAT(hora_salida,'%r') salida,
+		requiere_motorista,
+		LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
+		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido, s.apellido_casada)) AS nombre
+		FROM tcm_solicitud_transporte  t
+			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+		WHERE (estado_solicitud_transporte=2)
+			and (t.id_empleado_solicitante not in
+			(select id_empleado from sir_empleado_informacion_laboral))
+		
+		UNION
+		
+		SELECT id_solicitud_transporte id,
 		DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
 		DATE_FORMAT(hora_entrada,'%r') entrada,
 		DATE_FORMAT(hora_salida,'%r') salida,
@@ -165,58 +208,15 @@ SELECT id_solicitud_transporte id,
 		LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
 		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
 		FROM tcm_solicitud_transporte  t
-		LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
-		LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
-		LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-		WHERE (estado_solicitud_transporte=1)
-        and (i.id_empleado_informacion_laboral in
-  (SELECT max(id_empleado_informacion_laboral) as id
-  FROM sir_empleado_informacion_laboral
-  group by id_empleado
-  having count(id_empleado)>=1))
-	");
- 
- 
-   	return $query->result();
-		
-	}
-	/////FUNCION QUE RETORNA lAS SOlICITUDES QUE AÚN NO TIENEN UN VEHICUlO O MOTORISTA ASIGNADO
-	function solicitudes_por_asignar($seccion){
-	  $query=$this->db->query("
-SELECT id_solicitud_transporte id,
-DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
-DATE_FORMAT(hora_entrada,'%r') entrada,
-DATE_FORMAT(hora_salida,'%r') salida,
-requiere_motorista,
-LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
-LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
-FROM tcm_solicitud_transporte  t
-	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
-	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
-	LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
-	and (t.id_empleado_solicitante not in
-	(select id_empleado from sir_empleado_informacion_laboral))
-
-UNION
-
-SELECT id_solicitud_transporte id,
-DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
-DATE_FORMAT(hora_entrada,'%r') entrada,
-DATE_FORMAT(hora_salida,'%r') salida,
-requiere_motorista,
-LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
-LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
-FROM tcm_solicitud_transporte  t
-	LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
-	LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
-	LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
-	and (i.id_empleado_informacion_laboral in
-		(SELECT max(id_empleado_informacion_laboral) as id
-		FROM sir_empleado_informacion_laboral
-		group by id_empleado
-		having count(id_empleado)>=1))
+			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+		WHERE (estado_solicitud_transporte=2)
+			and (i.id_empleado_informacion_laboral in
+				(SELECT max(id_empleado_informacion_laboral) as id
+				FROM sir_empleado_informacion_laboral
+				group by id_empleado
+				having count(id_empleado)>=1))
 		");
 
 	   	return $query->result();
@@ -440,13 +440,37 @@ WHERE (o.id_seccion='$seccion' and estado_solicitud_transporte=1)
 		return $query->result();
 	}
 	
+	//////////////////////////FUNCIÓN PARA REGISTRAR UN NUEVO VEHÍCULO/////////////////////////////
+	
+	function registrar_vehiculo($nplaca,$marca,$modelo,$clase,$year,$condicion,$departamento,$seccion,$motorista,$fuente_fondo,$foto)
+	{
+		$query="INSERT INTO tcm_vehiculo(placa,id_seccion,id_marca,id_modelo,id_clase,id_condicion,anio,imagen,id_fuente_fondo,estado)
+				values('$nplaca','$seccion','$marca','$modelo','$clase','$condicion','$year','$foto','$fuente_fondo',1)";
+		$this->db->query($query);
+		
+		$q=$this->db->query("select max(id_vehiculo) as id from tcm_vehiculo");
+		$vehiculo=$q->result();
+		
+		foreach($vehiculo as $v)
+		{
+			$id_vehiculo=$v->id;
+		}
+		
+		$query2="INSERT INTO tcm_vehiculo_motorista(id_empleado,id_vehiculo) values('$motorista','$id_vehiculo')";
+		$this->db->query($query2);
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	
+	///////////////////////////FUNCIÓN PARA VALIDAR LA FECHA Y LA HORA DE UNA SOLICITUD//////////
+	
 	function validar_fecha_hora()
 	{
 		$query=$this->db->query("select st.id_solicitud_transporte,st.fecha_mision, st.hora_salida, st.hora_entrada, avm.id_vehiculo from tcm_solicitud_transporte as st
 inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.id_solicitud_transporte)");
 		return $query->result();
 	}
-	////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////
 	
 	///////////////CONSULTAR MOTORISTAS: CARGA LOS MOTORISTAS CORRESPONDIENTES A LOS VEHICULOS/////////////////////////////////
 	function consultar_motoristas($id)
