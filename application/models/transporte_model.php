@@ -383,6 +383,21 @@ function todas_solicitudes_por_confirmar(){
 	}
 	////////////////////////////////////////////////////////////////////////////
 	
+	//////////////////////////////REGISTRAR MARCAS//////////////////////////////
+	function nueva_marca($marca)
+	{
+		$query=$this->db->query("insert into tcm_vehiculo_marca(nombre) values('$marca')");
+		$query2=$this->db->query("select max(id_vehiculo_marca) as id tcm_vehiculo_marca");
+		
+		$vm=$query2->result();
+		foreach($vm as $v)
+		{
+			$id=$v->id;
+		}
+		return $id;
+	}
+	////////////////////////////////////////////////////////////////////////////
+	
 	//////////////////////////////CONSUlTAR MODElOS//////////////////////////////
 	function consultar_modelos()
 	{
