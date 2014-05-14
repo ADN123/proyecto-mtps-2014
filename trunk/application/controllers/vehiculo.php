@@ -78,6 +78,25 @@ class Vehiculo extends CI_Controller
 		$imagen=$this->input->post('imagen');
 		
 		if($imagen=="") $imagen="vehiculo.jpg"; ////////////// si no se sube una fotografía se pondrá una por defecto.
+		else
+		{
+			$config['upload_path'] = './fotografias_vehiculos/';
+			$config['allowed_types'] = 'gif|jpg|png';
+		//	$config['max_size']    = '100';
+		//	$config['max_width']  = '1024';
+		//	$config['max_height']  = '768';
+		 
+			$this->load->library('upload', $config);
+		 
+			if ( ! $this->upload->do_upload())
+			{
+				$error = array('error' = $this->upload->display_errors());
+			}
+			else
+			{
+				$data = array('upload_data' => $this->upload->data());
+			}
+		}
 		
 		$nmarca=$this->input->post('nmarca');
 		$nmodelo=$this->input->post('nmodelo');
@@ -86,23 +105,19 @@ class Vehiculo extends CI_Controller
 		
 		if($id_marca==0 && $nmarca!="")
 		{
-			$this->transporte_model->nueva_marca($nmarca);
-			$id_marca=$this->transporte_model->ultima_marca();
+			$id_marca=$this->transporte_model->nueva_marca($nmarca);
 		}
 		if($id_modelo==0 && $nmodelo!="")
 		{
-			$this->transporte_model->nuevo_modelo($nmodelo);
-			$id_modelo=$this->transporte_model->ultimo_modelo();
+			$id_modelo=$this->transporte_model->nuevo_modelo($nmodelo);
 		}
 		if($id_clase==0 && $nclase!="")
 		{
-			$this->transporte_model->nueva_clase($nclase);
-			$id_clase=$this->transporte_model->ultima_clase();
+			$id_clase=$this->transporte_model->nueva_clase($nclase);
 		}
 		if($id_fuente_fondo==0 && $nfuente!="")
 		{
-			$this->transporte_model->nueva_fuente($nfuente);
-			$id_fuente_fondo=$this->transporte_model->ultima_fuente_fondo();
+			$id_fuente_fondo=$this->transporte_model->nueva_fuente($nfuente);
 		}
 		if($id_marca!=0 && $id_modelo!=0 && $id_clase!=0 && $id_fuente_fondo!=0)
 		{
