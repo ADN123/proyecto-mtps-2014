@@ -1,12 +1,12 @@
 <script>
-	/*estado_transaccion='<?php echo $estado_transaccion?>';*/
+	estado_transaccion='<?php echo $estado_transaccion?>';
 	estado_correcto='Se ha registrado un nuevo vehículo exitosamente.';
 	estado_incorrecto='Error al registrar un nuevo vehículo: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 </script>
 <section>
     <h2>Nuevo Vehículo</h2>
 </section>
-<form name="form_vehiculo" method="post" action="<?php echo base_url()?>index.php/vehiculo/guardar_vehiculo" >
+<form name="form_vehiculo" method="post" action="<?php echo base_url()?>index.php/vehiculo/guardar_vehiculo" enctype="multipart/form-data">
 	<div id="wizard" class="swMain">
         <ul>
             <li>
