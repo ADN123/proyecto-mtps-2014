@@ -260,7 +260,7 @@
 		/*Constructor para valida nombres*/
 		if(settings.valNombre) {
 			settings.alf=true;
-			settings.lonMin=15;
+			settings.lonMin=10;
 		}
 		
 		/*Constructor que valida telefonos*/
