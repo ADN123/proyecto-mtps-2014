@@ -23,9 +23,9 @@ class Usuario_model extends CI_Model {
 		$query0=$this->db->query($sentencia);
 		$m0=(array)$query0->result_array();
 		$result='';
-		foreach($m0 as $val) { 
-			$id_sistema=$val['id_sistema'];
-			$nombre_sistema=$val['nombre_sistema'];
+		foreach($m0 as $val0) { 
+			$id_sistema=$val0['id_sistema'];
+			$nombre_sistema=$val0['nombre_sistema'];
 			if($id_sistema==5)
 				$result.='<ul class="treeview" style="max-width: 600px; width: 100%; margin: 0 auto;"><li data-expanded="true">'.$nombre_sistema;
 			else
@@ -35,42 +35,48 @@ class Usuario_model extends CI_Model {
 			$m1=(array)$query1->result_array();
 			
 			$result.='<ul>';
-			foreach($m1 as $val) { 
-				$id_modulo=$val['id_modulo'];
-				$nombre_modulo=$val['nombre_modulo'];
-				$descripcion_modulo=$val['descripcion_modulo'];
+			foreach($m1 as $val1) { 
+				$id_modulo=$val1['id_modulo'];
+				$nombre_modulo=$val1['nombre_modulo'];
+				$descripcion_modulo=$val1['descripcion_modulo'];
 				
 				$sentencia="SELECT id_modulo, nombre_modulo, descripcion_modulo FROM org_modulo where dependencia = ".$id_modulo." ORDER BY orden";
 				$query2=$this->db->query($sentencia);
 				$m2=(array)$query2->result_array();
 				
 				if($query2->num_rows>0) {
+					$expanded="false";
 					for($i=0;$i<count($id_mod);$i++) {
 						$ancestros=$this->buscar_padre_permisos_rol($id_mod[$i]);
+						if($id_modulo==$ancestros['padre'] || $id_modulo==$ancestros['abuelo'] || $id_modulo==$ancestros['bisabuelo'])
+							$expanded="true";
 					}
-					$result.='<li data-expanded="true" title="'.$descripcion_modulo.'"> '.$nombre_modulo;
+					$result.='<li data-expanded="'.$expanded.'" title="'.$descripcion_modulo.'"> '.$nombre_modulo;
 				}
 				else {
 					$result.='<li title="'.$descripcion_modulo.'"> '.$nombre_modulo;
-					$clave=in_array($id_modulo, $id_mod);
-					if($clave!="")
+					$clave='';
+					$clave=array_search($id_modulo, $id_mod);
+					$op1='';
+					$op2='';
+					$op3='';
+					$x='';
+					if($clave!==FALSE) {
 						switch($id_per[$clave]) {
 							case 1:
+								$x=1;
 								$op1='selected="selected"';
 								break;
 							case 2:
+								$x=2;
 								$op2='selected="selected"';
 								break;
 							case 3:
+								$x=3;
 								$op3='selected="selected"';
 								break;
 						}
-					else {
-						$op1='';
-						$op2='';
-						$op3='';
 					}
-					
  					$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Usuario General</option><option value="'.$id_modulo.',2" '.$op2.'>Delegado Sección</option><option value="'.$id_modulo.',3" '.$op3.'>Administrador</option></select>';
 				}
 				
@@ -80,34 +86,44 @@ class Usuario_model extends CI_Model {
 				foreach($m2 as $val2) {
 					$id_modulo=$val2['id_modulo'];
 					$nombre_modulo=$val2['nombre_modulo'];
-					$descripcion_modulo=$val['descripcion_modulo'];
+					$descripcion_modulo=$val2['descripcion_modulo'];
 					
 					$sentencia="SELECT id_modulo, nombre_modulo, descripcion_modulo FROM org_modulo where dependencia = ".$id_modulo." ORDER BY orden";
 					$query3=$this->db->query($sentencia);
 					$m3=(array)$query3->result_array();
 					
 					if($query3->num_rows>0){
-						$result.='<li data-expanded="true" title="'.$descripcion_modulo.'"> '.$nombre_modulo;
+						$expanded="false";
+						for($i=0;$i<count($id_mod);$i++) {
+							$ancestros=$this->buscar_padre_permisos_rol($id_mod[$i]);
+							if($id_modulo==$ancestros['padre'] || $id_modulo==$ancestros['abuelo'] || $id_modulo==$ancestros['bisabuelo'])
+								$expanded="true";
+						}
+						$result.='<li data-expanded="'.$expanded.'" title="'.$descripcion_modulo.'"> '.$nombre_modulo;
 					}
 					else {
 						$result.='<li title="'.$descripcion_modulo.'"> '.$nombre_modulo;
-						$clave=in_array($id_modulo, $id_mod);
-						if($clave!="")
+						$clave='';
+						$clave=array_search($id_modulo, $id_mod);
+						$op1='';
+						$op2='';
+						$op3='';
+						$x='';
+						if($clave!==FALSE) {
 							switch($id_per[$clave]){
 								case 1:
+									$x=1;
 									$op1='selected="selected"';
 									break;
 								case 2:
+									$x=2;
 									$op2='selected="selected"';
 									break;
 								case 3:
+									$x=3;
 									$op3='selected="selected"';
 									break;
 							}
-						else {
-							$op1='';
-							$op2='';
-							$op3='';
 						}
 						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Usuario General</option><option value="'.$id_modulo.',2" '.$op2.'>Delegado Sección</option><option value="'.$id_modulo.',3" '.$op3.'>Administrador</option></select>';
 					}
@@ -118,26 +134,30 @@ class Usuario_model extends CI_Model {
 					foreach($m3 as $val3) {
 						$id_modulo=$val3['id_modulo'];
 						$nombre_modulo=$val3['nombre_modulo'];
-						$descripcion_modulo=$val['descripcion_modulo'];
+						$descripcion_modulo=$val3['descripcion_modulo'];
 						
 						$result.='<li title="'.$descripcion_modulo.'"> '.$nombre_modulo;
-						$clave=in_array($id_modulo, $id_mod);
-						if($clave!="")
+						$clave='';
+						$clave=array_search($id_modulo, $id_mod);
+						$op1='';
+						$op2='';
+						$op3='';
+						$x='';
+						if($clave!==FALSE) {
 							switch($id_per[$clave]){
 								case 1:
+									$x=1;
 									$op1='selected="selected"';
 									break;
 								case 2:
+									$x=2;
 									$op2='selected="selected"';
 									break;
 								case 3:
+									$x=3;
 									$op3='selected="selected"';
 									break;
 							}
-						else {
-							$op1='';
-							$op2='';
-							$op3='';
 						}
 						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Usuario General</option><option value="'.$id_modulo.',2" '.$op2.'>Delegado Sección</option><option value="'.$id_modulo.',3" '.$op3.'>Administrador</option></select>';
 						$result.=' </li>';				
@@ -292,6 +312,25 @@ class Usuario_model extends CI_Model {
 	
 		/*return $query->num_rows;*/
 		return (array)$query->row();
+	}
+	
+	function eliminar_permisos_rol($id_rol)
+	{
+		$sentencia="DELETE FROM org_rol_modulo_permiso where id_rol='$id_rol'";
+		$this->db->query($sentencia);
+	}
+	
+	function eliminar_rol($id_rol)
+	{
+		$sentencia="DELETE FROM org_rol where id_rol='$id_rol'";
+		$this->db->query($sentencia);
+	}
+	
+	function actualizar_rol($formuInfo) 
+	{
+		extract($formuInfo);
+		$sentencia="UPDATE org_rol SET nombre_rol='$nombre_rol', descripcion_rol='$descripcion_rol' where id_rol='$id_rol'";
+		$this->db->query($sentencia);
 	}
 }
 ?>

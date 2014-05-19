@@ -2,13 +2,17 @@
 	$id_rol="";
 	$nombre_rol="";
 	$descripcion_rol="";
+	$dir="guardar_rol";
+	$label="Guardar";
 	foreach ($rol as $val) {
 		$id_rol=$val['id_rol'];
 		$nombre_rol=ucwords($val['nombre_rol']);
 		$descripcion_rol=$val['descripcion_rol'];
+		$dir="actualizar_rol";
+		$label="Actualizar";
 	}
 ?>
-<form name="formu" id="formu" style="max-width: 600px;" method="post" action="<?php echo base_url()?>index.php/usuarios/guardar_rol">
+<form name="formu" id="formu" style="max-width: 600px;" method="post" action="<?php echo base_url()?>index.php/usuarios/<?=$dir?>">
   	<input type="hidden" id="id_rol" name="id_rol" value="<?=$id_rol?>"/>
 	<fieldset>      
         <legend align='left'>Información del Rol</legend>
@@ -22,15 +26,11 @@
         </p>
     </fieldset>
     <fieldset>      
-        <legend align='left'>Información de los Sistemas</legend>
-        <!--<ul id="treeview" style="max-width: 600px; width: 100%; margin: 0 auto;">
-            <li data-expanded="true">-->
-                <?=$menu?>
-           <!-- </li>
-        </ul>-->
+        <legend align='left'>Información del Sistema</legend>
+        <?=$menu?>
   	</fieldset>
     <p style='text-align: center;'>
-        <button type="submit" id="aprobar" class="button tam-1 boton_validador" name="aprobar">Guardar</button>
+        <button type="submit" id="aprobar" class="button tam-1 boton_validador" name="aprobar"><?=$label?></button>
     </p>
 </form>
 <script>
