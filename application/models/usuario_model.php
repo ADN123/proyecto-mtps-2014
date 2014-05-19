@@ -152,9 +152,13 @@ class Usuario_model extends CI_Model {
 		return (array)$query->result_array();
 	}
 	
-	function mostrar_roles()
+	function mostrar_roles($id_rol=NULL)
 	{
-		$sentencia="SELECT org_rol.id_rol, LOWER(org_rol.nombre_rol) AS nombre_rol, org_rol.descripcion_rol FROM org_rol";
+		if($id_rol!=NULL)
+			$where_rol=" WHERE id_rol=".$id_rol;
+		else
+			$where_rol="";
+		$sentencia="SELECT org_rol.id_rol, LOWER(org_rol.nombre_rol) AS nombre_rol, org_rol.descripcion_rol FROM org_rol".$where_rol;
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();
 	}
