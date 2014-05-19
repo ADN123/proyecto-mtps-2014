@@ -8,9 +8,18 @@ class Usuario_model extends CI_Model {
 	
     }
 	
-	function mostrar_menu()
+	function mostrar_menu($id_rol=NULL)
 	{
-		$sentencia="SELECT id_sistema, nombre_sistema FROM org_sistema";
+		$sentencia="SELECT id_modulo, id_permiso FROM org_rol_modulo_permiso WHERE estado=1 AND id_rol='".$id_rol."'";
+		$query=$this->db->query($sentencia);
+		$m=(array)$query->result_array();
+		$id_mod=array();
+		$id_per=array();
+		foreach($m as $val) { 
+			$id_mod[]=$val['id_modulo'];
+			$id_per[]=$val['id_permiso'];
+		}
+		$sentencia="SELECT id_sistema, nombre_sistema FROM org_sistema WHERE id_sistema=5";
 		$query0=$this->db->query($sentencia);
 		$m0=(array)$query0->result_array();
 		$result='';
@@ -35,11 +44,34 @@ class Usuario_model extends CI_Model {
 				$query2=$this->db->query($sentencia);
 				$m2=(array)$query2->result_array();
 				
-				if($query2->num_rows>0)
-					$result.='<li data-expanded="false" title="'.$descripcion_modulo.'"> '.$nombre_modulo;
+				if($query2->num_rows>0) {
+					for($i=0;$i<count($id_mod);$i++) {
+						$ancestros=$this->buscar_padre_permisos_rol($id_mod[$i]);
+					}
+					$result.='<li data-expanded="true" title="'.$descripcion_modulo.'"> '.$nombre_modulo;
+				}
 				else {
-					$result.='<li> '.$nombre_modulo;
-					$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value="'.$id_modulo.',1">Usuario General</option><option value="'.$id_modulo.',2">Delegado Sección</option><option value="'.$id_modulo.',3">Administrador</option></select>';
+					$result.='<li title="'.$descripcion_modulo.'"> '.$nombre_modulo;
+					$clave=in_array($id_modulo, $id_mod);
+					if($clave!="")
+						switch($id_per[$clave]) {
+							case 1:
+								$op1='selected="selected"';
+								break;
+							case 2:
+								$op2='selected="selected"';
+								break;
+							case 3:
+								$op3='selected="selected"';
+								break;
+						}
+					else {
+						$op1='';
+						$op2='';
+						$op3='';
+					}
+					
+ 					$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Usuario General</option><option value="'.$id_modulo.',2" '.$op2.'>Delegado Sección</option><option value="'.$id_modulo.',3" '.$op3.'>Administrador</option></select>';
 				}
 				
 				if($query2->num_rows>0)
@@ -54,11 +86,30 @@ class Usuario_model extends CI_Model {
 					$query3=$this->db->query($sentencia);
 					$m3=(array)$query3->result_array();
 					
-					if($query3->num_rows>0)
-						$result.='<li data-expanded="false" title="'.$descripcion_modulo.'"> '.$nombre_modulo;
+					if($query3->num_rows>0){
+						$result.='<li data-expanded="true" title="'.$descripcion_modulo.'"> '.$nombre_modulo;
+					}
 					else {
-						$result.='<li> '.$nombre_modulo;
-						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value="'.$id_modulo.',1">Usuario General</option><option value="'.$id_modulo.',2">Delegado Sección</option><option value="'.$id_modulo.',3">Administrador</option></select>';
+						$result.='<li title="'.$descripcion_modulo.'"> '.$nombre_modulo;
+						$clave=in_array($id_modulo, $id_mod);
+						if($clave!="")
+							switch($id_per[$clave]){
+								case 1:
+									$op1='selected="selected"';
+									break;
+								case 2:
+									$op2='selected="selected"';
+									break;
+								case 3:
+									$op3='selected="selected"';
+									break;
+							}
+						else {
+							$op1='';
+							$op2='';
+							$op3='';
+						}
+						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Usuario General</option><option value="'.$id_modulo.',2" '.$op2.'>Delegado Sección</option><option value="'.$id_modulo.',3" '.$op3.'>Administrador</option></select>';
 					}
 					
 					if($query3->num_rows>0)
@@ -70,7 +121,25 @@ class Usuario_model extends CI_Model {
 						$descripcion_modulo=$val['descripcion_modulo'];
 						
 						$result.='<li title="'.$descripcion_modulo.'"> '.$nombre_modulo;
-						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value="'.$id_modulo.',1">Usuario General</option><option value="'.$id_modulo.',2">Delegado Sección</option><option value="'.$id_modulo.',3">Administrador</option></select>';
+						$clave=in_array($id_modulo, $id_mod);
+						if($clave!="")
+							switch($id_per[$clave]){
+								case 1:
+									$op1='selected="selected"';
+									break;
+								case 2:
+									$op2='selected="selected"';
+									break;
+								case 3:
+									$op3='selected="selected"';
+									break;
+							}
+						else {
+							$op1='';
+							$op2='';
+							$op3='';
+						}
+						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Usuario General</option><option value="'.$id_modulo.',2" '.$op2.'>Delegado Sección</option><option value="'.$id_modulo.',3" '.$op3.'>Administrador</option></select>';
 						$result.=' </li>';				
 					}
 					if($query3->num_rows>0)
@@ -158,7 +227,7 @@ class Usuario_model extends CI_Model {
 			$where_rol=" WHERE id_rol=".$id_rol;
 		else
 			$where_rol="";
-		$sentencia="SELECT id_rol, LOWER(nombre_rol) AS nombre_rol, descripcion_rol FROM org_rol".$where_rol;
+		$sentencia="SELECT id_rol, LOWER(nombre_rol) AS nombre_rol, descripcion_rol FROM org_rol".$where_rol." ORDER BY id_rol DESC";
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();
 	}

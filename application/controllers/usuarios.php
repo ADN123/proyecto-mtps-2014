@@ -66,13 +66,13 @@ class Usuarios extends CI_Controller
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
-					$data['menu']=$this->usuario_model->mostrar_menu();
+					$data['menu']=$this->usuario_model->mostrar_menu($id_rol);
 					break;
 				case 2:
-					$data['menu']=$this->usuario_model->mostrar_menu();
+					$data['menu']=$this->usuario_model->mostrar_menu($id_rol);
 					break;
 				case 3:
-					$data['menu']=$this->usuario_model->mostrar_menu();
+					$data['menu']=$this->usuario_model->mostrar_menu($id_rol);
 					break;
 			}
 			
