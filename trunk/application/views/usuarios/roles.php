@@ -6,7 +6,7 @@
 	<?php }?>
 </script>
 <section>
-    <h2>Control de Solicitudes</h2>
+    <h2>Control de Roles</h2>
 </section>
 <button type="button" id="nuevo_rol1" class="button tam-1">Nuevo Rol</button>
 <a id="nuevo_rol2" rel="leanModal" href="#ventana"></a>
@@ -31,7 +31,8 @@
     <td><?php echo ucwords($val['nombre_rol'])?></td>
     <td><?php echo $val['descripcion_rol']?></td>
     <td>
-    	<a class="modificar_rol" title="Modificar Rol" rel="leanModal" href="#ventana" data-id_rol="<?php echo $val['id_rol']?>"><img src="<?php echo base_url()?>img/lupa.gif"/></a>
+    	<a class="modificar_rol" title="Modificar Rol" rel="leanModal" href="#ventana" data-id_rol="<?php echo $val['id_rol']?>" data-nombre_rol="<?php echo ucwords($val['nombre_rol'])?>"><img src="<?php echo base_url()?>img/lupa.gif"/></a>
+    	<a class="eliminar_rol" title="Eliminar Rol" data-id_rol="<?php echo $val['id_rol']?>" data-nombre_rol="<?php echo ucwords($val['nombre_rol'])?>"><img src="<?php echo base_url()?>img/lupa.gif"/></a>
 	</td>
   </tr>
 <?php } ?>
@@ -49,7 +50,8 @@
 	$(document).ready(function(){
 		$(".modificar_rol").click(function(){
 			id=$(this).data("id_rol");
-			$("#titulo-ventana").html("Modificar Rol");
+			nom=$(this).data("nombre_rol");
+			$("#titulo-ventana").html("Modificar Rol - "+nom);
 			$('#contenido-ventana').load(base_url()+'index.php/usuarios/datos_de_rol/'+id);
 			return false;
 		});
@@ -60,6 +62,18 @@
 			$("#titulo-ventana").html("Nuevo Rol");
 			$('#contenido-ventana').load(base_url()+'index.php/usuarios/datos_de_rol');
 			return false;
+		});
+		$(".eliminar_rol").click(function(){
+			id=$(this).data("id_rol");
+			nom=$(this).data("nombre_rol");
+			alertify.confirm("Realmente desea eliminar el rol '<i>"+nom+"</i>'? Este cambio no lo podrá revertir.", function (e) {
+				if (e) {
+					$('#contenido-ventana').load(base_url()+'index.php/usuarios/eliminar_rol/'+id);
+				} else {
+					return false;
+				}
+			});
+			
 		});
 	});
 </script>
