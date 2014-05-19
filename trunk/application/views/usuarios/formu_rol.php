@@ -35,7 +35,6 @@
 </form>
 <script>
 	$(document).ready(function() {
-		$("select").prepend('<option value="" selected="selected"></option>');
 		$(".treeview").kendoTreeView();
 		$(".treeview li").hover(function(){
 			
