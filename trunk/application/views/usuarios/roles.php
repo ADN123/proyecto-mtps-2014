@@ -31,7 +31,7 @@
     <td><?php echo ucwords($val['nombre_rol'])?></td>
     <td><?php echo $val['descripcion_rol']?></td>
     <td>
-    	<a id="modificar_rol" title="Modificar Rol" rel="leanModal" href="#ventana" data-id_rol="<?php echo $val['id_rol']?>"><img src="<?php echo base_url()?>img/lupa.gif"/></a>
+    	<a class="modificar_rol" title="Modificar Rol" rel="leanModal" href="#ventana" data-id_rol="<?php echo $val['id_rol']?>"><img src="<?php echo base_url()?>img/lupa.gif"/></a>
 	</td>
   </tr>
 <?php } ?>
@@ -47,7 +47,7 @@
 </div>
 <script language="javascript" >
 	$(document).ready(function(){
-		$("#modificar_rol").click(function(){
+		$(".modificar_rol").click(function(){
 			id=$(this).data("id_rol");
 			$("#titulo-ventana").html("Modificar Rol");
 			$('#contenido-ventana').load(base_url()+'index.php/usuarios/datos_de_rol/'+id);

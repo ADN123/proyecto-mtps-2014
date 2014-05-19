@@ -158,7 +158,7 @@ class Usuario_model extends CI_Model {
 			$where_rol=" WHERE id_rol=".$id_rol;
 		else
 			$where_rol="";
-		$sentencia="SELECT org_rol.id_rol, LOWER(org_rol.nombre_rol) AS nombre_rol, org_rol.descripcion_rol FROM org_rol".$where_rol;
+		$sentencia="SELECT id_rol, LOWER(nombre_rol) AS nombre_rol, descripcion_rol FROM org_rol".$where_rol;
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();
 	}

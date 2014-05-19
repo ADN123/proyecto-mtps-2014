@@ -1,5 +1,7 @@
 <?php
-	
+	$id_rol="";
+	$nombre_rol="";
+	$descripcion_rol="";
 	foreach ($rol as $val) {
 		$id_rol=$val['id_rol'];
 		$nombre_rol=ucwords($val['nombre_rol']);
@@ -7,11 +9,12 @@
 	}
 ?>
 <form name="formu" id="formu" style="max-width: 600px;" method="post" action="<?php echo base_url()?>index.php/usuarios/guardar_rol">
+  	<input type="hidden" id="id_rol" name="id_rol" value="<?=$id_rol?>"/>
 	<fieldset>      
         <legend align='left'>Información del Rol</legend>
         <p>
             <label for="nombre_rol" id="lnombre_rol">Nombre del rol </label>
-            <input type="text" tabindex="1" id="nombre_rol" name="nombre_rol" value="<?=$nombre_rol?>"/>
+            <input type="text" tabindex="1" id="nombre_rol" name="nombre_rol" value="<?=$nombre_rol?>" class="tam-3"/>
         </p>
         <p>
             <label for="descripcion_rol" id="ldescripcion_rol" class="label_textarea">Descripción </label>
@@ -32,6 +35,7 @@
 </form>
 <script>
 	$(document).ready(function() {
+		$("select").prepend('<option value="" selected="selected"></option>');
 		$(".treeview").kendoTreeView();
 		$(".treeview li").hover(function(){
 			

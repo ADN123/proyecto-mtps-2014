@@ -76,7 +76,10 @@ class Usuarios extends CI_Controller
 					break;
 			}
 			
-			$data['rol']=$this->usuario_model->mostrar_roles($id_rol);
+			if($id_rol!=NULL)			
+				$data['rol']=$this->usuario_model->mostrar_roles($id_rol);
+			else
+				$data['rol']=array();
 				
 			$data['estado_transaccion']=$estado_transaccion;
 			
