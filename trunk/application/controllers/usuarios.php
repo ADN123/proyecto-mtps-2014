@@ -86,8 +86,6 @@ class Usuarios extends CI_Controller
 			else
 				$data['rol']=array();
 				
-			$data['estado_transaccion']=$estado_transaccion;
-			
 			$this->load->view('usuarios/formu_rol',$data);	
 		}
 		else {
@@ -309,14 +307,52 @@ class Usuarios extends CI_Controller
 	}
 	
 	/*
-	*	Nombre: usuarios
-	*	Objetivo: Carga la vista de creación de usuarios
+	*	Nombre: usuario
+	*	Objetivo: Carga la vista para la administracion de los usuarios
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
-	*	Última Modificación: 14/05/2014
+	*	Última Modificación: 19/05/2014
 	*	Observaciones: Ninguna.
 	*/
-	function crear_usuario($estado_transaccion=NULL)
+	function usuario($estado_transaccion=NULL,$accion=NULL)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79); /*Verificacion de permiso para administrara usuarios*/
+		
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+					$data['usuarios']=$this->usuario_model->mostrar_usuarios();
+					break;
+				case 2:
+					$data['usuarios']=$this->usuario_model->mostrar_usuarios();
+					break;
+				case 3:
+					$data['usuarios']=$this->usuario_model->mostrar_usuarios();
+					break;
+			}
+			$data['estado_transaccion']=$estado_transaccion;
+			if($accion==0)
+				$data['accion']="elimina";
+			if($accion==1)
+				$data['accion']="actualiza";
+			if($accion==2)
+				$data['accion']="guarda";
+			pantalla('usuarios/usuarios',$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+	}
+		
+	/*
+	*	Nombre: datos_de_usuario
+	*	Objetivo: Carga la vista del formulario creación o actualización de usuarios
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Última Modificación: 20/05/2014
+	*	Observaciones: Ninguna.
+	*/
+	function datos_de_usuario($id_usuario=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79); /*Verificacion de permiso para administrara usuarios*/
 		
@@ -335,9 +371,13 @@ class Usuarios extends CI_Controller
 					break;
 			}
 			$data['roles']=$this->usuario_model->mostrar_roles();
-			$data['estado_transaccion']=$estado_transaccion;
 			
-			pantalla('usuarios/crear_usuario',$data);	
+			if($id_usuario!=NULL)			
+				$data['usu']=$this->usuario_model->mostrar_usuarios($id_usuario);
+			else
+				$data['usu']=array();
+			
+			$this->load->view('usuarios/formu_usuario',$data);	
 		}
 		else {
 			echo 'No tiene permisos para acceder';
@@ -419,7 +459,31 @@ class Usuarios extends CI_Controller
 			);
 			$this->usuario_model->guardar_permisos_usuario($formuInfo); /*Guardando permisos del usuario*/
 			$this->db->trans_complete();
-			ir_a('index.php/usuarios/crear_usuario/'.$this->db->trans_status());
+			ir_a('index.php/usuarios/usuario/'.$this->db->trans_status().'/2');
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+	}
+	
+	/*
+	*	Nombre: eliminar_usuario
+	*	Objetivo: Elimina los registros de usuarios
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Última Modificación: 20/05/2014
+	*	Observaciones: Ninguna.
+	*/
+	function eliminar_usuario($id_usuario=NULL)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79);
+		
+		if($data['id_permiso']!=NULL) {
+			$this->db->trans_start();
+			$this->usuario_model->eliminar_usuario($id_usuario); /*Eliminar usuario*/
+			$this->usuario_model->eliminar_permisos_usuario($id_usuario); /*Eliminar permisos del usuario*/
+			$this->db->trans_complete();
+			ir_a('index.php/usuarios/usuario/'.$this->db->trans_status().'/0');
 		}
 		else {
 			echo 'No tiene permisos para acceder';

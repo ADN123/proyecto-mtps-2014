@@ -332,5 +332,29 @@ class Usuario_model extends CI_Model {
 		$sentencia="UPDATE org_rol SET nombre_rol='$nombre_rol', descripcion_rol='$descripcion_rol' where id_rol='$id_rol'";
 		$this->db->query($sentencia);
 	}
+	
+	function mostrar_usuarios($id_usuario=NULL,$id_seccion=NULL)
+	{
+		if($id_usuario!=NULL)
+			$where_usuario=" AND org_usuario.id_usuario=".$id_usuario;
+		else
+			$where_usuario="";
+		if($id_seccion!=NULL)
+			$where_seccion=" AND sir_empleado_informacion_laboral.id_seccion=".$id_seccion;
+		else
+			$where_seccion="";
+		$sentencia="SELECT DISTINCT
+					org_usuario.id_usuario,
+					nombre_completo,
+					usuario,
+					id_rol
+					FROM
+					org_usuario
+					INNER JOIN sir_empleado ON org_usuario.nr = sir_empleado.nr 
+					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado 
+					LEFT JOIN org_usuario_rol ON org_usuario_rol.id_usuario = org_usuario.id_usuario WHERE TRUE".$where_seccion.$where_usuario;
+		$query=$this->db->query($sentencia);
+		return (array)$query->result_array();
+	}
 }
 ?>
