@@ -38,7 +38,7 @@ class Seguridad_model extends CI_Model {
 					GROUP_CONCAT(url_modulo) as url_modulo,
 					GROUP_CONCAT(img_modulo) as img_modulo
 					FROM
-					(SELECT 
+					(SELECT DISTINCT
 					m2.orden AS orden_padre,
 					m2.id_modulo AS id_padre,
 					m2.nombre_modulo AS nombre_padre,

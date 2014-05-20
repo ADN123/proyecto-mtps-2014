@@ -352,9 +352,27 @@ class Usuario_model extends CI_Model {
 					org_usuario
 					INNER JOIN sir_empleado ON org_usuario.nr = sir_empleado.nr 
 					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado 
-					LEFT JOIN org_usuario_rol ON org_usuario_rol.id_usuario = org_usuario.id_usuario WHERE TRUE".$where_seccion.$where_usuario;
+					LEFT JOIN org_usuario_rol ON org_usuario_rol.id_usuario = org_usuario.id_usuario WHERE org_usuario.estado=1 ".$where_seccion.$where_usuario;
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();
+	}
+	
+	function eliminar_permisos_usuario($id_usuario)
+	{
+		$sentencia="DELETE FROM org_rol_modulo_permiso where id_usuario='$id_usuario'";
+		$this->db->query($sentencia);
+	}
+	
+	function eliminar_usuario($id_usuario)
+	{
+		$sentencia="DELETE FROM org_usuario where id_usuario='$id_usuario'";
+		$this->db->query($sentencia);
+	}
+	
+	function desactivar_usuario($id_usuario)
+	{
+		$sentencia="UPDATE org_usuario SET estado=0 where id_usuario='$id_usuario'";
+		$this->db->query($sentencia);
 	}
 }
 ?>

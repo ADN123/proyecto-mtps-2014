@@ -17,6 +17,11 @@
 		$op='';
 	}
 ?>
+<style>
+	.k-multiselect {
+		display: inline-block;
+	}
+</style>
 <form name="formu" id="formu" style="max-width: 600px;" method="post" action="<?php echo base_url()?>index.php/usuarios/<?=$dir?>">
   	<input type="hidden" id="id_usuario" name="id_usuario" value="<?=$id_usuario?>"/>
 	<fieldset>      
@@ -59,8 +64,8 @@
     <fieldset>      
         <legend align='left'>Información del Rol</legend>
         <p>
-            <label for="id_rol" id="lid_rol">Rol </label>
-            <select name="id_rol" id="id_rol" tabindex="3"  class="select" style="width:60%">
+            <label for="id_rol" id="lid_rol" class="label_textarea">Rol </label>
+            <select name="id_rol[]" id="id_rol" tabindex="3" multiple="multiple" class="multi" style="width:60%;">
                 <?php
                     foreach($roles as $val) {
 						if($val['id_rol']==$id_rol)
@@ -79,6 +84,9 @@
 <script>
 	$(document).ready(function() {
 		$("select").prepend('<option value="" <?=$op?>></option>');
+		$(".multi").kendoMultiSelect({
+			filter: "contains"	
+		}).data("kendoMultiSelect");
 		$(".select").kendoComboBox({
 			autoBind: false,
 			filter: "contains"
