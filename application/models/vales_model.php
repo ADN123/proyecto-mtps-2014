@@ -53,5 +53,21 @@ class Vales_model extends CI_Model {
 		}
 		return $oficinas;
 	}
+
+	function vehiculos($id_seccion=NULL)	{	
+
+		$sentencia="SELECT  v.id_vehiculo, v.placa,  vm.nombre, vmo.modelo, v.id_seccion
+						FROM tcm_vehiculo v
+							INNER JOIN tcm_vehiculo_marca vm ON v.id_marca = vm.id_vehiculo_marca 
+							INNER JOIN  tcm_vehiculo_modelo vmo ON vmo.id_vehiculo_modelo = v.id_modelo";
+
+							if($id_seccion!=NULL){
+							$sentencia.= "	WHERE v.id_seccion = '".$id_seccion."'";
+							}
+		$query=$this->db->query($sentencia);
+	
+		return (array)$query->result_array();
+	
+	}
 }
 ?>

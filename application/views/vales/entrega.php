@@ -101,7 +101,16 @@
                         </th>
                     </thead>
                     <tbody id="content_table">
-                        
+                 <?php
+                    foreach($vehiculos as $val) { ?>
+                        <tr> 
+                            <td><?php echo $val['placa'] ?></td>
+                            <td><?php echo $val['marca'] ?></td>
+                            <td><?php echo $val['modelo'] ?></td>
+                            <td><input type="checkbox"  name="veh<?php echo $val['id_vehiculo'] ?>" /> </td>
+                        </tr>
+                <?php } ?> 
+
                     </tbody>
                 </table>
             </p>

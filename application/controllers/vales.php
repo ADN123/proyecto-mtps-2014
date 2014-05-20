@@ -33,11 +33,13 @@ class Vales extends CI_Controller
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
 				case 1:
+
 				case 2:
 				case 3:
 			}
 			$data['gasolineras']=$this->vales_model->consultar_gasolineras();
 			$data['estado_transaccion']=$estado_transaccion;
+			$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
 			pantalla("vales/ingreso",$data);	
 		}
 		else {
@@ -100,28 +102,36 @@ class Vales extends CI_Controller
 	*	Última Modificación: 28/04/2014
 	*	Observaciones: Ninguna.
 	*/
-	function ingreso_requisicion($estado_transaccion=NULL)
+	function ingreso_requisicion($permiso, $estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear requisiciones*/
-		
+				$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
 				case 2:
 					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+					$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
 					break;
 				case 3:
 					$data['oficinas']=$this->vales_model->consultar_oficinas();
+					$data['vehiculos']=$this->vales_model->vehiculos();
 					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
+
 
 			pantalla('vales/entrega',$data);	
 		}
 		else {
 			echo 'No tiene permisos para acceder';
 		}
+	}
+
+	function guardar_requisicion()
+	{
+		print_r($_POST);
 	}
 }
 ?>

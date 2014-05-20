@@ -44,7 +44,7 @@ class Sessiones extends CI_Controller {
 	function iniciar_session()
 	{
 		$in=$this->verificar();
-		error_reporting(0);
+		//error_reporting(0);
 		if ($in<=3){				
 		
 					$login =$this->input->post('user');

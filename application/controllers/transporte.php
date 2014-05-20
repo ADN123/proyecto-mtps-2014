@@ -730,21 +730,26 @@ class Transporte extends CI_Controller
 	*	Observaciones: Ninguna
 	*/
 	function ver_solicitudes()
-	{
+	{ 
+
+							
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),61);
-		
+
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
 				case 1:
-					$empleado=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR']);
+					$empleado=$this->transporte_model->consultar_empleado($_SESSION['nr']);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR'], 1);
 					break;
 				case 2:
-					$seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes_seccion($seccion['id_seccion']);
+
+					$seccion=$this->transporte_model->consultar_seccion_usuario($_SESSION['nr']);
+					
+					
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 1, $seccion['id_seccion']);
 					break;
 				case 3:
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes();
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,1);
 			}
 			
 			pantalla("transporte/ver_solicitudes",$data);	
@@ -792,14 +797,14 @@ class Transporte extends CI_Controller
 			switch($data['id_permiso']) {
 				case 1:
 					$empleado=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR'],3);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR'],3,NULL);
 					break;
 				case 2:
 					$seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes_seccion($seccion['id_seccion'],3);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,3,$seccion['id_seccion']);
 					break;
 				case 3:
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,3);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,3,NULL);
 			}
 			pantalla("transporte/reporte_solicitudes",$data);	
 		}
