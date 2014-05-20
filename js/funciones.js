@@ -60,10 +60,10 @@ $(document).ready(function() {
 $(function() {
 	$('a[rel*=leanModal]').leanModal({ top : 50, closeButton: ".modal_close"});		
 });
-	String.prototype.capitalize = function()
+String.prototype.capitalize = function()
+{
+	return this.replace(/\w+/g, function(a)
 	{
-		return this.replace(/\w+/g, function(a)
-		{
-			return a.charAt(0).toUpperCase() + a.slice(1).toLowerCase();
-		});
-	};
+		return a.charAt(0).toUpperCase() + a.slice(1).toLowerCase();
+	});
+};

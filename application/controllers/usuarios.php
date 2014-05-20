@@ -430,6 +430,7 @@ class Usuarios extends CI_Controller
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
 			$id_empleado=$this->input->post('nombre_completo');
+			$usuario=$this->input->post('usuario');
 			$password=md5($this->input->post('password'));
 			
 			$data=$this->usuario_model->info_adicional($id_empleado);
@@ -445,19 +446,21 @@ class Usuarios extends CI_Controller
 				'password'=>$password,
 				'nr'=>$data['nr'],
 				'sexo'=>$data['sexo'],
-				'usuario'=>$data['usuario'],
+				'usuario'=>$usuario,
 				'id_seccion'=>$data['id_seccion'],
 				'estado'=>1
 			);
 			
 			$id_usuario=$this->usuario_model->guardar_usuario($formuInfo); /*Guardando usuario*/
 			$id_rol=$this->input->post('id_rol');
-			
-			$formuInfo = array(
-				'id_rol'=>$id_rol,
-				'id_usuario'=>$id_usuario
-			);
-			$this->usuario_model->guardar_permisos_usuario($formuInfo); /*Guardando permisos del usuario*/
+
+			for($i=0;$i<count($id_rol);$i++) {
+				$formuInfo = array(
+					'id_rol'=>$id_rol[$i],
+					'id_usuario'=>$id_usuario
+				);
+				$this->usuario_model->guardar_permisos_usuario($formuInfo); /*Guardando permisos del usuario*/
+			}
 			$this->db->trans_complete();
 			ir_a('index.php/usuarios/usuario/'.$this->db->trans_status().'/2');
 		}
@@ -480,8 +483,9 @@ class Usuarios extends CI_Controller
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
-			$this->usuario_model->eliminar_usuario($id_usuario); /*Eliminar usuario*/
-			$this->usuario_model->eliminar_permisos_usuario($id_usuario); /*Eliminar permisos del usuario*/
+			$this->usuario_model->desactivar_usuario($id_usuario); /*Desactivar usuario*/
+			/*$this->usuario_model->eliminar_usuario($id_usuario);*/ /*Eliminar usuario*/
+			/*$this->usuario_model->eliminar_permisos_usuario($id_usuario);*/ /*Eliminar permisos del usuario*/
 			$this->db->trans_complete();
 			ir_a('index.php/usuarios/usuario/'.$this->db->trans_status().'/0');
 		}
