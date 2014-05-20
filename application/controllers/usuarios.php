@@ -471,11 +471,11 @@ class Usuarios extends CI_Controller
 	
 	/*
 	*	Nombre: eliminar_usuario
-	*	Objetivo: Elimina los registros de usuarios
+	*	Objetivo: Desvactiva los registros de usuarios
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Última Modificación: 20/05/2014
-	*	Observaciones: Ninguna.
+	*	Observaciones: No elimina, solo cambia a cero el estado del usuario.
 	*/
 	function eliminar_usuario($id_usuario=NULL)
 	{
