@@ -31,8 +31,8 @@
     <td><?php echo ucwords($val['nombre_rol'])?></td>
     <td><?php echo $val['descripcion_rol']?></td>
     <td>
-    	<a class="modificar_rol" title="Modificar Rol" rel="leanModal" href="#ventana" data-id_rol="<?php echo $val['id_rol']?>" data-nombre_rol="<?php echo ucwords($val['nombre_rol'])?>"><img src="<?php echo base_url()?>img/lupa.gif"/></a>
-    	<a class="eliminar_rol" title="Eliminar Rol" data-id_rol="<?php echo $val['id_rol']?>" data-nombre_rol="<?php echo ucwords($val['nombre_rol'])?>"><img src="<?php echo base_url()?>img/lupa.gif"/></a>
+    	<a class="modificar_rol" title="Modificar Rol" rel="leanModal" href="#ventana" data-id_rol="<?php echo $val['id_rol']?>" data-nombre_rol="<?php echo ucwords($val['nombre_rol'])?>"><img src="<?php echo base_url()?>img/rol_editar.png"/></a>
+    	<a class="eliminar_rol" title="Eliminar Rol" data-id_rol="<?php echo $val['id_rol']?>" data-nombre_rol="<?php echo ucwords($val['nombre_rol'])?>"><img src="<?php echo base_url()?>img/rol_borrar.png"/></a>
 	</td>
   </tr>
 <?php } ?>

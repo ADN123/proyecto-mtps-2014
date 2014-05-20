@@ -31,8 +31,8 @@
     <td><?php echo ucwords($val['nombre_completo'])?></td>
     <td><?php echo $val['usuario']?></td>
     <td>
-    	<a class="modificar_usuario" title="Modificar Usuario" rel="leanModal" href="#ventana" data-id_usuario="<?php echo $val['id_usuario']?>" data-nombre_completo="<?php echo $val['usuario']?>"><img src="<?php echo base_url()?>img/lupa.gif"/></a>
-    	<a class="eliminar_usuario" title="Eliminar Usuario" data-id_usuario="<?php echo $val['id_usuario']?>" data-nombre_completo="<?php echo $val['usuario']?>"><img src="<?php echo base_url()?>img/lupa.gif"/></a>
+    	<a class="modificar_usuario" title="Modificar Usuario" rel="leanModal" href="#ventana" data-id_usuario="<?php echo $val['id_usuario']?>" data-nombre_completo="<?php echo $val['usuario']?>"><img src="<?php echo base_url()?>img/usu_editar.png"/></a>
+    	<a class="eliminar_usuario" title="Eliminar Usuario" data-id_usuario="<?php echo $val['id_usuario']?>" data-nombre_completo="<?php echo $val['usuario']?>"><img src="<?php echo base_url()?>img/usu_borrar.png"/></a>
 	</td>
   </tr>
 <?php } ?>
