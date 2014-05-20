@@ -65,7 +65,26 @@
 		
 		}	
 	function alerta($msj,$url){
-		echo'<script language="JavaScript" type="text/javascript">
+		echo'
+	<link href="'.base_url().'css/default.css" rel="stylesheet" type="text/css" />
+		<link href="'.base_url().'css/component.css" rel="stylesheet" type="text/css" />
+        <link href="'.base_url().'css/kendo.common.min.css" rel="stylesheet" type="text/css" />
+        <link href="'.base_url().'css/kendo.bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="'.base_url().'css/kendo.dataviz.bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="'.base_url().'css/tooltipster.css" rel="stylesheet" type="text/css" />
+		<link href="'.base_url().'css/alertify.core.css" rel="stylesheet" />
+		<link href="'.base_url().'css/alertify.default.css" rel="stylesheet" />
+        <link href="'.base_url().'css/style-base.css" rel="stylesheet" type="text/css" />
+        <script src="'.base_url().'js/jquery-1.8.2.js"></script>
+        <!--<script src="'.base_url().'js/jquery-ui-1.9.0.custom.js"></script>-->
+		<script src="'.base_url().'js/classie.js"></script>
+        <script src="'.base_url().'js/kendo.all.min.js" type="text/javascript"></script>
+        <script src="'.base_url().'js/jquery.tooltipster.js" type="text/javascript"></script>
+        <script src="'.base_url().'js/jquery.leanModal.min.js" type="text/javascript"></script>
+        <script src="'.base_url().'js/waypoints.min.js"></script>
+        <script src="'.base_url().'js/alertify.js" type="text/javascript"></script>
+		<script language="JavaScript" type="text/javascript">
+		
 				var pagina="'.base_url().$url.'"
 				function redireccionar() 
 				{

@@ -9,6 +9,7 @@ class Transporte_model extends CI_Model {
     }
 	function consultar_seccion_usuario($nr=0)
 	{
+
 		$sentencia="SELECT
 					sir_empleado_informacion_laboral.id_seccion
 					FROM
@@ -832,26 +833,55 @@ function infoSolicitud($id){
 		$q=$this->db->query($query);
 		return $q->result();
 	}
-	function buscar_solicitudes($id_empleado=NULL,$estado=NULL)
+	function buscar_solicitudes($id_empleado=NULL,$estado=NULL, $id_seccion=NULL)
 	{
-		$sentencia="SELECT
-					tcm_solicitud_transporte.id_solicitud_transporte AS id,
-					CONCAT_WS(' ',DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d-%m-%Y')) AS fecha,
-					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS salida,
-					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS entrada,
-					tcm_solicitud_transporte.estado_solicitud_transporte AS estado
-					FROM
-					tcm_solicitud_transporte";
-		if($id_empleado!=NULL || $estado!=NULL)
-			$sentencia.=" WHERE ";
+		$whereExtra="";
+
 		if($id_empleado!=NULL) {
-			$sentencia.=" tcm_solicitud_transporte.id_empleado_solicitante='".$id_empleado."'";
-			if($estado!=NULL)
-				$sentencia.=" AND tcm_solicitud_transporte.estado_solicitud_transporte>='".$estado."'";
+			$whereExtra.=" t.id_empleado_solicitante='".$id_empleado."' AND ";
+	
 		}
-		else
-			if($estado!=NULL)
-				$sentencia.=" tcm_solicitud_transporte.estado_solicitud_transporte>='".$estado."'";
+		if($estado!=NULL){
+				$whereExtra.=" t.estado_solicitud_transporte>='".$estado."' AND "  ;
+		}
+		if($id_seccion!=NULL){
+				$whereExtra.=" o.id_seccion= '".$id_seccion."' AND "  ;
+				}
+
+
+		$sentencia="SELECT id_solicitud_transporte id,
+		DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+		DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
+		DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+		estado_solicitud_transporte estado,
+		LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
+		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido, s.apellido_casada)) AS nombre
+		FROM tcm_solicitud_transporte  t
+			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+		WHERE ".$whereExtra."(t.id_empleado_solicitante not in
+			(select id_empleado from sir_empleado_informacion_laboral))
+
+		UNION
+		
+		SELECT id_solicitud_transporte id,
+		DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+		DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
+		DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+		estado_solicitud_transporte estado,
+		LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
+		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
+		FROM tcm_solicitud_transporte  t
+			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
+			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
+			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
+		WHERE  ".$whereExtra."(i.id_empleado_informacion_laboral in
+				(SELECT max(id_empleado_informacion_laboral) as id
+				FROM sir_empleado_informacion_laboral
+				group by id_empleado
+				having count(id_empleado)>=1))";
+
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->result_array();
@@ -919,25 +949,7 @@ function infoSolicitud($id){
 					('$id_solicitud_transporte', '$id_municipio', '$lugar_destino', '$direccion_destino', '$mision_encomendada')";
 		$this->db->query($sentencia);
 	}
-	
-	function buscar_solicitudes_seccion($seccion,$estado=NULL)
-	{
-		$sentencia="SELECT
-  					tcm_solicitud_transporte.id_solicitud_transporte AS id,
-					CONCAT_WS(' ',DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d-%m-%Y'),DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p')) AS fecha,
-					tcm_solicitud_transporte.lugar_destino AS lugar,
-					tcm_solicitud_transporte.mision_encomendada AS mision,
-					tcm_solicitud_transporte.estado_solicitud_transporte AS estado
-					FROM tcm_solicitud_transporte
-					LEFT JOIN sir_empleado_informacion_laboral ON tcm_solicitud_transporte.id_empleado_solicitante  = sir_empleado_informacion_laboral.id_empleado 
-					WHERE sir_empleado_informacion_laboral.id_seccion =".$seccion;
-		if($estado!=NULL)
-			$sentencia.=" AND tcm_solicitud_transporte.estado_solicitud_transporte>='".$estado."'";
-    	$query=$this->db->query($sentencia);
-		return (array)$query->result_array();
 		
-	}
-	
 	function accesorios(){
 					$query="SELECT 	id_accesorio, nombre,  descrip, estado	 
 							FROM  tcm_accesorios ";

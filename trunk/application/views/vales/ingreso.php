@@ -37,10 +37,13 @@
                     <input  id="inicial" name="inicial" type="text" size="10"/>
                 </p>
                 <p>
-                    <label for="tipo_vehiculo" id="ltipo_vehiculo" style="width:35%;">Desingnacion</label>
+                    <label for="tipo_vehiculo" id="ltipo_vehiculo" style="width:35%;">Fuente de Fondo</label>
                     <select class="select" id="tipo_vehiculo" name="tipo_vehiculo" style="width:175px">
-                    	<option value="1">Normal</option>
-                        <option value="2">Banco Mundial</option>
+                <?php foreach($fuente_fondo as $fue)
+                        {
+                            echo "<option value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
+                        }
+                ?>
                     </select>
                 </p>
            	</div>
