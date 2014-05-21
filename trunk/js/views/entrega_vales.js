@@ -9,10 +9,26 @@ $(document).ready(function(){
 	$("#justificacion").validacion({
 		lonMin: 10
 	});
-	$("#tipo_requisicion").validacion({
+	$("#id_fuente_fondo").validacion({
 		men: "Debe seleccionar un item"
 	});
-	$("#servicio_de").validacion({
+	$("#id_seccion").validacion({
 		men: "Debe seleccionar un item"
 	});
 });
+
+function cargar_vehiculo(){
+
+	var fuente_fondo = document.getElementById('id_fuente_fondo').value;
+	var seccion = document.getElementById('id_seccion').value;
+
+
+	if(fuente_fondo!="" && seccion!=""){
+		$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos/"+seccion+"/"+fuente_fondo);	
+	}else{
+
+	}
+		
+console.log( fuente_fondo + " "+ seccion);
+
+}

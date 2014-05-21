@@ -28,46 +28,54 @@ class Vales_model extends CI_Model {
 	
 	function consultar_oficinas($id_seccion=NULL)
 	{
-		if($id_seccion!=NULL) {
-			$oficinas=array(
-				array("id_ofi"=>9,"nom_ofi"=>"Oficina Central San Salvador")
-			);
+		if($id_seccion!=NULL){
+			$where.= "	WHERE s.id_seccion = '".$id_seccion."'";
 		}
-		else {
-			$oficinas=array(
-				array("id_ofi"=>9,"nom_ofi"=>"Oficina Central San Salvador"),
-				array("id_ofi"=>1,"nom_ofi"=>"Oficina Departamental Ahuachapán"),
-				array("id_ofi"=>2,"nom_ofi"=>"Oficina Departamental Cabañas"),
-				array("id_ofi"=>3,"nom_ofi"=>"Oficina Departamental Chalatenango"),
-				array("id_ofi"=>4,"nom_ofi"=>"Oficina Departamental Cuscatlán"),
-				array("id_ofi"=>5,"nom_ofi"=>"Oficina Departamental La Libertad"),
-				array("id_ofi"=>6,"nom_ofi"=>"Oficina Departamental La Unión"),
-				array("id_ofi"=>7,"nom_ofi"=>"Oficina Departamental Morazán"),
-				array("id_ofi"=>8,"nom_ofi"=>"Oficina Departamental San Miguel"),
-				array("id_ofi"=>10,"nom_ofi"=>"Oficina Departamental San Vicente"),
-				array("id_ofi"=>11,"nom_ofi"=>"Oficina Departamental Santa Ana"),
-				array("id_ofi"=>12,"nom_ofi"=>"Oficina Departamental Sonsonate"),
-				array("id_ofi"=>13,"nom_ofi"=>"Oficina Departamental Usulután"),
-				array("id_ofi"=>14,"nom_ofi"=>"Oficina Departamental Zacatecoluca")
-			);
-		}
-		return $oficinas;
+			
+		$sentencia="SELECT 	s.id_seccion,s.nombre_seccion
+					FROM 	org_seccion s
+				INNER JOIN tcm_vehiculo v ON s.id_seccion = v.id_seccion
+				".$where."
+				 GROUP BY s.id_seccion";
+
+		$query=$this->db->query($sentencia);	
+		return (array)$query->result_array();
+
 	}
 
-	function vehiculos($id_seccion=NULL)	{	
+	function vehiculos($id_seccion=NULL, $id_fuente_fondo= NULL)	{	
+		$whereb=FALSE;
 
-		$sentencia="SELECT  v.id_vehiculo, v.placa,  vm.nombre, vmo.modelo, v.id_seccion
+		$sentencia="SELECT  v.id_vehiculo, v.placa,  vm.nombre as marca, vmo.modelo, v.id_seccion
 						FROM tcm_vehiculo v
 							INNER JOIN tcm_vehiculo_marca vm ON v.id_marca = vm.id_vehiculo_marca 
 							INNER JOIN  tcm_vehiculo_modelo vmo ON vmo.id_vehiculo_modelo = v.id_modelo";
 
-							if($id_seccion!=NULL){
-							$sentencia.= "	WHERE v.id_seccion = '".$id_seccion."'";
-							}
+			if($id_seccion!=NULL){
+				$sentencia.= "	WHERE v.id_seccion = '".$id_seccion."'";
+				$whereb = TRUE;
+			}
+
+			if ($id_fuente_fondo!=NULL) {
+				
+				if ($whereb) {
+					$sentencia.=" AND ";
+				}else{
+					$sentencia.=" WHERE ";
+				}
+			$sentencia.= " v.id_fuente_fondo = '".$id_fuente_fondo."'";
+			} 
+			
 		$query=$this->db->query($sentencia);
-	
+		
 		return (array)$query->result_array();
 	
+	}
+
+		function consultar_fuente_fondo()
+	{
+		$query=$this->db->query("select id_fuente_fondo ,nombre_fuente_fondo as nombre_fuente from tcm_fuente_fondo");
+			return (array)$query->result_array();
 	}
 }
 ?>

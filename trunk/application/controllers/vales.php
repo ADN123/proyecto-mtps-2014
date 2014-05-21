@@ -98,14 +98,15 @@ class Vales extends CI_Controller
 	*	Nombre: ingreso_requisicion
 	*	Objetivo: Cargar la vista de la requisicion (solicitud) de combustible
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 28/04/2014
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 21/05/2014
 	*	Observaciones: Ninguna.
 	*/
-	function ingreso_requisicion($permiso, $estado_transaccion=NULL)
+	function ingreso_requisicion($estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear requisiciones*/
-				$data['id_permiso']=$permiso;
+		
+
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
@@ -119,8 +120,8 @@ class Vales extends CI_Controller
 					$data['vehiculos']=$this->vales_model->vehiculos();
 					break;
 			}
+			$data['fuente']=$this->vales_model->consultar_fuente_fondo();
 			$data['estado_transaccion']=$estado_transaccion;
-
 
 			pantalla('vales/entrega',$data);	
 		}
@@ -128,10 +129,36 @@ class Vales extends CI_Controller
 			echo 'No tiene permisos para acceder';
 		}
 	}
+		/*
+	*	Nombre: guardar_requisicion
+	*	Objetivo: Guardar la requisicion de una seccion
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 21/05/2014
+	*	Observaciones: Ninguna.
+	*/
 
 	function guardar_requisicion()
 	{
 		print_r($_POST);
+		ir_a('index.php/vales/ingreso_requisicion/'.$this->db->trans_status());
+	}
+	/*
+	*	Nombre: vehiculos
+	*	Objetivo: Cargar por ajax los vehiculos de una seccion y fuente de fonodo segun selccione el usuario 
+		en la pantalla de ingrese de requisicion de combustible 
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 21/05/2014
+	*	Observaciones: Ninguna.
+	*/
+	function vehiculos($id_seccion=NULL, $id_fuente_fondo = NULL)
+	{
+
+	$data['vehiculos']=$this->vales_model->vehiculos($id_seccion, $id_fuente_fondo);
+	$this->load->view("vales/vehiculos",$data);
+		
+
 	}
 }
 ?>
