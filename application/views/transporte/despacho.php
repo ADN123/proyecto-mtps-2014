@@ -1,7 +1,7 @@
 <script>
 	estado_transaccion='<?php echo $estado_transaccion?>';
 	<?php if($accion!="") {?>
-	estado_correcto='La <?php echo $accion?> de la Misión Oficial de ha almacenado exitosamente.';
+	estado_correcto='La <?php echo $accion?> de la Misión Oficial se ha almacenado exitosamente.';
 	estado_incorrecto='Error al intentar almacenar la <?php echo $accion?> de la Misión Oficial: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 	<?php }?>
 </script>

@@ -8,7 +8,6 @@ class Seguridad extends CI_Controller
 		error_reporting(0);
 		$this->load->helper('url');
 		$this->load->helper('form');
-       	$this->load->model('paciente_model');
 		$this->load->model('seguridad_model');
 		$this->load->model('bitacora_model');
 		if(!$this->session->userdata('id_usuario')){
