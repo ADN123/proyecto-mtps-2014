@@ -57,10 +57,10 @@ class Transporte extends CI_Controller
 					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
-			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
+			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud,1);
 			$data['info']=$this->transporte_model->info_adicional($data['solicitud']['id_empleado_solicitante']);
-			$data['solicitud_destinos']=$this->transporte_model->consultar_destinos($id_solicitud);
-			$data['solicitud_acompanantes']=$this->transporte_model->acompanantes_internos($id_solicitud);
+			$data['solicitud_destinos']=$this->transporte_model->consultar_destinos($data['solicitud']['id_solicitud_transporte']);
+			$data['solicitud_acompanantes']=$this->transporte_model->acompanantes_internos($data['solicitud']['id_solicitud_transporte']);
 			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
 			$data['municipios']=$this->transporte_model->consultar_municipios();
 
@@ -857,14 +857,22 @@ class Transporte extends CI_Controller
 					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR'], 1);
 					break;
 				case 2:
-
 					$seccion=$this->transporte_model->consultar_seccion_usuario($_SESSION['nr']);
-					
-					
 					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 1, $seccion['id_seccion']);
 					break;
 				case 3:
 					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,1);
+					break;
+				case 4:
+					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+					if($id_seccion==52 || $id_seccion==53 || $id_seccion==54 || $id_seccion==55 || $id_seccion==56 || $id_seccion==57 || $id_seccion==58 || $id_seccion==59 || $id_seccion==60 || $id_seccion==61 || $id_seccion==64 || $id_seccion==65 || $id_seccion==66) {
+						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 1, $id_seccion['id_seccion']);
+					}
+					else {
+						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,1);
+						/*$data['solicitudes']=$this->transporte_model->buscar_solicitudes_depto($id_seccion['id_seccion']);	*/
+					}
+					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
 			
@@ -921,6 +929,17 @@ class Transporte extends CI_Controller
 					break;
 				case 3:
 					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,3,NULL);
+					break;
+				case 4:
+					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+					if($id_seccion==52 || $id_seccion==53 || $id_seccion==54 || $id_seccion==55 || $id_seccion==56 || $id_seccion==57 || $id_seccion==58 || $id_seccion==59 || $id_seccion==60 || $id_seccion==61 || $id_seccion==64 || $id_seccion==65 || $id_seccion==66) {
+						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 3, $id_seccion['id_seccion']);
+					}
+					else {
+						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,3,NULL);
+						/*$data['solicitudes']=$this->transporte_model->buscar_solicitudes_depto($id_seccion['id_seccion']);	*/
+					}
+					break;
 			}
 			pantalla("transporte/reporte_solicitudes",$data);	
 		}
