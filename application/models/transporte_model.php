@@ -993,23 +993,7 @@ function infoSolicitud($id){
 	
 	function consultar_destinos($id_solicitud=NULL)
 	{
-		$sentencia="SELECT DISTINCT
-					id_solicitud_transporte id,
-					DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
-					DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-					DATE_FORMAT(hora_salida,'%h:%i %p') salida,
-					LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
-					LOWER(COALESCE(s.nombre_seccion, 'No hay registro')) seccion,
-					st.estado_solicitud_transporte estado
-					FROM
-					sir_empleado_informacion_laboral AS i
-					LEFT JOIN org_seccion AS s ON s.id_seccion = i.id_seccion
-					LEFT JOIN sir_empleado AS e ON e.id_empleado = i.id_empleado
-					INNER JOIN tcm_solicitud_transporte AS st ON st.id_empleado_solicitante = e.id_empleado
-					WHERE (i.id_empleado, i.fecha_inicio) IN  
-					( SELECT id_empleado ,MAX(fecha_inicio)  FROM sir_empleado_informacion_laboral GROUP BY id_empleado  ) ".$whereExtra."
-					ORDER BY fecha_mision,hora_salida
-					";
+		$sentencia="SELECT id_municipio, lugar_destino, direccion_destino, mision_encomendada FROM tcm_destino_mision WHERE id_solicitud_transporte='".$id_solicitud."'";
 		
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();
@@ -1022,7 +1006,7 @@ function infoSolicitud($id){
 		$query=$this->db->query($sentencia);
 		return true;
 	}
-	function consultar_solicitud($id_solicitud)
+	function consultar_solicitud($id_solicitud=NULL)
 	{
 		$sentencia="SELECT
 					tcm_solicitud_transporte.id_solicitud_transporte,
@@ -1032,10 +1016,13 @@ function infoSolicitud($id){
 					DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d/%m/%Y') AS fecha_mision,
 					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS hora_salida,
 					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS hora_entrada,
-					tcm_solicitud_transporte.acompanante
+					tcm_solicitud_transporte.acompanante,
+					tcm_observacion.observacion,
+					tcm_solicitud_transporte.requiere_motorista
 					FROM tcm_solicitud_transporte
 					INNER JOIN sir_empleado AS e1 ON tcm_solicitud_transporte.id_empleado_solicitante=e1.id_empleado
 					LEFT JOIN sir_empleado AS e2 ON tcm_solicitud_transporte.id_empleado_autoriza=e2.id_empleado
+					LEFT JOIN tcm_observacion ON tcm_observacion.id_solicitud_transporte = tcm_solicitud_transporte.id_solicitud_transporte
 					WHERE tcm_solicitud_transporte.id_solicitud_transporte='".$id_solicitud."'";
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
