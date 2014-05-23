@@ -58,7 +58,9 @@ class Transporte extends CI_Controller
 			}
 			$data['estado_transaccion']=$estado_transaccion;
 			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
+			$data['info']=$this->transporte_model->info_adicional($data['solicitud']['id_empleado_solicitante']);
 			$data['solicitud_destinos']=$this->transporte_model->consultar_destinos($id_solicitud);
+			$data['solicitud_acompanantes']=$this->transporte_model->acompanantes_internos($id_solicitud);
 			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
 			$data['municipios']=$this->transporte_model->consultar_municipios();
 
@@ -606,6 +608,13 @@ class Transporte extends CI_Controller
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
+			
+			$id_solicitud_old=$this->input->post('id_solicitud_old');
+			
+			if($id_solicitud_old!="") {
+				$this->transporte_model->eliminar_solicitud($id_solicitud_old);
+			}
+			
 			$fec=str_replace("/","-",$this->input->post('fecha_mision'));
 			$fecha_solicitud_transporte=date('Y-m-d');
 			$id_empleado_solicitante=(int)$this->input->post('nombre');
@@ -664,7 +673,12 @@ class Transporte extends CI_Controller
 				$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones, 1); /*Guardando observaciones*/
 			
 			$this->db->trans_complete();
-			ir_a('index.php/transporte/solicitud/'.$this->db->trans_status());
+			if($id_solicitud_old!="") {
+				ir_a('index.php/transporte/ver_solicitudes/'.$this->db->trans_status());
+			}
+			else {
+				ir_a('index.php/transporte/solicitud/'.$this->db->trans_status());
+			}
 		}
 		else {
 			echo "No tiene permisos para acceder";

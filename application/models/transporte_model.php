@@ -810,7 +810,7 @@ order by e.primer_nombre ASC);");
 	
 	function acompanantes_internos($id)
 	{
-		$query=$this->db->query("SELECT LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) as nombre FROM sir_empleado e inner join tcm_acompanante t on (e.id_empleado=t.id_empleado)
+		$query=$this->db->query("SELECT t.id_empleado AS id_empleado, LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) as nombre FROM sir_empleado e inner join tcm_acompanante t on (e.id_empleado=t.id_empleado)
 where t.id_solicitud_transporte='$id';");
 		
 		return $query->result();
@@ -851,7 +851,7 @@ where s.id_solicitud_transporte='$id'");
 			HAVING sir_empleado_informacion_laboral.fecha_inicio >= ALL(SELECT
 					sir_empleado_informacion_laboral.fecha_inicio
 					FROM sir_empleado_informacion_laboral
-					WHERE sir_empleado_informacion_laboral.id_empleado=".$id_empleado."
+					WHERE sir_empleado_informacion_laboral.id_empleado='".$id_empleado."'
 					GROUP BY sir_empleado_informacion_laboral.id_empleado,sir_empleado_informacion_laboral.fecha_inicio) 
 		";
 		$query=$this->db->query($sentencia);
@@ -1099,8 +1099,7 @@ function infoSolicitud($id){
 	
 	function consultar_destinos($id_solicitud=NULL)
 	{
-		$sentencia="SELECT id_municipio, lugar_destino, direccion_destino, mision_encomendada FROM tcm_destino_mision WHERE id_solicitud_transporte='".$id_solicitud."'";
-		
+		$sentencia="SELECT lugar_destino, direccion_destino, mision_encomendada, LOWER(CONCAT_WS(', ',departamento,municipio)) AS lugar, tcm_destino_mision.id_municipio FROM tcm_destino_mision INNER JOIN org_municipio ON org_municipio.id_municipio = tcm_destino_mision.id_municipio INNER JOIN org_departamento ON org_departamento.id_departamento = org_municipio.id_departamento_pais WHERE id_solicitud_transporte='".$id_solicitud."'";
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();
 	}
@@ -1124,7 +1123,9 @@ function infoSolicitud($id){
 					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS hora_entrada,
 					tcm_solicitud_transporte.acompanante,
 					tcm_observacion.observacion,
-					tcm_solicitud_transporte.requiere_motorista
+					tcm_observacion.quien_realiza,
+					tcm_solicitud_transporte.requiere_motorista,
+					e1.nr AS NR
 					FROM tcm_solicitud_transporte
 					INNER JOIN sir_empleado AS e1 ON tcm_solicitud_transporte.id_empleado_solicitante=e1.id_empleado
 					LEFT JOIN sir_empleado AS e2 ON tcm_solicitud_transporte.id_empleado_autoriza=e2.id_empleado
