@@ -72,24 +72,41 @@ class Transporte extends CI_Controller
 	{
  		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
 		
-		//echo $data['id_permiso'];
+
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
-			if($data['id_permiso']>2){//nivel 3
-				$data['datos']=$this->transporte_model->todas_solicitudes_por_confirmar();
-			}
-			else {//nivel 2
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-				$data['datos']=$this->transporte_model->solicitudes_por_confirmar($id_seccion['id_seccion']);			
-			}
-			$data['estado_transaccion']=$estado_transaccion;
-			if($accion==0)
-				$data['accion']="denega";
-			if($accion==2)
-				$data['accion']="aproba";
-					 
-			pantalla('transporte/ControlSolicitudes',$data);
+				$id_seccion_val=$id_seccion['id_seccion'];
+				switch ($data['id_permiso']) {
+					case 2:
+
+						$data['datos']=$this->transporte_model->solicitudes_por_confirmar($id_seccion_val);			
+						break;
+					case 3:
+						$data['datos']=$this->transporte_model->todas_solicitudes_por_confirmar();
+						break;
+					case 4:
+							$departamental=$this->transporte_model->is_departamental($id_seccion_val);
+
+						if($departamental){
+							$data['datos']=$this->transporte_model->solicitudes_por_confirmar($id_seccion_val);		
+
+						}else{/// para san salvador
+
+
+						}
+
+						break;
+				}
+				
+				$data['estado_transaccion']=$estado_transaccion;
+				if($accion==0)
+					$data['accion']="denega";
+				if($accion==2)
+					$data['accion']="aproba";					 
+				pantalla('transporte/ControlSolicitudes',$data);
 		}
-		else {//nivel 1
+		else 
+		{
 			echo "No tiene permisos para acceder";
 		}
 	}
