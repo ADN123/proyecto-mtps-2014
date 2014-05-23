@@ -14,6 +14,7 @@
 }
 </style>
 <form name="form_mision" method="post" action="<?php echo base_url()?>index.php/transporte/guardar_solicitud">
+	<input type="hidden" name="id_solicitud_old" id="id_solicitud_old" value="<?php echo $solicitud['id_solicitud_transporte'];?>" />
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -62,16 +63,11 @@
             <p>
                 <label for="nombre" id="lnombre">Solicitante</label>
                 <?php 
-					if($id_permiso>1) {
+					if($id_permiso>1 && $solicitud['id_solicitud_transporte']=="") {
 				?>
                     <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:40%">
                     <?php
                         foreach($empleados as $val) {
-							/*if($val['NR']==$solicitud['id_empleado_solicitante'])
-							 	$sel='selected="selected"';
-							else
-								$sel="";
-                            echo '<option '.$sel.' value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';*/
                             echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
                         }
                     ?>
@@ -79,10 +75,18 @@
              	<?php 
 					} 
 					else {
-						foreach($empleados as $val) {
-							echo '<strong>'.ucwords($val['nombre']).'</strong>';
+						if($solicitud['id_solicitud_transporte']=="") {
+							foreach($empleados as $val) {
+								echo '<strong>'.ucwords($val['nombre']).'</strong>';
 				?>
-                			<input type="hidden" id="nombre" name="nombre" value="<?php echo $val['NR']; ?>" />
+                				<input type="hidden" id="nombre" name="nombre" value="<?php echo $val['NR']; ?>" />
+                <?php
+							}
+						}
+						else {
+								echo '<strong style="font-size: 11px;">'.ucwords($solicitud['nombre']).'</strong>';
+				?>
+                				<input type="hidden" id="nombre" name="nombre" value="<?php echo $solicitud['id_empleado_solicitante']; ?>" />
                 <?php
 						}
 					}
@@ -96,8 +100,8 @@
 									"<p><label>Cargo</label> <strong>".$info['funcional']."</strong></p>".
 									"<p><label>Departamento</label> <strong>".$info['nivel_2']."</strong></p>".
 									"<p><label>Secci&oacute;n</label> <strong>".$info['nivel_1']."</strong></p>";
-						}
-						if($id_permiso==1) {
+						}else
+						if($solicitud['id_solicitud_transporte']!="") {
 							echo	"<p><label>NR</label> <strong>".$info['nr']."</strong></p>".
 									"<p><label>Cargo</label> <strong>".$info['funcional']."</strong></p>".
 									"<p><label>Departamento</label> <strong>".$info['nivel_2']."</strong></p>".
@@ -157,7 +161,24 @@
                         </th>
                     </thead>
                     <tbody id="content_table">
-                        
+                        <?php
+							 foreach($solicitud_destinos as $val) {
+						?>
+                        		<tr>
+                                	<td><?php echo $val['lugar']; ?></td>
+                                    <td><?php echo $val['lugar_destino']; ?></td>
+                                    <td><?php echo $val['direccion_destino']; ?></td>
+                                    <td><?php echo $val['mision_encomendada']; ?></td>
+                                    <td align="center">
+                                    	<a onClick="borrar_item(this)">
+                                        	<img src="<?php echo base_url();?>img/ico_basura.png" width="25" height="25" align="absmiddle" title="Borrar item"/>
+                                    	</a>
+                                  	</td>
+                                    <input type="hidden" name="values[]" value="<?php echo $val['id_municipio'].'**'.$val['lugar_destino'].'**'.$val['direccion_destino'].'**'.$val['mision_encomendada'];?>"/>
+                             	</tr>
+                        <?php
+							 }
+						?>
                     </tbody>
                 </table>
             </p>
@@ -169,14 +190,18 @@
                 <select name="acompanantes[]" id="acompanantes" class="multi" multiple="multiple" tabindex="9" placeholder="[Seleccione...]" style="width:350px;">
                 <?php
                      foreach($acompanantes as $val) {
-                         echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
+						 /*if(in_array($rs->fields['NR'], $solicitud_acompanantes))*/
+						 if(true)
+                         	echo '<option value="'.$val['NR'].'" selected="selected">'.ucwords($val['nombre']).'</option>';
+						else
+                         	echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
                      }
                 ?>
                 </select>
             </p> 
             <p>
                 <label for="acompanantes2" id="lacompanantes2" class="label_textarea">Otros acompa&ntilde;antes</label>
-                <textarea class="tam-4" id="acompanantes2" tabindex="10" name="acompanantes2"/></textarea>
+                <textarea class="tam-4" id="acompanantes2" tabindex="10" name="acompanantes2"/><?php echo $solicitud['acompanante']; ?></textarea>
             </p>
         </div>
     </div>
