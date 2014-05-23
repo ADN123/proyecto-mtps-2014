@@ -140,8 +140,9 @@ class Vales extends CI_Controller
 
 	function guardar_requisicion()
 	{
-		print_r($_POST);
-		ir_a('index.php/vales/ingreso_requisicion/'.$this->db->trans_status());
+		//print_r($_POST);
+		//ir_a('index.php/vales/ingreso_requisicion/'.$this->db->trans_status());
+		ir_a('index.php/vales/ingreso_requisicion/1');
 	}
 	/*
 	*	Nombre: vehiculos
