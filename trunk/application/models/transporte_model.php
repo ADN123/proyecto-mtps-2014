@@ -313,7 +313,7 @@ function solicitudes_por_asignar_depto(){
 			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
 			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
 			WHERE 
-				(estado_solicitud_transporte=2 and o.id_seccion='$seccion')
+				(estado_solicitud_transporte=2 and (o.id_seccion!=52 and o.id_seccion!=53 and o.id_seccion!=54 and o.id_seccion!=55 and o.id_seccion!=56 and o.id_seccion!=57 and o.id_seccion!=58 and o.id_seccion!=59 and o.id_seccion!=60 and o.id_seccion!=61 and o.id_seccion!=64 and o.id_seccion!=65 and o.id_seccion!=66))
 				and (t.id_empleado_solicitante not in
 						(select id_empleado from sir_empleado_informacion_laboral))
 					
@@ -331,7 +331,7 @@ function solicitudes_por_asignar_depto(){
 			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
 			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
 			WHERE 
-				(estado_solicitud_transporte=2 and o.id_seccion='$seccion')
+				(estado_solicitud_transporte=2 and (o.id_seccion!=52 and o.id_seccion!=53 and o.id_seccion!=54 and o.id_seccion!=55 and o.id_seccion!=56 and o.id_seccion!=57 and o.id_seccion!=58 and o.id_seccion!=59 and o.id_seccion!=60 and o.id_seccion!=61 and o.id_seccion!=64 and o.id_seccion!=65 and o.id_seccion!=66))
 				and 
 				(	i.id_empleado_informacion_laboral in
 					(
