@@ -652,6 +652,24 @@ where s.id_solicitud_transporte='$id'");
 	/////////////////////////////////////////////////
 	function info_adicional($id_empleado=0)
 	{
+				
+		$sentencia="SELECT
+			sir_empleado_informacion_laboral.id_empleado_informacion_laboral,
+			sir_empleado_informacion_laboral.id_empleado,
+			sir_empleado_informacion_laboral.id_seccion,
+			sir_empleado_informacion_laboral.fecha_inicio
+			FROM sir_empleado_informacion_laboral
+			WHERE sir_empleado_informacion_laboral.id_empleado=".$id_empleado."
+			GROUP BY sir_empleado_informacion_laboral.id_empleado_informacion_laboral
+			HAVING sir_empleado_informacion_laboral.fecha_inicio >= ALL(SELECT
+					sir_empleado_informacion_laboral.fecha_inicio
+					FROM sir_empleado_informacion_laboral
+					WHERE sir_empleado_informacion_laboral.id_empleado=".$id_empleado."
+					GROUP BY sir_empleado_informacion_laboral.id_empleado,sir_empleado_informacion_laboral.fecha_inicio) 
+		";
+		$query=$this->db->query($sentencia);
+		$datos=(array)$query->row();
+		
 		$sentencia="SELECT
 					sir_empleado.nr,
 					sir_empleado_informacion_laboral.id_seccion,
@@ -666,7 +684,7 @@ where s.id_solicitud_transporte='$id'");
 					LEFT JOIN org_seccion AS o1 ON sir_empleado_informacion_laboral.id_seccion = o1.id_seccion
 					LEFT JOIN org_seccion AS o2 ON o2.id_seccion = o1.depende
 					LEFT JOIN org_seccion AS o3 ON o3.id_seccion = o2.depende
-					WHERE sir_empleado.id_empleado='".$id_empleado."'";
+					WHERE sir_empleado.id_empleado='".$id_empleado."' AND sir_empleado_informacion_laboral.id_seccion='".$datos['id_seccion']."'";
 		$query=$this->db->query($sentencia);
 	
 		if($query->num_rows>0) {
@@ -716,13 +734,16 @@ where s.id_solicitud_transporte='$id'");
 	
 	function consultar_empleados_seccion($id_seccion)
 	{
-		$sentencia="SELECT
-					sir_empleado.id_empleado AS NR,
-					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre
+		$sentencia="SELECT DISTINCT
+					LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
+					i.id_empleado AS NR
 					FROM
-					sir_empleado
-					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado
-					WHERE sir_empleado_informacion_laboral.id_seccion='".$id_seccion."'";
+					sir_empleado_informacion_laboral AS i
+					LEFT JOIN org_seccion AS s ON s.id_seccion = i.id_seccion
+					LEFT JOIN sir_empleado AS e ON e.id_empleado = i.id_empleado
+					WHERE (i.id_empleado, i.fecha_inicio) IN  
+					( SELECT id_empleado ,MAX(fecha_inicio)  FROM sir_empleado_informacion_laboral GROUP BY id_empleado  ) 
+					AND i.id_seccion='".$id_seccion."'";
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->result_array();
@@ -867,6 +888,7 @@ function infoSolicitud($id){
 		estado_solicitud_transporte estado,
 		LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
 		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido, s.apellido_casada)) AS nombre
+		
 		FROM tcm_solicitud_transporte  t
 			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
 			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
