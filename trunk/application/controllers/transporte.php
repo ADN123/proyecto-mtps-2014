@@ -197,12 +197,12 @@ class Transporte extends CI_Controller
 			else if($data['id_permiso']==4) { // Para solicitudes departamentales
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				
-				if($id_seccion==52 || $id_seccion==53 || $id_seccion==54 || $id_seccion==55 || $id_seccion==56 || $id_seccion==57 || $id_seccion==58 || $id_seccion==59 || $id_seccion==60 || $id_seccion==61 || $id_seccion==64 || $id_seccion==65 || $id_seccion==66)
+				if($id_seccion==52 || $id_seccion==53 || $id_seccion==54 || $id_seccion==55 || $id_seccion==56 || $id_seccion==57 || $id_seccion==58 || $id_seccion==59 || $id_seccion==60 || $id_seccion==61 || $id_seccion==64 || $id_seccion==65 || $id_seccion==66) /*Oficina Departamental*/
 				{
 					$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion['id_seccion']);	
 					$data['estado_transaccion']=$estado_transaccion;
 				}
-				else
+				else /*San Salvador*/
 				{
 					$data['datos']=$this->transporte_model->solicitudes_por_asignar_depto();	
 					$data['estado_transaccion']=$estado_transaccion;
