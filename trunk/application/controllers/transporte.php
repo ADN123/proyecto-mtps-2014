@@ -50,7 +50,7 @@ class Transporte extends CI_Controller
 						$data['empleados']=$this->transporte_model->consultar_empleados_seccion($id_seccion['id_seccion']);	
 					}
 					else {
-						$data['empleados']=$this->transporte_model->consultar_empleados_seccion($id_seccion['id_seccion']);	
+						$data['empleados']=$this->transporte_model->consultar_empleados_seccion();	
 						/*$data['empleados']=$this->transporte_model->consultar_empleados_depto();	*/
 					}
 
