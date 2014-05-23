@@ -156,16 +156,28 @@ class Transporte extends CI_Controller
 	*	Objetivo: Carga la vista de Asignaciones de vehículos y Motoristas
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 13/05/2014
+	*	Última Modificación: 23/05/2014
 	*	Observaciones: Ninguna
 	*/
 	function asignar_vehiculo_motorista($estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		if($data['id_permiso']!=NULL) {
-			if($data['id_permiso']>=2) {
+			if($data['id_permiso']==2) {// para solicitudes locales
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion['id_seccion']);	
+				$data['estado_transaccion']=$estado_transaccion;
+				pantalla('transporte/asignacion_veh_mot',$data);
+			}
+			else if($data['id_permiso']==3) { // Para solicitudes nacionales
+				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+				$data['datos']=$this->transporte_model->todas_solicitudes_por_asignar();	
+				$data['estado_transaccion']=$estado_transaccion;
+				pantalla('transporte/asignacion_veh_mot',$data);
+			}
+			else if($data['id_permiso']==4) { // Para solicitudes departamentales
+				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+				$data['datos']=$this->transporte_model->solicitudes_por_asignar_depto();	
 				$data['estado_transaccion']=$estado_transaccion;
 				pantalla('transporte/asignacion_veh_mot',$data);
 			}
@@ -338,7 +350,7 @@ class Transporte extends CI_Controller
 				if($requiere==1) {
 				echo "
 						<label>Nombre</label>
-						<div id='cont-select' style='width:350px;display:inline-block;'>
+						<div id='cont-select' style='width:350px; display:inline-block;'>
 							<select name='motorista' id='motorista'>
 							</select>
 						</div>
