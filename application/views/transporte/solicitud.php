@@ -67,6 +67,11 @@
                     <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:40%">
                     <?php
                         foreach($empleados as $val) {
+							/*if($val['NR']==$solicitud['id_empleado_solicitante'])
+							 	$sel='selected="selected"';
+							else
+								$sel="";
+                            echo '<option '.$sel.' value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';*/
                             echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
                         }
                     ?>
@@ -100,14 +105,14 @@
             <h2 class="StepTitle">Ingreso de datos del viaje</h2>
             <p>
                 <label for="fecha_mision" id="lfecha_mision">Fecha Misi&oacute;n </label>
-                <input type="text" tabindex="3" id="fecha_mision" name="fecha_mision"/>
+                <input type="text" tabindex="3" id="fecha_mision" name="fecha_mision" value="<?php echo $solicitud['fecha_mision']; ?>"/>
             </p>
             <p>
                 <label for="hora_salida" id="lhora_salida">Hora de salida </label>
-                <input type="text" tabindex="4" class="inicio" id="hora_salida" name="hora_salida"/>
+                <input type="text" tabindex="4" class="inicio" id="hora_salida" name="hora_salida" value="<?php echo $solicitud['hora_salida']; ?>"/>
 
                 <label for="hora_regreso" id="lhora_regreso">Hora de regreso </label>
-                <input type="text" tabindex="5" class="fin" id="hora_regreso" name="hora_regreso"/>
+                <input type="text" tabindex="5" class="fin" id="hora_regreso" name="hora_regreso" value="<?php echo $solicitud['hora_entrada']; ?>"/>
             </p>
             <p style="text-align: center;">
                 <span id="resultado_fecha" style="color: #F00; font-size: 12px;"></span>

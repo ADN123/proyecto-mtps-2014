@@ -1,3 +1,8 @@
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='La solicitud se ha eliminado exitosamente.';
+	estado_incorrecto='Error al intentar eliminar la solicitud: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+</script>
 <section>
     <h2>Solicitudes</h2>
 </section>
@@ -48,13 +53,13 @@
             <td><?php echo $estado ?></td>
             <td>
             	<?php if($val['estado']<=1) {?>
-            		<a title="Editar solicitud" href="<?php echo base_url()?>index.php/transporte/solicitud/<?php echo $val['id']?>"><img  src="<?php echo base_url()?>img/editar.png"/></a>
+            		<a title="Editar solicitud" href="<?php echo base_url()?>index.php/transporte/solicitud/m/<?php echo $val['id']?>"><img  src="<?php echo base_url()?>img/editar.png"/></a>
                 <?php
             		} 
                 	 
                 	 if($val['estado']<=3){
                 ?>
-                <a title="Eliminar solicitud" href="<?php echo base_url()?>index.php/transporte/eliminar_solicitud/<?php echo $val['id']?>"><img  id="eliminar"  src="<?php echo base_url()?>img/ico_basura.png"/></a>
+                <a class="eliminar" title="Eliminar solicitud" href="<?php echo base_url()?>index.php/transporte/eliminar_solicitud/<?php echo $val['id']?>"><img src="<?php echo base_url()?>img/ico_basura.png"/></a>
                 	
                 <?php }?>
             </td>
@@ -66,8 +71,8 @@
 </table>
 <script language="javascript" >
 	$(document).ready(function(){
-		$('#eliminar').click(function(){
-			if(!(confirm("Realmente desea eliminar esta solicitud? Se perderán todos los datos relacionados a esta solicitud. Este proceso no se puede revertir.")))
+		$('.eliminar').click(function(){
+			if(!(confirm("Realmente desea eliminar esta solicitud? Se perderán todos los datos relacionados a la misma. Este proceso no se puede revertir.")))
 				return false;
 		});
 	});

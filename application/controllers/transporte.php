@@ -25,7 +25,7 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 13/04/2014
 	*	Observaciones: Ya no se podrá utilizar esta funcion para modificar (A menos que sepa como mandarle dos variables desde la barra de direcciones).
 	*/
-	function solicitud($estado_transaccion=NULL)
+	function solicitud($estado_transaccion=NULL,$id_solicitud=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
 		
@@ -46,7 +46,10 @@ class Transporte extends CI_Controller
 					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
-			//$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
+			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
+			$data['solicitud_destinos']=$this->transporte_model->consultar_destinos($id_solicitud);
+			echo "<br><br><br><br><br><br><br><br>".$id_solicitud."<br><br>";
+			print_r($data['solicitud']);
 			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
 			$data['municipios']=$this->transporte_model->consultar_municipios();
 
@@ -741,7 +744,7 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 15/03/2014
 	*	Observaciones: Ninguna
 	*/
-	function ver_solicitudes()
+	function ver_solicitudes($estado_transaccion=NULL)
 	{ 
 
 							
@@ -763,6 +766,7 @@ class Transporte extends CI_Controller
 				case 3:
 					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,1);
 			}
+			$data['estado_transaccion']=$estado_transaccion;
 			
 			pantalla("transporte/ver_solicitudes",$data);	
 		}

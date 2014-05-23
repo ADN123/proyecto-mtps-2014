@@ -961,7 +961,9 @@ function infoSolicitud($id){
 					LEFT JOIN sir_empleado AS e ON e.id_empleado = i.id_empleado
 					INNER JOIN tcm_solicitud_transporte AS st ON st.id_empleado_solicitante = e.id_empleado
 					WHERE (i.id_empleado, i.fecha_inicio) IN  
-					( SELECT id_empleado ,MAX(fecha_inicio)  FROM sir_empleado_informacion_laboral GROUP BY id_empleado  ) ".$whereExtra;
+					( SELECT id_empleado ,MAX(fecha_inicio)  FROM sir_empleado_informacion_laboral GROUP BY id_empleado  ) ".$whereExtra."
+					ORDER BY fecha_mision,hora_salida
+					";
 		
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
@@ -971,6 +973,31 @@ function infoSolicitud($id){
 			return (array)$query->result_array();
 		}
 	}
+	
+	function consultar_destinos($id_solicitud=NULL)
+	{
+		$sentencia="SELECT DISTINCT
+					id_solicitud_transporte id,
+					DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+					DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
+					DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+					LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
+					LOWER(COALESCE(s.nombre_seccion, 'No hay registro')) seccion,
+					st.estado_solicitud_transporte estado
+					FROM
+					sir_empleado_informacion_laboral AS i
+					LEFT JOIN org_seccion AS s ON s.id_seccion = i.id_seccion
+					LEFT JOIN sir_empleado AS e ON e.id_empleado = i.id_empleado
+					INNER JOIN tcm_solicitud_transporte AS st ON st.id_empleado_solicitante = e.id_empleado
+					WHERE (i.id_empleado, i.fecha_inicio) IN  
+					( SELECT id_empleado ,MAX(fecha_inicio)  FROM sir_empleado_informacion_laboral GROUP BY id_empleado  ) ".$whereExtra."
+					ORDER BY fecha_mision,hora_salida
+					";
+		
+		$query=$this->db->query($sentencia);
+		return (array)$query->result_array();
+	}
+	
 	function eliminar_solicitud($id_solicitud)
 	{
 		$sentencia="UPDATE tcm_solicitud_transporte SET estado_solicitud_transporte='-1' WHERE id_solicitud_transporte='$id_solicitud'";
