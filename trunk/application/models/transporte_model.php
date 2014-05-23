@@ -1122,8 +1122,14 @@ function infoSolicitud($id){
 		}else{
 			return false;
 		}
-
+	}
+	
+	public function consultar_empleados_depto()
+	{
+		$sentencia="";
+		$query=$this->db->query($sentencia);
 		
+		return (array)$query->result_array();
 	}
 
 }
