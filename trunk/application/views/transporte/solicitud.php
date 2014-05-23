@@ -1,7 +1,7 @@
 <script>
 	var permiso=<?php echo $id_permiso?>;
 	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='La solicitud se han almacenado exitosamente.';
+	estado_correcto='La solicitud se ha almacenado exitosamente.';
 	estado_incorrecto='Error al intentar guardar la solicitud: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 </script>
 <script src="<?php echo base_url()?>js/views/solicitud.js" type="text/javascript"></script>

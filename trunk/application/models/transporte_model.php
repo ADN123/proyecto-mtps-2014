@@ -9,17 +9,28 @@ class Transporte_model extends CI_Model {
     }
 	function consultar_seccion_usuario($nr=0)
 	{
-
-		$sentencia="SELECT
-					sir_empleado_informacion_laboral.id_seccion
-					FROM
-					org_usuario
-					LEFT JOIN sir_empleado ON org_usuario.nr = sir_empleado.nr
-					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado
-					WHERE org_usuario.nr like '".$nr."' 
-					ORDER BY sir_empleado_informacion_laboral.id_empleado_informacion_laboral DESC LIMIT 0,1";
+		
+		$sentencia="SELECT id_empleado FROM sir_empleado WHERE nr like '".$nr."'";
 		$query=$this->db->query($sentencia);
-	
+		
+		$datos=(array)$query->row();
+				
+		$sentencia="SELECT
+			sir_empleado_informacion_laboral.id_empleado_informacion_laboral,
+			sir_empleado_informacion_laboral.id_empleado,
+			sir_empleado_informacion_laboral.id_seccion,
+			sir_empleado_informacion_laboral.fecha_inicio
+			FROM sir_empleado_informacion_laboral
+			WHERE sir_empleado_informacion_laboral.id_empleado=".$datos['id_empleado']."
+			GROUP BY sir_empleado_informacion_laboral.id_empleado_informacion_laboral
+			HAVING sir_empleado_informacion_laboral.fecha_inicio >= ALL(SELECT
+					sir_empleado_informacion_laboral.fecha_inicio
+					FROM sir_empleado_informacion_laboral
+					WHERE sir_empleado_informacion_laboral.id_empleado=".$datos['id_empleado']."
+					GROUP BY sir_empleado_informacion_laboral.id_empleado,sir_empleado_informacion_laboral.fecha_inicio) 
+		";
+		$query=$this->db->query($sentencia);
+		
 		if($query->num_rows>0) {
 			return (array)$query->row();
 		}
@@ -862,7 +873,6 @@ function infoSolicitud($id){
 			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
 		WHERE ".$whereExtra."(t.id_empleado_solicitante not in
 			(select id_empleado from sir_empleado_informacion_laboral))
-
 		UNION
 		
 		SELECT id_solicitud_transporte id,
@@ -880,7 +890,8 @@ function infoSolicitud($id){
 				(SELECT max(id_empleado_informacion_laboral) as id
 				FROM sir_empleado_informacion_laboral
 				group by id_empleado
-				having count(id_empleado)>=1))";
+				having count(id_empleado)>=1))
+	";
 
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
@@ -892,7 +903,8 @@ function infoSolicitud($id){
 	}
 	function eliminar_solicitud($id_solicitud)
 	{
-		$sentencia="DELETE FROM tcm_solicitud_transporte where id_solicitud_transporte='$id_solicitud'";
+		$sentencia="UPDATE tcm_solicitud_transporte SET estado_solicitud_transporte='-1' WHERE id_solicitud_transporte='$id_solicitud'";
+		/*$sentencia="DELETE FROM tcm_solicitud_transporte where id_solicitud_transporte='$id_solicitud'";*/
 		$query=$this->db->query($sentencia);
 		return true;
 	}
