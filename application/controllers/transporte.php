@@ -205,8 +205,7 @@ class Transporte extends CI_Controller
 			}
 			else if($data['id_permiso']==4) { // Para solicitudes departamentales
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-				
-				if($id_seccion==52 || $id_seccion==53 || $id_seccion==54 || $id_seccion==55 || $id_seccion==56 || $id_seccion==57 || $id_seccion==58 || $id_seccion==59 || $id_seccion==60 || $id_seccion==61 || $id_seccion==64 || $id_seccion==65 || $id_seccion==66) /*Oficina Departamental*/
+				if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66) /*Oficina Departamental*/
 				{
 					$data['datos']=$this->transporte_model->solicitudes_por_asignar($id_seccion['id_seccion']);	
 					$data['estado_transaccion']=$estado_transaccion;
@@ -230,7 +229,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para cargar datos de solicitudes
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 09/04/2014
+	*	Última Modificación: 23/05/2014
 	*	Observaciones: Ninguna
 	*/
 	function cargar_datos_solicitud($id)
@@ -252,8 +251,21 @@ class Transporte extends CI_Controller
 					$salida=$row->salida;
 				}
 				
-				/*aquí se comparan la fecha, hora de entrada y de salida de la solicitud actual con las que ya tiene vehículo asignado, para mostrar únicamente los posibles vehiculos a utilizar */
-				$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida);
+				if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66)//Oficinas departamentales//
+				{
+					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida,$id_seccion['id_seccion']);
+					/*aquí se comparan la fecha, hora de entrada y de salida de la solicitud actual con las que ya tiene vehículo asignado, para mostrar únicamente los posibles vehiculos a utilizar */
+				}
+				else if($data['id_permiso']==4)
+				{
+					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles_central($fecha,$entrada,$salida);
+					/*aquí se comparan la fecha, hora de entrada y de salida de la solicitud actual con las que ya tiene vehículo asignado, para mostrar únicamente los posibles vehiculos a utilizar */
+				}
+				else if($data['id_permiso']==3)
+				{
+					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles_nacional($fecha,$entrada,$salida);
+					/*aquí se comparan la fecha, hora de entrada y de salida de la solicitud actual con las que ya tiene vehículo asignado, para mostrar únicamente los posibles vehiculos a utilizar */
+				}
 								
 				echo 
 				"
@@ -446,12 +458,13 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para conocer el motorista que se ha de asignar a la misión oficial
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 09/04/2014
+	*	Última Modificación: 23/05/2014
 	*	Observaciones: Ninguna
 	*/
 	function verificar_motoristas($id_vehiculo,$id_solicitud_actual)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 		if($data['id_permiso']!=NULL) {
 			if($data['id_permiso']>2) {
 				$datos_actual=$this->transporte_model->consultar_fecha_solicitud($id_solicitud_actual);
@@ -468,8 +481,24 @@ class Transporte extends CI_Controller
 					echo "El vehículo se encuentra reservado para esta hora";
 				}
 				
-				$motoristas=$this->transporte_model->consultar_motoristas($id_vehiculo);
-				//////////consulta al motorista asignado al vehiculo.
+				if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66)//Oficinas departamentales//
+				{
+					$motoristas=$this->transporte_model->consultar_motoristas($id_vehiculo,$id_seccion['id_seccion']);
+					//////////consulta al motorista asignado al vehiculo.
+					////////// y muestra los posibles motoristas de acuerdo a la oficina departamental
+				}
+				else if($data['id_permiso']==4)
+				{
+					$motoristas=$this->transporte_model->consultar_motoristas_central($id_vehiculo);
+					//////////consulta al motorista asignado al vehiculo.
+					////////// y muestra los posibles motoristas de acuerdo a la central
+				}
+				else if($data['id_permiso']==3)
+				{
+					$motoristas=$this->transporte_model->consultar_motoristas_nacional($id_vehiculo);
+					//////////consulta al motorista asignado al vehiculo.
+					////////// y muestra todos los posibles motoristas del mtps
+				}
 				
 				$j=json_encode($motoristas);
 				echo $j;
