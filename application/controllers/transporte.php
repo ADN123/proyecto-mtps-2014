@@ -82,28 +82,26 @@ class Transporte extends CI_Controller
 	function control_solicitudes($estado_transaccion=NULL,$accion=NULL)
 	{
  		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
-		
 
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$id_seccion_val=$id_seccion['id_seccion'];
 				switch ($data['id_permiso']) {
 					case 2:
-
-						$data['datos']=$this->transporte_model->solicitudes_por_confirmar($id_seccion_val);			
+						$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1);			
 						break;
 					case 3:
-						$data['datos']=$this->transporte_model->todas_solicitudes_por_confirmar();
+						$data['datos']=$this->transporte_model->todas_solicitudes_por_estado(1);
 						break;
 					case 4:
 							$departamental=$this->transporte_model->is_departamental($id_seccion_val);
 
 						if($departamental){
-							$data['datos']=$this->transporte_model->solicitudes_por_confirmar($id_seccion_val);		
-
+							$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1);		
+								
 						}else{/// para san salvador
-
-
+								
+							$data['datos']=$this->transporte_model->todas_solicitudes_sanSalavador(1);
 						}
 
 						break;
@@ -696,8 +694,32 @@ class Transporte extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),67);
 		
-		if($data['id_permiso']!=NULL) {
-			$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
+		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
+				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+				$id_seccion_val=$id_seccion['id_seccion'];
+				
+				switch ($data['id_permiso']) {
+					case 2:
+						$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,3);
+						print_r($id_seccion_val.$data['datos']);
+						break;
+					case 3:
+						$data['datos']=$this->transporte_model->salidas_entradas_vehiculos();
+						break;
+					case 4:
+							$departamental=$this->transporte_model->is_departamental($id_seccion_val);
+
+						if($departamental){
+							$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,3);		
+								
+						}else{/// para san salvador
+								
+							$data['datos']=$this->transporte_model->todas_solicitudes_sanSalavador(3);
+						}
+
+						break;
+				}
+				
 			$data['estado_transaccion']=$estado_transaccion;
 			if($accion==3)
 				$data['accion']="salida";
@@ -705,9 +727,11 @@ class Transporte extends CI_Controller
 				$data['accion']="entrada";	 
 			pantalla("transporte/despacho",$data);	
 		}
-		else {
+		else 
+		{
 			echo "No tiene permisos para acceder";
 		}
+
 	}
 	/*
 	*	Nombre: Cargar Accesorios
@@ -755,7 +779,6 @@ class Transporte extends CI_Controller
 	
 			/*remuevo de post los datos para que solo queden los accesorios*/
 
-			print_r($_POST);
 			$acces=$_POST;
 			unset($acces['estado']);
 			unset($acces['gas']);
