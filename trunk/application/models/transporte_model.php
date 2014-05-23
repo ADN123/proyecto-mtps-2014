@@ -918,51 +918,33 @@ function infoSolicitud($id){
 		$whereExtra="";
 
 		if($id_empleado!=NULL) {
-			$whereExtra.=" t.id_empleado_solicitante='".$id_empleado."' AND ";
+			$whereExtra.=" AND i.id_empleado_solicitante='".$id_empleado."'  ";
 	
 		}
 		if($estado!=NULL){
-				$whereExtra.=" t.estado_solicitud_transporte>='".$estado."' AND "  ;
+				$whereExtra.=" AND st.estado_solicitud_transporte>='".$estado."' "  ;
 		}
 		if($id_seccion!=NULL){
-				$whereExtra.=" o.id_seccion= '".$id_seccion."' AND "  ;
+				$whereExtra.=" AND i.id_seccion= '".$id_seccion."' "  ;
 				}
 
 
-		$sentencia="SELECT id_solicitud_transporte id,
-		DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
-		DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-		DATE_FORMAT(hora_salida,'%h:%i %p') salida,
-		estado_solicitud_transporte estado,
-		LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
-		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido, s.apellido_casada)) AS nombre
+		$sentencia="SELECT DISTINCT
+					id_solicitud_transporte id,
+					DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
+					DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
+					DATE_FORMAT(hora_salida,'%h:%i %p') salida,
+					LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
+					LOWER(COALESCE(s.nombre_seccion, 'No hay registro')) seccion,
+					st.estado_solicitud_transporte estado
+					FROM
+					sir_empleado_informacion_laboral AS i
+					LEFT JOIN org_seccion AS s ON s.id_seccion = i.id_seccion
+					LEFT JOIN sir_empleado AS e ON e.id_empleado = i.id_empleado
+					INNER JOIN tcm_solicitud_transporte AS st ON st.id_empleado_solicitante = e.id_empleado
+					WHERE (i.id_empleado, i.fecha_inicio) IN  
+					( SELECT id_empleado ,MAX(fecha_inicio)  FROM sir_empleado_informacion_laboral GROUP BY id_empleado  ) ".$whereExtra;
 		
-		FROM tcm_solicitud_transporte  t
-			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
-			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
-			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-		WHERE ".$whereExtra."(t.id_empleado_solicitante not in
-			(select id_empleado from sir_empleado_informacion_laboral))
-		UNION
-		
-		SELECT id_solicitud_transporte id,
-		DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
-		DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-		DATE_FORMAT(hora_salida,'%h:%i %p') salida,
-		estado_solicitud_transporte estado,
-		LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
-		LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
-		FROM tcm_solicitud_transporte  t
-			LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
-			LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
-			LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
-		WHERE  ".$whereExtra."(i.id_empleado_informacion_laboral in
-				(SELECT max(id_empleado_informacion_laboral) as id
-				FROM sir_empleado_informacion_laboral
-				group by id_empleado
-				having count(id_empleado)>=1))
-	";
-
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->result_array();
