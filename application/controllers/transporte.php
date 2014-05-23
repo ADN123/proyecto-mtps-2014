@@ -44,12 +44,21 @@ class Transporte extends CI_Controller
 				case 3:
 					$data['empleados']=$this->transporte_model->consultar_empleados();
 					break;
+				case 4:
+					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+					if($id_seccion==52 || $id_seccion==53 || $id_seccion==54 || $id_seccion==55 || $id_seccion==56 || $id_seccion==57 || $id_seccion==58 || $id_seccion==59 || $id_seccion==60 || $id_seccion==61 || $id_seccion==64 || $id_seccion==65 || $id_seccion==66) {
+						$data['empleados']=$this->transporte_model->consultar_empleados_seccion($id_seccion['id_seccion']);	
+					}
+					else {
+						$data['empleados']=$this->transporte_model->consultar_empleados_seccion($id_seccion['id_seccion']);	
+						/*$data['empleados']=$this->transporte_model->consultar_empleados_depto();	*/
+					}
+
+					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
 			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud);
 			$data['solicitud_destinos']=$this->transporte_model->consultar_destinos($id_solicitud);
-			echo "<br><br><br><br><br><br><br><br>".$id_solicitud."<br><br>";
-			print_r($data['solicitud_destinos']);
 			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
 			$data['municipios']=$this->transporte_model->consultar_municipios();
 
