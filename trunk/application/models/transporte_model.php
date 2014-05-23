@@ -735,15 +735,17 @@ where s.id_solicitud_transporte='$id'");
 	function consultar_empleados_seccion($id_seccion)
 	{
 		$sentencia="SELECT DISTINCT
-					LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
-					i.id_empleado AS NR
-					FROM
-					sir_empleado_informacion_laboral AS i
-					LEFT JOIN org_seccion AS s ON s.id_seccion = i.id_seccion
-					LEFT JOIN sir_empleado AS e ON e.id_empleado = i.id_empleado
-					WHERE (i.id_empleado, i.fecha_inicio) IN  
-					( SELECT id_empleado ,MAX(fecha_inicio)  FROM sir_empleado_informacion_laboral GROUP BY id_empleado  ) 
-					AND i.id_seccion='".$id_seccion."'";
+							LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
+							i.id_empleado AS NR
+							FROM
+							sir_empleado_informacion_laboral AS i
+							LEFT JOIN sir_empleado AS e ON e.id_empleado = i.id_empleado
+							WHERE (i.id_empleado, i.fecha_inicio) IN  
+							( SELECT id_empleado ,MAX(fecha_inicio)  FROM sir_empleado_informacion_laboral GROUP BY id_empleado  ) 
+							AND i.id_seccion=15
+							ORDER BY e.id_empleado";
+
+
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->result_array();
