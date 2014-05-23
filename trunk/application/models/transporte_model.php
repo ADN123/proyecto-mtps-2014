@@ -370,8 +370,48 @@ function solicitudes_por_asignar_depto(){
 	}
 	///////////////////////////////////////////////////////////////////////////////////////
 	
-	//////VEHICUlOS DISPONIBlES INClUYE lOS QUE ESTÁN EN MISIONES lOCAlES ///////////
-	function vehiculos_disponibles($fecha,$hentrada,$hsalida)
+	//////VEHICUlOS DISPONIBlES INClUYE lOS QUE ESTÁN EN MISIONES lOCAlES VERSIÓN OFICINAS ///////////
+	function vehiculos_disponibles($fecha,$hentrada,$hsalida,$seccion)
+	{
+		$query=$this->db->query("
+			select v.id_vehiculo, v.placa, vm.nombre, vmo.modelo, vc.nombre_clase, vcon.condicion
+			from tcm_vehiculo as v
+			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+			where v.id_vehiculo not in
+			(
+				select avm.id_vehiculo
+				from tcm_solicitud_transporte as st
+				inner join tcm_destino_mision as dm
+				on (dm.id_solicitud_transporte=st.id_solicitud_transporte)
+				inner join tcm_asignacion_sol_veh_mot as avm
+				on (avm.id_solicitud_transporte=st.id_solicitud_transporte)
+				where avm.id_vehiculo in
+				(
+					select avm.id_vehiculo
+					from tcm_solicitud_transporte as st
+					inner join tcm_asignacion_sol_veh_mot as avm
+					on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
+					where st.fecha_mision='$fecha' and 
+					(
+						(st.hora_salida>='$hsalida' and st.hora_salida<='$hentrada')
+						 or (st.hora_entrada>='$hsalida' and st.hora_entrada<='$hentrada')
+						 or (st.hora_salida<='$hsalida' and st.hora_entrada>='$hentrada')
+					 )
+					 and st.estado_solicitud_transporte=3
+				)
+				and st.estado_solicitud_transporte=3
+			)
+			and (id_seccion='$seccion')
+			order by v.id_vehiculo asc;");
+				return $query->result();
+	}
+	/////////////////////////////////////////////////////////////////////////////////////
+	
+	//////VEHICUlOS DISPONIBlES INClUYE lOS QUE ESTÁN EN MISIONES lOCAlES VERSION CENTRAL ///////////
+	function vehiculos_disponibles_central($fecha,$hentrada,$hsalida)
 	{
 		$query=$this->db->query("
 			select v.id_vehiculo, v.placa, vm.nombre, vmo.modelo, vc.nombre_clase, vcon.condicion
@@ -405,11 +445,52 @@ function solicitudes_por_asignar_depto(){
 				and st.estado_solicitud_transporte=3
 				and dm.id_municipio<>97
 			)
-			and (id_seccion=21 or id_seccion=113)
+			and (id_seccion!=52 and id_seccion!=53 and id_seccion!=54 and id_seccion!=55 and id_seccion!=56 and id_seccion!=57 and id_seccion!=58 and id_seccion!=59 and id_seccion!=60 and id_seccion!=61 and id_seccion!=64 and id_seccion!=65 and id_seccion!=66)
 			order by v.id_vehiculo asc;");
 				return $query->result();
 	}
 	/////////////////////////////////////////////////////////////////////////////////////
+	
+	//////VEHICUlOS DISPONIBlES INClUYE lOS QUE ESTÁN EN MISIONES lOCAlES VERSION ADMIN ///////////
+	function vehiculos_disponibles_nacional($fecha,$hentrada,$hsalida)
+	{
+		$query=$this->db->query("
+			select v.id_vehiculo, v.placa, vm.nombre, vmo.modelo, vc.nombre_clase, vcon.condicion
+			from tcm_vehiculo as v
+			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+			where v.id_vehiculo not in
+			(
+				select avm.id_vehiculo
+				from tcm_solicitud_transporte as st
+				inner join tcm_destino_mision as dm
+				on (dm.id_solicitud_transporte=st.id_solicitud_transporte)
+				inner join tcm_asignacion_sol_veh_mot as avm
+				on (avm.id_solicitud_transporte=st.id_solicitud_transporte)
+				where avm.id_vehiculo in
+				(
+					select avm.id_vehiculo
+					from tcm_solicitud_transporte as st
+					inner join tcm_asignacion_sol_veh_mot as avm
+					on (st.id_solicitud_transporte=avm.id_solicitud_transporte)
+					where st.fecha_mision='$fecha' and 
+					(
+						(st.hora_salida>='$hsalida' and st.hora_salida<='$hentrada')
+						 or (st.hora_entrada>='$hsalida' and st.hora_entrada<='$hentrada')
+						 or (st.hora_salida<='$hsalida' and st.hora_entrada>='$hentrada')
+					 )
+					 and st.estado_solicitud_transporte=3
+				)
+				and st.estado_solicitud_transporte=3
+				and dm.id_municipio<>97
+			)
+			order by v.id_vehiculo asc;");
+				return $query->result();
+	}
+	/////////////////////////////////////////////////////////////////////////////////////
+	
 	
 	//////////////////////VEHICUlOS EN MISION lOCAl/////////////////////////////////
 	
@@ -666,14 +747,39 @@ inner join tcm_asignacion_sol_veh_mot as avm on (st.id_solicitud_transporte=avm.
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	
-	///////////////CONSULTAR MOTORISTAS: CARGA LOS MOTORISTAS CORRESPONDIENTES A LOS VEHICULOS/////////////////////////////////
-	function consultar_motoristas($id)
+	///////////////CONSULTAR MOTORISTAS: CARGA LOS MOTORISTAS CORRESPONDIENTES A LOS VEHICULOS VERSION OFICINAS/////////////////////////////////
+	function consultar_motoristas($id,$seccion)
 	{
 		$query=$this->db->query("(SELECT t.id_empleado, IF(t.id_empleado!=0,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)),'No tiene asignado') as nombre FROM tcm_vehiculo_motorista t left join sir_empleado e on (t.id_empleado=e.id_empleado)
 where t.id_vehiculo='$id') union (SELECT t.id_empleado,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre FROM tcm_vehiculo_motorista t
 inner join sir_empleado e on (t.id_empleado=e.id_empleado)
 inner join tcm_vehiculo v on (t.id_vehiculo=v.id_vehiculo)
-where (v.id_seccion=21)
+where (v.id_seccion='$seccion')
+order by e.primer_nombre ASC);");
+		return $query->result();
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	///////////////CONSULTAR MOTORISTAS: CARGA LOS MOTORISTAS CORRESPONDIENTES A LOS VEHICULOS VERSION CENTRAL/////////////////////////////////
+	function consultar_motoristas_central($id,$seccion)
+	{
+		$query=$this->db->query("(SELECT t.id_empleado, IF(t.id_empleado!=0,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)),'No tiene asignado') as nombre FROM tcm_vehiculo_motorista t left join sir_empleado e on (t.id_empleado=e.id_empleado)
+where t.id_vehiculo='$id') union (SELECT t.id_empleado,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre FROM tcm_vehiculo_motorista t
+inner join sir_empleado e on (t.id_empleado=e.id_empleado)
+inner join tcm_vehiculo v on (t.id_vehiculo=v.id_vehiculo)
+where (v.id_seccion!=52 and v.id_seccion!=53 and v.id_seccion!=54 and v.id_seccion!=55 and v.id_seccion!=56 and v.id_seccion!=57 and v.id_seccion!=58 and v.id_seccion!=59 and v.id_seccion!=60 and v.id_seccion!=61 and v.id_seccion!=64 and v.id_seccion!=65 and v.id_seccion!=66)
+order by e.primer_nombre ASC);");
+		return $query->result();
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	///////////////CONSULTAR MOTORISTAS: CARGA LOS MOTORISTAS CORRESPONDIENTES A LOS VEHICULOS VERSION ADMIN/////////////////////////////////
+	function consultar_motoristas_nacional($id)
+	{
+		$query=$this->db->query("(SELECT t.id_empleado, IF(t.id_empleado!=0,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)),'No tiene asignado') as nombre FROM tcm_vehiculo_motorista t left join sir_empleado e on (t.id_empleado=e.id_empleado)
+where t.id_vehiculo='$id') union (SELECT t.id_empleado,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre FROM tcm_vehiculo_motorista t
+inner join sir_empleado e on (t.id_empleado=e.id_empleado)
+inner join tcm_vehiculo v on (t.id_vehiculo=v.id_vehiculo)
 order by e.primer_nombre ASC);");
 		return $query->result();
 	}
