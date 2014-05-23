@@ -1260,8 +1260,10 @@ SELECT
 		$query=$this->db->query($sentencia);
 		return true;
 	}
-	function consultar_solicitud($id_solicitud=NULL)
+	function consultar_solicitud($id_solicitud=NULL,$estado=NULL)
 	{
+		if($estado!=NULL)
+			$where_estado=" AND tcm_solicitud_transporte.estado_solicitud_transporte=".$estado;
 		$sentencia="SELECT
 					tcm_solicitud_transporte.id_solicitud_transporte,
 					tcm_solicitud_transporte.id_empleado_solicitante,
@@ -1279,7 +1281,7 @@ SELECT
 					INNER JOIN sir_empleado AS e1 ON tcm_solicitud_transporte.id_empleado_solicitante=e1.id_empleado
 					LEFT JOIN sir_empleado AS e2 ON tcm_solicitud_transporte.id_empleado_autoriza=e2.id_empleado
 					LEFT JOIN tcm_observacion ON tcm_observacion.id_solicitud_transporte = tcm_solicitud_transporte.id_solicitud_transporte
-					WHERE tcm_solicitud_transporte.id_solicitud_transporte='".$id_solicitud."'";
+					WHERE tcm_solicitud_transporte.id_solicitud_transporte='".$id_solicitud."' ".$where_estado;
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->row();
@@ -1294,7 +1296,12 @@ SELECT
 				'acompanante' => "",
 				'id_municipio' => 0,
 				'lugar_destino' => "",
-				'mision_encomendada' => ""
+				'mision_encomendada' => "",
+				'nombre' => "",
+				'observacion' => "",
+				'quien_realiza' => "",
+				'requiere_motorista' => "",
+				'NR' => ""
 			);
 		}
 	}
