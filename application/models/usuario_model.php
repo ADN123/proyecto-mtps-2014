@@ -60,6 +60,7 @@ class Usuario_model extends CI_Model {
 					$op1='';
 					$op2='';
 					$op3='';
+					$op4='';
 					$x='';
 					if($clave!==FALSE) {
 						switch($id_per[$clave]) {
@@ -75,9 +76,13 @@ class Usuario_model extends CI_Model {
 								$x=3;
 								$op3='selected="selected"';
 								break;
+							case 4:
+								$x=4;
+								$op4='selected="selected"';
+								break;
 						}
 					}
- 					$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Usuario General</option><option value="'.$id_modulo.',2" '.$op2.'>Delegado Sección</option><option value="'.$id_modulo.',3" '.$op3.'>Administrador</option></select>';
+ 					$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Personal</option><option value="'.$id_modulo.',2" '.$op2.'>Sección</option><option value="'.$id_modulo.',4" '.$op4.'>Departamental</option><option value="'.$id_modulo.',3" '.$op3.'>Nacional</option></select>';
 				}
 				
 				if($query2->num_rows>0)
@@ -108,6 +113,7 @@ class Usuario_model extends CI_Model {
 						$op1='';
 						$op2='';
 						$op3='';
+						$op4='';
 						$x='';
 						if($clave!==FALSE) {
 							switch($id_per[$clave]){
@@ -123,9 +129,13 @@ class Usuario_model extends CI_Model {
 									$x=3;
 									$op3='selected="selected"';
 									break;
+								case 4:
+									$x=4;
+									$op4='selected="selected"';
+									break;
 							}
 						}
-						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Usuario General</option><option value="'.$id_modulo.',2" '.$op2.'>Delegado Sección</option><option value="'.$id_modulo.',3" '.$op3.'>Administrador</option></select>';
+						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Personal</option><option value="'.$id_modulo.',2" '.$op2.'>Sección</option><option value="'.$id_modulo.',4" '.$op4.'>Departamental</option><option value="'.$id_modulo.',3" '.$op3.'>Nacional</option></select>';
 					}
 					
 					if($query3->num_rows>0)
@@ -142,6 +152,7 @@ class Usuario_model extends CI_Model {
 						$op1='';
 						$op2='';
 						$op3='';
+						$op4='';
 						$x='';
 						if($clave!==FALSE) {
 							switch($id_per[$clave]){
@@ -157,9 +168,13 @@ class Usuario_model extends CI_Model {
 									$x=3;
 									$op3='selected="selected"';
 									break;
+								case 4:
+									$x=4;
+									$op4='selected="selected"';
+									break;
 							}
 						}
-						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Usuario General</option><option value="'.$id_modulo.',2" '.$op2.'>Delegado Sección</option><option value="'.$id_modulo.',3" '.$op3.'>Administrador</option></select>';
+						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Personal</option><option value="'.$id_modulo.',2" '.$op2.'>Sección</option><option value="'.$id_modulo.',4" '.$op4.'>Departamental</option><option value="'.$id_modulo.',3" '.$op3.'>Nacional</option></select>';
 						$result.=' </li>';				
 					}
 					if($query3->num_rows>0)
