@@ -50,8 +50,7 @@ class Transporte extends CI_Controller
 						$data['empleados']=$this->transporte_model->consultar_empleados_seccion($id_seccion['id_seccion']);	
 					}
 					else {
-						$data['empleados']=$this->transporte_model->consultar_empleados();	
-						/*$data['empleados']=$this->transporte_model->consultar_empleados_depto();	*/
+						$data['empleados']=$this->transporte_model->consultar_empleados_depto();
 					}
 
 					break;
@@ -692,8 +691,8 @@ class Transporte extends CI_Controller
 	*/
 	function control_salidas_entradas($estado_transaccion=NULL,$accion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),67);
-		
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),64);
+
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$id_seccion_val=$id_seccion['id_seccion'];
@@ -767,7 +766,7 @@ class Transporte extends CI_Controller
 	*/
 	function guardar_despacho()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),67);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),64);
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
@@ -869,8 +868,7 @@ class Transporte extends CI_Controller
 						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 1, $id_seccion['id_seccion']);
 					}
 					else {
-						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,1);
-						/*$data['solicitudes']=$this->transporte_model->buscar_solicitudes_depto($id_seccion['id_seccion']);	*/
+						$data['solicitudes']=$this->transporte_model->buscar_solicitudes_depto(1);	
 					}
 					break;
 			}
@@ -936,8 +934,7 @@ class Transporte extends CI_Controller
 						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 3, $id_seccion['id_seccion']);
 					}
 					else {
-						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,3,NULL);
-						/*$data['solicitudes']=$this->transporte_model->buscar_solicitudes_depto($id_seccion['id_seccion']);	*/
+						$data['solicitudes']=$this->transporte_model->buscar_solicitudes_depto(3);
 					}
 					break;
 			}

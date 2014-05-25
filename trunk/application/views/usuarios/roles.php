@@ -48,19 +48,22 @@
 </div>
 <script language="javascript" >
 	$(document).ready(function(){
-		$(".modificar_rol").click(function(){
-			id=$(this).data("id_rol");
-			nom=$(this).data("nombre_rol");
-			$("#titulo-ventana").html("Modificar Rol - "+nom);
-			$('#contenido-ventana').load(base_url()+'index.php/usuarios/datos_de_rol/'+id);
-			return false;
-		});
 		$("#nuevo_rol1").click(function(){
 			$("#nuevo_rol2").click();
 		});
 		$("#nuevo_rol2").click(function(){
 			$("#titulo-ventana").html("Nuevo Rol");
 			$('#contenido-ventana').load(base_url()+'index.php/usuarios/datos_de_rol');
+			return false;
+		});
+	});
+	function recargar_javascript(arg) {
+		$('a[rel*=leanModal]').leanModal({ top : 50, closeButton: ".modal_close"});	
+		$(".modificar_rol").click(function(){
+			id=$(this).data("id_rol");
+			nom=$(this).data("nombre_rol");
+			$("#titulo-ventana").html("Modificar Rol - "+nom);
+			$('#contenido-ventana').load(base_url()+'index.php/usuarios/datos_de_rol/'+id);
 			return false;
 		});
 		$(".eliminar_rol").click(function(){
@@ -73,7 +76,6 @@
 					return false;
 				}
 			});
-			
 		});
-	});
+	}
 </script>

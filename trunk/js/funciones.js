@@ -54,7 +54,8 @@ $(document).ready(function() {
 			type: "odata",
 			pageSize: 9
 		},
-		pageable: true
+		pageable: true,
+        dataBound: recargar_javascript
 	});
 });
 $(function() {
@@ -67,3 +68,6 @@ String.prototype.capitalize = function()
 		return a.charAt(0).toUpperCase() + a.slice(1).toLowerCase();
 	});
 };
+function recargar_javascript(arg) {
+	$('a[rel*=leanModal]').leanModal({ top : 50, closeButton: ".modal_close"});
+}

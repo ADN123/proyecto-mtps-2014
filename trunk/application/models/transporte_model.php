@@ -205,6 +205,7 @@ DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
 DATE_FORMAT(hora_entrada,'%r') entrada,
 DATE_FORMAT(hora_salida,'%r') salida,
 requiere_motorista,
+estado_solicitud_transporte estado,
 LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
 LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido, s.apellido_casada)) AS nombre
 FROM tcm_solicitud_transporte  t
@@ -224,6 +225,7 @@ DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
 DATE_FORMAT(hora_entrada,'%r') entrada,
 DATE_FORMAT(hora_salida,'%r') salida,
 requiere_motorista,
+estado_solicitud_transporte estado,
 LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
 LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre
 FROM tcm_solicitud_transporte  t
@@ -1389,7 +1391,44 @@ SELECT
 	
 	public function consultar_empleados_depto()
 	{
-		$sentencia="";
+		$sentencia="SELECT DISTINCT
+					LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
+					i.id_empleado AS NR
+					FROM
+					sir_empleado_informacion_laboral AS i
+					LEFT JOIN sir_empleado AS e ON e.id_empleado = i.id_empleado
+					WHERE (i.id_empleado, i.fecha_inicio) IN  
+						( SELECT id_empleado ,MAX(fecha_inicio)  FROM sir_empleado_informacion_laboral GROUP BY id_empleado  ) 
+						AND i.id_seccion<>52 AND i.id_seccion<>53 AND i.id_seccion<>54 AND i.id_seccion<>55 AND i.id_seccion<>56 AND i.id_seccion<>57 AND i.id_seccion<>58 AND i.id_seccion<>59 AND i.id_seccion<>60 AND i.id_seccion<>61 AND i.id_seccion<>64 AND i.id_seccion<>65 AND i.id_seccion<>66 
+						ORDER BY e.id_empleado";
+		$query=$this->db->query($sentencia);
+
+		return (array)$query->result_array();
+	}
+	
+	public function buscar_solicitudes_depto($estado=NULL)
+	{
+		$sentencia="SELECT DISTINCT
+					tcm_solicitud_transporte.id_solicitud_transporte AS id,
+					DATE_FORMAT(tcm_solicitud_transporte.fecha_mision,'%d-%m-%Y') AS fecha,
+					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS entrada,
+					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS salida,
+					tcm_solicitud_transporte.id_solicitud_transporte,
+					tcm_solicitud_transporte.estado_solicitud_transporte,
+					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre,
+					tcm_solicitud_transporte.estado_solicitud_transporte AS estado,
+					LOWER(COALESCE(org_seccion.nombre_seccion, 'No hay registro')) seccion
+					FROM
+					tcm_solicitud_transporte
+					INNER JOIN sir_empleado ON tcm_solicitud_transporte.id_empleado_solicitante = sir_empleado.id_empleado
+					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado_informacion_laboral.id_empleado = sir_empleado.id_empleado
+					INNER JOIN org_seccion ON org_seccion.id_seccion = sir_empleado_informacion_laboral.id_seccion
+					WHERE tcm_solicitud_transporte.estado_solicitud_transporte>='".$estado."' AND tcm_solicitud_transporte.id_solicitud_transporte NOT IN (SELECT
+						tcm_solicitud_transporte.id_solicitud_transporte
+						FROM tcm_solicitud_transporte
+						INNER JOIN sir_empleado ON tcm_solicitud_transporte.id_empleado_solicitante = sir_empleado.id_empleado
+						LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado_informacion_laboral.id_empleado = sir_empleado.id_empleado
+						WHERE sir_empleado_informacion_laboral.id_seccion=52 OR sir_empleado_informacion_laboral.id_seccion=53  OR sir_empleado_informacion_laboral.id_seccion=54 OR sir_empleado_informacion_laboral.id_seccion=55 OR sir_empleado_informacion_laboral.id_seccion=56 OR sir_empleado_informacion_laboral.id_seccion=57 OR sir_empleado_informacion_laboral.id_seccion=58 OR sir_empleado_informacion_laboral.id_seccion=59 OR sir_empleado_informacion_laboral.id_seccion=60 OR sir_empleado_informacion_laboral.id_seccion=61 OR sir_empleado_informacion_laboral.id_seccion=64 OR sir_empleado_informacion_laboral.id_seccion=65 OR sir_empleado_informacion_laboral.id_seccion=66)";
 		$query=$this->db->query($sentencia);
 
 		return (array)$query->result_array();
