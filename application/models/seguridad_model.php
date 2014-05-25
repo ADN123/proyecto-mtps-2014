@@ -75,7 +75,7 @@ class Seguridad_model extends CI_Model {
 					INNER JOIN org_rol_modulo_permiso ON org_usuario_rol.id_rol = org_rol_modulo_permiso.id_rol
 					WHERE org_usuario_rol.id_usuario=".$id_usuario." AND org_rol_modulo_permiso.id_modulo=".$id_modulo."";
 		$query=$this->db->query($sentencia);
-	
+			
 		if($query->num_rows>0) {
 			return (array)$query->row();
 		}

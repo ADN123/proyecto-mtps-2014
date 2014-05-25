@@ -14,7 +14,9 @@
 }
 </style>
 <form name="form_mision" method="post" action="<?php echo base_url()?>index.php/transporte/guardar_solicitud">
-	<input type="hidden" name="id_solicitud_old" id="id_solicitud_old" value="<?php echo $solicitud['id_solicitud_transporte'];?>" />
+	<?php if($solicitud['id_solicitud_transporte']!="") {?>
+		<input type="hidden" name="id_solicitud_old" id="id_solicitud_old" value="<?php echo $solicitud['id_solicitud_transporte'];?>" />
+    <?php }?>
 	<div id="wizard" class="swMain">
         <ul>
             <li>

@@ -37,7 +37,7 @@
             <td><?php echo ucwords($fila->nombre)?></td>
             <td><a title="<?=$mensaje?>" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>,<?=$fila->estado?>)"><img  src="<?=base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a></td>
   		</tr>
-		<?php } ?>
+		<?php }?>
 	</tbody>
 </table> 
 
