@@ -1045,7 +1045,7 @@ where s.id_solicitud_transporte='$id'");
 			INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado
 			INNER JOIN  tcm_asignacion_sol_veh_mot asi ON asi.id_solicitud_transporte=s.id_solicitud_transporte
 			INNER JOIN tcm_vehiculo vh ON vh.id_vehiculo= asi.id_vehiculo
-			WHERE  (s.fecha_mision= CURDATE() AND (estado_solicitud_transporte=3) OR estado_solicitud_transporte=4)");
+			WHERE  ( (estado_solicitud_transporte=3) OR estado_solicitud_transporte=4)");
 		return $query->result();
 		
 		}
@@ -1058,6 +1058,7 @@ function salidas_entradas_vehiculos_seccion($id_seccion){
 						DATE_FORMAT(hora_entrada,'%r') entrada,
 						DATE_FORMAT(hora_salida,'%r') salida,
 						veh.placa,
+						estado_solicitud_transporte estado,
 						LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
 						LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido, s.apellido_casada)) AS nombre
 						FROM tcm_solicitud_transporte  t
@@ -1089,6 +1090,7 @@ DATE_FORMAT(fecha_mision,'%d-%m-%Y') fecha,
 DATE_FORMAT(hora_entrada,'%r') entrada,
 DATE_FORMAT(hora_salida,'%r') salida,
 veh.placa,
+estado_solicitud_transporte estado,
 LOWER(COALESCE(o.nombre_seccion, 'No hay registro')) seccion,
 LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido, s.apellido_casada)) AS nombre
 FROM tcm_solicitud_transporte  t
@@ -1167,12 +1169,12 @@ function regreso_vehiculo($id, $km, $hora, $gas,$acces){
 	SET
 		km_final = '$km' , 
 		combustible = '$gas' , 
-		hora_entrada = '$hora' , 
+		hora_entrada = CONCAT(CURDATE(),' $hora'), 
 		fecha_modificacion = CURDATE()
 	WHERE
 		id_solicitud_transporte = '$id' ;
 		";
-		
+	
 		$this->db->query($q);
 		
 		foreach($acces as  $row)://insert de accesorio
@@ -1192,17 +1194,30 @@ function regreso_vehiculo($id, $km, $hora, $gas,$acces){
 	}
 function infoSolicitud($id){
 	$query="
-SELECT  
-		LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
-		DATE_FORMAT(hora_salida,'%h:%i %p') salida,
-		DATE_FORMAT(hora_entrada,'%h:%i %p') regreso,
-		v.placa,
-		v.id_vehiculo		
-	FROM tcm_vehiculo v 
-	LEFT  JOIN tcm_asignacion_sol_veh_mot  asi ON v.id_vehiculo = asi.id_vehiculo
-	LEFT  JOIN tcm_solicitud_transporte s ON s.id_solicitud_transporte = asi.id_solicitud_transporte
-	LEFT  JOIN sir_empleado e ON e.id_empleado= s.id_empleado_solicitante
-	WHERE s.id_solicitud_transporte = ".$id;
+SELECT
+	LOWER(
+		CONCAT_WS(
+			' ',
+			e.primer_nombre,
+			e.segundo_nombre,
+			e.tercer_nombre,
+			e.primer_apellido,
+			e.segundo_apellido,
+			e.apellido_casada
+		)
+	) AS nombre,
+	DATE_FORMAT(hora_salida, '%h:%i %p') salida,
+	DATE_FORMAT(hora_entrada, '%h:%i %p') regreso,
+	v.placa,
+	v.id_vehiculo,
+	vm.modelo
+FROM
+	tcm_vehiculo v
+INNER JOIN tcm_asignacion_sol_veh_mot asi ON v.id_vehiculo = asi.id_vehiculo
+INNER JOIN tcm_vehiculo_modelo vm ON vm.id_vehiculo_modelo = V.id_modelo
+INNER JOIN tcm_solicitud_transporte s ON s.id_solicitud_transporte = asi.id_solicitud_transporte
+LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
+		WHERE s.id_solicitud_transporte = ".$id;
 		$q=$this->db->query($query);
 		return $q->result();
 	}
