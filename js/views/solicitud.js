@@ -103,7 +103,8 @@ $(document).ready(function(){
 						data['nivel_3']="(No se encuentró este registro)";
 					var html=	"<br>"+
 								"<p><label>NR</label> <strong>"+data['nr']+"</strong></p>"+
-								"<p><label>Cargo</label> <strong>"+data['funcional']+"</strong></p>"+
+								"<p><label>Cargo Nominal</label> <strong>"+data['nominal']+"</strong></p>"+
+								"<p><label>Cargo Funcional</label> <strong>"+data['funcional']+"</strong></p>"+
 								"<p><label>Departamento</label> <strong>"+data['nivel_2']+"</strong></p>"+
 								"<p><label>Secci&oacute;n</label> <strong>"+data['nivel_1']+"</strong></p>";
 

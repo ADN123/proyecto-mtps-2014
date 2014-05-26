@@ -193,7 +193,7 @@
         	</td>
         </tr>
         <tr><td colspan="2">&nbsp;</td></tr>
-        <tr>
+        <!--<tr>
         	<td align="center" style="width:50%">
             	f. _____________________________________________<br />
             	Solicitado Por <strong><?php echo ucwords($info_solicitud['nombre']) ?></strong><br />&nbsp;
@@ -201,6 +201,11 @@
         	<td align="center" style="width:50%">
             	f. _____________________________________________<br />
             	Autorizado Por <strong><?php echo ucwords($info_solicitud['nombre2']) ?></strong><br />Jefe de Departamento o Sección
+            </td>
+        </tr>-->
+        <tr>
+        	<td colspan="2" align="center">
+            	Aprobado por <strong><?php echo ucwords($info_solicitud['nombre2']) ?></strong><br /><?php echo ucwords($info_empleado2['nominal']) ?>
             </td>
         </tr>
     </table>
@@ -211,7 +216,7 @@
             	<strong>USO EXCLUSIVO SERVICIOS GENERALES</strong>
                  <table align="center" class="tabla" cellspacing="0" style="width:1000px;">
                  	<tr>
-                    	<td style="border-bottom: 1px solid #000;">
+                    	<td style="border-bottom: 1px solid #000;" align="center">
                         	<strong>AUTORIZACION  DE VEHICULO A  MISION  OFICIAL</strong>
                         </td>
                     </tr>
@@ -286,7 +291,7 @@
                    	</tr>
                     <tr>
                     	<td>No. placa veh&iacute;culo:</td>
-                    	<td>_________________</td>
+                    	<td><strong><?php echo $motorista_vehiculo['placa'] ?></strong></td>
                    	</tr>
                     <tr>
                     	<td>&nbsp;</td>

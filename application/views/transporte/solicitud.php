@@ -99,13 +99,15 @@
                 	<?php
 						if($id_permiso==1) {
 							echo	"<p><label>NR</label> <strong>".$info['nr']."</strong></p>".
-									"<p><label>Cargo</label> <strong>".$info['funcional']."</strong></p>".
+									"<p><label>Cargo Nominal</label> <strong>".$info['nominal']."</strong></p>".
+									"<p><label>Cargo Funcional</label> <strong>".$info['funcional']."</strong></p>".
 									"<p><label>Departamento</label> <strong>".$info['nivel_2']."</strong></p>".
 									"<p><label>Secci&oacute;n</label> <strong>".$info['nivel_1']."</strong></p>";
 						}else
 						if($solicitud['id_solicitud_transporte']!="") {
 							echo	"<p><label>NR</label> <strong>".$info['nr']."</strong></p>".
-									"<p><label>Cargo</label> <strong>".$info['funcional']."</strong></p>".
+									"<p><label>Cargo Nominal</label> <strong>".$info['nominal']."</strong></p>".
+									"<p><label>Cargo Funcional</label> <strong>".$info['funcional']."</strong></p>".
 									"<p><label>Departamento</label> <strong>".$info['nivel_2']."</strong></p>".
 									"<p><label>Secci&oacute;n</label> <strong>".$info['nivel_1']."</strong></p>";
 						}
