@@ -534,7 +534,7 @@ function solicitudes_por_asignar_depto(){
 				and st.estado_solicitud_transporte=3
 				and dm.id_municipio<>97
 			)
-			and (id_seccion!=52 and id_seccion!=53 and id_seccion!=54 and id_seccion!=55 and id_seccion!=56 and id_seccion!=57 and id_seccion!=58 and id_seccion!=59 and id_seccion!=60 and id_seccion!=61 and id_seccion!=64 and id_seccion!=65 and id_seccion!=66)
+			and (v.id_seccion!=52 and v.id_seccion!=53 and v.id_seccion!=54 and v.id_seccion!=55 and v.id_seccion!=56 and v.id_seccion!=57 and v.id_seccion!=58 and v.id_seccion!=59 and v.id_seccion!=60 and v.id_seccion!=61 and v.id_seccion!=64 and v.id_seccion!=65 and v.id_seccion!=66)
 			order by v.id_vehiculo asc;");
 				return $query->result();
 	}
@@ -579,7 +579,6 @@ function solicitudes_por_asignar_depto(){
 				return $query->result();
 	}
 	/////////////////////////////////////////////////////////////////////////////////////
-	
 	
 	//////////////////////VEHICUlOS EN MISION lOCAl/////////////////////////////////
 	
@@ -907,7 +906,7 @@ where t.id_solicitud_transporte='$id';");
 	
 	function asignar_veh_mot($id_solicitud,$id_empleado,$id_vehiculo,$estado,$fecha,$nr,$id_usuario)
 	{
-		$query=$this->db->query("insert into tcm_asignacion_sol_veh_mot(id_solicitud_transporte,id_empleado,id_vehiculo) values('$id_solicitud','$id_empleado','$id_vehiculo')");
+		$query=$this->db->query("insert into tcm_asignacion_sol_veh_mot(id_solicitud_transporte,id_empleado,id_vehiculo,id_empleado_asigna) values('$id_solicitud','$id_empleado','$id_vehiculo','$id_usuario')");
 		
 		$query2=$this->db->query("update tcm_solicitud_transporte set estado_solicitud_transporte='$estado', fecha_modificacion='$fecha', id_usuario_modifica='$id_usuario' where id_solicitud_transporte='$id_solicitud'");
 		
