@@ -13,7 +13,7 @@
 	display: inline-block;
 }
 </style>
-<form name="form_mision" method="post" action="<?php echo base_url()?>index.php/vales/guardar_requisicion">
+<form name="form_mision" method="post" id="form_mision" action="<?php echo base_url()?>index.php/vales/guardar_requisicion">
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -72,8 +72,10 @@
 						?>
                     </select>
              	<?php 
-					} 
-					else {
+					} else {
+                        if(sizeof($oficinas)==0)
+                            echo '<strong> La seccion no cuenta con vehiculos </strong>';
+
 						foreach($oficinas as $val) {
 							echo '<strong>'.ucwords($val['nombre_seccion']).'</strong>';
 				?>
