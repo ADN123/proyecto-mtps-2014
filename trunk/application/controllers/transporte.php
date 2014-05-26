@@ -571,6 +571,7 @@ class Transporte extends CI_Controller
 					'nr'=>$data['nr'],
 					'id_seccion'=>$data['id_seccion'],
 					'funcional'=>$data['funcional'],
+					'nominal'=>$data['nominal'],
 					'nivel_1'=>$data['nivel_1'],
 					'nivel_2'=>$data['nivel_2'],
 					'nivel_3'=>$data['nivel_3']
@@ -960,7 +961,9 @@ class Transporte extends CI_Controller
 			$data['info_solicitud']=$this->transporte_model->consultar_solicitud($id);
 			$id_solicitud_transporte=$data['info_solicitud']['id_solicitud_transporte'];
 			$id_empleado_solicitante=$data['info_solicitud']['id_empleado_solicitante'];
+			$id_empleado_autoriza=$data['info_solicitud']['id_empleado_autoriza'];
 			$data['info_empleado']=$this->transporte_model->info_adicional($id_empleado_solicitante);
+			$data['info_empleado2']=$this->transporte_model->info_adicional($id_empleado_autoriza);
 			$data['acompanantes']=$this->transporte_model->acompanantes_internos($id_solicitud_transporte);
 			$data['destinos']=$this->transporte_model->destinos($id_solicitud_transporte);
 			$data['salida_entrada_real']=$this->transporte_model->datos_salida_entrada_real($id_solicitud_transporte);

@@ -950,6 +950,7 @@ where s.id_solicitud_transporte='$id'");
 					sir_empleado.nr,
 					sir_empleado_informacion_laboral.id_seccion,
 					sir_cargo_funcional.funcional,
+					sir_cargo_nominal.cargo_nominal AS nominal,
 					o1.nombre_seccion AS nivel_1,
 					o2.nombre_seccion AS nivel_2,
 					o3.nombre_seccion AS nivel_3
@@ -960,6 +961,7 @@ where s.id_solicitud_transporte='$id'");
 					LEFT JOIN org_seccion AS o1 ON sir_empleado_informacion_laboral.id_seccion = o1.id_seccion
 					LEFT JOIN org_seccion AS o2 ON o2.id_seccion = o1.depende
 					LEFT JOIN org_seccion AS o3 ON o3.id_seccion = o2.depende
+					LEFT JOIN sir_cargo_nominal ON sir_cargo_nominal.id_cargo_nominal = sir_empleado_informacion_laboral.id_cargo_nominal
 					WHERE sir_empleado.id_empleado='".$id_empleado."' AND sir_empleado_informacion_laboral.id_seccion='".$datos['id_seccion']."'";
 		$query=$this->db->query($sentencia);
 	
@@ -1269,6 +1271,7 @@ SELECT
 		$sentencia="SELECT
 					tcm_solicitud_transporte.id_solicitud_transporte,
 					tcm_solicitud_transporte.id_empleado_solicitante,
+					tcm_solicitud_transporte.id_empleado_autoriza,
 					LOWER(CONCAT_WS(' ',e1.primer_nombre, e1.segundo_nombre, e1.tercer_nombre, e1.primer_apellido, e1.segundo_apellido, e1.apellido_casada)) AS nombre,
 					LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido, e2.segundo_apellido, e2.apellido_casada)) AS nombre2,
 					DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d/%m/%Y') AS fecha_mision,
