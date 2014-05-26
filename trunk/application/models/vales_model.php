@@ -77,5 +77,17 @@ class Vales_model extends CI_Model {
 		$query=$this->db->query("select id_fuente_fondo ,nombre_fuente_fondo as nombre_fuente from tcm_fuente_fondo");
 			return (array)$query->result_array();
 	}
+	function guardar_requisicion($formuInfo) 
+	{
+		extract($formuInfo);
+		$sentencia="INSERT INTO tcm_requisicion 
+		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion) 
+		VALUES 
+		(CURDATE(), '$id_seccion','$cantidad_solicitada',      '$id_empleado', $id_fuente_fondo '$justificacion' $id_usuario,   'CURDATE()');";
+		echo $sentencia;
+		//$this->db->query($sentencia);
+
+	}
+	
 }
 ?>

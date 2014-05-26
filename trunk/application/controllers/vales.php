@@ -134,15 +134,20 @@ class Vales extends CI_Controller
 	*	Objetivo: Guardar la requisicion de una seccion
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
-	*	Última Modificación: 21/05/2014
+	*	Última Modificación: 25/05/2014
 	*	Observaciones: Ninguna.
 	*/
 
 	function guardar_requisicion()
 	{
-		//print_r($_POST);
+		$this->db->trans_start();
+		print_r($_POST);
+
+		$this->vales_model->guardar_requisicion($_POST);
+		$this->db->trans_complete();
 		//ir_a('index.php/vales/ingreso_requisicion/'.$this->db->trans_status());
-		ir_a('index.php/vales/ingreso_requisicion/1');
+		//ir_a('index.php/vales/ingreso_requisicion/1');
+		
 	}
 	/*
 	*	Nombre: vehiculos
