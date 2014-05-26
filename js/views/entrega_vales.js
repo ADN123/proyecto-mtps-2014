@@ -32,3 +32,11 @@ function cargar_vehiculo(){
 console.log( fuente_fondo + " "+ seccion);
 
 }
+
+
+$( "#form_mision").submit(function( event ) {
+   alert("Mision jjjjj");
+    return false;
+  event.preventDefault();
+
+});

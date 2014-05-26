@@ -77,21 +77,32 @@ class Vales_model extends CI_Model {
 		$query=$this->db->query("select id_fuente_fondo ,nombre_fuente_fondo as nombre_fuente from tcm_fuente_fondo");
 			return (array)$query->result_array();
 	}
-	function guardar_requisicion($formuInfo) 
-	{
+	function guardar_requisicion($formuInfo,$id_usuario, $id_empleado_solicitante) 
+	{ 
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_requisicion 
 		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion) 
-		VALUES 
-		(CURDATE(), '$id_seccion','$cantidad_solicitada',      '$id_empleado', $id_fuente_fondo '$justificacion' $id_usuario,   'CURDATE()');";
-		echo $sentencia;
-		//$this->db->query($sentencia);
+			VALUES (CURDATE(), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario, CURDATE())";
+		
+
+		$this->db->query($sentencia);
+		return $this->db->insert_id();
 
 	}
 
-public function get_id_empleado($nr=''){}
+public function get_id_empleado($nr)
 {
-	# code...
+	$query="SELECT id_empleado FROM sir_empleado WHERE nr ='$nr'";
+	$query=$this->db->query($query);
+	$query=$query->result_array();
+	$query= $query[0];
+	return $query['id_empleado'];
+
+}
+public function guardar_req_veh($id_vehiculo, $id_requisicion)
+{
+	$sql="INSERT INTO tcm_req_veh VALUES('$id_requisicion','$id_vehiculo');";
+	$query=$this->db->query($sql);
 }
 	
 }
