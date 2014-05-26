@@ -513,7 +513,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para registrar una asignación de vehículo con su correspondiente motorista
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 01/04/2014
+	*	Última Modificación: 25/05/2014
 	*	Observaciones: Ninguna
 	*/
 	
