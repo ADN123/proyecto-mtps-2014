@@ -697,10 +697,9 @@ class Transporte extends CI_Controller
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$id_seccion_val=$id_seccion['id_seccion'];
-				
 				switch ($data['id_permiso']) {
 					case 2:
-						$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,3);
+						$data['datos']=$this->transporte_model->salidas_entradas_vehiculos_seccion($id_seccion_val);
 						print_r($id_seccion_val.$data['datos']);
 						break;
 					case 3:
@@ -710,11 +709,11 @@ class Transporte extends CI_Controller
 							$departamental=$this->transporte_model->is_departamental($id_seccion_val);
 
 						if($departamental){
-							$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,3);		
+							$data['datos']=$this->transporte_model->salidas_entradas_vehiculos_seccion($id_seccion_val);
 								
 						}else{/// para san salvador
 								
-							$data['datos']=$this->transporte_model->todas_solicitudes_sanSalavador(3);
+							$data['datos']=$this->transporte_model->salidas_entradas_vehiculos_SanSalvador();
 						}
 
 						break;

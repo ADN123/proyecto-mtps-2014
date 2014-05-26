@@ -88,6 +88,11 @@ class Vales_model extends CI_Model {
 		//$this->db->query($sentencia);
 
 	}
+
+public function get_id_empleado($nr=''){}
+{
+	# code...
+}
 	
 }
 ?>
