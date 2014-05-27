@@ -523,6 +523,9 @@ class Transporte extends CI_Controller
 	function asignar_veh_mot()
 	{
 		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		$empleado=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+		
+		$id_empleado=$empleado['id_empleado'];
 		
 		if($data['permiso']!=NULL) {
 			if($data['permiso']>=2) {
@@ -536,7 +539,7 @@ class Transporte extends CI_Controller
 				$observaciones=$this->input->post('observacion');//observación, si es que hay
 				
 				if($estado==3) {
-					$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr,$this->session->userdata('id_usuario'));
+					$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr, $id_empleado);
 					
 					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
 					$this->db->trans_complete();
