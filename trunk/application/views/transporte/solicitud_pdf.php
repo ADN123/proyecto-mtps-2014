@@ -213,7 +213,7 @@
     <table align="center" class="tabla2" cellspacing="0">
     	<tr><td colspan="2">&nbsp;</td></tr>
     	<tr>
-        	<td align="center" style="width:48%">
+        	<td align="center" style="width:43%">
             	<strong>USO EXCLUSIVO SERVICIOS GENERALES</strong>
                  <table align="center" class="tabla" cellspacing="0" style="width:1000px;">
                  	<tr>
@@ -251,7 +251,7 @@
                   	</tr>
                  </table>
             </td>
-        	<td align="center" style="width:48%">
+        	<td align="center" style="width:55%">
             	<strong>USO EXCLUSIVO PORTERO</strong>
                  <table align="center" class="tabla" cellspacing="0" style="width:1000px">
                     <tr>
@@ -266,7 +266,7 @@
                     	<td style="width:15%;">
                         	Kilometraje inicial:
                         </td>
-                    	<td style="width:10%;" <?php if($salida_entrada_real['km_inicial']=="") echo 'class="titu"';?>>
+                    	<td style="width:13%;" <?php if($salida_entrada_real['km_inicial']=="") echo 'class="titu"';?>>
                         	<strong><?php echo $salida_entrada_real['km_inicial'] ?></strong>
                         </td>
                     </tr>

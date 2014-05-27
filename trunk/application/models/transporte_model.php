@@ -1226,7 +1226,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$whereExtra="";
 
 		if($id_empleado!=NULL) {
-			$whereExtra.=" AND i.id_empleado_solicitante='".$id_empleado."'  ";
+			$whereExtra.=" AND st.id_empleado_solicitante='".$id_empleado."'  ";
 	
 		}
 		if($estado!=NULL){

@@ -672,7 +672,6 @@ class Transporte extends CI_Controller
 			$this->db->trans_complete();
 			if($this->db->trans_status()) {
 				$r1=enviar_correo("jose.henriquez@mtps.gob.sv","Nueva solicitud de transporte","Se acaba de almacenar una nueva solicitud de transporte.");
-				$r2=enviar_correo("leoneladonispm@hotmail.com","Nueva solicitud de transporte","Se acaba de almacenar una nueva solicitud de transporte.");
 			}
 			if($id_solicitud_old!="") {
 				ir_a('index.php/transporte/ver_solicitudes/'.$this->db->trans_status());
