@@ -1289,6 +1289,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 					LOWER(CONCAT_WS(' ',e1.primer_nombre, e1.segundo_nombre, e1.tercer_nombre, e1.primer_apellido, e1.segundo_apellido, e1.apellido_casada)) AS nombre,
 					LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido, e2.segundo_apellido, e2.apellido_casada)) AS nombre2,
 					DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d/%m/%Y') AS fecha_mision,
+					DATE_FORMAT(tcm_solicitud_transporte.fecha_solicitud_transporte, '%d/%m/%Y') AS fecha_solicitud_transporte,
 					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS hora_salida,
 					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS hora_entrada,
 					tcm_solicitud_transporte.acompanante,
@@ -1374,9 +1375,23 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	function datos_salida_entrada_real($id_solicitud_transporte)
 	{
 		$sentencia="SELECT
-					tcm_vehiculo_kilometraje.km_inicial,
-					tcm_vehiculo_kilometraje.km_final,
+					CONCAT_WS(' ', tcm_vehiculo_kilometraje.km_inicial, 'Kms') AS km_inicial,
+					CASE 
+						WHEN tcm_vehiculo_kilometraje.km_final IS NOT NULL THEN
+							CONCAT_WS(' ', tcm_vehiculo_kilometraje.km_final, 'Kms') 
+						ELSE
+							''
+						END
+						AS km_final,
+					CASE 
+						WHEN tcm_vehiculo_kilometraje.km_final IS NOT NULL THEN
+					CONCAT_WS(' ', (tcm_vehiculo_kilometraje.km_final-tcm_vehiculo_kilometraje.km_inicial), 'Kms')
+						ELSE
+							''
+						END
+						AS total,
 					tcm_vehiculo_kilometraje.combustible,
+					DATE_FORMAT(tcm_vehiculo_kilometraje.hora_salida,'%d/%m/%Y') AS fecha_mision,
 					DATE_FORMAT(tcm_vehiculo_kilometraje.hora_salida,'%h:%i %p') AS hora_salida,
 					DATE_FORMAT(tcm_vehiculo_kilometraje.hora_entrada,'%h:%i %p') AS hora_entrada
 					FROM tcm_vehiculo_kilometraje
