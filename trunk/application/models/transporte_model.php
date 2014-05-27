@@ -233,6 +233,9 @@ LEFT JOIN sir_empleado s ON (s.id_empleado=t.id_empleado_solicitante)
 LEFT JOIN sir_empleado_informacion_laboral i ON (i.id_empleado=s.id_empleado)
 LEFT JOIN org_seccion o ON (i.id_seccion=o.id_seccion)
 WHERE 
+ o.id_seccion NOT IN 
+			(SELECT id_seccion FROM org_seccion WHERE id_seccion BETWEEN 52 AND 66)
+	and
 	(estado_solicitud_transporte='".$estado."')
 	and 
 	(	i.id_empleado_informacion_laboral in
