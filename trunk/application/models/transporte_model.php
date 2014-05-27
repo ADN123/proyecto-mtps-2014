@@ -849,7 +849,7 @@ order by e.primer_nombre ASC);");
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	///////////////CONSULTAR MOTORISTAS: CARGA LOS MOTORISTAS CORRESPONDIENTES A LOS VEHICULOS VERSION CENTRAL/////////////////////////////////
-	function consultar_motoristas_central($id,$seccion)
+	function consultar_motoristas_central($id,$seccion=NULL)
 	{
 		$query=$this->db->query("(SELECT t.id_empleado, IF(t.id_empleado!=0,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)),'No tiene asignado') as nombre FROM tcm_vehiculo_motorista t left join sir_empleado e on (t.id_empleado=e.id_empleado)
 where t.id_vehiculo='$id') union (SELECT t.id_empleado,LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre FROM tcm_vehiculo_motorista t
@@ -1356,14 +1356,17 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	function datos_motorista_vehiculo($id_solicitud_transporte) 
 	{
 		$sentencia="SELECT
-					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre,
+					LOWER(CONCAT_WS(' ',e1.primer_nombre, e1.segundo_nombre, e1.tercer_nombre, e1.primer_apellido, e1.segundo_apellido, e1.apellido_casada)) AS nombre,
+					tcm_asignacion_sol_veh_mot.id_empleado_asigna,
+					LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido, e2.segundo_apellido, e2.apellido_casada)) AS nombre2,
 					tcm_vehiculo.placa,
 					LOWER(tcm_vehiculo_clase.nombre_clase) AS nombre_clase
 					FROM tcm_vehiculo
 					INNER JOIN tcm_vehiculo_clase ON tcm_vehiculo_clase.id_vehiculo_clase = tcm_vehiculo.id_clase
 					INNER JOIN tcm_asignacion_sol_veh_mot ON tcm_asignacion_sol_veh_mot.id_vehiculo = tcm_vehiculo.id_vehiculo
-					INNER JOIN sir_empleado ON tcm_asignacion_sol_veh_mot.id_empleado = sir_empleado.id_empleado
-					WHERE id_solicitud_transporte='".$id_solicitud_transporte."'";
+					INNER JOIN sir_empleado AS e1 ON tcm_asignacion_sol_veh_mot.id_empleado = e1.id_empleado
+					INNER JOIN sir_empleado AS e2 ON tcm_asignacion_sol_veh_mot.id_empleado_asigna = e2.id_empleado
+					WHERE tcm_asignacion_sol_veh_mot.id_solicitud_transporte = '".$id_solicitud_transporte."'";
 		$query=$this->db->query($sentencia);
 		
 		return (array)$query->row();

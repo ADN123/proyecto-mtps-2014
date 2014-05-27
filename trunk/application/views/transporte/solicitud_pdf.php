@@ -244,8 +244,8 @@
         			<tr><td>&nbsp;</td></tr>
                     <tr>
                         <td align="center">
-                            f. _____________________________________________<br />
-                            Autoriza – Jefe de Servicios Generales
+                           	<!--f. _____________________________________________<br />-->
+                            Asignado por <strong><?php echo ucwords($motorista_vehiculo['nombre']) ?> </strong><br /><?php echo ucwords($info_empleado3['nominal']) ?>
                         </td>
                   	</tr>
                  </table>
