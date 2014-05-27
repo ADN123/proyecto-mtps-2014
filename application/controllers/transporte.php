@@ -967,6 +967,7 @@ class Transporte extends CI_Controller
 			$data['destinos']=$this->transporte_model->destinos($id_solicitud_transporte);
 			$data['salida_entrada_real']=$this->transporte_model->datos_salida_entrada_real($id_solicitud_transporte);
 			$data['motorista_vehiculo']=$this->transporte_model->datos_motorista_vehiculo($id_solicitud_transporte);
+			$data['info_empleado3']=$this->transporte_model->info_adicional($data['motorista_vehiculo']['id_empleado_asigna']);
 			$data['observaciones']=$this->transporte_model->observaciones($id_solicitud_transporte);
 			/*$this->load->view('transporte/solicitud_pdf.php',$data);*/
 			
