@@ -28,12 +28,13 @@ class Transporte extends CI_Controller
 	function solicitud($estado_transaccion=NULL,$id_solicitud=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
-		
+		$band=1;
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
 					$data['empleados']=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
 					foreach($data['empleados'] as $val) {
+						$band=0;
 						$data['info']=$this->transporte_model->info_adicional($val['NR']);
 					}
 					break;
@@ -57,7 +58,8 @@ class Transporte extends CI_Controller
 			}
 			$data['estado_transaccion']=$estado_transaccion;
 			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud,1);
-			$data['info']=$this->transporte_model->info_adicional($data['solicitud']['id_empleado_solicitante']);
+			if($band)	
+				$data['info']=$this->transporte_model->info_adicional($data['solicitud']['id_empleado_solicitante']);
 			$data['solicitud_destinos']=$this->transporte_model->consultar_destinos($data['solicitud']['id_solicitud_transporte']);
 			$data['solicitud_acompanantes']=$this->transporte_model->acompanantes_internos($data['solicitud']['id_solicitud_transporte']);
 			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
