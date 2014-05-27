@@ -62,7 +62,6 @@ class Transporte extends CI_Controller
 			$data['solicitud_acompanantes']=$this->transporte_model->acompanantes_internos($data['solicitud']['id_solicitud_transporte']);
 			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
 			$data['municipios']=$this->transporte_model->consultar_municipios();
-
 			pantalla('transporte/solicitud',$data);	
 		}
 		else {
@@ -671,6 +670,10 @@ class Transporte extends CI_Controller
 				$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones, 1); /*Guardando observaciones*/
 			
 			$this->db->trans_complete();
+			if($this->db->trans_status()) {
+				$r1=enviar_correo("jose.henriquez@mtps.gob.sv","Nueva solicitud de transporte","Se acaba de almacenar una nueva solicitud de transporte.");
+				$r2=enviar_correo("leoneladonispm@hotmail.com","Nueva solicitud de transporte","Se acaba de almacenar una nueva solicitud de transporte.");
+			}
 			if($id_solicitud_old!="") {
 				ir_a('index.php/transporte/ver_solicitudes/'.$this->db->trans_status());
 			}
