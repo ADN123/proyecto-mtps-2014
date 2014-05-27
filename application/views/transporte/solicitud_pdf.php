@@ -221,6 +221,7 @@
                         	<strong>AUTORIZACION  DE VEHICULO A  MISION  OFICIAL</strong>
                         </td>
                     </tr>
+        			<tr><td>&nbsp;</td></tr>
                  	<tr>
                     	<td>
                         	Motorista: <strong><?php echo ucwords($motorista_vehiculo['nombre']) ?></strong>
@@ -236,7 +237,6 @@
                         	Clase del veh&iacute;culo: <strong><?php echo ucwords($motorista_vehiculo['nombre_clase']) ?></strong>
                         </td>
                     </tr>
-        			<tr><td>&nbsp;</td></tr>
         			<tr><td>&nbsp;</td></tr>
         			<tr><td>&nbsp;</td></tr>
         			<tr><td>&nbsp;</td></tr>
@@ -323,26 +323,36 @@
             </td>
         </tr>
     </table>
-    <p>
-        <?php
-            foreach($observaciones as $val) {
-                switch($val['quien_realiza']) {
-                    case 1:
-                        $quien="Observaciones por parte del solicitante";
-                        break;
-                    case 2:
-                        $quien="Observaciones por parte del Jefe de Departamento o Secci&oacute;n";
-                        break;
-                    case 3:
-                        $quien="Observaciones por parte del Jefe de Servicios Generales";
-                        break;
-                    default:
-                        $quien="General";
-                }
-                echo $quien.":<br><ul><li><strong>".$val['observacion'].".</strong></li></ul>";					
-            }
-		?>
-    </p>
+    <table align="center" border="0" cellspacing="0" style="width:100%;">
+    	<tr>
+        	<td style="vertical-align:top; font-size: 13px;">
+				<br>
+				<?php
+                    foreach($observaciones as $val) {
+                        switch($val['quien_realiza']) {
+                            case 1:
+                                $quien="Observaciones por parte del solicitante";
+                                break;
+                            case 2:
+                                $quien="Observaciones por parte del Jefe de Departamento o Secci&oacute;n";
+                                break;
+                            case 3:
+                                $quien="Observaciones por parte del Jefe de Servicios Generales";
+                                break;
+                            default:
+                                $quien="General";
+                        }
+                        echo $quien.":<br><ul><li><strong>".$val['observacion'].".</strong></li></ul>";					
+                    }
+                ?>
+            </td>
+        	<td align="center" style="width:40%; height:300px; vertical-align:bottom;">
+            	<img src="img/firma_gerencia.png" /><br />
+                f. _______________________________________<br />
+                Administración
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
 
