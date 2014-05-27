@@ -23,7 +23,8 @@
         <tr>
         	<td colspan="2" align="center">
             	<?php 
-					switch(date('m')) {
+					$fec=explode("/",$info_solicitud['fecha_mision']);
+					switch($fec[1]) {
 						case 1: 
 							$mes="Enero";
 							break;
@@ -62,7 +63,7 @@
 							break;
 					}
 				?>
-            	San Salvador, <?php echo date('d')?> de <?php echo $mes." ".date('Y')?> 
+            	San Salvador, <?php echo $fec[0]?> de <?php echo $mes." ".$fec[2]?> 
             </td>
         </tr>
         <tr>
@@ -94,7 +95,7 @@
                         	<strong><?php echo $info_solicitud['fecha_mision'] ?></strong>
                         </td>
                     	<td align="center">
-                        	<strong><?php ?></strong>
+                        	<strong><?php echo $salida_entrada_real['fecha_mision'] ?></strong>
                         </td>
                     </tr>
                 	<tr>
@@ -105,7 +106,7 @@
                         	<strong><?php echo $info_solicitud['hora_salida'] ?></strong>
                         </td>
                     	<td align="center">
-                        	<strong><?php  ?></strong>
+                        	<strong><?php echo $salida_entrada_real['hora_salida']?></strong>
                         </td>
                     </tr>
                 	<tr>
@@ -116,7 +117,7 @@
                         	<strong><?php echo $info_solicitud['hora_entrada'] ?></strong>
                         </td>
                     	<td align="center">
-                        	<strong><?php ?></strong>
+                        	<strong><?php echo $salida_entrada_real['hora_entrada'] ?></strong>
                         </td>
                     </tr>
                 </table>
@@ -245,7 +246,7 @@
                     <tr>
                         <td align="center">
                            	<!--f. _____________________________________________<br />-->
-                            Asignado por <strong><?php echo ucwords($motorista_vehiculo['nombre']) ?> </strong><br /><?php echo ucwords($info_empleado3['nominal']) ?>
+                            Asignado por <strong><?php echo ucwords($motorista_vehiculo['nombre2']) ?> </strong><br /><?php echo ucwords($info_empleado3['nominal']) ?>
                         </td>
                   	</tr>
                  </table>
@@ -257,7 +258,7 @@
                     	<td>&nbsp;</td>
                     	<td></td>
                         <td rowspan="10" align="right">
-                        	<img src="img/marcador_combustible.jpg" style="width:20%;height:auto;" />
+                        	<img src="img/marcador_combustible<?php echo $salida_entrada_real['combustible'] ?>.jpg" style="width:20%;height:auto;" />
                             <span style="font-size: 10px;">Remanente de combustible  que queda al final de la misión  en el vehículo.</span>
                         </td>
                    	</tr>
@@ -265,24 +266,24 @@
                     	<td style="width:15%;">
                         	Kilometraje inicial:
                         </td>
-                    	<td class="titu" style="width:10%;">
-                        	
+                    	<td style="width:10%;" <?php if($salida_entrada_real['km_inicial']=="") echo 'class="titu"';?>>
+                        	<strong><?php echo $salida_entrada_real['km_inicial'] ?></strong>
                         </td>
                     </tr>
                  	<tr>
                     	<td>
                         	kilometraje final:
                         </td>
-                    	<td class="titu">
-                        	
+                    	<td <?php if($salida_entrada_real['km_final']=="") echo 'class="titu"';?>>
+                        	<strong><?php echo $salida_entrada_real['km_final'] ?></strong>
                         </td>
                     </tr>
                  	<tr>
                     	<td>
                         	Kms. recorridos:
                         </td>
-                    	<td class="titu">
-                        	
+                    	<td <?php if($salida_entrada_real['km_final']=="") echo 'class="titu"';?>>
+                        	<strong><?php echo $salida_entrada_real['total'] ?></strong>
                         </td>
                     </tr>
                     <tr>
