@@ -85,7 +85,7 @@ class Transporte extends CI_Controller
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$id_seccion_val=$id_seccion['id_seccion'];
-				echo $data['id_permiso'];
+			
 				switch ($data['id_permiso']) {
 					case 2:
 						$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1);			
