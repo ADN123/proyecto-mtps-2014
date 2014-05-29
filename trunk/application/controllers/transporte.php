@@ -23,7 +23,7 @@ class Transporte extends CI_Controller
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Última Modificación: 13/04/2014
-	*	Observaciones: Ya no se podrá utilizar esta funcion para modificar (A menos que sepa como mandarle dos variables desde la barra de direcciones).
+	*	Observaciones: Ninguna.
 	*/
 	function solicitud($estado_transaccion=NULL,$id_solicitud=NULL)
 	{
