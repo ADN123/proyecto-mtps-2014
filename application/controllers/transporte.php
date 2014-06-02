@@ -786,15 +786,18 @@ class Transporte extends CI_Controller
 			$km=$this->input->post('km');
 			$gas=$this->input->post('gas');
 			$hora=date("H:i:s", strtotime($this->input->post('hora')));
-	
+			$imprimir=$this->input->post('resp'); //estado de la solicitud
 			/*remuevo de post los datos para que solo queden los accesorios*/
 
+		
 			$acces=$_POST;
+			unset($acces['resp']);
 			unset($acces['estado']);
 			unset($acces['gas']);
 			unset($acces['id']);
 			unset($acces['km']);
 			unset($acces['hora']);
+			//print_r($acces);
 			
 			if($estado==3){
 				$this->transporte_model->salida_vehiculo($id, $km,$hora,$acces);
@@ -809,7 +812,14 @@ class Transporte extends CI_Controller
 				}
 			}
 			$this->db->trans_complete();
+
+			if($imprimir==1){
+		
+			 nuevaVentana('index.php/transporte/solicitud_pdf/'.$id);	
+			}
 			ir_a('index.php/transporte/control_salidas_entradas/'.$this->db->trans_status()."/".$estado);	
+				
+			
 		}
 		else {
 			echo "No tiene permisos para acceder";

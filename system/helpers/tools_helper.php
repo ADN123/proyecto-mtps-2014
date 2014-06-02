@@ -59,11 +59,25 @@
 				{
 				location.href=pagina
 				} 
-				setTimeout ("redireccionar()", 1000);
+				setTimeout ("redireccionar()", 600);
 				
 				</script>';
 		
 		}	
+
+	function nuevaVentana($url){
+		echo'<script language="JavaScript" type="text/javascript">
+				var pagina2="'.base_url().$url.'"
+				function nuevaVentana() 
+				{
+				window.open(pagina2,"_blank");
+				} 
+				setTimeout ("nuevaVentana()", 300);
+				
+				</script>';
+		
+		}	
+
 	function enviar_correo($correo,$title,$message) 
 	{
 		$CI =& get_instance();
