@@ -23,6 +23,24 @@ class Seguridad_model extends CI_Model {
 			);
 		}
 	}
+	public function sexoUsuario($id_usuario='')
+	{
+			$sentencia="SELECT
+						CASE 1
+					WHEN sexo = 'F' THEN
+						'Bienvenida'
+					WHEN sexo = 'M' THEN
+						'Bienvenido'
+					ELSE
+						'Bienvenido/a'
+					END AS msj
+					FROM
+						org_usuario
+					WHERE
+						id_usuario =".$id_usuario;
+			$query=$this->db->query($sentencia);
+			return (array)$query->result_array();
+	}
 	
 	function buscar_menus($id) 
 	{
