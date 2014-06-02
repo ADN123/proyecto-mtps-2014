@@ -15,14 +15,16 @@ class Inicio extends CI_Controller
     }
 	
 	function index()
-	{
-	 	$this->pantalla('home');
-		
+
+	{	$data=$this->seguridad_model->sexoUsuario($this->session->userdata('id_usuario'));
+	$data=$data[0];
+	 	//print_r($data);
+	 	$this->pantalla('home',$data);
 		/*$data['menus']=$this->seguridad_model->buscar_menus($this->session->userdata('id_usuario'));
 		$this->load->view('prueba',$data);*/
 	}
 	
-	function pantalla ($vista) 
+	function pantalla ($vista,$data) 
 	{
 		$data['nick']=$this->session->userdata('usuario');
 		$data['nombre']=$this->session->userdata('nombre');
