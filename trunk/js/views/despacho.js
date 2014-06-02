@@ -37,11 +37,7 @@ function dialogo(id, val){ //carga la informacion si la
 	$('#id').val(id);
 	$('#estado').val(val);
 
-	if(val==3){
-		$('#dere').hide();
-			}else{
-		$('#dere').show();
-	}
+
 info(id,val);	
 }
 

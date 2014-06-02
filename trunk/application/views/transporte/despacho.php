@@ -51,6 +51,7 @@
             <input type="hidden" name="estado" id="estado" />
             <input type="hidden" name="id" id="id" />
             <input type="hidden" id="kmi" />
+            <input type='hidden' id='resp' name='resp' />
             <fieldset>
                 <legend align='left'>Información de la Misión Oficial</legend>
                 <div id="InfoMision"></div>
@@ -86,7 +87,9 @@
           	</fieldset>
             <br />
    	 		<p align="center"> 
-            	<button type="submit" id="aprobar" class="boton_validador">Guardar</button>
+            	<button type="submit" id="guard" class="boton_validador"  onclick="Enviar(0)" >Guardar </button> 
+               <button  type="submit" id="imprimir" class="boton_validador" onclick="Enviar(1)">Guardar e Imprimir</button>
+                
            	</p>    
       	</form>
 	</div>
@@ -114,4 +117,9 @@
 		men: "Por Ingrese el kilometraje",
 		numMin: 0
 	});
+
+function Enviar(v)
+{
+    document.getElementById('resp').value=v;
+}
 </script>
