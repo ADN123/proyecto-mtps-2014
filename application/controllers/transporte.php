@@ -428,7 +428,7 @@ class Transporte extends CI_Controller
 					<textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
 				</fieldset>
 				<p style='text-align: center;'>
-					<button type='submit' id='asignar' name='asignar' class='boton_validador' onclick='enviar(3)'>Asignar</button>
+					<button type='submit' id='asignar' name='asignar' class='boton_validador' onclick='enviar(3)'>Asignar</button>&nbsp;&nbsp;&nbsp;<button type='submit' id='asignar' name='asignar' class='boton_validador' onclick='enviar(0)'>Denegar</button>
 				</p>
 				</form>
 				";
@@ -523,7 +523,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para registrar una asignación de vehículo con su correspondiente motorista
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 25/05/2014
+	*	Última Modificación: 03/06/2014
 	*	Observaciones: Ninguna
 	*/
 	
@@ -540,7 +540,7 @@ class Transporte extends CI_Controller
 				$id_solicitud=$this->input->post('id_solicitud');//id_solicitud
 				$id_vehiculo=$this->input->post('vehiculo'); //id_vehiculo
 				$id_motorista=$this->input->post('motorista'); //estado de la solicitud
-				$estado=$this->input->post('resp');//futurp estado de la solicitud
+				$estado=$this->input->post('resp');//futuro estado de la solicitud
 				$fecha_m=date('Y-m-d H:i:s');
 				$nr=$this->session->userdata('nr'); //NR del usuario Logueado
 				$observaciones=$this->input->post('observacion');//observación, si es que hay
@@ -548,6 +548,13 @@ class Transporte extends CI_Controller
 				if($estado==3) {
 					$this->transporte_model->asignar_veh_mot($id_solicitud,$id_motorista,$id_vehiculo, $estado, $fecha_m,$nr, $id_empleado);
 					
+					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
+					$this->db->trans_complete();
+					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$this->db->trans_status());
+				}
+				else if($estado==0)
+				{
+					$this->transporte_model->nasignar_veh_mot($id_solicitud, $estado, $fecha_m, $id_empleado);
 					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
 					$this->db->trans_complete();
 					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$this->db->trans_status());

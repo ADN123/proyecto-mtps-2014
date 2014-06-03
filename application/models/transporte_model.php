@@ -916,6 +916,13 @@ where t.id_solicitud_transporte='$id';");
 		
 		return $query;
 	}
+	
+	function nasignar_veh_mot($id_solicitud,$estado,$fecha,$id_usuario)
+	{
+		$query=$this->db->query("update tcm_solicitud_transporte set estado_solicitud_transporte='$estado', fecha_modificacion='$fecha', id_usuario_modifica='$id_usuario' where id_solicitud_transporte='$id_solicitud'");
+		
+		return $query;
+	}
 	////////////////////////////FUNCION DE DESTINOS/////////////////
 	function destinos($id)
 	{
