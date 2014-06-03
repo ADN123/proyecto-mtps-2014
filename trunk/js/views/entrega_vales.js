@@ -15,6 +15,9 @@ $(document).ready(function(){
 	$("#id_seccion").validacion({
 		men: "Debe seleccionar un item"
 	});
+	$("#verificando").validacion({       
+        men: "Porfavor Selccione un vehiculo"
+     });
 });
 
 function cargar_vehiculo(){

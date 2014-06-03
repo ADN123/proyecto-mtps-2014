@@ -791,11 +791,15 @@ class Transporte extends CI_Controller
 			$km=$this->input->post('km');
 			$gas=$this->input->post('gas');
 			$hora=date("H:i:s", strtotime($this->input->post('hora')));
+			$descrip=$this->input->post('observacion'); //Observacion
 			$imprimir=$this->input->post('resp'); //estado de la solicitud
+
+
 			/*remuevo de post los datos para que solo queden los accesorios*/
 
 		
 			$acces=$_POST;
+			unset($acces['observacion']);
 			unset($acces['resp']);
 			unset($acces['estado']);
 			unset($acces['gas']);
@@ -816,7 +820,12 @@ class Transporte extends CI_Controller
 
 				}
 			}
+
+			if($descrip!=""){
+					$this->transporte_model->insertar_descripcion($id,$descrip,3);
+					}
 			$this->db->trans_complete();
+
 
 			if($imprimir==1){
 		

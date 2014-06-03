@@ -90,6 +90,12 @@
                 Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)" >
           	</fieldset>
             <br />
+                <br>
+                <fieldset>
+                    <legend align='left'>Informaci&oacute;n  Adicional</legend>
+                    <label for="observacion" id="lobservacion" class="label_textarea">Observaciones</label>
+                    <textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
+                </fieldset>
    	 		<p align="center"> 
             	<button type="submit" id="guard" class="boton_validador"  onclick="Enviar(0)" >Guardar </button> 
                <button  type="submit" id="imprimir" class="boton_validador" onclick="Enviar(1)">Guardar e Imprimir</button>
@@ -121,6 +127,10 @@
 		men: "Por Ingrese el kilometraje",
 		numMin: 0
 	});
+     $("#observacion").validacion({
+        req: false,
+        lonMin: 10
+    });
 
 function Enviar(v)
 {

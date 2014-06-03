@@ -660,7 +660,8 @@ function solicitudes_por_asignar_depto(){
 				id_empleado_autoriza= (SELECT id_empleado FROM sir_empleado WHERE NR LIKE '".$nr."'),
 				estado_solicitud_transporte = $estado,
 				id_usuario_modifica = '".$iduse."', 
-				fecha_modificacion=  CONCAT_WS(' ', CURDATE(),CURTIME())  
+				fecha_modificacion=  CONCAT_WS(' ', CURDATE(),CURTIME()),  
+				fecha_aprobacion=  CONCAT_WS(' ', CURDATE(),CURTIME())  
 			WHERE id_solicitud_transporte= ".$id;
 	
 		  $query=$this->db->query($q);

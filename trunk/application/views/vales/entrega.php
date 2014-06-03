@@ -34,14 +34,14 @@
                     </span>
                 </a>
             </li>
-        </ul>
+        </ul>                 
+
         <div id="step-1">	
             <h2 class="StepTitle">Ingrese los de datos de los vales de combustible</h2>
            
             <p> 
                 <label for="cantidad_solicitada" id="lcantidad_solicitada">Cantidad Solicitada </label>
                 <input style="width:100px;" type="text" tabindex="1" id="cantidad_solicitada" name="cantidad_solicitada"/>
-                 
                 <label for="id_fuente_fondo" id="lid_fuente_fondo">Fuente de Fondo </label>
                 <select class="select" style="width:200px;" tabindex="2" id="id_fuente_fondo" name="id_fuente_fondo" onChange="cargar_vehiculo()">
                     <?php
@@ -88,9 +88,23 @@
       	</div>
         <div id="step-2">	
             <h2 class="StepTitle">Selecci&oacute;n los vehiculos a los que se aplicarán los vales</h2>
+            <label for="verificando" id="lverificando" class="label_textarea">Cantidad de Vehiculos</label>
             <p ><div id="divVehiculos"></div>
+
+
+                <div style="display:none;">   
+
+                    <input type="text" id="verificando" name="verificando"  >  </div>
             	
             </p>
         </div>
     </div>
 </form>
+<script type="text/javascript">
+
+
+function marcados() {
+    document.getElementById('verificando').value=12;
+}
+
+</script>
