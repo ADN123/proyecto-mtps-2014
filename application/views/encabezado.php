@@ -17,7 +17,8 @@
 		<link href="<?php echo base_url()?>css/alertify.default.css" rel="stylesheet" />
         <link href="<?php echo base_url()?>css/style-base.css" rel="stylesheet" type="text/css" />
         <script src="<?php echo base_url()?>js/jquery-1.8.2.js"></script>
-        <!--<script src="<?php echo base_url()?>js/jquery-ui-1.9.0.custom.js"></script>-->
+        <script src="<?php echo base_url()?>js/jquery-ui-1.9.0.custom.js"></script>
+        <script src="<?php echo base_url()?>js/jquery.dataTables.js"></script>
 		<script src="<?php echo base_url()?>js/classie.js"></script>
         <script src="<?php echo base_url()?>js/kendo.all.min.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/jquery.tooltipster.js" type="text/javascript"></script>
@@ -132,6 +133,9 @@
 				});
 			});
 		</script>
+        <style type="text/css" title="currentStyle">
+			@import "<?php echo base_url()?>css/demo_table_jui.css";
+		</style>
 	</head>
 	<body>
         <header id="ha-header" class="ha-header ha-header-subshow">

@@ -61,6 +61,7 @@ class Sessiones extends CI_Controller {
 					$this->session->set_userdata('usuario', $v['usuario']);
 					$this->session->set_userdata('nr', $v['NR']);			
 					$this->session->set_userdata('id_seccion', $v['id_seccion']);
+					$this->session->set_userdata('sexo', $v['sexo']);
 					setcookie('contador', 1, time() + 15* 60);			
 					ir_a('index.php/inicio'); 
 					}
