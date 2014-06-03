@@ -78,6 +78,7 @@
 		
 		}	
 
+	/*function enviar_correo($correo=array(),$title,$message) */
 	function enviar_correo($correo,$title,$message) 
 	{
 		$CI =& get_instance();
@@ -90,9 +91,11 @@
 		$mail->Username = "departamento.transporte@mtps.gob.sv";
 		$mail->Password = ".[?=)&%$";
 		$mail->From = "departamento.transporte@mtps.gob.sv";
-		$mail->FromName = $title;
+		$mail->FromName = "Departamento de Transporte";
 		$mail->IsHTML(true);          
 		$mail->Timeout = 1000;
+		/*for($i=0;$i<count($correo);$i++)
+			$mail->AddAddress( $correo[$i] );*/
 		$mail->AddAddress( $correo );
 		$mail->ContentType = "text/html";
 		$mail->Subject = $title;
@@ -100,6 +103,68 @@
 		$r=$mail->Send();
 		return $r;
 	}
+	
+	function enviar_correo_automatico_administracion($id_solicitud_transporte=NULL, $id_modulo=NULL) 
+	{
+		$CI =& get_instance();
+		$CI->load->model('usuario_model');
+		$CI->load->model('transporte_model');
+		$datos=$CI->usuario_model->buscar_correos($id_solicitud_transporte, $id_modulo);
+		$solicitud=$CI->transporte_model->consultar_solicitud($id_solicitud_transporte);
+		for($i=0;$i<count($datos);$i++) {
+			$nombre=ucwords($datos[$i]['nombre']);
+			$correo=ucwords($datos[$i]['correo']);
+			/*$correo="leoneladonispm@hotmail.com";*/
+			$nominal=ucwords($datos[$i]['nominal']);
+			$mensaje="Estimad@ ".$nombre.",<br><br>La solicitud N&deg;<strong>".$id_solicitud_transporte."</strong> realizada por <strong>".ucwords($solicitud['nombre'])."</strong> ";
+			switch($id_modulo){
+				case 60:
+					$titulo="SOLICITUD DE TRANSPORTE PENDIENTE DE AUTORIZACION";
+					$mensaje.="requiere de su autorizaci&oacute;n.<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+					break;
+				case 62:
+					$titulo="SOLICITUD DE TRANSPORTE PENDIENTE DE ASIGACION DE VEHCULO/MOTORISTA";
+					$mensaje.="requiere asignaci&oacute;n de veh&iacute;culo/motorista.<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+					break;
+				default:
+					$titulo="";
+					$mensaje="";
+			}
+			$r=enviar_correo($correo,$titulo,$mensaje);
+		}
+	}
+	
+	function enviar_correo_automatico_usuarios($id_solicitud_transporte=NULL) 
+	{
+		$CI =& get_instance();
+		$CI->load->model('usuario_model');
+		$CI->load->model('transporte_model');
+		$datos=$CI->usuario_model->buscar_correo($id_solicitud_transporte);
+		$nombre=ucwords($datos['nombre']);
+		/*$correo=ucwords($datos['correo']);*/
+		$correo="leoneladonispm@hotmail.com";
+		$nominal=ucwords($datos['nominal']);
+		$mensaje="Estimad@ ".$nombre.",<br><br>Su solicitud N&deg;<strong>".$id_solicitud_transporte."</strong> con fecha de salida <strong>".$datos['fecha_mision']."</strong> ";
+		switch($datos['estado']){
+			case 0:
+				$titulo="SOLICITUD DE TRANSPORTE RECHAZADA";
+				$mensaje.="ha sido reprobada. Puede que se deba a uno de los siguientes motivos: '<strong>".$datos['observacion']."</strong>'<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+				break;
+			case 2:
+				$titulo="SOLICITUD DE TRANSPORTE APROBADA";
+				$mensaje.="ha sido aprobada.<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+				break;
+			case 3:
+				$titulo="SOLICITUD DE TRANSPORTE ASIGNADA CON VEHICULO/MOTORISTA";
+				$mensaje.="ha sido asignada con veh&iacute;culo/motorista.<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+				break;
+			default:
+				$titulo="";
+				$mensaje="";
+		}
+		$r=enviar_correo($correo,$titulo,$mensaje);
+	}
+	
 	function alerta($msj,$url){
 		echo'
 	<link href="'.base_url().'css/default.css" rel="stylesheet" type="text/css" />
