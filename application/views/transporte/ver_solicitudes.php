@@ -60,7 +60,7 @@
                 <?php
             		} 
                 	 
-                	 if($val['estado']<=3){
+                	 if($val['estado']<=3 && $val['estado']>=1){
                 ?>
                 <a class="eliminar" title="Eliminar solicitud" href="<?php echo base_url()?>index.php/transporte/eliminar_solicitud/<?php echo $val['id']?>"><img src="<?php echo base_url()?>img/ico_basura.png"/></a>
                 	
