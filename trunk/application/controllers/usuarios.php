@@ -435,6 +435,7 @@ class Usuarios extends CI_Controller
 			
 			$data=$this->usuario_model->info_adicional($id_empleado);
 			
+
 			if($data['id_genero']==1) {
 				$data['id_genero']="M";
 			}
