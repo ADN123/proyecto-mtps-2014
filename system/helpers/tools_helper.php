@@ -141,8 +141,8 @@
 		$CI->load->model('transporte_model');
 		$datos=$CI->usuario_model->buscar_correo($id_solicitud_transporte);
 		$nombre=ucwords($datos['nombre']);
-		/*$correo=ucwords($datos['correo']);*/
-		$correo="leoneladonispm@hotmail.com";
+		$correo=ucwords($datos['correo']);
+		/*$correo="leoneladonispm@hotmail.com";*/
 		$nominal=ucwords($datos['nominal']);
 		$mensaje="Estimad@ ".$nombre.",<br><br>Su solicitud N&deg;<strong>".$id_solicitud_transporte."</strong> con fecha de salida <strong>".$datos['fecha_mision']."</strong> ";
 		switch($datos['estado']){
