@@ -10,7 +10,7 @@
     <thead>
       <tr>
       	<th>ID Solicitud</th>
-        <th>fechacha y Hora de Misión</th>
+        <th>fecha y Hora de Misión</th>
         <th>Sección del Solicitante</th>
         <th>Persona Solicitante</th>
         <th>Opción</th>
