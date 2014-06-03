@@ -28,7 +28,7 @@
 						case 1: 
 							$mes="Enero";
 							break;
-						case 2: 
+						case 2:
 							$mes="Febreo";
 							break;
 						case 3: 
@@ -62,8 +62,55 @@
 							$mes="Diciembre";
 							break;
 					}
+					
+					switch($id_seccion)
+					{
+						case 52:
+						$depto="Ahuachapán";
+						break;
+						case 53:
+						$depto="Cabañas";
+						break;
+						case 54:
+						$depto="Chalatenango";
+						break;
+						case 55:
+						$depto="Cuscatlán";
+						break;
+						case 56:
+						$depto="La Libertad";
+						break;
+						case 57:
+						$depto="La Unión";
+						break;
+						case 58:
+						$depto="Morazán";
+						break;
+						case 59:
+						$depto="San Vicente";
+						break;
+						case 60:
+						$depto="Sonsonate";
+						break;
+						case 61:
+						$depto="Usulután";
+						break;
+						case 64:
+						$depto="Zacatecoluca";
+						break;
+						case 65:
+						$depto="San Miguel";
+						break;
+						case 66:
+						$depto="Santa Ana";
+						break;
+						default:
+						$depto="San Salvador";
+						break;
+					}
+					
 				?>
-            	San Salvador, <?php echo $fec[0]?> de <?php echo $mes." ".$fec[2]?> 
+            	<?php echo $depto; ?>, <?php echo $fec[0]?> de <?php echo $mes." ".$fec[2]?> 
             </td>
         </tr>
         <tr>
