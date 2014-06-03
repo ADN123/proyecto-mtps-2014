@@ -8,6 +8,7 @@
  var estado_transaccion="";
  var estado_correcto="La transacción fue ejecutada exitosamente";
  var estado_incorrecto="Error en la transacción: No se pudo conectar al servidor";
+ var id='';
 $(document).ready(function() {
 	if(estado_transaccion!="") {
 		if(Number(estado_transaccion)==1) {
@@ -27,9 +28,25 @@ $(document).ready(function() {
 		autoBind: false,
 		filter: "contains"
 	});
-	multi= $(".multi").kendoMultiSelect({
+	if(id!=''){
+		var dropdownlist = $("#nombre").data("kendoComboBox");
+		id=Number(id);
+		dropdownlist.value(id);
+	}
+		
+	$(".multi").kendoMultiSelect({
 		filter: "contains"	
-	}).data("kendoMultiSelect");
+	});
+	
+	/*var multiSelect = $("#acompanantes2").data("kendoMultiSelect");
+	
+	setValue = function(e) {
+		if (e.type != "keypress" || kendo.keys.ENTER == e.keyCode) {
+			multiSelect.dataSource.filter({}); //clear applied filter before setting value
+			var x="1,2,4";
+			multiSelect.value(x.split(","));
+		}
+	};*/
 	
 	$(".nac").kendoDatePicker({
 		culture: "es-SV",

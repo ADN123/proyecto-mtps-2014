@@ -3,8 +3,10 @@
 	estado_transaccion='<?php echo $estado_transaccion?>';
 	estado_correcto='La solicitud se ha almacenado exitosamente.';
 	estado_incorrecto='Error al intentar guardar la solicitud: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+	<?php if($solicitud['id_solicitud_transporte']!="") {?>
+		id='<?php echo $solicitud['id_empleado_solicitante'];?>';
+	<?php }?>
 </script>
-<script src="<?php echo base_url()?>js/views/solicitud.js" type="text/javascript"></script>
 <section>
     <h2>Nueva solicitud para Misi&oacute;n Oficial</h2>
 </section>
@@ -86,10 +88,18 @@
 							}
 						}
 						else {
-								echo '<strong style="font-size: 11px;">'.ucwords($solicitud['nombre']).'</strong>';
+								echo '<!--<strong style="font-size: 11px;">'.ucwords($solicitud['nombre']).'</strong>-->';
 				?>
-                				<input type="hidden" id="nombre" name="nombre" value="<?php echo $solicitud['id_empleado_solicitante']; ?>" />
-                <?php
+                				<!--<input type="hidden" id="nombre" name="nombre" value="<?php echo $solicitud['id_empleado_solicitante']; ?>" />-->
+                                <select name="nombre" id="nombre" tabindex="1" placeholder="[Seleccione...]" class="select" style="width:40%">
+                                <?php
+                                    foreach($empleados as $val) {
+                                        echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
+                                    }
+                                ?>
+                                </select>
+				
+				<?php
 						}
 					}
 				?>
@@ -246,3 +256,4 @@
         </p>
   	</form>
 </div>
+<script src="<?php echo base_url()?>js/views/solicitud.js" type="text/javascript"></script>

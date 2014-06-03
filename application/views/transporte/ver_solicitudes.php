@@ -8,11 +8,11 @@
 </section>
 <table class="grid">
 	<colgroup>
+    	<col width="100" />
+    	<col width="190" />
     	<col />
-    	<col width="175" />
     	<col />
-    	<col />
-    	<col />
+    	<col width="150" />
     	<col width="100" />
     </colgroup>
 	<thead>
