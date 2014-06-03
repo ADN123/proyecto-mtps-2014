@@ -172,6 +172,10 @@ class Transporte extends CI_Controller
 				if($descrip!="")
 					$this->transporte_model->insertar_descripcion($id,$descrip,2);
 				$this->db->trans_complete();
+				if($this->db->trans_status() && $estado==2) {
+					enviar_correo_automatico_administracion($id_solicitud_transporte,62);
+				}
+				enviar_correo_automatico_usuarios($id_solicitud_transporte);
 				ir_a("index.php/transporte/control_solicitudes/".$this->db->trans_status()."/".$estado);
 			}
 			else {
@@ -680,7 +684,7 @@ class Transporte extends CI_Controller
 			
 			$this->db->trans_complete();
 			if($this->db->trans_status()) {
-				$r1=enviar_correo("jose.henriquez@mtps.gob.sv","Nueva solicitud de transporte","Se acaba de almacenar una nueva solicitud de transporte.");
+				enviar_correo_automatico_administracion($id_solicitud_transporte,60);
 			}
 			if($id_solicitud_old!="") {
 				ir_a('index.php/transporte/ver_solicitudes/'.$this->db->trans_status());

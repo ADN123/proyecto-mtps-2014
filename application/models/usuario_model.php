@@ -389,5 +389,81 @@ class Usuario_model extends CI_Model {
 		$sentencia="UPDATE org_usuario SET estado=0 where id_usuario='$id_usuario'";
 		$this->db->query($sentencia);
 	}
+	function buscar_correos($id_solicitud_transporte=NULL, $id_modulo=NULL)
+	{
+		$sentencia="SELECT e.nombre, e.correo, e.nominal
+					FROM tcm_empleado AS e
+					INNER JOIN org_usuario_rol AS ur ON ur.id_usuario=e.id_usuario
+					INNER JOIN org_rol AS r ON r.id_rol=ur.id_rol
+					INNER JOIN org_rol_modulo_permiso AS rm ON rm.id_rol=r.id_rol AND (rm.id_permiso>=2 AND rm.id_modulo='".$id_modulo."') AND rm.id_permiso<>3
+					INNER JOIN org_modulo AS m ON m.id_modulo=rm.id_modulo AND m.id_sistema=5
+					INNER JOIN	
+						(SELECT e.id_seccion
+						FROM tcm_empleado AS e
+						INNER JOIN tcm_solicitud_transporte AS s ON s.id_empleado_solicitante=e.id_empleado
+						WHERE id_solicitud_transporte='".$id_solicitud_transporte."') AS s
+					ON s.id_seccion=e.id_seccion
+					WHERE e.correo NOT LIKE ''
+					GROUP BY id_empleado;";
+		$query=$this->db->query($sentencia);
+		if($query->num_rows>0) {
+			return (array)$query->result_array();
+		}
+		else {
+			$sentencia="SELECT e.nombre, e.correo, e.nominal
+						FROM tcm_empleado AS e
+						INNER JOIN org_usuario_rol AS ur ON ur.id_usuario=e.id_usuario
+						INNER JOIN org_rol AS r ON r.id_rol=ur.id_rol
+						INNER JOIN org_rol_modulo_permiso AS rm ON rm.id_rol=r.id_rol AND (rm.id_permiso=4 AND rm.id_modulo='".$id_modulo."') AND rm.id_permiso<>3
+						INNER JOIN org_modulo AS m ON m.id_modulo=rm.id_modulo AND m.id_sistema=5
+						INNER JOIN	
+							(SELECT e.id_seccion
+							FROM tcm_empleado AS e
+							INNER JOIN tcm_solicitud_transporte AS s ON s.id_empleado_solicitante=e.id_empleado
+							WHERE id_solicitud_transporte='".$id_solicitud_transporte."') AS s
+						ON s.id_seccion NOT BETWEEN 52 AND 66
+						WHERE e.correo NOT LIKE ''
+						GROUP BY id_empleado;";
+			$query=$this->db->query($sentencia);
+			if($query->num_rows>0) {
+				return (array)$query->result_array();
+			}
+			else {
+				$sentencia="SELECT e.nombre, e.correo, e.nominal
+							FROM tcm_empleado AS e
+							INNER JOIN org_usuario_rol AS ur ON ur.id_usuario=e.id_usuario
+							INNER JOIN org_rol AS r ON r.id_rol=ur.id_rol
+							INNER JOIN org_rol_modulo_permiso AS rm ON rm.id_rol=r.id_rol AND rm.id_permiso=3 AND rm.id_modulo='".$id_modulo."'
+							INNER JOIN org_modulo AS m ON m.id_modulo=rm.id_modulo AND m.id_sistema=5
+							INNER JOIN	
+								(SELECT e.id_seccion
+								FROM tcm_empleado AS e
+								INNER JOIN tcm_solicitud_transporte AS s ON s.id_empleado_solicitante=e.id_empleado
+								WHERE id_solicitud_transporte='".$id_solicitud_transporte."') AS s
+							ON s.id_seccion IS NULL
+							WHERE e.correo NOT LIKE ''
+							GROUP BY id_empleado;";
+				$query=$this->db->query($sentencia);
+				return (array)$query->result_array();
+			}
+		}
+	}
+	
+	function buscar_correo($id_solicitud_transporte)
+	{
+		$sentencia="SELECT 
+					tcm_empleado.nombre, 
+					tcm_empleado.correo, 
+					tcm_empleado.nominal, 
+					DATE_FORMAT(fecha_mision,'%d-%m-%Y') AS fecha_mision,
+					tcm_solicitud_transporte.estado_solicitud_transporte AS estado,
+					tcm_observacion.observacion AS observacion
+					FROM tcm_empleado
+					INNER JOIN tcm_solicitud_transporte ON tcm_empleado.id_empleado = tcm_solicitud_transporte.id_empleado_solicitante
+					LEFT JOIN tcm_observacion ON tcm_observacion.id_solicitud_transporte = tcm_solicitud_transporte.id_solicitud_transporte AND tcm_observacion.quien_realiza=2
+					WHERE tcm_solicitud_transporte.id_solicitud_transporte='".$id_solicitud_transporte."';";
+		$query=$this->db->query($sentencia);
+		return (array)$query->row();
+	}
 }
 ?>
