@@ -15,6 +15,7 @@
 <table  class="grid">
 	<thead>
   		<tr>
+            <th>ID Solicitud</th>
     		<th>Salida</th>
     		<th>Regreso</th>
             <th>Vehiculo</th>
@@ -31,6 +32,7 @@
 					$mensaje="Dar entrada a Misi&oacute;n Oficial";
         ?>
   		<tr>
+            <td><?=$fila->id?></td>
             <td><?=$fila->salida?></td>
             <td><?=$fila->entrada?></td>
             <td><?=$fila->placa?></td>

@@ -12,10 +12,12 @@
     	<col />
     	<col />
     	<col />
+    	<col />
     	<col width="100" />
     </colgroup>
 	<thead>
   		<tr>
+            <th>ID Solicitud</th>
             <th>Fecha y hora</th>
             <th>Solicitante</th>
             <th>Sección</th>
@@ -47,6 +49,7 @@
 			}									
 	?>
   		<tr>
+  			<td><?php echo $val['id']?></td>
             <td><?php echo $val['fecha']." ".$val['salida']?></td>
             <td><?php echo  ucwords($val['nombre'])?></td>
             <td><?php echo  ucwords($val['seccion'])?></td>

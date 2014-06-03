@@ -9,7 +9,8 @@
 <table  class="grid">
     <thead>
       <tr>
-        <th>Fecha y Hora de Misión</th>
+      	<th>ID Solicitud</th>
+        <th>fechacha y Hora de Misión</th>
         <th>Sección del Solicitante</th>
         <th>Persona Solicitante</th>
         <th>Opción</th>
@@ -20,6 +21,7 @@
         foreach ($datos as $fila) {
     ?>
         <tr>
+        	<td><?php echo $fila->id?></td>
             <td><?php echo $fila->fecha?>&nbsp;&nbsp;<?php echo $fila->salida?></td>
             <td><?php echo ucwords($fila->seccion)?></td>
             <td><?php echo ucwords($fila->nombre)?></td>
