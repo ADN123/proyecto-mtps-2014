@@ -55,7 +55,7 @@
             <td><?php echo  ucwords($val['seccion'])?></td>
             <td><?php echo $estado ?></td>
             <td>
-            	<?php if($val['estado']<=1) {?>
+            	<?php if($val['estado']==1) {?>
             		<a title="Editar solicitud" href="<?php echo base_url()?>index.php/transporte/solicitud/m/<?php echo $val['id']?>"><img  src="<?php echo base_url()?>img/editar.png"/></a>
                 <?php
             		} 

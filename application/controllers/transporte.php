@@ -47,8 +47,9 @@ class Transporte extends CI_Controller
 					break;
 				case 4:
 					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-					if($id_seccion==52 || $id_seccion==53 || $id_seccion==54 || $id_seccion==55 || $id_seccion==56 || $id_seccion==57 || $id_seccion==58 || $id_seccion==59 || $id_seccion==60 || $id_seccion==61 || $id_seccion==64 || $id_seccion==65 || $id_seccion==66) {
+					if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66) {
 						$data['empleados']=$this->transporte_model->consultar_empleados_seccion($id_seccion['id_seccion']);	
+						
 					}
 					else {
 						$data['empleados']=$this->transporte_model->consultar_empleados_depto();
@@ -878,22 +879,22 @@ class Transporte extends CI_Controller
 			switch($data['id_permiso']) {
 				case 1:
 					$empleado=$this->transporte_model->consultar_empleado($_SESSION['nr']);
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR'], 1);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR'], 0);
 					break;
 				case 2:
 					$seccion=$this->transporte_model->consultar_seccion_usuario($_SESSION['nr']);
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 1, $seccion['id_seccion']);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 0, $seccion['id_seccion']);
 					break;
 				case 3:
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,1);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,0);
 					break;
 				case 4:
 					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-					if($id_seccion==52 || $id_seccion==53 || $id_seccion==54 || $id_seccion==55 || $id_seccion==56 || $id_seccion==57 || $id_seccion==58 || $id_seccion==59 || $id_seccion==60 || $id_seccion==61 || $id_seccion==64 || $id_seccion==65 || $id_seccion==66) {
-						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 1, $id_seccion['id_seccion']);
+					if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66) {
+						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 0, $id_seccion['id_seccion']);
 					}
 					else {
-						$data['solicitudes']=$this->transporte_model->buscar_solicitudes_depto(1);	
+						$data['solicitudes']=$this->transporte_model->buscar_solicitudes_depto(0);	
 					}
 					break;
 			}
@@ -955,7 +956,7 @@ class Transporte extends CI_Controller
 					break;
 				case 4:
 					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-					if($id_seccion==52 || $id_seccion==53 || $id_seccion==54 || $id_seccion==55 || $id_seccion==56 || $id_seccion==57 || $id_seccion==58 || $id_seccion==59 || $id_seccion==60 || $id_seccion==61 || $id_seccion==64 || $id_seccion==65 || $id_seccion==66) {
+					if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66) {
 						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 3, $id_seccion['id_seccion']);
 					}
 					else {

@@ -931,7 +931,7 @@ where s.id_solicitud_transporte='$id'");
 	function info_adicional($id_empleado=0)
 	{
 				
-		$sentencia="SELECT
+		/*$sentencia="SELECT
 			sir_empleado_informacion_laboral.id_empleado_informacion_laboral,
 			sir_empleado_informacion_laboral.id_empleado,
 			sir_empleado_informacion_laboral.id_seccion,
@@ -965,6 +965,18 @@ where s.id_solicitud_transporte='$id'");
 					LEFT JOIN org_seccion AS o3 ON o3.id_seccion = o2.depende
 					LEFT JOIN sir_cargo_nominal ON sir_cargo_nominal.id_cargo_nominal = sir_empleado_informacion_laboral.id_cargo_nominal
 					WHERE sir_empleado.id_empleado='".$id_empleado."' AND sir_empleado_informacion_laboral.id_seccion='".$datos['id_seccion']."'";
+		$query=$this->db->query($sentencia);*/
+		
+		$sentencia="SELECT 
+					tcm_empleado.nr,
+					tcm_empleado.id_seccion,
+					UPPER(tcm_empleado.funcional) AS funcional,
+					UPPER(tcm_empleado.nominal) AS nominal,
+					UPPER(tcm_empleado.seccion) AS nivel_1,
+					UPPER(tcm_empleado.padre) AS nivel_2,
+					UPPER(tcm_empleado.abuelo) AS nivel_3
+					FROM tcm_empleado
+					WHERE tcm_empleado.id_empleado='".$id_empleado."'";
 		$query=$this->db->query($sentencia);
 	
 		if($query->num_rows>0) {
