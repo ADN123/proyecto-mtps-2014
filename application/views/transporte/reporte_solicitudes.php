@@ -44,11 +44,8 @@
 			}									
 	?>
   		<tr>
-<<<<<<< .mine
-            <td><?php echo  ucwords($val['id'])?></td>
-=======
+
             <td><?php echo $val['id']?></td>
->>>>>>> .r245
             <td><?php echo $val['fecha']." ".$val['salida']?></td>
             <td><?php echo  ucwords($val['nombre'])?></td>
             <td><?php echo  ucwords($val['seccion'])?></td>
