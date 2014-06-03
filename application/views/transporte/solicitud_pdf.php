@@ -11,6 +11,7 @@
             </td>
             <td align="right">
                 <h3>SOLICITUD DE USO DE VEHICULO</h3>
+                <h6>ID solicitud: <strong><?php echo $info_solicitud['id_solicitud_transporte']; ?></strong> </h6>
             </td>
         </tr>
         <tr>
@@ -24,7 +25,8 @@
         	<td colspan="2" align="center">
             	<?php 
 					$fec=explode("/",$info_solicitud['fecha_mision']);
-					switch($fec[1]) {
+					//switch($fec[1]) {
+                    switch(date("m")){
 						case 1: 
 							$mes="Enero";
 							break;
@@ -110,7 +112,9 @@
 					}
 					
 				?>
-            	<?php echo $depto; ?>, <?php echo $fec[0]?> de <?php echo $mes." ".$fec[2]?> 
+            <?php echo $depto; ?>, 
+            <?php echo date("d"); //echo $fec[0] ?> de 
+            <?php echo $mes." ".date("Y"); //$fec[2]?> 
             </td>
         </tr>
         <tr>

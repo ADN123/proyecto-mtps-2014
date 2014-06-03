@@ -37,7 +37,9 @@
             <td><?=$fila->entrada?></td>
             <td><?=$fila->placa?></td>
             <td><?php echo ucwords($fila->nombre)?></td>
-            <td><a title="<?=$mensaje?>" rel="leanModal" href="#ventana" onclick="dialogo(<?=$fila->id?>,<?=$fila->estado?>)"><img  src="<?=base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a></td>
+            <td><a title="<?=$mensaje?>" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila->id;?>,<?php echo$fila->estado;?>)"><img  src="<?php echo base_url()?>img/vehiculo<?=$fila->estado?>.png"/></a>
+                <a title="Crear .pdf de solicitud" target="_blank" href="<?php echo base_url()?>index.php/transporte/solicitud_pdf/<?php echo $fila->id;?>"><img  src="<?php echo base_url()?>img/ico_pdf.png"/></a>
+            </td>
   		</tr>
 		<?php }?>
 	</tbody>

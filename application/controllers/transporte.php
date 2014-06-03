@@ -804,7 +804,7 @@ class Transporte extends CI_Controller
 			//print_r($acces);
 			
 			if($estado==3){
-				$this->transporte_model->salida_vehiculo($id, $km,$hora,$acces);
+				$this->transporte_model->salida_vehiculo($id, $km,$hora,$acces,$gas);
 
 			}
 			else {

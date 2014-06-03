@@ -12,12 +12,12 @@
     </colgroup>
 <thead>
   		<tr>
-            <th>ID Solicitud</th>
-          	<th>Fecha y hora</th>
-            <th>Solicitante</th>
-            <th>Sección</th>
-            <th>Estado Solicitud</th>
-            <th>Opción</th>
+        <th>ID Solicitud</th>
+      	<th>Fecha y hora</th>
+        <th>Solicitante</th>
+        <th>Sección</th>
+        <th>Estado Solicitud</th>
+        <th>Opción</th>
   		</tr>
  	</thead>
  	<tbody>
@@ -44,7 +44,11 @@
 			}									
 	?>
   		<tr>
+<<<<<<< .mine
+            <td><?php echo  ucwords($val['id'])?></td>
+=======
             <td><?php echo $val['id']?></td>
+>>>>>>> .r245
             <td><?php echo $val['fecha']." ".$val['salida']?></td>
             <td><?php echo  ucwords($val['nombre'])?></td>
             <td><?php echo  ucwords($val['seccion'])?></td>
