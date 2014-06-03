@@ -57,6 +57,13 @@ $(document).ready(function() {
 		pageable: true,
         dataBound: recargar_javascript
 	});
+	$('#grid').dataTable( {
+		"sScrollY": 350,
+		"bJQueryUI": false,
+		"sPaginationType": "full_numbers",
+		"aLengthMenu": [ 18, 25, 50, 100 ],
+		"iDisplayLength": 18
+	});
 });
 $(function() {
 	$('a[rel*=leanModal]').leanModal({ top : 50, closeButton: ".modal_close"});		

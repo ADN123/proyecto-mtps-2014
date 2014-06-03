@@ -1000,7 +1000,7 @@ where s.id_solicitud_transporte='$id'");
 	
 	function insertar_descripcion($id,$descrip,$quien=NULL)
 	{
-		$q="INSERT INTO mtps.tcm_observacion 
+		$q="INSERT INTO tcm_observacion 
 				(id_solicitud_transporte, observacion, quien_realiza)
 			VALUES
 				('".$id."', 
@@ -1152,7 +1152,7 @@ function salida_vehiculo($id, $km_inicial,$hora_salida,$acces){
 				foreach($acces as  $row)://insert de accesorio
 
 
-			$this->db->query("INSERT INTO mtps.tcm_chekeo_accesorio(id_solicitud_transporte, 
+			$this->db->query("INSERT INTO tcm_chekeo_accesorio(id_solicitud_transporte, 
 							id_accesorio, salida)
 							VALUES
 							($id, $row, 1 );");
@@ -1217,7 +1217,7 @@ SELECT
 FROM
 	tcm_vehiculo v
 INNER JOIN tcm_asignacion_sol_veh_mot asi ON v.id_vehiculo = asi.id_vehiculo
-INNER JOIN tcm_vehiculo_modelo vm ON vm.id_vehiculo_modelo = V.id_modelo
+INNER JOIN tcm_vehiculo_modelo vm ON vm.id_vehiculo_modelo = v.id_modelo
 INNER JOIN tcm_solicitud_transporte s ON s.id_solicitud_transporte = asi.id_solicitud_transporte
 LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		WHERE s.id_solicitud_transporte = ".$id;
@@ -1386,8 +1386,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	function kilometraje($id){
 			$query="SELECT v.id_vehiculo, COALESCE(MAX(k.km_inicial), 0) AS KMinicial, COALESCE(MAX(k.km_Final), 0) AS KMFinal
 				FROM tcm_vehiculo  v 
-				LEFT JOIN tcm_vehiculo_kilometraje  K 
-				ON  V.id_vehiculo= K.id_vehiculo 
+				LEFT JOIN tcm_vehiculo_kilometraje  k  
+				ON  v.id_vehiculo= k.id_vehiculo 
 				GROUP BY v.id_vehiculo HAVING v.id_vehiculo=".$id;
 		$q=$this->db->query($query);
 		return $q->result();

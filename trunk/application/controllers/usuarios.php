@@ -435,17 +435,17 @@ class Usuarios extends CI_Controller
 			
 			$data=$this->usuario_model->info_adicional($id_empleado);
 			
-			if($data['sexo']==1) {
-				$data['sexo']="M";
+			if($data['id_genero']==1) {
+				$data['id_genero']="M";
 			}
 			else 
-				$data['sexo']="F";
+				$data['id_genero']="F";
 			
 			$formuInfo = array(
 				'nombre_completo'=>$data['nombre'],
 				'password'=>$password,
 				'nr'=>$data['nr'],
-				'sexo'=>$data['sexo'],
+				'sexo'=>$data['id_genero'],
 				'usuario'=>$usuario,
 				'id_seccion'=>$data['id_seccion'],
 				'estado'=>1
