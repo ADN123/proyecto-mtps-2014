@@ -970,14 +970,16 @@ class Transporte extends CI_Controller
 	*	Nombre: solicitud_pdf
 	*	Objetivo: Genera una archivo pdf de una solicitud
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Ultima Modificacion: 13/04/2014
+	*	Modificada por: Oscar
+	*	Ultima Modificacion: 02/06/2014
 	*	Observaciones: Ninguna
 	*/
 	function solicitud_pdf($id) 
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),66);
 		if($data['id_permiso']!=NULL) {
+			$seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			$data['id_seccion']=$seccion['id_seccion'];
 			$data['info_solicitud']=$this->transporte_model->consultar_solicitud($id);
 			$id_solicitud_transporte=$data['info_solicitud']['id_solicitud_transporte'];
 			$id_empleado_solicitante=$data['info_solicitud']['id_empleado_solicitante'];
