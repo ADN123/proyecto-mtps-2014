@@ -18,7 +18,7 @@
 	<thead>
   		<tr>
             <th>ID Solicitud</th>
-            <th>Fecha y hora</th>
+            <th>Fecha y hora de la misión</th>
             <th>Solicitante</th>
             <th>Sección</th>
             <th>Estado Solicitud</th>

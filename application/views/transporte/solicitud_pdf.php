@@ -390,6 +390,7 @@
                             case 3:
                                 $quien="Observaciones por parte del Jefe de Servicios Generales";
                                 break;
+                            
                             default:
                                 $quien="General";
                         }

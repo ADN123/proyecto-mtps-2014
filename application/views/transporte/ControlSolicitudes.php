@@ -36,7 +36,7 @@
 
 <div id="ventana" style="height:600px">
     <div id='signup-header'>
-        <h2>Aprobacion de solicitud de Misión Oficial</h2>
+        <h2>Aprobación de solicitud de Misión Oficial</h2>
         <a class="modal_close"></a>
     </div>
     <div id='contenido-ventana'>
