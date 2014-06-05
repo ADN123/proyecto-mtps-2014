@@ -194,10 +194,10 @@ class Transporte extends CI_Controller
 	*	Objetivo: Carga la vista de Asignaciones de vehículos y Motoristas
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 23/05/2014
+	*	Última Modificación: 05/06/2014
 	*	Observaciones: Ninguna
 	*/
-	function asignar_vehiculo_motorista($estado_transaccion=NULL)
+	function asignar_vehiculo_motorista($estado_transaccion=NULL,$accion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		if($data['id_permiso']!=NULL) {
@@ -224,6 +224,11 @@ class Transporte extends CI_Controller
 					$data['datos']=$this->transporte_model->solicitudes_por_asignar_depto();	
 					$data['estado_transaccion']=$estado_transaccion;
 				}
+				$data['estado_transaccion']=$estado_transaccion;
+				if($accion==0)
+					$data['accion']="denega";
+				if($accion==3)
+					$data['accion']="aproba";					 
 				pantalla('transporte/asignacion_veh_mot',$data);
 			}
 		}
@@ -467,7 +472,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para conocer el motorista que se ha de asignar a la misión oficial
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 23/05/2014
+	*	Última Modificación: 05/06/2014
 	*	Observaciones: Ninguna
 	*/
 	function verificar_motoristas($id_vehiculo,$id_solicitud_actual)
@@ -475,7 +480,7 @@ class Transporte extends CI_Controller
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 		if($data['id_permiso']!=NULL) {
-			if($data['id_permiso']>2) {
+			if($data['id_permiso']>=2) {
 				$datos_actual=$this->transporte_model->consultar_fecha_solicitud($id_solicitud_actual);
 				
 				foreach($datos_actual as $da) {
@@ -523,11 +528,11 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para registrar una asignación de vehículo con su correspondiente motorista
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 03/06/2014
+	*	Última Modificación: 05/06/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function asignar_veh_mot()
+	function asignar_veh_mot($estado_transaccion=NULL,$accion=NULL)
 	{
 		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
 		$empleado=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
@@ -550,17 +555,17 @@ class Transporte extends CI_Controller
 					
 					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
 					$this->db->trans_complete();
-					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$this->db->trans_status());
+					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$this->db->trans_status()."/".$estado);
 				}
 				else if($estado==0)
 				{
 					$this->transporte_model->nasignar_veh_mot($id_solicitud, $estado, $fecha_m, $id_empleado);
 					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
 					$this->db->trans_complete();
-					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$this->db->trans_status());
+					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$this->db->trans_status()."/".$estado);
 				}
 				else {
-					ir_a("index.php/transporte/asignar_vehiculo_motorista/0");
+					ir_a("index.php/transporte/asignar_vehiculo_motorista/0/0");
 				}
 			}
 		}
