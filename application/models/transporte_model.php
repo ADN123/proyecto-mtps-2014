@@ -908,15 +908,17 @@ where t.id_solicitud_transporte='$id';");
 		return $query->result();
 	}
 	
+	/////////////////FUNCIÓN PARA INSERTAR UN REGISTRO DE ASIGNACIÓN DE VEHICULO Y MOTORISTA/////////////////////////////
 	function asignar_veh_mot($id_solicitud,$id_empleado,$id_vehiculo,$estado,$fecha,$nr,$id_usuario)
 	{
-		$query=$this->db->query("insert into tcm_asignacion_sol_veh_mot(id_solicitud_transporte,id_empleado,id_vehiculo,id_empleado_asigna) values('$id_solicitud','$id_empleado','$id_vehiculo','$id_usuario')");
+		$query=$this->db->query("insert into tcm_asignacion_sol_veh_mot(id_solicitud_transporte,id_empleado,id_vehiculo,id_empleado_asigna,fecha_hora_asignacion) values('$id_solicitud','$id_empleado','$id_vehiculo','$id_usuario','$fecha')");
 		
 		$query2=$this->db->query("update tcm_solicitud_transporte set estado_solicitud_transporte='$estado', fecha_modificacion='$fecha', id_usuario_modifica='$id_usuario' where id_solicitud_transporte='$id_solicitud'");
 		
 		return $query;
 	}
 	
+	//////////////////FUNCIÓN PARA REGISTRAR UNA DENEGACIÓN DE ASIGNACIÓN DE VEHICULO Y MOTORISTA//////////////////////
 	function nasignar_veh_mot($id_solicitud,$estado,$fecha,$id_usuario)
 	{
 		$query=$this->db->query("update tcm_solicitud_transporte set estado_solicitud_transporte='$estado', fecha_modificacion='$fecha', id_usuario_modifica='$id_usuario' where id_solicitud_transporte='$id_solicitud'");
