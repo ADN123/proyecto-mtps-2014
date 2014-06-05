@@ -99,32 +99,56 @@ class Vales extends CI_Controller
 	*	Objetivo: Cargar la vista de la requisicion (solicitud) de combustible
 	*	Hecha por: Leonel
 	*	Modificada por: Jhonatan
-	*	Última Modificación: 21/05/2014
+	*	Última Modificación: 05/06/2014
 	*	Observaciones: Ninguna.
 	*/
 	function ingreso_requisicion($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear requisiciones*/
-			$url='vales/entrega';
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
+		$url='vales/entrega';
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
-				case 2:
-					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']-1);
+				case 2://seccion
+					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
 					$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
 						if(sizeof($data['vehiculos'])==0){
 							$url.='error';	
 						}
 					break;
-				case 3:
+				case 3://administrador
 					$data['oficinas']=$this->vales_model->consultar_oficinas();
-					$data['vehiculos']=$this->vales_model->vehiculos();
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo();
+
 					break;
+				case 4: //departamental
+					
+
+						if($this->vales_model->is_departamental($id_seccion['id_seccion'])){// fuera de san salvador
+							
+								$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+								$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
+								$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
+									if(sizeof($data['vehiculos'])==0){
+												$url.='error';	
+										}
+						}else{//san salvador
+			
+								$data['oficinas']=$this->vales_model->consultar_oficinas_san_salvador();
+								$data['fuente']=$this->vales_model->consultar_fuente_fondo_san_salvador();
+
+						}
+
+					break;
+					
 			}
-			$data['fuente']=$this->vales_model->consultar_fuente_fondo();
+
 			$data['estado_transaccion']=$estado_transaccion;
+/*			 echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
+			print_r($data['oficinas']);  */
 
 			pantalla($url,$data);	
 		}
@@ -170,6 +194,57 @@ class Vales extends CI_Controller
 
 	$data['vehiculos']=$this->vales_model->vehiculos($id_seccion, $id_fuente_fondo);
 	$this->load->view("vales/vehiculos",$data);
+		
+
+	}
+		/*
+	*	Nombre: control de requisiciones
+	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 21/05/2014
+	*	Observaciones: Ninguna.
+	*/
+
+	function control_requisiones($estado_transaccion=NULL)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		//$data['id_permiso']=$permiso;
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+				case 2://seccion
+				$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion'], 1);
+
+
+					break;
+				case 3://administrador
+				$data['datos']=$this->vales_model->consultar_requisiciones(NULL,1);					
+
+					break;
+				case 4: //departamental
+					
+
+						if($this->vales_model->is_departamental($id_seccion['id_seccion'])){// fuera de san salvador
+
+							$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion'], 1);
+						}else{//san salvador
+							$data['datos']=$this->vales_model->consultar_requisiciones_san_salvador(1);
+
+						}
+
+					break;
+					
+			}
+
+			$data['estado_transaccion']=$estado_transaccion;
+			//print_r($data);
+			pantalla("vales/ControlRequisicion",$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
 		
 
 	}

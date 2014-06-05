@@ -3,6 +3,7 @@
 	estado_transaccion='<?php echo $estado_transaccion;?>';
 	estado_correcto='La requisición se ha guardado correctamente';
 	estado_incorrecto='Error al intentar guardar la requisición: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
+
 </script>
 <script src="<?php echo base_url()?>js/views/entrega_vales.js" type="text/javascript"></script>
 <section>
@@ -60,7 +61,7 @@
             <p>
             	<label for="id_seccion" id="lservicio_de">Al servicio de </label>
                 <?php 
-					if($id_permiso==3) {
+					if(sizeof($oficinas)!=1) {
 				?>
                     <select class="select" style="width:300px;" tabindex="4" id="id_seccion" name="id_seccion" onChange="cargar_vehiculo()">
                         <?php
@@ -88,12 +89,12 @@
       	</div>
         <div id="step-2">	
             <h2 class="StepTitle">Selecci&oacute;n los vehiculos a los que se aplicarán los vales</h2>
-            <label for="verificando" id="lverificando" class="label_textarea">Cantidad de Vehiculos</label>
+
             <p ><div id="divVehiculos"></div>
 
 
                 <div style="display:none;">   
-
+            <label for="verificando" id="lverificando" class="label_textarea">Cantidad de Vehiculos</label>
                     <input type="text" id="verificando" name="verificando"  >  </div>
             	
             </p>
@@ -104,7 +105,17 @@
 
 
 function marcados() {
-    document.getElementById('verificando').value=12;
+
+    var i=0;
+    $("input[name='values[]']:checked").each(function (){   //capturando los chekeados
+        i++;
+    }); 
+
+    if(i==0){
+        document.getElementById('verificando').value="";
+    }else{
+        document.getElementById('verificando').value="ok";
+    }
 }
 
 </script>
