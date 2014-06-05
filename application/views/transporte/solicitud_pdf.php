@@ -388,7 +388,7 @@
                                 $quien="Observaciones por parte del Jefe de Departamento o Secci&oacute;n";
                                 break;
                             case 3:
-                                $quien="Observaciones por parte del Jefe de Servicios Generales";
+                                $quien="Observaciones por parte del Jefe de Transporte";
                                 break;
                             
                             default:

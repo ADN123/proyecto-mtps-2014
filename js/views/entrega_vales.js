@@ -28,6 +28,7 @@ function cargar_vehiculo(){
 
 	if(fuente_fondo!="" && seccion!=""){
 		$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos/"+seccion+"/"+fuente_fondo);	
+		document.getElementById('verificando').value="";
 	}else{
 
 	}

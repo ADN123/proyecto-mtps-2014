@@ -1493,10 +1493,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 
 	public function is_departamental($id_seccion=NULL)
-	{	if($id_seccion!=NULL){
-			return false;
-		}
-
+	{	
 		if($id_seccion>=52 AND $id_seccion<=66 ){
 			return true;
 		}else{
