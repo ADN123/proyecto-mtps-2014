@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://dorivaldo-pc/mtps/';
+$config['base_url']	= 'http://localhost/mtps/';
 
 /*
 |--------------------------------------------------------------------------
