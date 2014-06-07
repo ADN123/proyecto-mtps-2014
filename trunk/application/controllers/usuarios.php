@@ -30,7 +30,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78); /*Verificacion de permiso para administrara roles*/
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
 					$data['roles']=$this->usuario_model->mostrar_roles();
@@ -68,7 +68,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78); /*Verificacion de permiso para administrara roles*/
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
 					$data['menu']=$this->usuario_model->mostrar_menu($id_rol);
@@ -105,7 +105,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78);
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			$this->db->trans_start();
 			$nombre_rol=strtoupper($this->input->post('nombre_rol'));
 			$descripcion_rol=$this->input->post('descripcion_rol');
@@ -198,7 +198,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78);
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			$this->db->trans_start();
 			$id_rol=$this->input->post('id_rol');
 			$nombre_rol=strtoupper($this->input->post('nombre_rol'));
@@ -294,7 +294,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78);
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			$this->db->trans_start();
 			$this->usuario_model->eliminar_rol($id_rol); /*Eliminar rol*/
 			$this->usuario_model->eliminar_permisos_rol($id_rol); /*Eliminar permisos del rol*/
@@ -318,7 +318,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79); /*Verificacion de permiso para administrara usuarios*/
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
 					$data['usuarios']=$this->usuario_model->mostrar_usuarios();
@@ -356,7 +356,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79); /*Verificacion de permiso para administrara usuarios*/
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
 					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
@@ -396,7 +396,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79); /*Verificacion de permiso para crear solicitudes*/
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			$id_empleado=$this->input->post('id_empleado');
 			$data=$this->usuario_model->info_adicional($id_empleado);
 			if($data['usuario']!="")
@@ -427,7 +427,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79);
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			$this->db->trans_start();
 			$id_empleado=$this->input->post('nombre_completo');
 			$usuario=$this->input->post('usuario');
@@ -482,7 +482,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79);
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			$this->db->trans_start();
 			$id_usuario=$this->input->post('id_usuario');
 			$password=md5($this->input->post('password'));
@@ -526,7 +526,7 @@ class Usuarios extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79);
 		
-		if($data['id_permiso']!=NULL) {
+		if($data['id_permiso']==3) {
 			$this->db->trans_start();
 			$this->usuario_model->desactivar_usuario($id_usuario); /*Desactivar usuario*/
 			/*$this->usuario_model->eliminar_usuario($id_usuario);*/ /*Eliminar usuario*/
