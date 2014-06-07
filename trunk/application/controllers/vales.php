@@ -197,6 +197,20 @@ class Vales extends CI_Controller
 		
 
 	}
+	
+	/*
+	*	Nombre: requisiciones_pdf
+	*	Objetivo: Cargar el PDF 
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/06/2014
+	*	Observaciones: Ninguna.
+	*/
+	function requisiciones_pdf()
+	{
+		$this->load->view("vales/requisicion_pdf");
+	}
+
 		/*
 	*	Nombre: control de requisiciones
 	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
@@ -253,5 +267,6 @@ class Vales extends CI_Controller
 	{
 			
 	}
+>>>>>>> .r258
 }
 ?>
