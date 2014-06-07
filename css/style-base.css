@@ -6,7 +6,10 @@ form {
 	height: auto;
 	margin: 0 auto;
 	/*font-family: Verdana, Geneva, sans-serif;*/
-}       
+}    
+.select_rol {
+	width: 115px;
+}   
 form p {
 	position: relative;
 	width: 100%;
