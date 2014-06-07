@@ -214,7 +214,7 @@
                 </select>
             </p> 
             <p>
-                <label for="acompanantes2" id="lacompanantes2" class="label_textarea">Otros acompa&ntilde;antes</label>
+                <label for="acompanantes2" id="lacompanantes2" class="label_textarea">Personal Externo</label>
                 <textarea class="tam-4" id="acompanantes2" tabindex="10" name="acompanantes2"/><?php echo $solicitud['acompanante']; ?></textarea>
             </p>
         </div>

@@ -1368,6 +1368,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 					tcm_solicitud_transporte.id_solicitud_transporte,
 					tcm_solicitud_transporte.id_empleado_solicitante,
 					tcm_solicitud_transporte.id_empleado_autoriza,
+					DATE_FORMAT(tcm_solicitud_transporte.fecha_aprobacion, '%d/%m/%Y') AS fecha_aprobacion,
+					DATE_FORMAT(tcm_solicitud_transporte.fecha_aprobacion,'%h:%i %p') AS hora_aprobacion,
 					LOWER(CONCAT_WS(' ',e1.primer_nombre, e1.segundo_nombre, e1.tercer_nombre, e1.primer_apellido, e1.segundo_apellido, e1.apellido_casada)) AS nombre,
 					LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido, e2.segundo_apellido, e2.apellido_casada)) AS nombre2,
 					DATE_FORMAT(tcm_solicitud_transporte.fecha_mision, '%d/%m/%Y') AS fecha_mision,
@@ -1441,6 +1443,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$sentencia="SELECT
 					LOWER(CONCAT_WS(' ',e1.primer_nombre, e1.segundo_nombre, e1.tercer_nombre, e1.primer_apellido, e1.segundo_apellido, e1.apellido_casada)) AS nombre,
 					tcm_asignacion_sol_veh_mot.id_empleado_asigna,
+					DATE_FORMAT(tcm_asignacion_sol_veh_mot.fecha_hora_asignacion, '%d/%m/%Y') AS fecha_asignacion,
+					DATE_FORMAT(tcm_asignacion_sol_veh_mot.fecha_hora_asignacion,'%h:%i %p') AS hora_asignacion,
 					LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido, e2.segundo_apellido, e2.apellido_casada)) AS nombre2,
 					tcm_vehiculo.placa,
 					LOWER(tcm_vehiculo_clase.nombre_clase) AS nombre_clase
