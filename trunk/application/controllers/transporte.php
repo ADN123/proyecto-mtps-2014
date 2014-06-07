@@ -433,7 +433,8 @@ class Transporte extends CI_Controller
 					<textarea class='tam-4' id='observacion' tabindex='2' name='observacion'/></textarea>
 				</fieldset>
 				<p style='text-align: center;'>
-					<button type='submit' id='asignar' name='asignar' class='boton_validador' onclick='enviar(3)'>Asignar</button>&nbsp;&nbsp;&nbsp;<button type='submit' id='asignar' name='asignar' class='boton_validador' onclick='enviar(0)'>Denegar</button>
+					<button type='submit' id='asignar' name='asignar' class='boton_validador' onclick='enviar(3)'>Asignar</button>&nbsp;&nbsp;&nbsp;
+					<button type='submit' id='asignar' name='asignar' class='boton_validador' onclick='enviar(0)'>Denegar</button>
 				</p>
 				</form>
 				";

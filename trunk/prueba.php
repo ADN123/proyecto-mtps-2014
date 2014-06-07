@@ -160,6 +160,7 @@
     <h2>Nuevo Formulario</h2>
 </section>
 <form name="formu" id="formu" action="index.php" method="post">
+<input type="hidden" name="estudiantes[]" value="1" /> 
     <p>
         <label for="nombre" id="lnombre">Texto</label>
         <input type="text" class="tam-4" tabindex="1" id="nombre" name="nombre"/>
