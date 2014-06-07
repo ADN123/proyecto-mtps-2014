@@ -30,7 +30,7 @@ class Usuario_model extends CI_Model {
 				$result.='<ul class="treeview" style="max-width: 600px; width: 100%; margin: 0 auto;"><li data-expanded="true">'.$nombre_sistema;
 			else
 				$result.='<ul class="treeview" style="max-width: 600px; width: 100%; margin: 0 auto;"><li data-expanded="false">'.$nombre_sistema;
-			$sentencia="SELECT id_modulo, nombre_modulo, descripcion_modulo FROM org_modulo where (dependencia IS NULL OR dependencia = 0) AND id_modulo<>71 AND id_sistema=".$id_sistema." ORDER BY orden";
+			$sentencia="SELECT id_modulo, nombre_modulo, descripcion_modulo, opciones_modulo FROM org_modulo where (dependencia IS NULL OR dependencia = 0) AND id_modulo<>71 AND id_sistema=".$id_sistema." ORDER BY orden";
 			$query1=$this->db->query($sentencia);
 			$m1=(array)$query1->result_array();
 			
@@ -39,8 +39,9 @@ class Usuario_model extends CI_Model {
 				$id_modulo=$val1['id_modulo'];
 				$nombre_modulo=$val1['nombre_modulo'];
 				$descripcion_modulo=$val1['descripcion_modulo'];
+				$opciones_modulo=$val1['opciones_modulo'];
 				
-				$sentencia="SELECT id_modulo, nombre_modulo, descripcion_modulo FROM org_modulo where dependencia = ".$id_modulo." ORDER BY orden";
+				$sentencia="SELECT id_modulo, nombre_modulo, descripcion_modulo, opciones_modulo FROM org_modulo where dependencia = ".$id_modulo." ORDER BY orden";
 				$query2=$this->db->query($sentencia);
 				$m2=(array)$query2->result_array();
 				
@@ -82,8 +83,17 @@ class Usuario_model extends CI_Model {
 								break;
 						}
 					}
- 					$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Personal</option><option value="'.$id_modulo.',2" '.$op2.'>Sección</option><option value="'.$id_modulo.',4" '.$op4.'>Departamental</option><option value="'.$id_modulo.',3" '.$op3.'>Nacional</option></select>';
-				}
+					$op='';
+					if($opciones_modulo>=1) 
+ 						$op='<option value="'.$id_modulo.',3" '.$op3.'>Nacional</option>'.$op;
+					if($opciones_modulo>=2) 
+ 						$op='<option value="'.$id_modulo.',4" '.$op4.'>Departamental</option>'.$op;
+					if($opciones_modulo>=3) 
+ 						$op='<option value="'.$id_modulo.',2" '.$op2.'>Sección</option>'.$op;
+					if($opciones_modulo>=4) 
+ 						$op='<option value="'.$id_modulo.',1" '.$op1.'>Personal</option>'.$op;
+					$result.='<select class="oculto select_rol" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option>'.$op.'</select>';
+				}	
 				
 				if($query2->num_rows>0)
 					$result.=' <ul>';
@@ -92,8 +102,9 @@ class Usuario_model extends CI_Model {
 					$id_modulo=$val2['id_modulo'];
 					$nombre_modulo=$val2['nombre_modulo'];
 					$descripcion_modulo=$val2['descripcion_modulo'];
+					$opciones_modulo=$val2['opciones_modulo'];
 					
-					$sentencia="SELECT id_modulo, nombre_modulo, descripcion_modulo FROM org_modulo where dependencia = ".$id_modulo." ORDER BY orden";
+					$sentencia="SELECT id_modulo, nombre_modulo, descripcion_modulo, opciones_modulo FROM org_modulo where dependencia = ".$id_modulo." ORDER BY orden";
 					$query3=$this->db->query($sentencia);
 					$m3=(array)$query3->result_array();
 					
@@ -135,7 +146,16 @@ class Usuario_model extends CI_Model {
 									break;
 							}
 						}
-						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Personal</option><option value="'.$id_modulo.',2" '.$op2.'>Sección</option><option value="'.$id_modulo.',4" '.$op4.'>Departamental</option><option value="'.$id_modulo.',3" '.$op3.'>Nacional</option></select>';
+						$op='';
+						if($opciones_modulo>=1) 
+							$op='<option value="'.$id_modulo.',3" '.$op3.'>Nacional</option>'.$op;
+						if($opciones_modulo>=2) 
+							$op='<option value="'.$id_modulo.',4" '.$op4.'>Departamental</option>'.$op;
+						if($opciones_modulo>=3) 
+							$op='<option value="'.$id_modulo.',2" '.$op2.'>Sección</option>'.$op;
+						if($opciones_modulo>=4) 
+							$op='<option value="'.$id_modulo.',1" '.$op1.'>Personal</option>'.$op;
+						$result.='<select class="oculto select_rol" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option>'.$op.'</select>';
 					}
 					
 					if($query3->num_rows>0)
@@ -145,6 +165,7 @@ class Usuario_model extends CI_Model {
 						$id_modulo=$val3['id_modulo'];
 						$nombre_modulo=$val3['nombre_modulo'];
 						$descripcion_modulo=$val3['descripcion_modulo'];
+						$opciones_modulo=$val3['opciones_modulo'];
 						
 						$result.='<li title="'.$descripcion_modulo.'"> '.$nombre_modulo;
 						$clave='';
@@ -174,7 +195,16 @@ class Usuario_model extends CI_Model {
 									break;
 							}
 						}
-						$result.='<select class="oculto" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option><option value="'.$id_modulo.',1" '.$op1.'>Personal</option><option value="'.$id_modulo.',2" '.$op2.'>Sección</option><option value="'.$id_modulo.',4" '.$op4.'>Departamental</option><option value="'.$id_modulo.',3" '.$op3.'>Nacional</option></select>';
+						$op='';
+						if($opciones_modulo>=1) 
+							$op='<option value="'.$id_modulo.',3" '.$op3.'>Nacional</option>'.$op;
+						if($opciones_modulo>=2) 
+							$op='<option value="'.$id_modulo.',4" '.$op4.'>Departamental</option>'.$op;
+						if($opciones_modulo>=3) 
+							$op='<option value="'.$id_modulo.',2" '.$op2.'>Sección</option>'.$op;
+						if($opciones_modulo>=4) 
+							$op='<option value="'.$id_modulo.',1" '.$op1.'>Personal</option>'.$op;
+						$result.='<select class="oculto select_rol" name="permiso[]" style="height: 16px; float: right; padding: 0px;"><option value=""></option>'.$op.'</select>';
 						$result.=' </li>';				
 					}
 					if($query3->num_rows>0)
