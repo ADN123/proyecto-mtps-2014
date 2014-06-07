@@ -6,7 +6,7 @@
 	<?php }?>
 </script>
 <section>
-    <h2>Control de Requisiciones</h2>
+    <h2>Visto Bueno de Requisiciones</h2>
 </section>
 <table  class="grid">
 <thead>
@@ -36,7 +36,7 @@
 
 <div id="ventana" style="height:600px">
     <div id='signup-header'>
-        <h2>Aprobación de solicitud de Misión Oficial</h2>
+        <h2>Visto Bueno de Requisición de Combustible</h2>
         <a class="modal_close"></a>
     </div>
     <div id='contenido-ventana'>
@@ -45,12 +45,15 @@
 <script language="javascript" >
 	function dialogo(id)
 	{  
-		$('#contenido-ventana').load(base_url()+'index.php/transporte/datos_de_solicitudes/'+id);
+		$('#contenido-ventana').load(base_url()+'index.php/vales/dialogo_visto_bueno/'+id);
 		return false;
 	}	
 	
 	function Enviar(v)
 	{
 		document.getElementById('resp').value=v;
+        if(v==0){
+           $("#asignar").destruirValidacion();            
+        }
 	}
 </script>

@@ -222,7 +222,7 @@ class Vales extends CI_Controller
 
 	function visto_bueno($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80); /*Verificacion de permiso para crear requisiciones*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -263,10 +263,38 @@ class Vales extends CI_Controller
 
 	}
 
-	public function dialogoAprobar($id_requisicion=NULL)
+function dialogo_visto_bueno($id)
 	{
-			
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80);
+		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
+			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			$datos['d']=$this->vales_model->info_requisicion($id);
+			$datos['f']=$this->vales_model->info_requisicion_vehiculos($id);
+			$datos['id']=$id;
+			$this->load->view('vales/dialogo_visto_bueno',$datos);
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
 	}
->>>>>>> .r258
+function guardar_visto_bueno()
+{
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80);
+	$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
+	$_POST['id_usuario']=$this->session->userdata('id_usuario');
+	$_POST['id_empleado']=$id_empleado;
+
+	if($data['id_permiso']!=NULL) {
+		
+			$this->db->trans_start();
+			$this->vales_model->guardar_visto_bueno($_POST);
+			$this->db->trans_complete();
+			ir_a('index.php/vales/visto_bueno/'.$this->db->trans_status());		
+
+	}else{
+			echo 'No tiene permisos para acceder';
+	}
+
+}
 }
 ?>

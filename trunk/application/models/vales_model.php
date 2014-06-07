@@ -124,7 +124,7 @@ function consultar_oficinas_san_salvador()
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_requisicion 
 		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion) 
-			VALUES (CURDATE(), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario, CURDATE())";
+VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()))";
 		
 
 		$this->db->query($sentencia);
@@ -189,8 +189,7 @@ function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 		if($estado!=NULL){
 			$where.= "	AND estado = '".$estado."'";
 		}
-
-		$query=$this->db->query("SELECT
+		$q="SELECT
 									id_requisicion,
 									sr.nombre_seccion AS seccion,
 									cantidad_solicitada AS cantidad,
@@ -198,13 +197,67 @@ function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 								FROM
 									tcm_requisicion r
 								INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
-								WHERE sr.id_seccion NOT BETWEEN 52 	
+								WHERE sr.id_seccion NOT BETWEEN 52 	AND 66
 								".$where."
 								ORDER BY
-									fecha DESC");
+									fecha DESC";
+									//echo $q;
+
+		$query=$this->db->query($q);
 			return (array)$query->result_array();
 
 	}
+
+	function info_requisicion($id)
+	{
+	$query=$this->db->query(" SELECT
+				id_requisicion,
+				sr.nombre_seccion AS seccion,
+				cantidad_solicitada AS cantidad,
+				fecha,
+				justificacion,
+				LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre
+			FROM
+				tcm_requisicion r
+			INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
+			LEFT JOIN sir_empleado e ON r.id_empleado_solicitante= e.id_empleado
+				WHERE id_requisicion= ".$id);
+			return $query->result();
+
+		
+	}
+
+function info_requisicion_vehiculos($id)
+	{
+	$query=$this->db->query("SELECT 
+					v.placa, 
+					 c.nombre_clase as clase,
+					 m.nombre as marca, 
+					ff.nombre_fuente_fondo  as fondo
+					 FROM tcm_req_veh rv 
+					INNER JOIN tcm_vehiculo v ON rv.id_vehiculo = v.id_vehiculo
+					INNER JOIN tcm_fuente_fondo ff ON  ff.id_fuente_fondo = v.id_fuente_fondo
+					INNER JOIN tcm_vehiculo_clase c ON c.id_vehiculo_clase = v.id_clase
+					INNER JOIN  tcm_vehiculo_marca m ON m.id_vehiculo_marca = v.id_marca
+					WHERE id_requisicion = ".$id);
+			return $query->result();
+	}
+ function guardar_visto_bueno($post)
+{
+	extract($post);
+
+	$this->db->query("UPDATE tcm_requisicion SET
+					id_empleado_vistobueno = ".$id_empleado.",
+					fecha_visto_bueno = CONCAT_WS(' ',CURDATE(),CURTIME()),
+					fecha_modificacion = CONCAT_WS(' ',CURDATE(),CURTIME()),
+					id_usuario_modifica = ".$id_usuario.",
+					cantidad_entregado = ".$asignar.",
+					estado = ".$resp."
+					WHERE id_requisicion = ".$ids);
+
 }
+
+
+}	
 
 ?>
