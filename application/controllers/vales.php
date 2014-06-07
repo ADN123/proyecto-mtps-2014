@@ -206,7 +206,7 @@ class Vales extends CI_Controller
 	*	Observaciones: Ninguna.
 	*/
 
-	function control_requisiones($estado_transaccion=NULL)
+	function visto_bueno($estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
@@ -240,13 +240,18 @@ class Vales extends CI_Controller
 
 			$data['estado_transaccion']=$estado_transaccion;
 			//print_r($data);
-			pantalla("vales/ControlRequisicion",$data);	
+			pantalla("vales/visto_bueno",$data);	
 		}
 		else {
 			echo 'No tiene permisos para acceder';
 		}
 		
 
+	}
+
+	public function dialogoAprobar($id_requisicion=NULL)
+	{
+			
 	}
 }
 ?>

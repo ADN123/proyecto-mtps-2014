@@ -44,7 +44,7 @@
 </div>
 <script language="javascript" >
 	function dialogo(id)
-	{
+	{  
 		$('#contenido-ventana').load(base_url()+'index.php/transporte/datos_de_solicitudes/'+id);
 		return false;
 	}	
