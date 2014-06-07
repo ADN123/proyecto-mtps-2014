@@ -257,7 +257,7 @@
         </tr>-->
         <tr>
         	<td colspan="2" align="center">
-            	Aprobado por <strong><?php echo ucwords($info_solicitud['nombre2']) ?></strong><br /><?php echo ucwords($info_empleado2['nominal']) ?>
+            	Aprobado por <strong><?php echo ucwords($info_solicitud['nombre2']) ?></strong><br /><?php echo ucwords($info_empleado2['nominal']) ?><br />Fecha aprobaci&oacute;n: <?php echo $info_solicitud['fecha_aprobacion'] ?> a las <?php echo $info_solicitud['hora_aprobacion'] ?> 
             </td>
         </tr>
     </table>
@@ -293,11 +293,10 @@
         			<tr><td>&nbsp;</td></tr>
         			<tr><td>&nbsp;</td></tr>
         			<tr><td>&nbsp;</td></tr>
-        			<tr><td>&nbsp;</td></tr>
                     <tr>
                         <td align="center">
                            	<!--f. _____________________________________________<br />-->
-                            Asignado por <strong><?php echo ucwords($motorista_vehiculo['nombre2']) ?> </strong><br /><?php echo ucwords($info_empleado3['nominal']) ?>
+                            Asignado por <strong><?php echo ucwords($motorista_vehiculo['nombre2']) ?> </strong><br /><?php echo ucwords($info_empleado3['nominal']) ?><br />Fecha asignaci&oacute;n: <?php echo $motorista_vehiculo['fecha_asignacion'] ?> a las <?php echo $motorista_vehiculo['hora_asignacion'] ?> 
                         </td>
                   	</tr>
                  </table>
@@ -401,7 +400,7 @@
         	<td align="center" style="width:40%; height:300px; vertical-align:bottom;">
             	<img src="img/firma_gerencia.png" /><br />
                 f. _______________________________________<br />
-                Administración
+                Directora Administrativa
             </td>
         </tr>
     </table>
