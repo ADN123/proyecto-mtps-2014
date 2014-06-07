@@ -465,5 +465,18 @@ class Usuario_model extends CI_Model {
 		$query=$this->db->query($sentencia);
 		return (array)$query->row();
 	}
+	
+	function eliminar_roles_usuario($id_usuario)
+	{
+		$sentencia="DELETE FROM org_usuario_rol where id_usuario='$id_usuario'";
+		$this->db->query($sentencia);
+	}
+	
+	function actualizar_usuario($formuInfo) 
+	{
+		extract($formuInfo);
+		$sentencia="UPDATE org_usuario SET password='$password' where id_usuario='$id_usuario'";
+		$this->db->query($sentencia);
+	}
 }
 ?>

@@ -2,7 +2,7 @@
 	$id_usuario="";
 	$nombre_completo="";
 	$usuario="";
-	$id_rol="";
+	$id_rol[]="";
 	$dir="guardar_usuario";
 	$label="Guardar";
 	$op='selected="selected"';
@@ -11,7 +11,7 @@
 		$id_usuario=$val['id_usuario'];
 		$nombre_completo=ucwords($val['nombre_completo']);
 		$usuario=$val['usuario'];
-		$id_rol=$val['id_rol'];
+		$id_rol[]=$val['id_rol'];
 		$dir="actualizar_usuario";
 		$label="Actualizar";
 		$op='';
@@ -68,7 +68,7 @@
             <select name="id_rol[]" id="id_rol" tabindex="3" multiple="multiple" class="multi" style="width:60%;">
                 <?php
                     foreach($roles as $val) {
-						if($val['id_rol']==$id_rol)
+						if(in_array($val['id_rol'], $id_rol))
                         	echo '<option value="'.$val['id_rol'].'" selected="selected">'.ucwords($val['nombre_rol']).'</option>';
 						else
                         	echo '<option value="'.$val['id_rol'].'">'.ucwords($val['nombre_rol']).'</option>';
