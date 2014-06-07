@@ -623,21 +623,7 @@ function solicitudes_por_asignar_depto(){
 		*	por eso no mostraba la seccion real a la que pertenece
 		*	el empleado solicitante
 		*/
-		/*$query=$this->db->query("
-				SELECT id_solicitud_transporte id, 
-					LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
-					DATE_FORMAT(fecha_solicitud_transporte, '%d-%m-%Y') fechaS,
-					DATE_FORMAT(fecha_mision, '%d-%m-%Y')  fechaM,
-					DATE_FORMAT(hora_salida,'%h:%i %p') salida,
-					DATE_FORMAT(hora_entrada,'%h:%i %p') entrada,
-					nombre_seccion seccion,
-					requiere_motorista req,
-					acompanante,
-					id_empleado_solicitante
-				FROM tcm_solicitud_transporte  s 
-				INNER JOIN sir_empleado e ON id_empleado_solicitante = id_empleado,
-				org_seccion sec
-				WHERE   sec.id_seccion = ".$seccion." AND id_solicitud_transporte =".$id);*/
+
 		$query=$this->db->query("SELECT id_solicitud_transporte id, 
 								LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
 								DATE_FORMAT(fecha_solicitud_transporte, '%d-%m-%Y') fechaS,
