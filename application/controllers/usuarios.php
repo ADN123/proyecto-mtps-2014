@@ -471,6 +471,50 @@ class Usuarios extends CI_Controller
 	}
 	
 	/*
+	*	Nombre: actualizar_usuario
+	*	Objetivo: Actualiza los registros de usuarios
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Última Modificación: 07/06/2014
+	*	Observaciones: Ninguna.
+	*/
+	function actualizar_usuario()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79);
+		
+		if($data['id_permiso']!=NULL) {
+			$this->db->trans_start();
+			$id_usuario=$this->input->post('id_usuario');
+			$password=md5($this->input->post('password'));
+			
+			if($password!="") {			
+				$formuInfo = array(
+					'password'=>$password,
+					'id_usuario'=>$id_usuario
+				);
+				$this->usuario_model->actualizar_usuario($formuInfo); /*Actualizar usuario*/
+			}
+			
+			$this->usuario_model->eliminar_roles_usuario($id_usuario); /*Eliminar permisos del usuario*/
+			
+			$id_rol=$this->input->post('id_rol');
+
+			for($i=0;$i<count($id_rol);$i++) {
+				$formuInfo = array(
+					'id_rol'=>$id_rol[$i],
+					'id_usuario'=>$id_usuario
+				);
+				$this->usuario_model->guardar_permisos_usuario($formuInfo); /*Guardando permisos del usuario*/
+			}
+			$this->db->trans_complete();
+			ir_a('index.php/usuarios/usuario/'.$this->db->trans_status().'/1');
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+	}
+	
+	/*
 	*	Nombre: eliminar_usuario
 	*	Objetivo: Desvactiva los registros de usuarios
 	*	Hecha por: Leonel
