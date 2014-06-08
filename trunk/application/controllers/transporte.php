@@ -820,17 +820,27 @@ class Transporte extends CI_Controller
 			unset($acces['id']);
 			unset($acces['km']);
 			unset($acces['hora']);
-			//print_r($acces);
+
+
+			
 			
 			if($estado==3){
-				$this->transporte_model->salida_vehiculo($id, $km,$hora,$acces,$gas);
+				$this->transporte_model->salida_vehiculo($id, $km,$hora,$acces,$gas);			
 
-			}
-			else {
+				$diferencia= $this->transporte_model->consultar_direfencia($id, $gas);
+				if($diferencia[0]['diferencia']>=10){
+					//bitacora de comparacion de gas con el que salio y con cuanto se dejo en caso de ser sospechoso			
+						$this->transporte_model->insertar_bitacora_combustible($id, $diferencia[0]['diferencia']);
+						echo $diferencia[0]['diferencia'];
+				}
+
+			}else {
 				
 				if($estado==4) {
-				$this->transporte_model->regreso_vehiculo($id, $km, $hora, $gas,$acces);		
-			  
+				$this->transporte_model->regreso_vehiculo($id, $km, $hora, $gas,$acces);	
+			  	$this->transporte_model->update_combustible($id, $gas);
+
+
 
 				}
 			}
@@ -845,7 +855,10 @@ class Transporte extends CI_Controller
 		
 			 nuevaVentana('index.php/transporte/solicitud_pdf/'.$id);	
 			}
-			ir_a('index.php/transporte/control_salidas_entradas/'.$this->db->trans_status()."/".$estado);	
+
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+
+			ir_a('index.php/transporte/control_salidas_entradas/'.$tr."/".$estado);	
 				
 			
 		}

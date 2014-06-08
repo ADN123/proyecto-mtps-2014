@@ -52,6 +52,8 @@ function datos(data){ //carga informacion en el cuadro de dialogo
                     "Placa:<strong> "+data[0].placa+"</strong><br />"+
 					 "Kilometraje Recorrido:<strong> "+ minKM+" Kms</strong>";
 			 
+			 		document.getElementById('gas').value=data[0].gas;
+			 		tanque(data[0].gas	);
 					document.getElementById('InfoMision').innerHTML=echo1;
 					$('#km').destruirValidacion();
 					$('#km').validacion({
