@@ -327,7 +327,7 @@ function guardar_visto_bueno()
 
 	function autorizar_requisicion($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81); /*Verificacion de permiso para crear requisiciones*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -378,7 +378,7 @@ function guardar_visto_bueno()
 
 function dialogo_autorizacion($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$datos['d']=$this->vales_model->info_requisicion($id);
@@ -402,7 +402,7 @@ function dialogo_autorizacion($id)
 	*/
 function guardar_autorizacion()
 {
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81);
 		$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$_POST['id_empleado']=$id_empleado;
@@ -410,9 +410,9 @@ function guardar_autorizacion()
 		if($data['id_permiso']!=NULL) {
 			
 				$this->db->trans_start();
-				$this->vales_model->guardar_visto_bueno($_POST);
+				$this->vales_model->guardar_autorizacion($_POST);
 				$this->db->trans_complete();
-				ir_a('index.php/vales/visto_bueno/'.$this->db->trans_status());		
+				ir_a('index.php/vales/autorizar_requisicion/'.$this->db->trans_status());		
 
 		}else{
 				echo 'No tiene permisos para acceder';

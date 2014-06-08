@@ -1,4 +1,4 @@
-<form id='form' action="<?php echo base_url()?>index.php/vales/dialogo_autorizacion" method='post'>
+<form id='form' action="<?php echo base_url()?>index.php/vales/guardar_autorizacion" method='post'>
     <input type='hidden' id='resp' name='resp' />
     <input type='hidden' name='ids' value="<?php echo $id?>" />
 
@@ -13,14 +13,22 @@
                     $cantidad=$datos->cantidad;
                     $justificacion=$datos->justificacion;
                     $id_requisicion=$datos->id_requisicion;
+                    $cantidadE =$datos->entregado;
+                    $fechaVB =$datos->fecha_visto_bueno;
+                    $visto_bueno =ucwords($datos->visto_bueno);
                 }
             
-                echo "Nombre: <strong>".$nombre."</strong> <br>
-                Sección: <strong>".$seccion."</strong> <br>
+                echo "
                 ID Requisicion: <strong>".$id_requisicion."</strong> <br>
-                Fecha de Solicitud: <strong>".$fecha."</strong> <br>
+                Nombre: <strong>".$nombre."</strong> <br>
+                Sección: <strong>".$seccion."</strong> <br>
+                Fecha y hora de Solicitud: <strong>".$fecha."</strong> <br>
                 Cantidad Solicitada: <strong>".$cantidad."</strong> <br>
-                Justificacion: <strong>".$justificacion."</strong> <br></fieldset>
+                Justificacion: <strong>".$justificacion."</strong> <br>
+                Cantidad a Entregar: <strong>".$cantidadE."</strong> <br>
+                Fecha y Hora de Visto Bueno: <strong>".$fechaVB."</strong> <br>
+                Visto Bueno por: <strong>".$visto_bueno."</strong> <br>
+                </fieldset>
     <br />";
 	?>
     	
@@ -60,7 +68,7 @@
     </fieldset>";
     ?>
     <p style='text-align: center;'>
-        <button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(3)">Aprobar</button>
+        <button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(3)">Autorizar</button>
         <button  type="submit" id="denegar" class="button tam-1 boton_validador"  onclick="Enviar(0)">Denegar</button>
     </p>
 </form>
