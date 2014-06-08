@@ -6,6 +6,7 @@ class Inicio extends CI_Controller
 	{
         parent::__construct();
 		date_default_timezone_set('America/El_Salvador');
+		error_reporting(0);
 		$this->load->helper('url');
 		$this->load->helper('form');
 		$this->load->model('seguridad_model');
@@ -18,11 +19,8 @@ class Inicio extends CI_Controller
 	function index()
 
 	{	$data=$this->seguridad_model->sexoUsuario($this->session->userdata('id_usuario'));
-	$data=$data[0];
-	 	//print_r($data);
+		$data=$data[0];
 	 	$this->pantalla('home',$data);
-		/*$data['menus']=$this->seguridad_model->buscar_menus($this->session->userdata('id_usuario'));
-		$this->load->view('prueba',$data);*/
 	}
 	
 	function pantalla ($vista,$data) 

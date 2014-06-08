@@ -110,14 +110,6 @@ class Seguridad_model extends CI_Model {
 		
 		$result=(array)$query->result_array();
 		
-		$id_modulo="";
-		$orden="";
-		$nombre_modulo="";
-		$descripcion_modulo="";
-		$dependencia="";
-		$url_modulo="";
-		$img_modulo="";
-		
 		$new_menu=array();
 		foreach($result as $r) {
 			if(!in_array($r[id_padre], $new_menu)){
@@ -149,7 +141,7 @@ class Seguridad_model extends CI_Model {
 		$valores='';
 		foreach($result as $r) {
 			if($r[dependencia]==$id_modulo) {
-				if($r[$campo]!="" || $r[$campo]!=NULL)
+				if($r[$campo]!="" && $r[$campo]!=NULL)
 					$valores.=$r[$campo].',';
 			}
 		}
