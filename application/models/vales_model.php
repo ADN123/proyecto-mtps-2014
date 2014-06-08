@@ -161,19 +161,26 @@ public function is_departamental($id_seccion=58)
 function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 	{		
 		$where="";
-		if($id_seccion!=NULL){
+
+		if($estado!=NULL){
+			$where.= "	WHERE estado = '".$estado."'";
+		}
+		if($id_seccion!=NULL && $estado!=NULL){
 			$where.= "	AND sr.id_seccion = '".$id_seccion."'";
+		}
+		if($id_seccion!=NULL && $estado==NULL){
+			$where.= "	WHERE sr.id_seccion = '".$id_seccion."'";	
 		}
 
 		$query=$this->db->query("SELECT
 									id_requisicion,
 									sr.nombre_seccion AS seccion,
 									cantidad_solicitada AS cantidad,
-									DATE_FORMAT(fecha,'%d/%m/%Y') as fecha
+									DATE_FORMAT(fecha,'%d/%m/%Y') as fecha,
+									estado 
 								FROM
 									tcm_requisicion r
 								INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
-									WHERE estado =".$estado."
 											".$where."
 								ORDER BY
 									fecha DESC");
@@ -193,7 +200,8 @@ function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 									id_requisicion,
 									sr.nombre_seccion AS seccion,
 									cantidad_solicitada AS cantidad,
-									DATE_FORMAT(fecha,'%d/%m/%Y') as fecha
+									DATE_FORMAT(fecha,'%d/%m/%Y') as fecha,
+									estado
 								FROM
 									tcm_requisicion r
 								INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
@@ -210,21 +218,28 @@ function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 
 	function info_requisicion($id)
 	{
-	$query=$this->db->query("  SELECT
+	$query=$this->db->query(" SELECT
 				id_requisicion,
 				sr.nombre_seccion AS seccion,
 				cantidad_solicitada AS cantidad,
-				DATE_FORMAT(fecha,'%d/%m/%Y %r') as fecha,
+				DATE_FORMAT(fecha,'%d/%m/%Y %h:%i %p') as fecha,
+				ff.nombre_fuente_fondo as fuente_fondo,
 				justificacion,
 				LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
-				DATE_FORMAT(fecha_visto_bueno,'%d/%m/%Y %r') as fecha_visto_bueno,			
+				DATE_FORMAT(fecha_visto_bueno,'%d/%m/%Y %h:%i %p') as fecha_visto_bueno,			
 				LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido,e2.segundo_apellido,e2.apellido_casada)) AS visto_bueno,
-				cantidad_entregado as entregado
+				cantidad_entregado as entregado,
+				DATE_FORMAT(fecha_autorizado,'%d/%m/%Y %h:%i %p') as fecha_autorizado,			
+				LOWER(CONCAT_WS(' ',e3.primer_nombre, e3.segundo_nombre, e3.tercer_nombre, e3.primer_apellido,e3.segundo_apellido,e3.apellido_casada)) AS autorizado,
+				estado
+
 			FROM
 				tcm_requisicion r
 			INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
 			LEFT JOIN sir_empleado e ON r.id_empleado_solicitante= e.id_empleado
 			LEFT JOIN sir_empleado e2 ON r.id_empleado_vistobueno = e2.id_empleado
+			LEFT JOIN sir_empleado e3 ON r.id_empleado_autoriza = e3.id_empleado
+			LEFT JOIN tcm_fuente_fondo ff ON ff.id_fuente_fondo = r.id_fuente_fondo
 				WHERE id_requisicion= ".$id);
 			return $query->result();
 
@@ -271,13 +286,15 @@ $q="UPDATE tcm_requisicion
 		 fecha_modificacion = CONCAT_WS(' ', CURDATE(), CURTIME()),
 		id_empleado_autoriza = ".$id_empleado.", 
 		id_usuario_modifica = ".$id_usuario.",
-		 estado = 4
+		 estado = 3
 		WHERE
 			id_requisicion = ".$ids;
 			$this->db->query($q);
 
 }
 
-}	
 
+
+
+}	
 ?>
