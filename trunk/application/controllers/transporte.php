@@ -174,11 +174,12 @@ class Transporte extends CI_Controller
 				if($descrip!="")
 					$this->transporte_model->insertar_descripcion($id,$descrip,2);
 				$this->db->trans_complete();
-				if($this->db->trans_status() && $estado==2) {
+				$tr=($this->db->trans_status()===FALSE)?0:1;
+				if($tr==1 && $estado==2) {
 					enviar_correo_automatico_administracion($id_solicitud_transporte,62);
 				}
 				enviar_correo_automatico_usuarios($id_solicitud_transporte);
-				ir_a("index.php/transporte/control_solicitudes/".$this->db->trans_status()."/".$estado);
+				ir_a("index.php/transporte/control_solicitudes/".$tr."/".$estado);
 			}
 			else {
 				$this->db->trans_complete();
@@ -557,14 +558,16 @@ class Transporte extends CI_Controller
 					
 					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
 					$this->db->trans_complete();
-					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$this->db->trans_status()."/".$estado);
+					$tr=($this->db->trans_status()===FALSE)?0:1;
+					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$tr."/".$estado);
 				}
 				else if($estado==0)
 				{
 					$this->transporte_model->nasignar_veh_mot($id_solicitud, $estado, $fecha_m, $id_empleado);
 					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
 					$this->db->trans_complete();
-					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$this->db->trans_status()."/".$estado);
+					$tr=($this->db->trans_status()===FALSE)?0:1;
+					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$tr."/".$estado);
 				}
 				else {
 					ir_a("index.php/transporte/asignar_vehiculo_motorista/0/0");
@@ -698,14 +701,15 @@ class Transporte extends CI_Controller
 				$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones, 1); /*Guardando observaciones*/
 			
 			$this->db->trans_complete();
-			if($this->db->trans_status()) {
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			if($tr) {
 				enviar_correo_automatico_administracion($id_solicitud_transporte,60);
 			}
 			if($id_solicitud_old!="") {
-				ir_a('index.php/transporte/ver_solicitudes/'.$this->db->trans_status());
+				ir_a('index.php/transporte/ver_solicitudes/'.$tr);
 			}
 			else {
-				ir_a('index.php/transporte/solicitud/'.$this->db->trans_status());
+				ir_a('index.php/transporte/solicitud/'.$tr);
 			}
 		}
 		else {
@@ -855,7 +859,6 @@ class Transporte extends CI_Controller
 		
 			 nuevaVentana('index.php/transporte/solicitud_pdf/'.$id);	
 			}
-
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 
 			ir_a('index.php/transporte/control_salidas_entradas/'.$tr."/".$estado);	
@@ -959,7 +962,8 @@ class Transporte extends CI_Controller
 			$this->db->trans_start();
 			$this->transporte_model->eliminar_solicitud($id_solicitud);
 			$this->db->trans_complete();
-			redirect('index.php/transporte/ver_solicitudes/'.$this->db->trans_status());
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			redirect('index.php/transporte/ver_solicitudes/'.$tr);
 		}
 		else {
 			echo "No tiene permisos para acceder";
