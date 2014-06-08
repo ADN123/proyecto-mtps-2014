@@ -398,7 +398,7 @@ function dialogo_autorizacion($id)
 	*	Objetivo: 	Guardar la informacion o respuesta del usuario en visto bueno
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
-	*	Última Modificación: 7/06/2014
+	*	Última Modificación: 8/06/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
 function guardar_autorizacion()
@@ -420,5 +420,81 @@ function guardar_autorizacion()
 		}
 
 	}
+		/*
+	*	Nombre: ver requiciciones de combustible 
+	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 8/06/2014
+	*	Observaciones: Ninguna.
+	*/
+
+	function ver_requisiciones($estado_transaccion=NULL)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); /*Verificacion de permiso para crear requisiciones*/
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		//$data['id_permiso']=$permiso;
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+				case 2://seccion
+				$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion']);
+
+
+					break;
+				case 3://administrador
+				$data['datos']=$this->vales_model->consultar_requisiciones();					
+
+					break;
+				case 4: //departamental
+					
+
+						if($this->vales_model->is_departamental($id_seccion['id_seccion'])){// fuera de san salvador
+
+							$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion']);
+						}else{//san salvador
+							$data['datos']=$this->vales_model->consultar_requisiciones_san_salvador();
+						}
+
+					break;
+					
+			}
+
+			$data['estado_transaccion']=$estado_transaccion;
+			//print_r($data);
+			pantalla("vales/ver_requisiciones",$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+	}
+/*
+	*	Nombre: dialogo detalle
+	*	Objetivo: 	Guardar la informacion o respuesta del usuario en visto bueno
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 8/06/2014
+	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
+	*/
+function dialogo_detalles($id)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82);
+		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
+			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			$datos['d']=$this->vales_model->info_requisicion($id);
+			$datos['f']=$this->vales_model->info_requisicion_vehiculos($id);
+			$datos['id']=$id;
+			
+			
+
+		//echo "<pre>";	print_r($datos);echo "</pre>";
+
+			$this->load->view('vales/dialogo_detalles',$datos);
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+	}
+
 }
 ?>
