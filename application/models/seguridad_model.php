@@ -42,7 +42,7 @@ class Seguridad_model extends CI_Model {
 			return (array)$query->result_array();
 	}
 	
-	function buscar_menus($id) 
+	function buscar_menus2($id) 
 	{
 		$sentencia="SELECT 
 					orden_padre,
@@ -83,7 +83,79 @@ class Seguridad_model extends CI_Model {
 		else {
 			return 0;
 		}
+	}
+		
+	function buscar_menus($id) 
+	{
+		$sentencia="SELECT DISTINCT
+					m2.orden AS orden_padre,
+					m2.id_modulo AS id_padre,
+					m2.nombre_modulo AS nombre_padre,
+					
+					org_modulo.id_modulo,
+					org_modulo.orden,
+					org_modulo.nombre_modulo,
+					org_modulo.descripcion_modulo,
+					org_modulo.dependencia,
+					org_modulo.url_modulo,
+					org_modulo.img_modulo
+					FROM org_rol
+					INNER JOIN org_usuario_rol ON org_rol.id_rol = org_usuario_rol.id_rol
+					INNER JOIN org_rol_modulo_permiso ON org_rol_modulo_permiso.id_rol = org_rol.id_rol
+					INNER JOIN org_modulo ON org_modulo.id_modulo = org_rol_modulo_permiso.id_modulo
+					LEFT JOIN org_modulo AS m2 ON m2.id_modulo = org_modulo.dependencia
+					WHERE org_usuario_rol.id_usuario=".$id." AND org_modulo.id_sistema=5 AND org_rol_modulo_permiso.estado=1
+					ORDER BY m2.id_modulo, org_modulo.orden";
+		$query=$this->db->query($sentencia);
+		
+		$result=(array)$query->result_array();
+		
+		$id_modulo="";
+		$orden="";
+		$nombre_modulo="";
+		$descripcion_modulo="";
+		$dependencia="";
+		$url_modulo="";
+		$img_modulo="";
+		
+		$new_menu=array();
+		foreach($result as $r) {
+			if(!in_array($r[id_padre], $new_menu)){
+				$new_menu[$r[id_padre]]=array(
+					"orden_padre"=>$r[orden_padre],
+					"id_padre"=>$r[id_padre],
+					"nombre_padre"=>$r[nombre_padre],
+					"id_modulo"=>$this->buscar_submenus($r[id_padre],$result,"id_modulo"),
+					"orden"=>$this->buscar_submenus($r[id_padre],$result,"orden"),
+					"nombre_modulo"=>$this->buscar_submenus($r[id_padre],$result,"nombre_modulo"),
+					"descripcion_modulo"=>$this->buscar_submenus($r[id_padre],$result,"descripcion_modulo"),
+					"dependencia"=>$this->buscar_submenus($r[id_padre],$result,"dependencia"),
+					"url_modulo"=>$this->buscar_submenus($r[id_padre],$result,"url_modulo"),
+					"img_modulo"=>$this->buscar_submenus($r[id_padre],$result,"img_modulo")
+				);
+			}			
+		}
+		
+		if($query->num_rows>0) {
+			return $new_menu;
+		}
+		else {
+			return 0;
+		}
 	}	
+	
+	function buscar_submenus($id_modulo,$result,$campo) 
+	{
+		$valores='';
+		foreach($result as $r) {
+			if($r[dependencia]==$id_modulo) {
+				if($r[$campo]!="" || $r[$campo]!=NULL)
+					$valores.=$r[$campo].',';
+			}
+		}
+		return substr($valores, 0, -1);
+	}
+	
 	function consultar_permiso($id_usuario,$id_modulo)
 	{
 		$sentencia="SELECT

@@ -5,6 +5,7 @@ class Vales extends CI_Controller
     function Vales()
 	{
         parent::__construct();
+		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('vales_model');
 		$this->load->model('transporte_model');
 		$this->load->library("mpdf");

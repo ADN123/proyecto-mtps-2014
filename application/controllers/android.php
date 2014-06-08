@@ -5,6 +5,7 @@ class Android extends CI_Controller {
 	function Android()
 	{
         parent::__construct();
+		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('android_model');
 		$this->load->model('transporte_model');
 		$this->load->model('seguridad_model');

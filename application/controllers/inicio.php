@@ -5,6 +5,7 @@ class Inicio extends CI_Controller
     function Inicio()
 	{
         parent::__construct();
+		date_default_timezone_set('America/El_Salvador');
 		$this->load->helper('url');
 		$this->load->helper('form');
 		$this->load->model('seguridad_model');

@@ -5,6 +5,7 @@ class Usuarios extends CI_Controller
     function Usuarios()
 	{
         parent::__construct();
+		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('usuario_model');
 		$this->load->model('transporte_model');
 		$this->load->library("mpdf");
