@@ -169,7 +169,7 @@ function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 									id_requisicion,
 									sr.nombre_seccion AS seccion,
 									cantidad_solicitada AS cantidad,
-									fecha
+									DATE_FORMAT(fecha,'%d/%m/%Y') as fecha
 								FROM
 									tcm_requisicion r
 								INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
@@ -193,7 +193,7 @@ function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 									id_requisicion,
 									sr.nombre_seccion AS seccion,
 									cantidad_solicitada AS cantidad,
-									fecha
+									DATE_FORMAT(fecha,'%d/%m/%Y') as fecha
 								FROM
 									tcm_requisicion r
 								INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
@@ -210,17 +210,21 @@ function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 
 	function info_requisicion($id)
 	{
-	$query=$this->db->query(" SELECT
+	$query=$this->db->query("  SELECT
 				id_requisicion,
 				sr.nombre_seccion AS seccion,
 				cantidad_solicitada AS cantidad,
-				fecha,
+				DATE_FORMAT(fecha,'%d/%m/%Y %r') as fecha,
 				justificacion,
-				LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre
+				LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
+				DATE_FORMAT(fecha_visto_bueno,'%d/%m/%Y %r') as fecha_visto_bueno,			
+				LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido,e2.segundo_apellido,e2.apellido_casada)) AS visto_bueno,
+				cantidad_entregado as entregado
 			FROM
 				tcm_requisicion r
 			INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
 			LEFT JOIN sir_empleado e ON r.id_empleado_solicitante= e.id_empleado
+			LEFT JOIN sir_empleado e2 ON r.id_empleado_vistobueno = e2.id_empleado
 				WHERE id_requisicion= ".$id);
 			return $query->result();
 
@@ -257,6 +261,22 @@ function info_requisicion_vehiculos($id)
 
 }
 
+function guardar_autorizacion($post)
+{
+	extract($post);
+
+$q="UPDATE tcm_requisicion
+		SET 
+		 fecha_autorizado = CONCAT_WS(' ', CURDATE(), CURTIME()),
+		 fecha_modificacion = CONCAT_WS(' ', CURDATE(), CURTIME()),
+		id_empleado_autoriza = ".$id_empleado.", 
+		id_usuario_modifica = ".$id_usuario.",
+		 estado = 4
+		WHERE
+			id_requisicion = ".$ids;
+			$this->db->query($q);
+
+}
 
 }	
 

@@ -18,7 +18,7 @@
                 echo "Nombre: <strong>".$nombre."</strong> <br>
                 Sección: <strong>".$seccion."</strong> <br>
                 ID Requisicion: <strong>".$id_requisicion."</strong> <br>
-                Fecha de Solicitud: <strong>".$fecha."</strong> <br>
+                Fecha y hora de Solicitud: <strong>".$fecha."</strong> <br>
                 Cantidad Solicitada: <strong>".$cantidad."</strong> <br>
                 Justificacion: <strong>".$justificacion."</strong> <br></fieldset>
     <br />";
@@ -65,7 +65,7 @@
         <input class="tam-1" id='asignar' tabindex='2' name='asignar' type="text"/>
     </fieldset>
     <p style='text-align: center;'>
-        <button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)">Aprobar</button>
+        <button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)">Visto Bueno</button>
         <button  type="submit" id="denegar" class="button tam-1 boton_validador"  onclick="Enviar(0)">Denegar</button>
     </p>
 </form>
