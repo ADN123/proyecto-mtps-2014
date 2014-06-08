@@ -24,12 +24,6 @@ class Seguridad extends CI_Controller
     
 	function index()
 	{
-		echo '<pre>';
-		print_r( $this->seguridad_model->buscar_menus(22) );
-		echo '</pre>';
-		echo '<pre>';
-		print_r( $this->seguridad_model->buscar_menus2(22) );
-		echo '</pre>';
   	}
 	
 	function registrar_usuario_index()
