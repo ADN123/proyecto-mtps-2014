@@ -6,10 +6,10 @@ class Seguridad extends CI_Controller
 	{
         parent::__construct();
 		error_reporting(0);
+		date_default_timezone_set('America/El_Salvador');
 		$this->load->helper('url');
 		$this->load->helper('form');
 		$this->load->model('seguridad_model');
-		$this->load->model('bitacora_model');
 		if(!$this->session->userdata('id_usuario')){
 		 redirect('index.php/sessiones');
 		}
@@ -24,9 +24,12 @@ class Seguridad extends CI_Controller
     
 	function index()
 	{
-		$this->load->view('encabezado');
-		$this->load->view('seguridad_index');
-		$this->load->view('piePagina');
+		echo '<pre>';
+		print_r( $this->seguridad_model->buscar_menus(22) );
+		echo '</pre>';
+		echo '<pre>';
+		print_r( $this->seguridad_model->buscar_menus2(22) );
+		echo '</pre>';
   	}
 	
 	function registrar_usuario_index()

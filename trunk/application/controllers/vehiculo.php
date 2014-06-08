@@ -5,6 +5,7 @@ class Vehiculo extends CI_Controller
     function Vehiculo()
 	{
         parent::__construct();
+		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('transporte_model');
 //		$this->load->model('vehiculo_model');
     	if(!$this->session->userdata('id_usuario')){

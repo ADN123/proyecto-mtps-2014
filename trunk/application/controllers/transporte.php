@@ -5,6 +5,7 @@ class Transporte extends CI_Controller
     function Transporte()
 	{
         parent::__construct();
+		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('transporte_model');
 		$this->load->library("mpdf");
     	if(!$this->session->userdata('id_usuario')) {
