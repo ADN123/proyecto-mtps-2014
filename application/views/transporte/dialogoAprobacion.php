@@ -38,7 +38,7 @@
                         $quien="Por parte del Jefe de Departamento o Secci&oacute;n";
                         break;
                     case 3:
-                        $quien="Por parte del Jefe de Servicios Generales";
+                        $quien="Por parte del Jefe de Transporte";
                         break;
                     default:
                         $quien="General";
