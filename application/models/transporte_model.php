@@ -1223,7 +1223,8 @@ SELECT
 	DATE_FORMAT(hora_entrada, '%h:%i %p') regreso,
 	v.placa,
 	v.id_vehiculo,
-	vm.modelo
+	vm.modelo,
+v.cantidad_combustible as gas
 FROM
 	tcm_vehiculo v
 INNER JOIN tcm_asignacion_sol_veh_mot asi ON v.id_vehiculo = asi.id_vehiculo
@@ -1512,27 +1513,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	
 	public function buscar_solicitudes_depto($estado=NULL)
 	{
-		/*$sentencia="SELECT DISTINCT
-					tcm_solicitud_transporte.id_solicitud_transporte AS id,
-					DATE_FORMAT(tcm_solicitud_transporte.fecha_mision,'%d-%m-%Y') AS fecha,
-					DATE_FORMAT(tcm_solicitud_transporte.hora_entrada,'%h:%i %p') AS entrada,
-					DATE_FORMAT(tcm_solicitud_transporte.hora_salida,'%h:%i %p') AS salida,
-					tcm_solicitud_transporte.id_solicitud_transporte,
-					tcm_solicitud_transporte.estado_solicitud_transporte,
-					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre,
-					tcm_solicitud_transporte.estado_solicitud_transporte AS estado,
-					LOWER(COALESCE(org_seccion.nombre_seccion, 'No hay registro')) seccion
-					FROM
-					tcm_solicitud_transporte
-					INNER JOIN sir_empleado ON tcm_solicitud_transporte.id_empleado_solicitante = sir_empleado.id_empleado
-					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado_informacion_laboral.id_empleado = sir_empleado.id_empleado
-					INNER JOIN org_seccion ON org_seccion.id_seccion = sir_empleado_informacion_laboral.id_seccion
-					WHERE tcm_solicitud_transporte.estado_solicitud_transporte>='".$estado."' AND tcm_solicitud_transporte.id_solicitud_transporte NOT IN (SELECT
-						tcm_solicitud_transporte.id_solicitud_transporte
-						FROM tcm_solicitud_transporte
-						INNER JOIN sir_empleado ON tcm_solicitud_transporte.id_empleado_solicitante = sir_empleado.id_empleado
-						LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado_informacion_laboral.id_empleado = sir_empleado.id_empleado
-						WHERE sir_empleado_informacion_laboral.id_seccion=52 OR sir_empleado_informacion_laboral.id_seccion=53  OR sir_empleado_informacion_laboral.id_seccion=54 OR sir_empleado_informacion_laboral.id_seccion=55 OR sir_empleado_informacion_laboral.id_seccion=56 OR sir_empleado_informacion_laboral.id_seccion=57 OR sir_empleado_informacion_laboral.id_seccion=58 OR sir_empleado_informacion_laboral.id_seccion=59 OR sir_empleado_informacion_laboral.id_seccion=60 OR sir_empleado_informacion_laboral.id_seccion=61 OR sir_empleado_informacion_laboral.id_seccion=64 OR sir_empleado_informacion_laboral.id_seccion=65 OR sir_empleado_informacion_laboral.id_seccion=66)";*/
+		
 		$sentencia="SELECT * FROM
 					(
 						SELECT id_solicitud_transporte id,
@@ -1590,6 +1571,58 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$query=$this->db->query($sentencia);
 
 		return (array)$query->result_array();
+	}
+
+	function update_combustible($id, $gas)
+	{
+		$q="UPDATE tcm_vehiculo SET cantidad_combustible= '".$gas."'
+		 WHERE (id_vehiculo='(SELECT id_vehiculo 
+		 	FROM tcm_asignacion_sol_veh_mot 
+		 	WHERE id_solicitud_transporte = ".$id.")')";
+		
+		$query=$this->db->query($q);
+
+	}
+	
+
+	function consultar_direfencia($id,$gas)
+	{
+
+		$q="SELECT
+				cantidad_combustible - ".$gas." as diferencia
+			FROM tcm_vehiculo
+			WHERE
+				id_vehiculo = ( SELECT id_vehiculo
+					FROM 		tcm_asignacion_sol_veh_mot
+					WHERE
+						id_solicitud_transporte = ".$id."
+				)";
+		
+		$query=$this->db->query($q);
+		return (array)$query->result_array();
+	}
+
+
+	function insertar_bitacora_combustible($id,$gas)
+	{
+
+		$q="INSERT INTO `tcm_bitacora_vehiculo` (
+				`id_solicitud_transporte_bitacora`,
+				`fecha_hora`,
+				`id_vehiculo`,
+				`diferencia`
+			)
+			VALUES
+				(
+					".$id.",
+				 CONCAT_WS(' ',CURDATE(),CURTIME()),
+					(SELECT id_vehiculo 
+					 	FROM tcm_asignacion_sol_veh_mot 
+					 	WHERE id_solicitud_transporte = ".$id."),
+					'".$gas."'
+				)";
+		
+		$query=$this->db->query($q);
 	}
 
 
