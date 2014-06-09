@@ -6,8 +6,8 @@
  */
  var multi;
  var estado_transaccion="";
- var estado_correcto="La transacción fue ejecutada exitosamente";
- var estado_incorrecto="Error en la transacción: No se pudo conectar al servidor";
+ var estado_correcto="La transacci&oacute;n fue ejecutada exitosamente";
+ var estado_incorrecto="Error en la transacci&oacute;n: No se pudo conectar al servidor";
  var id='';
 $(document).ready(function() {
 	if(estado_transaccion!="") {
