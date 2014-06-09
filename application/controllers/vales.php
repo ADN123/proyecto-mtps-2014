@@ -116,9 +116,9 @@ class Vales extends CI_Controller
 					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
 					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
 					$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
-						if(sizeof($data['vehiculos'])==0){
-							$url.='error';	
-						}
+					if(sizeof($data['vehiculos'])==0) {
+						$url.='error';	
+					}
 					break;
 				case 3://administrador
 					$data['oficinas']=$this->vales_model->consultar_oficinas();
@@ -126,38 +126,31 @@ class Vales extends CI_Controller
 
 					break;
 				case 4: //departamental
-					
-
-						if($this->vales_model->is_departamental($id_seccion['id_seccion'])){// fuera de san salvador
-							
-								$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
-								$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
-								$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
-									if(sizeof($data['vehiculos'])==0){
-												$url.='error';	
-										}
-						}else{//san salvador
-			
-								$data['oficinas']=$this->vales_model->consultar_oficinas_san_salvador();
-								$data['fuente']=$this->vales_model->consultar_fuente_fondo_san_salvador();
-
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
+						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
+						$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
+						if(sizeof($data['vehiculos'])==0){
+							$url.='error';	
 						}
-
+					}
+					else {//san salvador
+						$data['oficinas']=$this->vales_model->consultar_oficinas_san_salvador();
+						$data['fuente']=$this->vales_model->consultar_fuente_fondo_san_salvador();
+					}
 					break;
-					
 			}
-
 			$data['estado_transaccion']=$estado_transaccion;
-/*			 echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
+			/*echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
 			print_r($data['oficinas']);  */
-
 			pantalla($url,$data);	
 		}
 		else {
 			echo 'No tiene permisos para acceder';
 		}
 	}
-		/*
+	
+	/*
 	*	Nombre: guardar_requisicion
 	*	Objetivo: Guardar la requisicion de una seccion
 	*	Hecha por: Jhonatan
@@ -165,7 +158,6 @@ class Vales extends CI_Controller
 	*	Última Modificación: 25/05/2014
 	*	Observaciones: Ninguna.
 	*/
-
 	function guardar_requisicion()
 	{
 		$this->db->trans_start();
@@ -181,10 +173,11 @@ class Vales extends CI_Controller
 		$this->db->trans_complete();
 			ir_a('index.php/vales/ingreso_requisicion/'.$this->db->trans_status());		
 	}
+	
 	/*
 	*	Nombre: vehiculos
 	*	Objetivo: Cargar por ajax los vehiculos de una seccion y fuente de fonodo segun selccione el usuario 
-		en la pantalla de ingrese de requisicion de combustible 
+	*	en la pantalla de ingrese de requisicion de combustible 
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
 	*	Última Modificación: 21/05/2014
@@ -192,11 +185,8 @@ class Vales extends CI_Controller
 	*/
 	function vehiculos($id_seccion=NULL, $id_fuente_fondo = NULL)
 	{
-
-	$data['vehiculos']=$this->vales_model->vehiculos($id_seccion, $id_fuente_fondo);
-	$this->load->view("vales/vehiculos",$data);
-		
-
+		$data['vehiculos']=$this->vales_model->vehiculos($id_seccion, $id_fuente_fondo);
+		$this->load->view("vales/vehiculos",$data);		
 	}
 	
 	/*
@@ -212,7 +202,7 @@ class Vales extends CI_Controller
 		$this->load->view("vales/requisicion_pdf");
 	}
 
-		/*
+	/*
 	*	Nombre: visto bueno
 	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
 	*	Hecha por: Jhonatan
@@ -220,7 +210,6 @@ class Vales extends CI_Controller
 	*	Última Modificación: 7/06/2014
 	*	Observaciones: Ninguna.
 	*/
-
 	function visto_bueno($estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80); /*Verificacion de permiso para crear requisiciones*/
@@ -230,50 +219,38 @@ class Vales extends CI_Controller
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
 				case 2://seccion
-				$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion'], 1);
-
-
+					$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion'], 1);
 					break;
 				case 3://administrador
-				$data['datos']=$this->vales_model->consultar_requisiciones(NULL,1);					
-
+					$data['datos']=$this->vales_model->consultar_requisiciones(NULL,1);					
 					break;
-				case 4: //departamental
-					
-
+				case 4: //departamental					
 						if($this->vales_model->is_departamental($id_seccion['id_seccion'])){// fuera de san salvador
-
 							$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion'], 1);
-						}else{//san salvador
-							$data['datos']=$this->vales_model->consultar_requisiciones_san_salvador(1);
-
 						}
-
+						else{//san salvador
+							$data['datos']=$this->vales_model->consultar_requisiciones_san_salvador(1);
+						}
 					break;
-					
 			}
-
 			$data['estado_transaccion']=$estado_transaccion;
 			//print_r($data);
 			pantalla("vales/visto_bueno",$data);	
 		}
 		else {
 			echo 'No tiene permisos para acceder';
-		}
-		
-
+		}		
 	}
 
-/*
+	/*
 	*	Nombre: dialogo_visto bueno
-	*	Objetivo: 	cargar el cuadro de dialogo mediante ajax en la pantalla de visto_bueno
+	*	Objetivo: Cargar el cuadro de dialogo mediante ajax en la pantalla de visto_bueno
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
 	*	Última Modificación: 7/06/2014
 	*	Observaciones: Ninguna.
 	*/
-
-function dialogo_visto_bueno($id)
+	function dialogo_visto_bueno($id)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
@@ -288,36 +265,33 @@ function dialogo_visto_bueno($id)
 		}
 	}
 
-
-/*
+	/*
 	*	Nombre: guardar_visto bueno
-	*	Objetivo: 	Guardar la informacion o respuesta del usuario en visto bueno
+	*	Objetivo: Guardar la informacion o respuesta del usuario en visto bueno
 	*	Hecha por: Jhonatan
 	*	Modificada por: Jhonatan
 	*	Última Modificación: 7/06/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
-function guardar_visto_bueno()
-{
+	function guardar_visto_bueno()
+	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80);
 		$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$_POST['id_empleado']=$id_empleado;
 
 		if($data['id_permiso']!=NULL) {
-			
-				$this->db->trans_start();
-				$this->vales_model->guardar_visto_bueno($_POST);
-				$this->db->trans_complete();
-				ir_a('index.php/vales/visto_bueno/'.$this->db->trans_status());		
-
-		}else{
-				echo 'No tiene permisos para acceder';
+			$this->db->trans_start();
+			$this->vales_model->guardar_visto_bueno($_POST);
+			$this->db->trans_complete();
+			ir_a('index.php/vales/visto_bueno/'.$this->db->trans_status());		
 		}
-
+		else{
+			echo 'No tiene permisos para acceder';
+		}
 	}
 
-		/*
+	/*
 	*	Nombre: autorizar_requisicion
 	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
 	*	Hecha por: Jhonatan
@@ -325,7 +299,6 @@ function guardar_visto_bueno()
 	*	Última Modificación: 7/06/2014
 	*	Observaciones: Ninguna.
 	*/
-
 	function autorizar_requisicion($estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81); /*Verificacion de permiso para crear requisiciones*/
@@ -335,28 +308,20 @@ function guardar_visto_bueno()
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
 				case 2://seccion
-				$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion'], 2);
-
-
+					$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion'], 2);
 					break;
 				case 3://administrador
-				$data['datos']=$this->vales_model->consultar_requisiciones(NULL,2);					
-
+					$data['datos']=$this->vales_model->consultar_requisiciones(NULL,2);					
 					break;
-				case 4: //departamental
-					
-
-						if($this->vales_model->is_departamental($id_seccion['id_seccion'])){// fuera de san salvador
-
-							$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion'], 2);
-						}else{//san salvador
-							$data['datos']=$this->vales_model->consultar_requisiciones_san_salvador(2);
-						}
-
+				case 4: //departamental					
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])){// fuera de san salvador
+						$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion'], 2);
+					}
+					else{//san salvador
+						$data['datos']=$this->vales_model->consultar_requisiciones_san_salvador(2);
+					}
 					break;
-					
 			}
-
 			$data['estado_transaccion']=$estado_transaccion;
 			//print_r($data);
 			pantalla("vales/autorizacion",$data);	
@@ -364,11 +329,9 @@ function guardar_visto_bueno()
 		else {
 			echo 'No tiene permisos para acceder';
 		}
-		
-
 	}
 
-/*
+	/*
 	*	Nombre: dialogo_autorizacion
 	*	Objetivo: 	cargar el cuadro de dialogo mediante ajax en la pantalla de autorizacion
 	*	Hecha por: Jhonatan
@@ -376,8 +339,7 @@ function guardar_visto_bueno()
 	*	Última Modificación: 7/06/2014
 	*	Observaciones: Ninguna.
 	*/
-
-function dialogo_autorizacion($id)
+	function dialogo_autorizacion($id)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
@@ -393,7 +355,7 @@ function dialogo_autorizacion($id)
 	}
 
 
-/*
+	/*
 	*	Nombre: guardar_autorizacion
 	*	Objetivo: 	Guardar la informacion o respuesta del usuario en visto bueno
 	*	Hecha por: Jhonatan
@@ -401,26 +363,24 @@ function dialogo_autorizacion($id)
 	*	Última Modificación: 8/06/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
-function guardar_autorizacion()
-{
+	function guardar_autorizacion()
+	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81);
 		$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$_POST['id_empleado']=$id_empleado;
 
 		if($data['id_permiso']!=NULL) {
-			
-				$this->db->trans_start();
-				$this->vales_model->guardar_autorizacion($_POST);
-				$this->db->trans_complete();
-				ir_a('index.php/vales/autorizar_requisicion/'.$this->db->trans_status());		
-
+			$this->db->trans_start();
+			$this->vales_model->guardar_autorizacion($_POST);
+			$this->db->trans_complete();
+			ir_a('index.php/vales/autorizar_requisicion/'.$this->db->trans_status());		
 		}else{
-				echo 'No tiene permisos para acceder';
+			echo 'No tiene permisos para acceder';
 		}
-
 	}
-		/*
+
+	/*
 	*	Nombre: ver requiciciones de combustible 
 	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
 	*	Hecha por: Jhonatan
@@ -428,7 +388,6 @@ function guardar_autorizacion()
 	*	Última Modificación: 8/06/2014
 	*	Observaciones: Ninguna.
 	*/
-
 	function ver_requisiciones($estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); /*Verificacion de permiso para crear requisiciones*/
@@ -438,28 +397,20 @@ function guardar_autorizacion()
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
 				case 2://seccion
-				$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion']);
-
-
+					$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion']);
 					break;
 				case 3://administrador
-				$data['datos']=$this->vales_model->consultar_requisiciones();					
-
+					$data['datos']=$this->vales_model->consultar_requisiciones();					
 					break;
 				case 4: //departamental
-					
-
 						if($this->vales_model->is_departamental($id_seccion['id_seccion'])){// fuera de san salvador
-
 							$data['datos']=$this->vales_model->consultar_requisiciones($id_seccion['id_seccion']);
-						}else{//san salvador
+						}
+						else{//san salvador
 							$data['datos']=$this->vales_model->consultar_requisiciones_san_salvador();
 						}
-
 					break;
-					
 			}
-
 			$data['estado_transaccion']=$estado_transaccion;
 			//print_r($data);
 			pantalla("vales/ver_requisiciones",$data);	
@@ -468,7 +419,8 @@ function guardar_autorizacion()
 			echo 'No tiene permisos para acceder';
 		}
 	}
-/*
+	
+	/*
 	*	Nombre: dialogo detalle
 	*	Objetivo: 	Guardar la informacion o respuesta del usuario en visto bueno
 	*	Hecha por: Jhonatan
@@ -476,7 +428,7 @@ function guardar_autorizacion()
 	*	Última Modificación: 8/06/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
-function dialogo_detalles($id)
+	function dialogo_detalles($id)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
@@ -484,16 +436,41 @@ function dialogo_detalles($id)
 			$datos['d']=$this->vales_model->info_requisicion($id);
 			$datos['f']=$this->vales_model->info_requisicion_vehiculos($id);
 			$datos['id']=$id;
-			
-			
-
-		//echo "<pre>";	print_r($datos);echo "</pre>";
-
+			//echo "<pre>";	print_r($datos);echo "</pre>";
 			$this->load->view('vales/dialogo_detalles',$datos);
 		}
 		else {
 			echo 'No tiene permisos para acceder';
 		}
+	}
+	
+	/*
+	*	Nombre: ingreso_consumo
+	*	Objetivo: Carga la vista para el ingreso de comsumo de vales de combustible or vehiculo.
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Última Modificación: 08/06/2014
+	*	Observaciones: Ninguna.
+	*/
+	function ingreso_consumo()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),63); 
+		
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) {
+				case 1:
+
+				case 2:
+				case 3:
+			}
+			$data['gasolineras']=$this->vales_model->consultar_gasolineras();
+			$data['estado_transaccion']=$estado_transaccion;
+			$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
+			pantalla("vales/ingreso",$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}	
 	}
 
 }
