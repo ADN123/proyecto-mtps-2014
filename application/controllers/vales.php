@@ -197,8 +197,9 @@ class Vales extends CI_Controller
 	*	Última Modificación: 07/06/2014
 	*	Observaciones: Ninguna.
 	*/
-	function requisiciones_pdf()
+	function requisiciones_pdf($id)
 	{
+		$data=$this->vales_model->req_pdf($id);
 		$this->load->view("vales/requisicion_pdf");
 	}
 
