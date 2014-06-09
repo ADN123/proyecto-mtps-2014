@@ -276,11 +276,31 @@ function info_requisicion_vehiculos($id)
 
 }
 
+function req_pdf($id_requisicion)
+{
+	$query=$this->db->query("SELECT DATE_FORMAT(r.fecha,'%d-%m-%Y') as fecha,
+	o.nombre_seccion as seccion,
+	r.cantidad_solicitada,
+	LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
+	r.tipo_requisicion, r.justificacion, r.servicio_de, r.cantidad_entregado,
+	r.numero_inicial, r.cantidad_restante
+	FROM tcm_requisicion AS r
+	LEFT JOIN org_seccion AS o ON o.id_seccion=r.id_seccion
+	LEFT JOIN sir_empleado AS e ON 
+				(e.id_empleado = r.id_empleado_solicitante AND
+				 e.id_empleado = r.id_empleado_autoriza AND
+				 e.id_empleado = r.id_empleado_recibe AND
+				 e.id_empleado = r.id_empleado_vistobueno AND
+				 e.id_empleado = r.id_empledo_entrega
+				)
+	WHERE r.id_requisicion='$id_requisicion'");
+}
+
 function guardar_autorizacion($post)
 {
 	extract($post);
 
-$q="UPDATE tcm_requisicion
+	$q="UPDATE tcm_requisicion
 		SET 
 		 fecha_autorizado = CONCAT_WS(' ', CURDATE(), CURTIME()),
 		 fecha_modificacion = CONCAT_WS(' ', CURDATE(), CURTIME()),
@@ -292,7 +312,6 @@ $q="UPDATE tcm_requisicion
 			$this->db->query($q);
 
 }
-
 
 
 
