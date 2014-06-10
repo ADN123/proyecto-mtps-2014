@@ -180,7 +180,8 @@ class Usuarios extends CI_Controller
 			$this->usuario_model->guardar_permisos_rol($formuInfo); /*Guardando permisos del rol para salir del sistema*/
 			
 			$this->db->trans_complete();
-			ir_a('index.php/usuarios/roles/'.$this->db->trans_status().'/2');
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/usuarios/roles/'.$tr.'/2');
 		}
 		else {
 			echo 'No tiene permisos para acceder';
@@ -276,7 +277,8 @@ class Usuarios extends CI_Controller
 			$this->usuario_model->guardar_permisos_rol($formuInfo); /*Guardando permisos del rol para salir del sistema*/
 			
 			$this->db->trans_complete();
-			ir_a('index.php/usuarios/roles/'.$this->db->trans_status().'/1');
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/usuarios/roles/'.$tr.'/1');
 		}
 		else {
 			echo 'No tiene permisos para acceder';
@@ -300,7 +302,8 @@ class Usuarios extends CI_Controller
 			$this->usuario_model->eliminar_rol($id_rol); /*Eliminar rol*/
 			$this->usuario_model->eliminar_permisos_rol($id_rol); /*Eliminar permisos del rol*/
 			$this->db->trans_complete();
-			ir_a('index.php/usuarios/roles/'.$this->db->trans_status().'/0');
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/usuarios/roles/'.$tr.'/0');
 		}
 		else {
 			echo 'No tiene permisos para acceder';
@@ -464,7 +467,8 @@ class Usuarios extends CI_Controller
 				$this->usuario_model->guardar_permisos_usuario($formuInfo); /*Guardando permisos del usuario*/
 			}
 			$this->db->trans_complete();
-			ir_a('index.php/usuarios/usuario/'.$this->db->trans_status().'/2');
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/usuarios/usuario/'.$tr.'/2');
 		}
 		else {
 			echo 'No tiene permisos para acceder';
@@ -508,7 +512,8 @@ class Usuarios extends CI_Controller
 				$this->usuario_model->guardar_permisos_usuario($formuInfo); /*Guardando permisos del usuario*/
 			}
 			$this->db->trans_complete();
-			ir_a('index.php/usuarios/usuario/'.$this->db->trans_status().'/1');
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/usuarios/usuario/'.$tr.'/1');
 		}
 		else {
 			echo 'No tiene permisos para acceder';
@@ -533,7 +538,8 @@ class Usuarios extends CI_Controller
 			/*$this->usuario_model->eliminar_usuario($id_usuario);*/ /*Eliminar usuario*/
 			/*$this->usuario_model->eliminar_permisos_usuario($id_usuario);*/ /*Eliminar permisos del usuario*/
 			$this->db->trans_complete();
-			ir_a('index.php/usuarios/usuario/'.$this->db->trans_status().'/0');
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/usuarios/usuario/'.$tr.'/0');
 		}
 		else {
 			echo 'No tiene permisos para acceder';

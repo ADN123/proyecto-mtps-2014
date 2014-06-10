@@ -88,7 +88,8 @@ class Vales extends CI_Controller
 			$this->vales_model->guardar_vales($formuInfo);
 			
 			$this->db->trans_complete();
-			ir_a('index.php/vales/ingreso_vales/'.$this->db->trans_status());
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/ingreso_vales/'.$tr);
 		}
 		else {
 			echo "No tiene permisos para acceder";
@@ -171,7 +172,8 @@ class Vales extends CI_Controller
 				$this->vales_model->guardar_req_veh($vehiculos[$i], $id_requisicion);
 			}
 		$this->db->trans_complete();
-			ir_a('index.php/vales/ingreso_requisicion/'.$this->db->trans_status());		
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a('index.php/vales/ingreso_requisicion/'.$tr);		
 	}
 	
 	/*
@@ -283,9 +285,14 @@ class Vales extends CI_Controller
 
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
+			$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
+			$val=$this->vales_model->buscar_vales($req[0]->id_fuente_fondo,$_POST['asignar']);
+			$_POST['id_vale']=$val['id_vale'];
+			$_POST['numero_inicial']=$val['inicial'];
 			$this->vales_model->guardar_visto_bueno($_POST);
 			$this->db->trans_complete();
-			ir_a('index.php/vales/visto_bueno/'.$this->db->trans_status());		
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/visto_bueno/'.$tr);		
 		}
 		else{
 			echo 'No tiene permisos para acceder';
@@ -375,7 +382,8 @@ class Vales extends CI_Controller
 			$this->db->trans_start();
 			$this->vales_model->guardar_autorizacion($_POST);
 			$this->db->trans_complete();
-			ir_a('index.php/vales/autorizar_requisicion/'.$this->db->trans_status());		
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/autorizar_requisicion/'.$tr);		
 		}else{
 			echo 'No tiene permisos para acceder';
 		}
@@ -450,24 +458,27 @@ class Vales extends CI_Controller
 	*	Objetivo: Carga la vista para el ingreso de comsumo de vales de combustible or vehiculo.
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
-	*	Última Modificación: 08/06/2014
+	*	Última Modificación: 10/06/2014
 	*	Observaciones: Ninguna.
 	*/
 	function ingreso_consumo()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),63); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
 		
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
 				case 1:
-
+					break;
 				case 2:
+					break;
 				case 3:
+					break;
+				case 4:
+					break;
 			}
 			$data['gasolineras']=$this->vales_model->consultar_gasolineras();
 			$data['estado_transaccion']=$estado_transaccion;
-			$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
-			pantalla("vales/ingreso",$data);	
+			pantalla("vales/consumo",$data);	
 		}
 		else {
 			echo 'No tiene permisos para acceder';

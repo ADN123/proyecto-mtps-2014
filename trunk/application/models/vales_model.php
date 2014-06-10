@@ -42,7 +42,7 @@ class Vales_model extends CI_Model {
 
 	}
 
-function consultar_oficinas_san_salvador()
+	function consultar_oficinas_san_salvador()
 	{
 
 		$sentencia="SELECT 	s.id_seccion,s.nombre_seccion
@@ -56,7 +56,8 @@ function consultar_oficinas_san_salvador()
 
 	}
 
-	function vehiculos($id_seccion=NULL, $id_fuente_fondo= NULL)	{	
+	function vehiculos($id_seccion=NULL, $id_fuente_fondo= NULL)	
+	{	
 		$whereb=FALSE;
 
 		$sentencia="SELECT  v.id_vehiculo, v.placa,  vm.nombre as marca, vmo.modelo, v.id_seccion
@@ -85,7 +86,7 @@ function consultar_oficinas_san_salvador()
 	
 	}
 
-		function consultar_fuente_fondo($id_seccion=NULL)
+	function consultar_fuente_fondo($id_seccion=NULL)
 	{
 		$where="";
 		if($id_seccion!=NULL){
@@ -104,9 +105,9 @@ function consultar_oficinas_san_salvador()
 			return (array)$query->result_array();
 
 	}
+	
 	function consultar_fuente_fondo_san_salvador()
 	{
-
 		$query=$this->db->query("	SELECT
 									ff.id_fuente_fondo,
 									ff.nombre_fuente_fondo AS nombre_fuente
@@ -119,6 +120,7 @@ function consultar_oficinas_san_salvador()
 			return (array)$query->result_array();
 
 	}
+	
 	function guardar_requisicion($formuInfo,$id_usuario, $id_empleado_solicitante) 
 	{ 
 		extract($formuInfo);
@@ -132,21 +134,23 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 
 	}
 
-public function get_id_empleado($nr)
-{
-	$query="SELECT id_empleado FROM sir_empleado WHERE nr ='$nr'";
-	$query=$this->db->query($query);
-	$query=$query->result_array();
-	$query= $query[0];
-	return $query['id_empleado'];
-
-}
-public function guardar_req_veh($id_vehiculo, $id_requisicion)
-{
-	$sql="INSERT INTO tcm_req_veh VALUES('$id_requisicion','$id_vehiculo');";
-	$query=$this->db->query($sql);
-}
-public function is_departamental($id_seccion=58)
+	public function get_id_empleado($nr)
+	{
+		$query="SELECT id_empleado FROM sir_empleado WHERE nr ='$nr'";
+		$query=$this->db->query($query);
+		$query=$query->result_array();
+		$query= $query[0];
+		return $query['id_empleado'];
+	
+	}
+	
+	public function guardar_req_veh($id_vehiculo, $id_requisicion)
+	{
+		$sql="INSERT INTO tcm_req_veh VALUES('$id_requisicion','$id_vehiculo');";
+		$query=$this->db->query($sql);
+	}
+	
+	public function is_departamental($id_seccion=58)
 	{	
 
 		if($id_seccion>=52 AND $id_seccion<=66 ){
@@ -155,10 +159,8 @@ public function is_departamental($id_seccion=58)
 			return false;
 		}
 	}
-	
 
-
-function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
+	function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 	{		
 		$where="";
 
@@ -213,16 +215,16 @@ function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 
 		$query=$this->db->query($q);
 			return (array)$query->result_array();
-
 	}
 
 	function info_requisicion($id)
 	{
-	$query=$this->db->query(" SELECT
+		$query=$this->db->query(" SELECT
 				id_requisicion,
 				sr.nombre_seccion AS seccion,
 				cantidad_solicitada AS cantidad,
 				DATE_FORMAT(fecha,'%d/%m/%Y %h:%i %p') as fecha,
+				ff.id_fuente_fondo as id_fuente_fondo,
 				ff.nombre_fuente_fondo as fuente_fondo,
 				justificacion,
 				LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
@@ -246,7 +248,7 @@ function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 		
 	}
 
-function info_requisicion_vehiculos($id)
+	function info_requisicion_vehiculos($id)
 	{
 	$query=$this->db->query("SELECT 
 					v.placa, 
@@ -261,8 +263,9 @@ function info_requisicion_vehiculos($id)
 					WHERE id_requisicion = ".$id);
 			return $query->result();
 	}
- function guardar_visto_bueno($post)
-{
+	
+	function guardar_visto_bueno($post)
+	{
 	extract($post);
 
 	$this->db->query("UPDATE tcm_requisicion SET
@@ -271,49 +274,59 @@ function info_requisicion_vehiculos($id)
 					fecha_modificacion = CONCAT_WS(' ',CURDATE(),CURTIME()),
 					id_usuario_modifica = ".$id_usuario.",
 					cantidad_entregado = ".$asignar.",
+					cantidad_restante = ".$asignar.",
+					id_vale = ".$id_vale.",
+					numero_inicial = ".$numero_inicial.",
 					estado = ".$resp."
 					WHERE id_requisicion = ".$ids);
 
-}
-
-function req_pdf($id_requisicion)
-{
-	$query=$this->db->query("SELECT DATE_FORMAT(r.fecha,'%d-%m-%Y') as fecha,
-	o.nombre_seccion as seccion,
-	r.cantidad_solicitada,
-	LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
-	r.tipo_requisicion, r.justificacion, r.servicio_de, r.cantidad_entregado,
-	r.numero_inicial, r.cantidad_restante
-	FROM tcm_requisicion AS r
-	LEFT JOIN org_seccion AS o ON o.id_seccion=r.id_seccion
-	LEFT JOIN sir_empleado AS e ON 
-				(e.id_empleado = r.id_empleado_solicitante AND
-				 e.id_empleado = r.id_empleado_autoriza AND
-				 e.id_empleado = r.id_empleado_recibe AND
-				 e.id_empleado = r.id_empleado_vistobueno AND
-				 e.id_empleado = r.id_empledo_entrega
-				)
-	WHERE r.id_requisicion='$id_requisicion'");
-}
-
-function guardar_autorizacion($post)
-{
-	extract($post);
-
-	$q="UPDATE tcm_requisicion
-		SET 
-		 fecha_autorizado = CONCAT_WS(' ', CURDATE(), CURTIME()),
-		 fecha_modificacion = CONCAT_WS(' ', CURDATE(), CURTIME()),
-		id_empleado_autoriza = ".$id_empleado.", 
-		id_usuario_modifica = ".$id_usuario.",
-		 estado = 3
-		WHERE
-			id_requisicion = ".$ids;
-			$this->db->query($q);
-
-}
-
-
+	}
+	
+	function req_pdf($id_requisicion)
+	{
+		$query=$this->db->query("SELECT DATE_FORMAT(r.fecha,'%d-%m-%Y') as fecha,
+		o.nombre_seccion as seccion,
+		r.cantidad_solicitada,
+		LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
+		r.tipo_requisicion, r.justificacion, r.servicio_de, r.cantidad_entregado,
+		r.numero_inicial, r.cantidad_restante
+		FROM tcm_requisicion AS r
+		LEFT JOIN org_seccion AS o ON o.id_seccion=r.id_seccion
+		LEFT JOIN sir_empleado AS e ON 
+					(e.id_empleado = r.id_empleado_solicitante AND
+					 e.id_empleado = r.id_empleado_autoriza AND
+					 e.id_empleado = r.id_empleado_recibe AND
+					 e.id_empleado = r.id_empleado_vistobueno AND
+					 e.id_empleado = r.id_empledo_entrega
+					)
+		WHERE r.id_requisicion='$id_requisicion'");
+	}
+	
+	function guardar_autorizacion($post)
+	{
+		extract($post);
+	
+		$q="UPDATE tcm_requisicion
+			SET 
+			 fecha_autorizado = CONCAT_WS(' ', CURDATE(), CURTIME()),
+			 fecha_modificacion = CONCAT_WS(' ', CURDATE(), CURTIME()),
+			id_empleado_autoriza = ".$id_empleado.", 
+			id_usuario_modifica = ".$id_usuario.",
+			 estado = 3
+			WHERE
+				id_requisicion = ".$ids;
+				$this->db->query($q);
+	
+	}
+	
+	function buscar_vales($id_fuente_fondo,$cantidad)
+	{
+		/*$sentencia="SELECT id_vale, (final-cantidad_restante) AS inicial FROM tcm_vale WHERE tipo_vehiculo='".$id_fuente_fondo."' AND cantidad_restante>='".$cantidad."' ORDER BY fecha_recibido, id_vale LIMIT 0,1";*/
+		$sentencia="SELECT id_vale, (final-cantidad_restante) AS inicial FROM tcm_vale WHERE tipo_vehiculo='".$id_fuente_fondo."' AND cantidad_restante>0 ORDER BY fecha_recibido, id_vale LIMIT 0,1";
+		$query=$this->db->query($sentencia);
+		
+		return (array)$query->row();
+	}
 
 }	
 ?>
