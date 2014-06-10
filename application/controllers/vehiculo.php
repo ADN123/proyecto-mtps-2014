@@ -124,7 +124,8 @@ class Vehiculo extends CI_Controller
 		{
 			$this->transporte_model->registrar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$id_departamento,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen);
 			$this->db->trans_complete();
-			ir_a("index.php/vehiculo/nuevo_vehiculo/".$this->db->trans_status());
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a("index.php/vehiculo/nuevo_vehiculo/".$tr);
 		}
 		else
 		{
