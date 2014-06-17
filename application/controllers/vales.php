@@ -249,8 +249,8 @@ class Vales extends CI_Controller
 	*	Nombre: dialogo_visto bueno
 	*	Objetivo: Cargar el cuadro de dialogo mediante ajax en la pantalla de visto_bueno
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 7/06/2014
+	*	Modificada por: Leonel
+	*	Última Modificación: 17/06/2014
 	*	Observaciones: Ninguna.
 	*/
 	function dialogo_visto_bueno($id)
@@ -260,6 +260,7 @@ class Vales extends CI_Controller
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$datos['d']=$this->vales_model->info_requisicion($id);
 			$datos['f']=$this->vales_model->info_requisicion_vehiculos($id);
+			$datos['v']=$this->vales_model->info_vales($id);
 			$datos['id']=$id;
 			$this->load->view('vales/dialogo_visto_bueno',$datos);
 		}
@@ -272,8 +273,8 @@ class Vales extends CI_Controller
 	*	Nombre: guardar_visto bueno
 	*	Objetivo: Guardar la informacion o respuesta del usuario en visto bueno
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 7/06/2014
+	*	Modificada por: Leonel
+	*	Última Modificación: 17/06/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
 	function guardar_visto_bueno()
@@ -282,17 +283,19 @@ class Vales extends CI_Controller
 		$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$_POST['id_empleado']=$id_empleado;
-
+		
+		$_POST['ids']=6;		
+		$_POST['asignar']=10000;
+		$_POST['resp']=2;
+		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
 			$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
-			$val=$this->vales_model->buscar_vales($req[0]->id_fuente_fondo,$_POST['asignar']);
-			$_POST['id_vale']=$val['id_vale'];
-			$_POST['numero_inicial']=$val['inicial'];
+			$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);
 			$this->vales_model->guardar_visto_bueno($_POST);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a('index.php/vales/visto_bueno/'.$tr);		
+			//sir_a('index.php/vales/visto_bueno/'.$tr);		
 		}
 		else{
 			echo 'No tiene permisos para acceder';
