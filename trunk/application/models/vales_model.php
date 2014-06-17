@@ -230,7 +230,6 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
 				DATE_FORMAT(fecha_visto_bueno,'%d/%m/%Y %h:%i %p') as fecha_visto_bueno,			
 				LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido,e2.segundo_apellido,e2.apellido_casada)) AS visto_bueno,
-				cantidad_entregado as entregado,
 				DATE_FORMAT(fecha_autorizado,'%d/%m/%Y %h:%i %p') as fecha_autorizado,			
 				LOWER(CONCAT_WS(' ',e3.primer_nombre, e3.segundo_nombre, e3.tercer_nombre, e3.primer_apellido,e3.segundo_apellido,e3.apellido_casada)) AS autorizado,
 				estado
@@ -268,7 +267,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 	{
 	extract($post);
 
-	$this->db->query("UPDATE tcm_requisicion SET
+	/*$this->db->query("UPDATE tcm_requisicion SET
 					id_empleado_vistobueno = ".$id_empleado.",
 					fecha_visto_bueno = CONCAT_WS(' ',CURDATE(),CURTIME()),
 					fecha_modificacion = CONCAT_WS(' ',CURDATE(),CURTIME()),
@@ -277,6 +276,14 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					cantidad_restante = ".$asignar.",
 					id_vale = ".$id_vale.",
 					numero_inicial = ".$numero_inicial.",
+					estado = ".$resp."
+					WHERE id_requisicion = ".$ids);*/
+	
+	$this->db->query("UPDATE tcm_requisicion SET
+					id_empleado_vistobueno = ".$id_empleado.",
+					fecha_visto_bueno = CONCAT_WS(' ',CURDATE(),CURTIME()),
+					fecha_modificacion = CONCAT_WS(' ',CURDATE(),CURTIME()),
+					id_usuario_modifica = ".$id_usuario.",
 					estado = ".$resp."
 					WHERE id_requisicion = ".$ids);
 
@@ -288,7 +295,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		o.nombre_seccion as seccion,
 		r.cantidad_solicitada,
 		LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido, e.segundo_apellido, e.apellido_casada)) AS nombre,
-		r.tipo_requisicion, r.justificacion, r.servicio_de, r.cantidad_entregado,
+		r.tipo_requisicion, r.justificacion, r.servicio_de,
 		r.numero_inicial, r.cantidad_restante
 		FROM tcm_requisicion AS r
 		LEFT JOIN org_seccion AS o ON o.id_seccion=r.id_seccion
@@ -319,12 +326,42 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 	
 	}
 	
-	function buscar_vales($id_fuente_fondo,$cantidad)
+	function buscar_vales($id_requisicion,$id_fuente_fondo,$cantidad)
 	{
-		/*$sentencia="SELECT id_vale, (final-cantidad_restante) AS inicial FROM tcm_vale WHERE tipo_vehiculo='".$id_fuente_fondo."' AND cantidad_restante>='".$cantidad."' ORDER BY fecha_recibido, id_vale LIMIT 0,1";*/
-		$sentencia="SELECT id_vale, (final-cantidad_restante) AS inicial FROM tcm_vale WHERE tipo_vehiculo='".$id_fuente_fondo."' AND cantidad_restante>0 ORDER BY fecha_recibido, id_vale LIMIT 0,1";
+		$sentencia="SELECT id_vale, (final-cantidad_restante+1) AS inicial, cantidad_restante FROM tcm_vale WHERE tipo_vehiculo='".$id_fuente_fondo."' AND cantidad_restante>0 ORDER BY fecha_recibido, id_vale";
 		$query=$this->db->query($sentencia);
-		
+		$res=(array)$query->result_array();
+		foreach($res as $r) {
+			if($cantidad>0) {
+				if($r[cantidad_restante]>=$cantidad) {
+					$sentencia="UPDATE tcm_vale SET cantidad_restante=cantidad_restante-".$cantidad." WHERE id_vale=".$r[id_vale];
+					$cantidad_entregado=$cantidad;
+					$cantidad=0;
+				}
+				else {
+					$sentencia="UPDATE tcm_vale SET cantidad_restante=0 WHERE id_vale=".$r[id_vale];
+					$cantidad_entregado=$r[cantidad_restante];
+					$cantidad=$cantidad-$r[cantidad_restante];
+				}	
+				$query=$this->db->query($sentencia);
+				
+				$sentencia="INSERT INTO tcm_requisicion_vale (id_vale, id_requisicion, cantidad_entregado, numero_inicial, cantidad_restante) VALUES (".$r[id_vale].", ".$id_requisicion.", ".$cantidad_entregado.", ".$r[inicial].", ".$cantidad_entregado.")";
+				$query=$this->db->query($sentencia);
+			}
+		}
+		if($cantidad>0)
+			echo "No se entregaron todos los vales solicitados. Faltaron ".$cantidad." vales";
+		else
+			echo "Se entregaron todos los vales solicitados";
+	}
+	
+	function info_vales($id) 
+	{
+		$sentencia="SELECT id_fuente_fondo FROM tcm_requisicion WHERE id_requisicion='".$id."'";	
+		$query=$this->db->query($sentencia);
+		$res=(array)$query->row();
+		$sentencia="SELECT SUM(cantidad_restante) AS cantidad_restante FROM tcm_vale WHERE tipo_vehiculo='".$res['id_fuente_fondo']."'";	
+		$query=$this->db->query($sentencia);
 		return (array)$query->row();
 	}
 

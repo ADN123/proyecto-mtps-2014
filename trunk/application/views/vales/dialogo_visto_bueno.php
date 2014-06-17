@@ -61,14 +61,33 @@
     ?>
      <fieldset>
         <legend align='left'>Informaci&oacute;n  Adicional</legend>
-        <label for="asignar" id="lasignar" class="tam-2">Cantidad a Entregar</label>
-        <input class="tam-1" id='asignar' tabindex='2' name='asignar' type="text"/>
+        <?php 
+			if($v['cantidad_restante']>0){?>
+            	<label for="asignar" id="lasignar" class="tam-2">Cantidad a Entregar</label>
+            	<input class="tam-1" id='asignar' tabindex='2' name='asignar' type="text"/>
+    	<?php 
+			}
+			else {
+				echo "<strong>En estos momentos no hay vales disponibles</strong>";
+			}
+		?>
     </fieldset>
     <p style='text-align: center;'>
-        <button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)">Visto Bueno</button>
+    	<?php 
+			if($v['cantidad_restante']>0){?>
+        		<button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)">Visto Bueno</button>
+        <?php 
+			}
+		?>
         <button  type="submit" id="denegar" class="button tam-1 boton_validador"  onclick="Enviar(0)">Denegar</button>
     </p>
 </form>
 <script>
-	$("#asignar").validacion();
+	<?php if($v['cantidad_restante']>0){?>
+		$("#asignar").validacion({
+			ent: true,
+			numMin: 0,
+			numMax: <?php echo $v['cantidad_restante'];?>
+		});
+	<?php }?>
 </script>
