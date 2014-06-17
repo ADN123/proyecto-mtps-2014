@@ -284,10 +284,6 @@ class Vales extends CI_Controller
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$_POST['id_empleado']=$id_empleado;
 		
-		$_POST['ids']=6;		
-		$_POST['asignar']=10000;
-		$_POST['resp']=2;
-		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
 			$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
@@ -295,7 +291,7 @@ class Vales extends CI_Controller
 			$this->vales_model->guardar_visto_bueno($_POST);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			//sir_a('index.php/vales/visto_bueno/'.$tr);		
+			ir_a('index.php/vales/visto_bueno/'.$tr);		
 		}
 		else{
 			echo 'No tiene permisos para acceder';
