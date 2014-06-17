@@ -349,10 +349,10 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				$query=$this->db->query($sentencia);
 			}
 		}
-		if($cantidad>0)
+		/*if($cantidad>0)
 			echo "No se entregaron todos los vales solicitados. Faltaron ".$cantidad." vales";
 		else
-			echo "Se entregaron todos los vales solicitados";
+			echo "Se entregaron todos los vales solicitados";*/
 	}
 	
 	function info_vales($id) 
