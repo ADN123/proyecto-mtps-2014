@@ -201,8 +201,8 @@ class Vales extends CI_Controller
 	*/
 	function requisiciones_pdf($id)
 	{
-		$data=$this->vales_model->req_pdf($id);
-		$this->load->view("vales/requisicion_pdf");
+		$data['datos']=$this->vales_model->req_pdf($id);
+		$this->load->view("vales/requisicion_pdf",$data);
 	}
 
 	/*
