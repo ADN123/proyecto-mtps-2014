@@ -465,19 +465,48 @@ class Vales extends CI_Controller
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
 		
 		if($data['id_permiso']!=NULL) {
+			$data['fuente']=$this->vales_model->consultar_fuente_fondo();
+			$data['gasolineras']=$this->vales_model->consultar_gasolineras();
+			$data['estado_transaccion']=$estado_transaccion;
+			pantalla("vales/consumo",$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}	
+	}
+	
+	/*
+	*	Nombre: vehiculos_consumo
+	*	Objetivo: Cargar por ajax los vehiculos de una seccion segun la gasolinera que se seleccione  
+	*	en la pantalla de ingrese de requisicion de combustible 
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Última Modificación: 24/06/2014
+	*	Observaciones: Ninguna.
+	*/
+	function vehiculos_consumo($id_gasolinera = NULL)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
+		
+		if($data['id_permiso']!=NULL) {
+			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			switch($data['id_permiso']) {
 				case 1:
 					break;
 				case 2:
+					$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera);
 					break;
 				case 3:
-					break;
 				case 4:
+					if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66)  {
+						$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera);
+					}
+					else {
+						$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion(NULL,$id_gasolinera);
+					}
 					break;
 			}
-			$data['gasolineras']=$this->vales_model->consultar_gasolineras();
-			$data['estado_transaccion']=$estado_transaccion;
-			pantalla("vales/consumo",$data);	
+			$this->load->view("vales/vehiculos_consumo",$data);	
 		}
 		else {
 			echo 'No tiene permisos para acceder';

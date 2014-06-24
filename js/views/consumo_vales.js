@@ -4,7 +4,7 @@ $(document).ready(function() {
 	newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours(), tiempo.getMinutes());
 	
 	$('#wizard').smartWizard();
-	
+
 	$("#id_gasolinera").validacion({
 		men: "Debe seleccionar un item"        
 	});
@@ -30,5 +30,9 @@ $(document).ready(function() {
 	});
 	$("#valor_diesel").validacion({
 		valPrecio: true
+	});
+	$("#id_gasolinera").change(function(){
+		var id_gasolinera = $(this).val();
+		$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos_consumo/"+id_gasolinera);	
 	});
 });

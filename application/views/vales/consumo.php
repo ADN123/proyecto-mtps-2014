@@ -68,7 +68,10 @@
         </div>
         <div id="step-2" style="text-align: center;">	
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n de la cantidad suministrada a cada veh&iacute;culo</h2>
-      	</div>
+            <p >
+            	<div id="divVehiculos"></div>
+      		</p>
+        </div>
     </div>
 </form>
 <script src="<?php echo base_url()?>js/views/consumo_vales.js" type="text/javascript"></script>
