@@ -1624,7 +1624,5 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		
 		$query=$this->db->query($q);
 	}
-
-
 }
 ?>
