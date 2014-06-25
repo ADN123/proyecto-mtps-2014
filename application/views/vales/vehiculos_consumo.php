@@ -1,19 +1,22 @@
 <table cellspacing="0" align="center" class="table_design">
     <thead>
-        <th>
+        <th width="90">
             Placa
         </th>
         <th>
+            Fuente
+        </th>
+        <th width="125">
             Tipo Gasolina
         </th>  
-        <th width="175">
+        <th width="125">
             Cantidad de Vales
         </th>                  
-        <th width="120">
+        <th width="90">
             Galones
         </th>                 
         <th width="120">
-            Sub-Total
+            Sub-Total ($)
         </th>
     </thead>
     <tbody id="content_table">
@@ -24,6 +27,7 @@
 						<?php echo $val['placa'] ?>
                    		<input type="hidden" name="id_vehiculo[]" id="id_vehiculo<?php echo $val['id_vehiculo'] ?>" value="<?php echo $val['id_vehiculo'] ?>" />
                     </td>
+                    <td ><?php echo $val['nombre_fuente_fondo'] ?></td>
                     <td>
                     	<select name="tip_gas[]" id="tip_gas<?php echo $val['id_vehiculo'] ?>" class="tipo_gas">
                         	<option value=""></option>
@@ -34,14 +38,14 @@
                     </td>
                     <td><input class="cantidad" type="text" name="cantidad_consumo[]" id="cantidad_consumo<?php echo $val['id_vehiculo'] ?>" size="2" /></td>
                     <td class="gal">0.00</td>
-                    <td class="sub">$ 0.00 US</td>
+                    <td class="sub">0.00</td>
                 </tr>
         <?php } ?> 
         <tr> 
-            <td align="right" colspan="2"> <strong>TOTAL</strong> </td>
-            <td><strong>0</strong></td>
+            <td align="right" colspan="3"> <strong>TOTAL</strong> </td>
+            <td class="tval" style="color: #F8F8F8;  background: #EA8511; font-size: 14px;"><strong>0 Vales</strong></td>
             <td></td>
-            <td><strong>$ 0.00 US</strong></td>
+            <td class="tsub" style="color: #F8F8F8;  background: #EA8511; font-size: 14px;"><strong>$ 0.00 US</strong></td>
         </tr>
     </tbody>
 </table>
@@ -82,14 +86,27 @@
 		var $sub=$abu.find(".sub");
 		
 		if(gas!="" && gas!=0 && val!="" && val!=0) {
-			$gal.html((5/gas*val));
-			$sub.html((val*5));
+			var n1=5/gas*val;
+			var n2=val*5;
+			$gal.html(parseFloat(n1).toFixed(2));
+			$sub.html(parseFloat(n2).toFixed(2));
 		}
 		else {
 			$gal.html("0.00");
 			$sub.html("0.00");
 		}
-			
+		
+		var su=0;
+		$(".sub").each(function (index) {
+			su=su+Number($(this).html());			
+		});
+		$(".tsub").html("<strong>$ "+parseFloat(su).toFixed(2)+" US</strong>");		
+		
+		var su=0;
+		$(".cantidad").each(function (index) {
+			su=su+Number($(this).val());			
+		});
+		$(".tval").html("<strong>"+su+" Vales</strong>");			
 	});
 	$(".tipo_gas").change(function(){
 
@@ -116,14 +133,28 @@
 			var $sub=$abu.find(".sub");
 				
 			if(gas!="" && gas!=0 && val!="" && val!=0) {
-				$gal.html((5/gas*val));
-				$sub.html((val*5));
+				var n1=5/gas*val;
+				var n2=val*5;
+				$gal.html(parseFloat(n1).toFixed(2));
+				$sub.html(parseFloat(n2).toFixed(2));
 			}
 			else {
 				$gal.html("0.00");
 				$sub.html("0.00");
 			}
 		}
+		
+		var su=0;
+		$(".sub").each(function (index) {
+			su=su+Number($(this).html());			
+		});
+		$(".tsub").html("<strong>$ "+parseFloat(su).toFixed(2)+" US</strong>");		
+		
+		var su=0;
+		$(".cantidad").each(function (index) {
+			su=su+Number($(this).val());			
+		});
+		$(".tval").html("<strong>"+su+" Vales</strong>");			
 	});
 	$("#valor_regular, #valor_super, #valor_diesel").keyup(function(){
 		$(".tipo_gas").change();
