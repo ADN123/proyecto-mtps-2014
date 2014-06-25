@@ -32,9 +32,9 @@
                             <option value="3">Diesel</option>
                         </select>
                     </td>
-                    <td><input type="text" name="cantidad_consumo[]" id="cantidad_consumo<?php echo $val['id_vehiculo'] ?>" size="2" /></td>
-                    <td>0.00</td>
-                    <td>$ 0.00 US</td>
+                    <td><input class="cantidad" type="text" name="cantidad_consumo[]" id="cantidad_consumo<?php echo $val['id_vehiculo'] ?>" size="2" /></td>
+                    <td class="gal">0.00</td>
+                    <td class="sub">$ 0.00 US</td>
                 </tr>
         <?php } ?> 
         <tr> 
@@ -49,5 +49,83 @@
 	$(".tipo_gas").kendoComboBox({
 		autoBind: false,
 		filter: "contains"
+	});
+	$(".cantidad").validacion({
+		numMin:0,
+		ent: true,
+		req: false
+	});
+	$(".cantidad").keyup(function(){
+		var $abu=$(this).parents('tr'); 
+		var $sel=$abu.find("select");
+		var combobox = $sel.data("kendoComboBox");
+		
+		var gas=Number(combobox.value());
+		
+		switch(gas) {
+			case 1:
+				gas=Number($("#valor_regular").val());
+				break;
+			case 2:
+				gas=Number($("#valor_super").val());
+				break;
+			case 3:
+				gas=Number($("#valor_diesel").val());
+				break;
+			default:
+				gas="";
+		}
+		
+		var val=Number($(this).val());
+		
+		var $gal=$abu.find(".gal");
+		var $sub=$abu.find(".sub");
+		
+		if(gas!="" && gas!=0 && val!="" && val!=0) {
+			$gal.html((5/gas*val));
+			$sub.html((val*5));
+		}
+		else {
+			$gal.html("0.00");
+			$sub.html("0.00");
+		}
+			
+	});
+	$(".tipo_gas").change(function(){
+
+		var $abu=$(this).parents('tr'); 
+		var $can=$abu.find(".cantidad");
+		
+		var val=Number($can.val());
+		if($(this).val()!="") {
+			switch(Number($(this).val())) {
+				case 1:
+					gas=Number($("#valor_regular").val());
+					break;
+				case 2:
+					gas=Number($("#valor_super").val());
+					break;
+				case 3:
+					gas=Number($("#valor_diesel").val());
+					break;
+				default:
+					gas="";
+			}
+		
+			var $gal=$abu.find(".gal");
+			var $sub=$abu.find(".sub");
+				
+			if(gas!="" && gas!=0 && val!="" && val!=0) {
+				$gal.html((5/gas*val));
+				$sub.html((val*5));
+			}
+			else {
+				$gal.html("0.00");
+				$sub.html("0.00");
+			}
+		}
+	});
+	$("#valor_regular, #valor_super, #valor_diesel").keyup(function(){
+		$(".tipo_gas").change();
 	});
 </script>

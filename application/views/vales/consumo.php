@@ -6,7 +6,7 @@
 <section>
     <h2>Ingreso de comsumo de vales</h2>
 </section>
-<form name="formu" id="formu" action="<?=base_url()?>index.php/vales/guardar_vales" method="post">
+<form name="formu" id="formu" action="<?=base_url()?>index.php/vales/guardar_consumo" method="post">
 	<div id="wizard" class="swMain">
         <ul>
             <li>
