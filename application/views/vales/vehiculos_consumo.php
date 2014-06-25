@@ -34,7 +34,7 @@
                    		<input type="hidden" name="id_vehiculo[]" id="id_vehiculo<?php echo $val['id_vehiculo'] ?>" value="<?php echo $val['id_vehiculo'] ?>" />
                     </td>
                     <td><?php echo $val['nombre_fuente_fondo'] ?></td>
-                    <td><input type="text" name="actividad_consumo[]" id="actividad_consumo<?php echo $val['id_vehiculo'] ?>"/></td>
+                    <td><input class="actividad" type="text" name="actividad_consumo[]" id="actividad_consumo<?php echo $val['id_vehiculo'] ?>"/></td>
                     <td>
                     	<select name="tip_gas[]" id="tip_gas<?php echo $val['id_vehiculo'] ?>" class="tipo_gas">
                         	<option value=""></option>
@@ -66,6 +66,10 @@
 		numMin:0,
 		numMax:15,
 		ent: true,
+		req: false
+	});
+	$(".actividad").validacion({
+		lonMin: 5,
 		req: false
 	});
 	$(".cantidad").keyup(function(){
