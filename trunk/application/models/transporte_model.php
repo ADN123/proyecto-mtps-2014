@@ -496,7 +496,7 @@ function solicitudes_por_asignar_depto(){
 				)
 				and st.estado_solicitud_transporte=3
 			)
-			and (id_seccion='$seccion')
+			and (id_seccion='$seccion') and v.estado=1
 			order by v.id_vehiculo asc;");
 				return $query->result();
 	}
@@ -538,6 +538,7 @@ function solicitudes_por_asignar_depto(){
 				and dm.id_municipio<>97
 			)
 			and (v.id_seccion!=52 and v.id_seccion!=53 and v.id_seccion!=54 and v.id_seccion!=55 and v.id_seccion!=56 and v.id_seccion!=57 and v.id_seccion!=58 and v.id_seccion!=59 and v.id_seccion!=60 and v.id_seccion!=61 and v.id_seccion!=64 and v.id_seccion!=65 and v.id_seccion!=66)
+			and v.estado=1
 			order by v.id_vehiculo asc;");
 				return $query->result();
 	}
@@ -578,6 +579,7 @@ function solicitudes_por_asignar_depto(){
 				and st.estado_solicitud_transporte=3
 				and dm.id_municipio<>97
 			)
+			and v.estado=1
 			order by v.id_vehiculo asc;");
 				return $query->result();
 	}
@@ -655,6 +657,8 @@ function solicitudes_por_asignar_depto(){
 		return $query;
 	}	
 	
+	
+	/////////////////////////////////CONSUlTAR VEHICUlOS//////////////////////////////////////////
 	function consultar_vehiculos()
 	{
 		$query=$this->db->query("
@@ -667,7 +671,8 @@ function solicitudes_por_asignar_depto(){
 		");
 		return $query->result();
 	}
-	
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+		
 	//////////////////////////////CONSUlTAR MARCAS//////////////////////////////
 	function consultar_marcas()
 	{

@@ -11,6 +11,7 @@ class Vehiculo extends CI_Controller
     	if(!$this->session->userdata('id_usuario')){
 		 redirect('index.php/sessiones');
 		}
+		error_reporting(0);
     }
 	
 	function index()
@@ -53,6 +54,21 @@ class Vehiculo extends CI_Controller
 		$data['seccion']=$this->transporte_model->consultar_secciones();
 		$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
 		pantalla("mantenimiento/nuevo_vehiculo",$data);
+	}
+	
+	/*
+	*	Nombre: rep_man_tmtps
+	*	Objetivo: carga la vista de Reparación y mantenimiento en taller del MTPS
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 24/06/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function tallerMTPS()
+	{
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
+		pantalla('mantenimiento/taller_MTPS',$data);
 	}
 	
 	/*
