@@ -13,6 +13,7 @@
                     $cantidad=$datos->cantidad;
                     $justificacion=$datos->justificacion;
                     $id_requisicion=$datos->id_requisicion;
+					$refuerzo=$datos->refuerzo;
                 }
             
                 echo "Nombre: <strong>".$nombre."</strong> <br>
@@ -63,8 +64,20 @@
         <legend align='left'>Informaci&oacute;n  Adicional</legend>
         <?php 
 			if($v['cantidad_restante']>0){?>
-            	<label for="asignar" id="lasignar" class="tam-2">Cantidad a Entregar</label>
-            	<input class="tam-1" id='asignar' tabindex='2' name='asignar' type="text"/>
+            	
+                <label for="asignar" id="lasignar" class="tam-2">Cantidad a Entregar</label>
+    				    <?php 
+
+					if($refuerzo!=1){?>
+							
+								<input class="tam-1" id='asignar' tabindex='2' name='asignar' type="text"/>
+								
+							<?php } else {?>
+   								<input  id='asignar' tabindex='2' name='asignar'  type="hidden" value="<?php echo $cantidad;?>"/>
+	                            <strong><?php echo $cantidad;?></strong> <br>
+                            <?php } ?>
+                            
+			
     	<?php 
 			}
 			else {
