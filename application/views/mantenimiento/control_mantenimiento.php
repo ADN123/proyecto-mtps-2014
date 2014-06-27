@@ -1,5 +1,5 @@
 <section>
-    <h2>Reparación y Mantenimiento en Taller MTPS</h2>
+    <h2>Control de Mantenimiento</h2>
 </section>
 <form name="form_taller" method="post" action="<?php echo base_url()?>index.php/vehiculo/guardar_taller" >
 	<div id="wizard" class="swMain">
