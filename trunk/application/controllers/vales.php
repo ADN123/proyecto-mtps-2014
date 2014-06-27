@@ -161,6 +161,16 @@ class Vales extends CI_Controller
 	*/
 	function guardar_requisicion()
 	{
+		
+		print_r($_POST);
+
+		if(isset($_POST['refuerzo'])){
+
+			$_POST['refuerzo']=1;
+		}else{
+			$_POST['refuerzo']=0;
+		}
+
 		$this->db->trans_start();
 
 		$id_usuario=$this->session->userdata('id_usuario');
@@ -172,6 +182,7 @@ class Vales extends CI_Controller
 				$this->vales_model->guardar_req_veh($vehiculos[$i], $id_requisicion);
 			}
 		$this->db->trans_complete();
+		
 		$tr=($this->db->trans_status()===FALSE)?0:1;
 		ir_a('index.php/vales/ingreso_requisicion/'.$tr);		
 	}
@@ -262,6 +273,8 @@ class Vales extends CI_Controller
 			$datos['f']=$this->vales_model->info_requisicion_vehiculos($id);
 			$datos['v']=$this->vales_model->info_vales($id);
 			$datos['id']=$id;
+			
+		
 			$this->load->view('vales/dialogo_visto_bueno',$datos);
 		}
 		else {

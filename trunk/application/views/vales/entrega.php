@@ -4,6 +4,17 @@
 	estado_correcto='La requisición se ha guardado correctamente';
 	estado_incorrecto='Error al intentar guardar la requisición: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
 
+function chekear(k){
+var obj = $('.cheke');
+var ban= $(k).prop('checked');
+
+    for(i=0;i<obj.length;i++){
+        obj[i].checked=ban;
+    }
+    marcados();
+}
+
+
 </script>
 <script src="<?php echo base_url()?>js/views/entrega_vales.js" type="text/javascript"></script>
 <section>
@@ -59,6 +70,11 @@
               	<textarea class="tam-4" id="justificacion" tabindex="3" name="justificacion"/></textarea>
             </p>
             <p>
+     <label for="refuerzo" id="lrefuezo" >Refuerzo </label>
+          	<input  id="refuerzo"  name="refuerzo" type="checkbox"/>
+            </p>
+                        
+            <p>
             	<label for="id_seccion" id="lservicio_de">Al servicio de </label>
                 <?php 
 					if(sizeof($oficinas)!=1) {
@@ -89,7 +105,7 @@
       	</div>
         <div id="step-2">	
             <h2 class="StepTitle">Selecci&oacute;n los vehiculos a los que se aplicarán los vales</h2>
-
+                 Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)" >
             <p ><div id="divVehiculos"></div>
 
 

@@ -125,8 +125,8 @@ class Vales_model extends CI_Model {
 	{ 
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_requisicion 
-		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion) 
-VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()))";
+		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion, refuerzo) 
+VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()), $refuerzo)";
 		
 
 		$this->db->query($sentencia);
@@ -143,7 +143,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		return $query['id_empleado'];
 	
 	}
-	
+		
 	public function guardar_req_veh($id_vehiculo, $id_requisicion)
 	{
 		$sql="INSERT INTO tcm_req_veh VALUES('$id_requisicion','$id_vehiculo');";
@@ -179,7 +179,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 									sr.nombre_seccion AS seccion,
 									cantidad_solicitada AS cantidad,
 									DATE_FORMAT(fecha,'%d/%m/%Y') as fecha,
-									estado 
+									estado , refuerzo 
 								FROM
 									tcm_requisicion r
 								INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
@@ -232,7 +232,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido,e2.segundo_apellido,e2.apellido_casada)) AS visto_bueno,
 				DATE_FORMAT(fecha_autorizado,'%d/%m/%Y %h:%i %p') as fecha_autorizado,			
 				LOWER(CONCAT_WS(' ',e3.primer_nombre, e3.segundo_nombre, e3.tercer_nombre, e3.primer_apellido,e3.segundo_apellido,e3.apellido_casada)) AS autorizado,
-				estado
+				estado, refuerzo
 
 			FROM
 				tcm_requisicion r
