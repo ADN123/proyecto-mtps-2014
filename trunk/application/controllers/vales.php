@@ -473,7 +473,7 @@ class Vales extends CI_Controller
 	*	Última Modificación: 10/06/2014
 	*	Observaciones: Ninguna.
 	*/
-	function ingreso_consumo()
+	function ingreso_consumo($estado_transaccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
 		
@@ -525,6 +525,34 @@ class Vales extends CI_Controller
 			echo 'No tiene permisos para acceder';
 		}	
 	}
-
+	
+	/*
+	*	Nombre: guardar_consumo
+	*	Objetivo: Guardar formulario del consumo de vales de combustible
+	*	en la pantalla de ingrese de requisicion de combustible 
+	*	Hecha por: Leonel
+	*	Modificada por: Leonel
+	*	Última Modificación: 28/06/2014
+	*	Observaciones: Ninguna.
+	*/
+	function guardar_consumo()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
+		
+		if($data['id_permiso']!=NULL) {
+			$this->db->trans_start();
+			
+			$fec=str_replace("/","-",$this->input->post('fecha_recibido'));
+			$fecha_recibido=date("Y-m-d", strtotime($fec));
+			$inicial=$this->input->post('inicial');
+			
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/ingreso_consumo/'.$tr);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}	
+	}
 }
 ?>

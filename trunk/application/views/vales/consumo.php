@@ -1,12 +1,12 @@
 <script>
 	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='El registro de vales se ha almacenado exitosamente.';
-	estado_incorrecto='Error al intentar guardar el registro de vales: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+	estado_correcto='El registro de consumo de vales se ha almacenado exitosamente.';
+	estado_incorrecto='Error al intentar guardar el registro de consumo de vales: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 </script>
 <section>
     <h2>Ingreso de comsumo de vales</h2>
 </section>
-<form name="formu" id="formu" action="<?=base_url()?>index.php/vales/guardar_consumo" method="post">
+<form name="formu" id="formu" action="<?=base_url()?>index.php/vales/guardar_consumo" method="post" autocomplete="off">
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -69,8 +69,9 @@
         <div id="step-2" style="text-align: center;">	
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n de la cantidad suministrada a cada veh&iacute;culo</h2>
             <p >
-            	<div id="divVehiculos"></div>
+            	<div id="divVehiculos"><br/><br/><br/>Debe seleccionar una gasolinera...</div>
       		</p>
+			<input type="hidden" name="total" id="total" />
         </div>
     </div>
 </form>

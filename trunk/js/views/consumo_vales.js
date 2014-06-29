@@ -33,6 +33,12 @@ $(document).ready(function() {
 	});
 	$("#id_gasolinera").change(function(){
 		var id_gasolinera = $(this).val();
-		$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos_consumo/"+id_gasolinera);	
+		if(id_gasolinera!="")
+			$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos_consumo/"+id_gasolinera);
+		else
+			$('#divVehiculos').html("<br/><br/><br/>Debe seleccionar una gasolinera...");	
+	});
+	$("#total").validacion({
+		valPrecio: true
 	});
 });
