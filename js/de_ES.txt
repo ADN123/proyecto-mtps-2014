@@ -1,0 +1,17 @@
+{
+	"processing": "Procesando...",
+	"lengthMenu": "_MENU_ Entradas por pagina",
+	"zeroRecords": "No se encontraron resultados",
+	"info": "Mostrando  _START_ a _END_ de _TOTAL_ Entradas",
+	"infoEmpty": "0 a 0 de 0 Entradas",
+	"infoFiltered": "(Filtradas de _MAX_  Entradas)",
+	"infoPostFix": "",
+	"search": "Buscar",
+	"url": "",
+	"paginate": {
+		"first":    "Primera",
+		"previous": "Anterior",
+		"next":     "Siguiente",
+		"last":     "Ultima"
+	}
+}

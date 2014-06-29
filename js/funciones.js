@@ -38,6 +38,8 @@ $(document).ready(function() {
 		filter: "contains"	
 	});
 	
+
+	//ya estaba comentado
 	/*var multiSelect = $("#acompanantes2").data("kendoMultiSelect");
 	
 	setValue = function(e) {
@@ -48,6 +50,9 @@ $(document).ready(function() {
 		}
 	};*/
 	
+	//esto no
+	
+
 	$(".nac").kendoDatePicker({
 		culture: "es-SV",
 		format: "dd/MM/yyyy",
@@ -63,7 +68,7 @@ $(document).ready(function() {
 		min: new Date(f.getFullYear(), f.getMonth(), f.getDate()+1),
 	});
 	$(".hora").kendoTimePicker();
-	$(".grid").kendoGrid({
+	/*$(".grid").kendoGrid({
 		height: 450,
 		width: 800,
 		sortable: true,
@@ -74,17 +79,25 @@ $(document).ready(function() {
 		pageable: true,
         dataBound: recargar_javascript
 	});
+	
 	$('#grid').dataTable( {
 		"sScrollY": 350,
 		"bJQueryUI": false,
 		"sPaginationType": "full_numbers",
 		"aLengthMenu": [ 18, 25, 50, 100 ],
 		"iDisplayLength": 18
-	});
+	}); */
+
+$('.grid').dataTable( {
+        "language": {
+            "url": base_url()+"js/de_ES.txt"
+        }
+    } );
+
 });
 $(function() {
 	$('a[rel*=leanModal]').leanModal({ top : 50, closeButton: ".modal_close"});		
-});
+}); 
 String.prototype.capitalize = function()
 {
 	return this.replace(/\w+/g, function(a)

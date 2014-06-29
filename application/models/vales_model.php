@@ -223,7 +223,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				id_requisicion,
 				sr.nombre_seccion AS seccion,
 				cantidad_solicitada AS cantidad,
-				DATE_FORMAT(fecha,'%d/%m/%Y %h:%i %p') as fecha,
+				DATE_FORMAT(fecha_creacion,'%d/%m/%Y %h:%i %p') as fecha,
 				ff.id_fuente_fondo as id_fuente_fondo,
 				ff.nombre_fuente_fondo as fuente_fondo,
 				justificacion,

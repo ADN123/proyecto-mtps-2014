@@ -16,6 +16,8 @@
 		<link href="<?php echo base_url()?>css/alertify.core.css" rel="stylesheet" />
 		<link href="<?php echo base_url()?>css/alertify.default.css" rel="stylesheet" />
         <link href="<?php echo base_url()?>css/style-base.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="<?php  echo base_url() ?>/css/datatable.css">
+
         <script src="<?php echo base_url()?>js/jquery-1.8.2.js"></script>
         <script src="<?php echo base_url()?>js/jquery-ui-1.9.0.custom.js"></script>
         <script src="<?php echo base_url()?>js/jquery.dataTables.js"></script>
@@ -28,6 +30,11 @@
         <script src="<?php echo base_url()?>js/alertify.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/funciones.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/validador.js" type="text/javascript"></script>
+        
+
+   
+
+
         <script type="text/javascript">
 			function base_url() {
 				return "<?php echo base_url()?>";
@@ -133,9 +140,11 @@
 				});
 			});
 		</script>
-        <style type="text/css" title="currentStyle">
-			@import "<?php echo base_url()?>css/demo_table_jui.css";
-		</style>
+
+
+
+
+		
 	</head>
 	<body>
         <header id="ha-header" class="ha-header ha-header-subshow">
