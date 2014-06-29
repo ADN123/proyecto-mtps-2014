@@ -13,22 +13,15 @@
                     $cantidad=$datos->cantidad;
                     $justificacion=$datos->justificacion;
                     $id_requisicion=$datos->id_requisicion;
-                    $cantidadE =$datos->entregado;
-                    $fechaVB =$datos->fecha_visto_bueno;
-                    $visto_bueno =ucwords($datos->visto_bueno);
+					$refuerzo=$datos->refuerzo;
                 }
             
-                echo "
-                ID Requisicion: <strong>".$id_requisicion."</strong> <br>
-                Nombre: <strong>".$nombre."</strong> <br>
+                echo "Nombre: <strong>".$nombre."</strong> <br>
                 Sección: <strong>".$seccion."</strong> <br>
+                ID Requisicion: <strong>".$id_requisicion."</strong> <br>
                 Fecha y hora de Solicitud: <strong>".$fecha."</strong> <br>
                 Cantidad Solicitada: <strong>".$cantidad."</strong> <br>
-                Justificacion: <strong>".$justificacion."</strong> <br>
-                Cantidad a Entregar: <strong>".$cantidadE."</strong> <br>
-                Fecha y Hora de Visto Bueno: <strong>".$fechaVB."</strong> <br>
-                Visto Bueno por: <strong>".$visto_bueno."</strong> <br>
-                </fieldset>
+                Justificacion: <strong>".$justificacion."</strong> <br></fieldset>
     <br />";
 	?>
     	
@@ -67,8 +60,47 @@
         </table>
     </fieldset>";
     ?>
+     <fieldset>
+        <legend align='left'>Informaci&oacute;n  Adicional</legend>
+        <?php 
+			if($v['cantidad_restante']>0){?>
+            	
+                <label for="asignar" id="lasignar" class="tam-2">Cantidad a Entregar</label>
+    				    <?php 
+
+					if($refuerzo==1){?>
+							
+								<input class="tam-1" id='asignar' tabindex='2' name='asignar' type="text"/>
+								
+							<?php } else {?>
+   								<input  id='asignar' tabindex='2' name='asignar'  type="hidden" value="<?php echo $cantidad;?>"/>
+	                            <strong>: <?php echo $cantidad;?></strong> <br>
+                            <?php } ?>
+                            
+			
+    	<?php 
+			}
+			else {
+				echo "<strong>En estos momentos no hay vales disponibles</strong>";
+			}
+		?>
+    </fieldset>
     <p style='text-align: center;'>
-        <button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(3)">Autorizar</button>
+    	<?php 
+			if($v['cantidad_restante']>0){?>
+        		<button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)">Visto Bueno</button>
+        <?php 
+			}
+		?>
         <button  type="submit" id="denegar" class="button tam-1 boton_validador"  onclick="Enviar(0)">Denegar</button>
     </p>
 </form>
+<script>
+	<?php if($v['cantidad_restante']>0&& $refuerzo==1) {?>
+		$("#asignar").validacion({
+			ent: true,
+			numMin: 0,
+			numMax: <?php echo $v['cantidad_restante'];?>
+		});
+	<?php }?>
+</script>

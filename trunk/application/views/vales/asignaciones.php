@@ -1,16 +1,26 @@
-<script>
+
+
+
+
+
+<script type="application/javascript" language="javascript">
 	estado_transaccion='<?php echo $estado_transaccion?>';
 	<?php if($accion!="") {?>
 	estado_correcto='La solicitud se ha <?php echo $accion?>do exitosamente.';
 	estado_incorrecto='Error al intentar <?php echo $accion?>r la solicitud: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 	<?php }?>
+
+
+
 </script>
+
+
 <section>
     <h2>Autorización de Requisiciones de Combustible</h2>
 </section>
-<table  class="grid">
-<thead>
-  <tr>
+<table  class="grid" >
+<thead >
+  <tr  >
     <th>ID Requisicion</th>
     <th>Fecha Solicitada</th>
     <th>Sección Solicitante</th>
@@ -20,9 +30,12 @@
  </thead>
  <tbody>
 <?php
-	foreach ($datos as $fila) {
+//	foreach ($datos as $fila) {
+for ($i=0; $i < 20; $i++) { 
+  # code...
+
 ?>
-  <tr>
+ <!--  <tr>
     <td><?php echo $fila['id_requisicion']?></td>
     <td><?php echo $fila['fecha']?></td>
     <td><?php echo ucwords($fila['seccion'])?></td>
@@ -30,9 +43,30 @@
     <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila['id_requisicion']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
 	</td>
   </tr>
+-->
+
+ <tr>
+    <td><?php echo $i?></td>
+    <td><?php echo "4";?></td>
+    <td><?php echo "="?></td>
+    <td><?php echo $i*4?></td>
+    <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila['id_requisicion']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
+  </td>
+  </tr>
+
+
 <?php } ?>
 </tbody>
 </table>
+
+
+
+
+
+
+
+
+
 
 <div id="ventana" style="height:600px">
     <div id='signup-header'>
