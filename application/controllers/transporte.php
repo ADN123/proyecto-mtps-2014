@@ -78,7 +78,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Control 
 	*	Hecha por: Jhonatan
 	*	Modificada por: Oscar
-	*	Última Modificación: 13/05/2014
+	*	Última Modificación: 30/06/2014
 	*	Observaciones: Ninguna
 	*/
 	function control_solicitudes($estado_transaccion=NULL,$accion=NULL)
@@ -87,7 +87,8 @@ class Transporte extends CI_Controller
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$id_seccion_val=$id_seccion['id_seccion'];
-			
+				$id_empl=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
+				$id_empleado=$id_empl['id_empleado'];
 				switch ($data['id_permiso']) {
 					case 2:
 						$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1);			
