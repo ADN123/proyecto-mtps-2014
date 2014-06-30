@@ -69,7 +69,7 @@
         <div id="step-2" style="text-align: center;">	
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n de la cantidad suministrada a cada veh&iacute;culo</h2>
             <p >
-            	<div id="divVehiculos"><br/><br/><br/>Debe seleccionar una gasolinera...</div>
+            	<div id="divVehiculos"><br/><br/><br/>Debe seleccionar una <strong>gasolinera</strong> e ingresar la <strong>fecha de la factura</strong>...</div>
       		</p>
 			<input type="hidden" name="total" id="total" />
         </div>

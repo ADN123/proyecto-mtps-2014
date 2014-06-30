@@ -446,7 +446,7 @@ class Vales extends CI_Controller
 	*	Última Modificación: 24/06/2014
 	*	Observaciones: Ninguna.
 	*/
-	function vehiculos_consumo($id_gasolinera = NULL)
+	function vehiculos_consumo($id_gasolinera = NULL, $fecha_factura = NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
 		
@@ -456,15 +456,15 @@ class Vales extends CI_Controller
 				case 1:
 					break;
 				case 2:
-					$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera);
+					$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura);
 					break;
 				case 3:
 				case 4:
 					if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66)  {
-						$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera);
+						$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura);
 					}
 					else {
-						$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion(NULL,$id_gasolinera);
+						$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion(NULL,$id_gasolinera,$fecha_factura);
 					}
 					break;
 			}
@@ -481,7 +481,7 @@ class Vales extends CI_Controller
 	*	en la pantalla de ingrese de requisicion de combustible 
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
-	*	Última Modificación: 28/06/2014
+	*	Última Modificación: 29/06/2014
 	*	Observaciones: Ninguna.
 	*/
 	function guardar_consumo()
@@ -491,13 +491,51 @@ class Vales extends CI_Controller
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
 			
-			$fec=str_replace("/","-",$this->input->post('fecha_recibido'));
-			$fecha_recibido=date("Y-m-d", strtotime($fec));
-			$inicial=$this->input->post('inicial');
+			$id_gasolinera=$this->input->post('id_gasolinera');
+			$fec=str_replace("/","-",$this->input->post('fecha_factura'));
+			$fecha_factura=date("Y-m-d", strtotime($fec));
+			$numero_factura=$this->input->post('numero_factura');
+			$valor_super=$this->input->post('valor_super');
+			$valor_regular=$this->input->post('valor_regular');
+			$valor_diesel=$this->input->post('valor_diesel');
 			
+			$id_vehiculo=$this->input->post('id_vehiculo');
+			$actividad_consumo=$this->input->post('actividad_consumo');
+			$tip_gas=$this->input->post('tip_gas');
+			$cantidad_consumo=$this->input->post('cantidad_consumo');
+			
+			$formuInfo = array(
+				'fecha_factura'=>$fecha_factura,
+				'numero_factura'=>$numero_factura,
+				'valor_super'=>$valor_super,
+				'valor_regular'=>$valor_regular,
+				'valor_diesel'=>$valor_diesel,
+				'id_usuario_crea'=>$this->session->userdata('id_usuario')
+			);
+			/*$id_consumo=$this->vales_model->guardar_factura($formuInfo);*/
+			$id_consumo=2;
+			
+			for($i=0;$i<count($id_vehiculo);$i++){
+				$val=explode("**",$id_vehiculo[$i]);
+				$id_veh=$val[0];
+				$id_requisicion_vale=$val[1];
+				$valor_vale=$val[2];
+				
+				$formuInfo = array(
+					'id_consumo'=>$id_consumo,
+					'id_vehiculo'=>$id_veh,
+					'actividad_consumo'=>$actividad_consumo[$i],
+					'tip_gas'=>$tip_gas[$i],
+					'id_requisicion_vale'=>$id_requisicion_vale,
+					'cantidad'=>$cantidad_consumo[$i],
+					'id_gasolinera'=>$id_gasolinera,
+					'recibido'=>1
+				);
+				$this->vales_model->buscar_requisicion_vale($formuInfo);
+			}
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a('index.php/vales/ingreso_consumo/'.$tr);	
+			/*ir_a('index.php/vales/ingreso_consumo/'.$tr);*/	
 		}
 		else {
 			echo 'No tiene permisos para acceder';

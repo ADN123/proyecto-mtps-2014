@@ -326,8 +326,9 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 	
 	}
 	
-	function buscar_vales($id_requisicion,$id_fuente_fondo,$cantidad)
+	function buscar_vales($formuInfo)
 	{
+		extract($formuInfo);
 		$sentencia="SELECT id_vale, (final-cantidad_restante+1) AS inicial, cantidad_restante FROM tcm_vale WHERE tipo_vehiculo='".$id_fuente_fondo."' AND cantidad_restante>0 ORDER BY fecha_recibido, id_vale";
 		$query=$this->db->query($sentencia);
 		$res=(array)$query->result_array();
@@ -365,7 +366,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		return (array)$query->row();
 	}
 
-	function consultar_vehiculos_seccion($id_seccion=NULL, $id_gasolinera=NULL)
+	function consultar_vehiculos_seccion($id_seccion=NULL, $id_gasolinera=NULL, $fecha_factura=NULL)
 	{
 		if($id_seccion!=NULL)
 			$where="tcm_requisicion.id_seccion=".$id_seccion;
@@ -373,6 +374,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			$where="tcm_requisicion.id_seccion<>52 AND tcm_requisicion.id_seccion<>53 AND tcm_requisicion.id_seccion<>54 AND tcm_requisicion.id_seccion<>55 AND tcm_requisicion.id_seccion<>56 AND tcm_requisicion.id_seccion<>57 AND tcm_requisicion.id_seccion<>58 AND tcm_requisicion.id_seccion<>59 AND tcm_requisicion.id_seccion<>60 AND tcm_requisicion.id_seccion<>61 AND tcm_requisicion.id_seccion<>64 AND tcm_requisicion.id_seccion<>65 AND tcm_requisicion.id_seccion<>66";
 		if($id_gasolinera!=NULL)
 			$where.=" AND tcm_vale.id_gasolinera='".$id_gasolinera."'";
+		if($fecha_factura!=NULL)
+			$where.=" AND tcm_requisicion.fecha_visto_bueno<'".$fecha_factura."'";
 		/*$sentencia="SELECT tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_fuente_fondo.nombre_fuente_fondo, tcm_vehiculo_marca.nombre as marca, tcm_vehiculo_modelo.modelo, tcm_vale.valor_nominal
 					FROM tcm_vehiculo
 					INNER JOIN tcm_req_veh ON tcm_req_veh.id_vehiculo = tcm_vehiculo.id_vehiculo
@@ -401,5 +404,63 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		return (array)$query->result_array();		
 	}
 
+	function guardar_factura($formuInfo)
+	{
+		extract($formuInfo);
+		$sentencia="INSERT INTO tcm_consumo 
+					(fecha_factura, numero_factura, valor_super, valor_regular, valor_diesel, id_usuario_crea, fecha_creacion) VALUES 
+					('$fecha_factura', '$numero_factura','$valor_super','$valor_regular', $valor_diesel, $id_usuario_crea, CONCAT_WS(' ', CURDATE(),CURTIME()))";
+		$this->db->query($sentencia);
+		return $this->db->insert_id();
+	}
+	
+	function buscar_requisicion_vale($formuInfo)
+	{
+		extract($formuInfo);
+		$sentencia="SELECT tcm_requisicion_vale.id_requisicion_vale, (tcm_requisicion_vale.cantidad_entregado-tcm_requisicion_vale.cantidad_restante+1) AS inicial, tcm_requisicion_vale.cantidad_restante
+					FROM tcm_requisicion
+					INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
+					INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
+					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera;
+		echo $sentencia."<br><br>";
+		$query=$this->db->query($sentencia);
+		$res=(array)$query->result_array();
+		foreach($res as $r) {
+			if($cantidad>0) {
+				if($r[cantidad_restante]>=$cantidad) {
+					$sentencia="UPDATE tcm_requisicion_vale SET cantidad_restante=cantidad_restante-".$cantidad." WHERE id_requisicion_vale=".$r[id_requisicion_vale];
+					$cantidad_entregado=$cantidad;
+					$cantidad=0;
+				}
+				else {
+					$sentencia="UPDATE tcm_requisicion_vale SET cantidad_restante=0 WHERE id_requisicion_vale=".$r[id_requisicion_vale];
+					$cantidad_entregado=$r[cantidad_restante];
+					$cantidad=$cantidad-$r[cantidad_restante];
+				}	
+				echo $sentencia."<br><br>";
+				$query=$this->db->query($sentencia);
+				
+				$sentencia="INSERT INTO tcm_consumo_vehiculo (id_consumo, id_vehiculo, actividad, tip_gas, cantidad_vales, inicial, recibido) VALUES (".$id_consumo.", ".$id_vehiculo.", '".$actividad_consumo."', '".$tip_gas."', ".$cantidad_entregado.", ".$r[inicial].", ".$recibido.")";
+				echo $sentencia."<br><br>";
+				$query=$this->db->query($sentencia);
+			}
+		}
+		if($cantidad>0)
+			echo "No se entregaron todos los vales solicitados. Faltaron ".$cantidad." vales";
+		else
+			echo "Se entregaron todos los vales solicitados";
+		
+		/*return (array)$query->row();*/
+	}
+	
+	function guardar_consumo($formuInfo)
+	{
+		extract($formuInfo);
+		$sentencia="INSERT INTO tcm_consumo 
+					(fecha_factura, numero_factura, valor_super, valor_regular, valor_diesel, id_usuario_crea, fecha_creacion) VALUES 
+					('$fecha_factura', '$numero_factura','$valor_super','$valor_regular', $valor_diesel, $id_usuario_crea, CONCAT_WS(' ', CURDATE(),CURTIME()))";
+		$this->db->query($sentencia);
+		return $this->db->insert_id();
+	}
 }	
 ?>
