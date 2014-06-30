@@ -33,12 +33,16 @@ $(document).ready(function() {
 	});
 	$("#id_gasolinera").change(function(){
 		var id_gasolinera = $(this).val();
-		if(id_gasolinera!="")
-			$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos_consumo/"+id_gasolinera);
+		var fecha_factura = $("#fecha_factura").val();
+		if(id_gasolinera!="" && fecha_factura!="")
+			$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos_consumo/"+id_gasolinera+"/"+fecha_factura);
 		else
-			$('#divVehiculos').html("<br/><br/><br/>Debe seleccionar una gasolinera...");	
+			$('#divVehiculos').html("<br/><br/><br/>Debe seleccionar una <strong>gasolinera</strong> e ingresar la <strong>fecha de la factura</strong>...");	
 	});
 	$("#total").validacion({
 		valPrecio: true
+	});
+	$("#fecha_factura").blur(function(){
+		$("#id_gasolinera").change();
 	});
 });
