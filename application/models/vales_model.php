@@ -422,7 +422,6 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
 					INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
 					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera;
-		echo $sentencia."<br><br>";
 		$query=$this->db->query($sentencia);
 		$res=(array)$query->result_array();
 		foreach($res as $r) {
@@ -437,18 +436,16 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					$cantidad_entregado=$r[cantidad_restante];
 					$cantidad=$cantidad-$r[cantidad_restante];
 				}	
-				echo $sentencia."<br><br>";
 				$query=$this->db->query($sentencia);
 				
 				$sentencia="INSERT INTO tcm_consumo_vehiculo (id_consumo, id_vehiculo, actividad, tip_gas, cantidad_vales, inicial, recibido) VALUES (".$id_consumo.", ".$id_vehiculo.", '".$actividad_consumo."', '".$tip_gas."', ".$cantidad_entregado.", ".$r[inicial].", ".$recibido.")";
-				echo $sentencia."<br><br>";
 				$query=$this->db->query($sentencia);
 			}
 		}
-		if($cantidad>0)
+		/*if($cantidad>0)
 			echo "No se entregaron todos los vales solicitados. Faltaron ".$cantidad." vales";
 		else
-			echo "Se entregaron todos los vales solicitados";
+			echo "Se entregaron todos los vales solicitados";*/
 		
 		/*return (array)$query->row();*/
 	}
