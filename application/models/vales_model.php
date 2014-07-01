@@ -375,7 +375,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		if($id_gasolinera!=NULL)
 			$where.=" AND tcm_vale.id_gasolinera='".$id_gasolinera."'";
 		if($fecha_factura!=NULL)
-			$where.=" AND tcm_requisicion.fecha_visto_bueno<'".$fecha_factura."'";
+			$where.=" AND tcm_requisicion.fecha_visto_bueno<='".$fecha_factura."'";
 		/*$sentencia="SELECT tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_fuente_fondo.nombre_fuente_fondo, tcm_vehiculo_marca.nombre as marca, tcm_vehiculo_modelo.modelo, tcm_vale.valor_nominal
 					FROM tcm_vehiculo
 					INNER JOIN tcm_req_veh ON tcm_req_veh.id_vehiculo = tcm_vehiculo.id_vehiculo
@@ -401,7 +401,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					GROUP BY tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_fuente_fondo.nombre_fuente_fondo, marca, tcm_vehiculo_modelo.modelo
 					ORDER BY tcm_vehiculo.placa DESC";
 		$query=$this->db->query($sentencia);
-		return (array)$query->result_array();		
+		return (array)$query->result_array();	
 	}
 
 	function guardar_factura($formuInfo)

@@ -443,17 +443,16 @@ class Vales extends CI_Controller
 	*	en la pantalla de ingrese de requisicion de combustible 
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
-	*	Última Modificación: 24/06/2014
+	*	Última Modificación: 01/07/2014
 	*	Observaciones: Ninguna.
 	*/
-	function vehiculos_consumo($id_gasolinera = NULL, $fecha_factura = NULL)
+	function vehiculos_consumo($id_gasolinera = NULL, $fecha_factura_dia = NULL, $fecha_factura_mes = NULL, $fecha_factura_anio = NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
 		
 		if($data['id_permiso']!=NULL) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-			/*$fec=str_replace("/","-",$fecha_factura);
-			$fecha_factura=date("Y-m-d", strtotime($fec));*/
+			$fecha_factura=$fecha_factura_anio."-".$fecha_factura_mes."-".$fecha_factura_dia;
 			switch($data['id_permiso']) {
 				case 1:
 					break;
@@ -483,7 +482,7 @@ class Vales extends CI_Controller
 	*	en la pantalla de ingrese de requisicion de combustible 
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
-	*	Última Modificación: 29/06/2014
+	*	Última Modificación: 01/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function guardar_consumo()
@@ -512,20 +511,11 @@ class Vales extends CI_Controller
 						$tip_gas[]=$tip_gas_bruto[$x];
 				}
 			}
+			else
+				$tip_gas=$tip_gas_bruto;
+			
 			/*echo "<br><pre>";
-			print_r($id_vehiculo);
-			echo "</pre>";
-			
-			echo "<br><pre>";
-			print_r($actividad_consumo);
-			echo "</pre>";
-			
-			echo "<br><pre>";
 			print_r($tip_gas);
-			echo "</pre>";
-			
-			echo "<br><pre>";
-			print_r($cantidad_consumo);
 			echo "</pre>";*/
 			
 			$formuInfo = array(
@@ -555,9 +545,6 @@ class Vales extends CI_Controller
 						'id_gasolinera'=>$id_gasolinera,
 						'recibido'=>1
 					);
-					/*echo "<br><pre>";
-					print_r($formuInfo);
-					echo "</pre>";*/
 					$this->vales_model->buscar_requisicion_vale($formuInfo);
 				}
 			}
