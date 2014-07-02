@@ -29,6 +29,7 @@ function cargar_vehiculo(){
 	if(fuente_fondo!="" && seccion!=""){
 		$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos/"+seccion+"/"+fuente_fondo);	
 		document.getElementById('verificando').value="";
+		info(seccion,fuente_fondo);
 	}else{
 
 	}
@@ -38,9 +39,71 @@ console.log( fuente_fondo + " "+ seccion);
 }
 
 
-$( "#form_mision").submit(function( event ) {
-   alert("Mision jjjjj");
-    return false;
-  event.preventDefault();
 
-});
+function marcados() {
+
+    var i=0;
+    $("input[name='values[]']:checked").each(function (){   //capturando los chekeados
+        i++;
+    }); 
+
+    if(i==0){
+        document.getElementById('verificando').value="";
+    }else{
+        document.getElementById('verificando').value="ok";
+    }
+}
+
+function info(id1,id2){
+$.ajax({
+        async:  true, 
+        url:    base_url()+"/index.php/vales/consultar_consumo/"+id1+"/"+id2,
+        dataType:"json",
+        success: function(data){
+            console.log(data.peticion);
+			    
+			    if($("#refuerzo").is(':checked')) {  
+			    $("#cantidad_solicitada").prop('readonly', false);
+			    //para cuando ya este lo de las asignaciones 
+			    /*$("#cantidad_solicitada").destruirValidacion();					
+			    $('#cantidad_solicitada').validacion({
+						req: true,
+						numMin: 0	
+						});*/
+		    	$('#justificacion').val("");
+
+			    }else{
+				console.log(data.peticion);
+			    if(data.peticion!="0") {
+					$("#cantidad_solicitada").prop('readonly', true);
+			    	 }else{
+			    	$("#cantidad_solicitada").prop('readonly', false);
+			    	 }
+
+				$("#cantidad_solicitada").val(data.peticion);
+			    var txt = $("#id_seccion option:selected").text();
+			    $('#justificacion').val("Cuota mensual asignada a "+ txt);
+			   
+
+			    }
+
+
+
+
+            },
+        error:function(data){
+             alertify.alert('Error al cargar datos');
+            console.log(data);
+            }
+        }); 
+}
+
+function refuerzo(obj) {
+ 	if($("#refuerzo").is(':checked')) {  
+ 		$("#cantidad_solicitada").prop('readonly', false);
+ 		
+ 	}else{
+ 		$("#cantidad_solicitada").prop('readonly', true);
+ 	}
+ 	cargar_vehiculo();
+}

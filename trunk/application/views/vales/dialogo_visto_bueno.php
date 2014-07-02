@@ -88,7 +88,7 @@
     <p style='text-align: center;'>
     	<?php 
 			if($v['cantidad_restante']>0){?>
-        		<button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)">Visto Bueno</button>
+        		<button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)">Autorizar</button>
         <?php 
 			}
 		?>

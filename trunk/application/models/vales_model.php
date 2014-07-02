@@ -279,13 +279,17 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					estado = ".$resp."
 					WHERE id_requisicion = ".$ids);*/
 	
-	$this->db->query("UPDATE tcm_requisicion SET
+	$q="UPDATE tcm_requisicion SET
 					id_empleado_vistobueno = ".$id_empleado.",
 					fecha_visto_bueno = CONCAT_WS(' ',CURDATE(),CURTIME()),
 					fecha_modificacion = CONCAT_WS(' ',CURDATE(),CURTIME()),
 					id_usuario_modifica = ".$id_usuario.",
-					estado = ".$resp."
-					WHERE id_requisicion = ".$ids);
+					estado = ".$resp.",
+					observaciones = '".$observacion."'
+					WHERE id_requisicion = ".$ids;
+
+		
+					$this->db->query($q);
 
 	}
 	
@@ -374,6 +378,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			$where="tcm_requisicion.id_seccion<>52 AND tcm_requisicion.id_seccion<>53 AND tcm_requisicion.id_seccion<>54 AND tcm_requisicion.id_seccion<>55 AND tcm_requisicion.id_seccion<>56 AND tcm_requisicion.id_seccion<>57 AND tcm_requisicion.id_seccion<>58 AND tcm_requisicion.id_seccion<>59 AND tcm_requisicion.id_seccion<>60 AND tcm_requisicion.id_seccion<>61 AND tcm_requisicion.id_seccion<>64 AND tcm_requisicion.id_seccion<>65 AND tcm_requisicion.id_seccion<>66";
 		if($id_gasolinera!=NULL)
 			$where.=" AND tcm_vale.id_gasolinera='".$id_gasolinera."'";
+
 		if($fecha_factura!=NULL)
 			$where.=" AND tcm_requisicion.fecha_visto_bueno<='".$fecha_factura."'";
 		/*$sentencia="SELECT tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_fuente_fondo.nombre_fuente_fondo, tcm_vehiculo_marca.nombre as marca, tcm_vehiculo_modelo.modelo, tcm_vale.valor_nominal
@@ -404,6 +409,60 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		return (array)$query->result_array();	
 	}
 
+<<<<<<< .mine
+
+	function asignaciones($id_seccion=NULL,$id_fuente_fondo=NULL)
+	{
+		$where=" ";
+		if($id_seccion !=NULL && $id_fuente_fondo!=NULL){
+			
+			$where.="WHERE  a.id_seccion = ".$id_seccion." AND a.id_fuente_fondo = ".$id_fuente_fondo; 
+			
+
+		}
+
+		$sentencia ="SELECT
+			a.id_seccion, a.id_fuente_fondo, nombre_seccion as seccion, f.nombre_fuente_fondo as fuente , cantidad
+			FROM
+				tcm_seccion_asignacion a
+			INNER JOIN tcm_fuente_fondo f ON a.id_fuente_fondo = f.id_fuente_fondo
+			INNER JOIN org_seccion s ON a.id_seccion = s.id_seccion".$where;
+
+		$query=$this->db->query($sentencia);
+		return (array)$query->result_array();		
+	}
+
+	function modificar_asignaciones($post)
+	{extract($post);
+		$q="UPDATE tcm_seccion_asignacion SET cantidad = ".$cantidad."
+		WHERE id_seccion = ".$id_seccion." AND id_fuente_fondo = ".$id_fuente_fondo;
+		$this->db->query($q);
+	}
+	function insertar_asignaciones($post)
+	{extract($post);
+		$q="INSERT INTO tcm_seccion_asignacion(id_seccion,id_fuente_fondo, cantidad ) 
+		VALUES (".$id_seccion.",".$id_fuente_fondo.",".$cantidad.")";
+		$this->db->query($q);
+	}
+	function eliminar_asignaciones($id_seccion, $id_fuente_fondo)
+	{
+		$q="DELETE FROM tcm_seccion_asignacion 
+			WHERE id_seccion = ".$id_seccion." AND id_fuente_fondo =".$id_fuente_fondo;
+		$this->db->query($q);
+	}
+	function consultar_consumo($id_seccion, $id_fuente_fondo)
+	{
+		$q="SELECT
+			COALESCE(SUM(cantidad_restante), 0) suma 	
+			FROM
+				tcm_requisicion r
+			INNER JOIN tcm_requisicion_vale v ON r.id_requisicion = v.id_requisicion
+			WHERE id_seccion = ".$id_seccion." AND id_fuente_fondo =".$id_fuente_fondo;
+		$query=$this->db->query($q);
+		return $query->result_array();
+	}
+
+=======
 	function guardar_factura($formuInfo)
 	{
 		extract($formuInfo);
@@ -459,5 +518,6 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		$this->db->query($sentencia);
 		return $this->db->insert_id();
 	}
+>>>>>>> .r296
 }	
 ?>
