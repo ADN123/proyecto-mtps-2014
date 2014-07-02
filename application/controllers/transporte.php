@@ -78,7 +78,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Control 
 	*	Hecha por: Jhonatan
 	*	Modificada por: Oscar
-	*	Última Modificación: 01/07/2014
+	*	Última Modificación: 02/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function control_solicitudes($estado_transaccion=NULL,$accion=NULL)
