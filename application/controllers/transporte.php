@@ -78,7 +78,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Control 
 	*	Hecha por: Jhonatan
 	*	Modificada por: Oscar
-	*	Última Modificación: 30/06/2014
+	*	Última Modificación: 01/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function control_solicitudes($estado_transaccion=NULL,$accion=NULL)
@@ -87,28 +87,36 @@ class Transporte extends CI_Controller
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$id_seccion_val=$id_seccion['id_seccion'];
-				$id_empl=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
-				$id_empleado=$id_empl['id_empleado'];
+				
+				$id_empl=$this->transporte_model->consultar_empl($this->session->userdata('nr'));
+				
+				$id_empleado=$id_empl[0][id_empleado];
+				$ministro=$this->transporte_model->consultar_cargo($id_empleado);
+				
+				if($ministro[0][funcional]=='MINISTRO') $M=1;
+				else $M=0;
+				
 				switch ($data['id_permiso']) {
 					case 2:
-						$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1);			
+						/*echo "<script type='text/javascript'> alert('M=".$M." Permiso=".$data['id_permiso']." id_empleado=".$id_empleado."');</script>";*/
+						if($M==1) $data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1,0);
+						else $data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1,$id_empleado);			
 						break;
 					case 3:
-						$data['datos']=$this->transporte_model->todas_solicitudes_por_estado(1);
+						if($M==1) $data['datos']=$this->transporte_model->todas_solicitudes_por_estado(1,0);
+						else $data['datos']=$this->transporte_model->todas_solicitudes_por_estado(1,$id_empleado);
 						break;
 					case 4:
 							$departamental=$this->transporte_model->is_departamental($id_seccion_val);
 
 
 						if($departamental){
-							$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1);		
+							if($M==1)$data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1,0);
+							else $data['datos']=$this->transporte_model->solicitudes_por_seccion_estado($id_seccion_val,1,$id_empleado);
 								
 						}else{/// para san salvador
-								
-							$data['datos']=$this->transporte_model->todas_solicitudes_sanSalavador(1);
-							
-
-
+							if($M==1) $data['datos']=$this->transporte_model->todas_solicitudes_sanSalvador(1,0);
+							else $data['datos']=$this->transporte_model->todas_solicitudes_sanSalvador(1,$id_empleado);
 						}
 
 						break;
