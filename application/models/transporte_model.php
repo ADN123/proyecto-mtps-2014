@@ -155,7 +155,7 @@ class Transporte_model extends CI_Model {
 		LEFT JOIN sir_empleado AS e ON e.id_empleado = i.id_empleado
 		INNER JOIN tcm_solicitud_transporte AS st ON st.id_empleado_solicitante = e.id_empleado
 		WHERE 
-		(i.id_seccion=40 || i.id_seccion in (SELECT o.id_seccion FROM org_seccion as o
+		(i.id_seccion=40 || i.id_seccion in (SELECT distinct(o.id_seccion) FROM org_seccion as o
 		inner join tcm_empleado as e on e.id_seccion=o.depende
 		where e.id_seccion='$seccion')) and
 		e.id_empleado<>'$id' and st.estado_solicitud_transporte = '".$estado."' AND (i.id_empleado, i.fecha_inicio) IN  
