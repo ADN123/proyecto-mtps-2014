@@ -32,8 +32,8 @@
                 Justificacion: <strong>".$justificacion."</strong> <br>
                 </fieldset>
     <br />";
-    if ($estado>=2) {
-    echo "
+
+        echo "
     
             <fieldset>      
                 <legend align='left'>Autorización</legend>
@@ -43,18 +43,16 @@
             </fieldset>
             <br />
             ";
-    }
-    if ($estado>=3) {
-    echo "
+
+        echo "
     
             <fieldset>      
-                <legend align='left'>Autorización</legend>
-                Autorizado por: <strong>".$autorizado."</strong> <br>
-                Fecha y Hora de autorización: <strong>".$fecha_autorizado."</strong> <br>          
+                <legend align='left'>Vales a entregar</legend>
+
             </fieldset>
             <br />
             ";
-    }
+    
     ?>
         
     
@@ -63,7 +61,7 @@
         <legend align='left'> Vehiculos &nbsp;&nbsp;<img id="boton1"  src="<?php echo base_url()?>img/lupa.gif"/> </legend>
       
 
-        <div id='autos'>
+        <div id='autos' style="display:none">
 
         <table cellspacing='0' align='center' class='table_design'>
             <thead>
@@ -95,7 +93,7 @@
             </tbody>
         </table>
     </div>
-    </fieldset>";
+    </fieldset>
  
 
 </form>

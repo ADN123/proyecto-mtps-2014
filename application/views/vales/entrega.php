@@ -1,137 +1,59 @@
 <script>
-	var permiso=<?php echo $id_permiso;?>;
-	estado_transaccion='<?php echo $estado_transaccion;?>';
-	estado_correcto='La requisición se ha guardado correctamente';
-	estado_incorrecto='Error al intentar guardar la requisición: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
-
-function chekear(k){
-var obj = $('.cheke');
-var ban= $(k).prop('checked');
-
-    for(i=0;i<obj.length;i++){
-        obj[i].checked=ban;
-    }
-    marcados();
-}
-
-
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	<?php if($accion!="") {?>
+	estado_correcto='La solicitud se ha <?php echo $accion?>do exitosamente.';
+	estado_incorrecto='Error al intentar <?php echo $accion?>r la solicitud: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+	<?php }?>
 </script>
-<script src="<?php echo base_url()?>js/views/entrega_vales.js" type="text/javascript"></script>
 <section>
-    <h2>Ingreso de Requisición de Combustible</h2>
+    <h2>Entrega de Vales de Combustible</h2>
 </section>
-<style>
-.k-multiselect {
-	display: inline-block;
-}
-</style>
-<form name="form_mision" method="post" id="form_mision" action="<?php echo base_url()?>index.php/vales/guardar_requisicion">
-	<div id="wizard" class="swMain">
-        <ul>
-            <li>
-                <a href="#step-1">
-                    <span class="stepNumber">1<small>er</small></span>
-                    <span class="stepDesc">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Datos de vales</small>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a href="#step-2">
-                    <span class="stepNumber">2<small>do</small></span>
-                    <span class="stepDesc">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Selección de vehículos</small>
-                    </span>
-                </a>
-            </li>
-        </ul>                 
+<table  class="grid">
+<thead>
+  <tr>
+    <th>ID Requisicion</th>
+    <th>Fecha Solicitada</th>
+    <th>Sección Solicitante</th>
+    <th>Cantidad </th>
+    <th>Opción</th>
+  </tr>
+ </thead>
+ <tbody>
+<?php
+	foreach ($datos as $fila) {
+?>
+  <tr>
+    <td><?php echo $fila['id_requisicion']?></td>
+    <td><?php echo $fila['fecha']?></td>
+    <td><?php echo ucwords($fila['seccion'])?></td>
+    <td><?php echo $fila['cantidad']?></td>
+    <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila['id_requisicion']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
+	</td>
+  </tr>
+<?php } ?>
+</tbody>
+</table>
 
-        <div id="step-1">	
-            <h2 class="StepTitle">Ingrese los de datos de los vales de combustible</h2>
-           
-            <p> 
-                <label for="cantidad_solicitada" id="lcantidad_solicitada">Cantidad Solicitada </label>
-                <input style="width:100px;" type="text" tabindex="1" id="cantidad_solicitada" name="cantidad_solicitada"/>
-                <label for="id_fuente_fondo" id="lid_fuente_fondo">Fuente de Fondo </label>
-                <select class="select" style="width:200px;" tabindex="2" id="id_fuente_fondo" name="id_fuente_fondo" onChange="cargar_vehiculo()">
-                    <?php
-                        foreach($fuente as $val) {
-                    ?>
-                       <option value="<?php echo $val['id_fuente_fondo'] ?>"><?php echo $val['nombre_fuente'] ?></option>
-                    <?php   
-                        }
-                    ?>
-                </select>
-            </p>
-            <p>
-            	<label for="justificacion" id="ljustificacion" class="label_textarea">Justificación </label>
-              	<textarea class="tam-4" id="justificacion" tabindex="3" name="justificacion"/></textarea>
-            </p>
-            <p>
-     <label for="refuerzo" id="lrefuezo" >Refuerzo </label>
-          	<input  id="refuerzo"  name="refuerzo" type="checkbox"/>
-            </p>
-                        
-            <p>
-            	<label for="id_seccion" id="lservicio_de">Al servicio de </label>
-                <?php 
-					if(sizeof($oficinas)!=1) {
-				?>
-                    <select class="select" style="width:300px;" tabindex="4" id="id_seccion" name="id_seccion" onChange="cargar_vehiculo()">
-                        <?php
-							foreach($oficinas as $val) {
-						?>
-                        		<option value="<?php echo $val['id_seccion'] ?>"><?php echo $val['nombre_seccion'] ?></option>
-                        <?php	
-							}
-						?>
-                    </select>
-             	<?php 
-					} else {
-                        if(sizeof($oficinas)==0)
-                            echo '<strong> La seccion no cuenta con vehiculos </strong>';
-
-						foreach($oficinas as $val) {
-							echo '<strong>'.ucwords($val['nombre_seccion']).'</strong>';
-				?>
-                			<input type="hidden" id="id_seccion" name="id_seccion" value="<?php echo $val['id_seccion']; ?>" />
-                <?php
-						}
-					}
-				?>
-            </p>
-      	</div>
-        <div id="step-2">	
-            <h2 class="StepTitle">Selecci&oacute;n los vehiculos a los que se aplicarán los vales</h2>
-                 Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)" >
-            <p ><div id="divVehiculos"></div>
-
-
-                <div style="display:none;">   
-            <label for="verificando" id="lverificando" class="label_textarea">Cantidad de Vehiculos</label>
-                    <input type="text" id="verificando" name="verificando"  >  </div>
-            	
-            </p>
-        </div>
+<div id="ventana" style="height:600px">
+    <div id='signup-header'>
+        <h2>Entrega de Vales de Combustible</h2>
+        <a class="modal_close"></a>
     </div>
-</form>
-<script type="text/javascript">
-
-
-function marcados() {
-
-    var i=0;
-    $("input[name='values[]']:checked").each(function (){   //capturando los chekeados
-        i++;
-    }); 
-
-    if(i==0){
-        document.getElementById('verificando').value="";
-    }else{
-        document.getElementById('verificando').value="ok";
-    }
-}
-
+    <div id='contenido-ventana'>
+    </div>
+</div>
+<script language="javascript" >
+	function dialogo(id)
+	{  
+		$('#contenido-ventana').load(base_url()+'index.php/vales/dialogo_entrega/'+id);
+		return false;
+	}	
+	
+	function Enviar(v)
+	{
+		document.getElementById('resp').value=v;
+        if(v==0){
+           $("#asignar").destruirValidacion();            
+        }
+	}
 </script>

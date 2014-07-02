@@ -56,9 +56,7 @@
 			$('#contenido-ventana').load(base_url()+'index.php/usuarios/datos_de_rol');
 			return false;
 		});
-	});
-	function recargar_javascript(arg) {
-		$('a[rel*=leanModal]').leanModal({ top : 50, closeButton: ".modal_close"});	
+
 		$(".modificar_rol").click(function(){
 			id=$(this).data("id_rol");
 			nom=$(this).data("nombre_rol");
@@ -77,5 +75,5 @@
 				}
 			});
 		});
-	}
+	});
 </script>
