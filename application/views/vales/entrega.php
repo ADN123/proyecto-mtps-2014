@@ -52,8 +52,6 @@
 	function Enviar(v)
 	{
 		document.getElementById('resp').value=v;
-        if(v==0){
-           $("#asignar").destruirValidacion();            
-        }
+        
 	}
 </script>

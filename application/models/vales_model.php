@@ -262,6 +262,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					WHERE id_requisicion = ".$id);
 			return $query->result();
 	}
+
 	
 	function guardar_visto_bueno($post)
 	{
@@ -409,7 +410,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		return (array)$query->result_array();	
 	}
 
-<<<<<<< .mine
+
 
 	function asignaciones($id_seccion=NULL,$id_fuente_fondo=NULL)
 	{
@@ -462,7 +463,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		return $query->result_array();
 	}
 
-=======
+
 	function guardar_factura($formuInfo)
 	{
 		extract($formuInfo);
@@ -518,6 +519,46 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		$this->db->query($sentencia);
 		return $this->db->insert_id();
 	}
->>>>>>> .r296
+	function info_requisicion_vales($id)
+	{
+	$query=$this->db->query("SELECT
+						id_requisicion_vale,
+						numero_inicial,
+						(numero_inicial + cantidad_entregado - 1 ) AS numero_final
+					FROM
+						tcm_requisicion_vale
+					WHERE id_requisicion=".$id);
+			return $query->result();
+
+	}
+	function info_cantidad_entregar($id)
+	{
+	$query=$this->db->query("SELECT
+					SUM(cantidad_entregado) AS cantidad_entregado
+				FROM 	tcm_requisicion_vale
+				WHERE 	id_requisicion = ".$id."
+				GROUP BY 	id_requisicion");
+			return $query->result();
+
+	}
+	function guardar_entrega($post)
+	{
+		extract($post);
+	
+		$q="UPDATE tcm_requisicion
+			SET 
+			 fecha_autorizado = CONCAT_WS(' ', CURDATE(), CURTIME()),
+			 fecha_entregado = CONCAT_WS(' ', CURDATE(), CURTIME()),
+			id_empledo_entrega = ".$id_empleado.", 
+			id_usuario_modifica = ".$id_usuario.",
+			 estado = 3
+			WHERE
+				id_requisicion = ".$ids;
+				$this->db->query($q);
+	
+	}	
+
+
+
 }	
 ?>

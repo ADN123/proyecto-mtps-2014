@@ -707,8 +707,8 @@ class Vales extends CI_Controller
 	/*
 	*	Nombre: entrega de vales
 	*	Objetivo: Mostrar la informacion necesaria para entregar los vales
-	*	Hecha por: Leonel
-	*	Modificada por: Leonel
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 02/06/2014
 	*	Observaciones: Ninguna.
 	*/
@@ -733,17 +733,21 @@ function entrega($estado_transaccion=NULL)
 	/*
 	*	Nombre: dialogo entrega vales
 	*	Objetivo: Mostrar  informacion mas detallada de la entrega de vales
-	*	Hecha por: Leonel
-	*	Modificada por: Leonel
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 02/06/2014
 	*	Observaciones: Ninguna.
 	*/
 	function dialogo_entrega($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),83);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			
+			$t=$this->vales_model->info_cantidad_entregar($id);
+			$datos['c']=$t[0];
 			$datos['d']=$this->vales_model->info_requisicion($id);
+			$datos['e']=$this->vales_model->info_requisicion_vales($id);
 			$datos['f']=$this->vales_model->info_requisicion_vehiculos($id);
 			$datos['id']=$id;
 			//echo "<pre>";	print_r($datos);echo "</pre>";
@@ -753,5 +757,33 @@ function entrega($estado_transaccion=NULL)
 			echo 'No tiene permisos para acceder';
 		}
 	}
+	/*
+	*	Nombre: guardar_entrega
+	*	Objetivo: Guardar el registro de entrega
+	*	Hecha por: Jhonatan
+	*	Modificada por: Leonel
+	*	Última Modificación: 02/07/2014
+	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
+	*/
+	function guardar_entrega()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81);
+		$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$_POST['id_empleado']=$id_empleado;		
+		if($data['id_permiso']!=NULL) {
+			$this->db->trans_start();
+			
+			$this->vales_model->guardar_entrega($_POST);
+
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/entrega/'.$tr);		
+		}
+		else{
+			echo 'No tiene permisos para acceder';
+		}
+	}
+
 }
 ?>

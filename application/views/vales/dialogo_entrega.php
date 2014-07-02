@@ -1,4 +1,4 @@
-    <form id='form' action="<?php echo base_url()?>index.php/vales/guardar_autorizacion" method='post'>
+    <form id='form' action="<?php echo base_url()?>index.php/vales/guardar_entrega" method='post'>
     <input type='hidden' id='resp' name='resp' />
     <input type='hidden' name='ids' value="<?php echo $id?>" />
 
@@ -13,15 +13,13 @@
                     $cantidad=$datos->cantidad;
                     $justificacion=$datos->justificacion;
                     $id_requisicion=$datos->id_requisicion;
-                    $cantidadE =$datos->entregado;
                     $fuente_fondo=$datos->fuente_fondo;
                     $fechaVB =$datos->fecha_visto_bueno;
                     $visto_bueno =ucwords($datos->visto_bueno);
                     $estado =$datos->estado;
-                    $fecha_autorizado =$datos->fecha_autorizado;
-                    $autorizado =ucwords($datos->autorizado);
+
                 }
-            
+                $cantidadE= $c->cantidad_entregado;
                 echo "
                 ID Requisicion: <strong>".$id_requisicion."</strong> <br>
                 Solicitante: <strong>".$nombre."</strong> <br>
@@ -33,29 +31,45 @@
                 </fieldset>
     <br />";
 
-        echo "
-    
-            <fieldset>      
-                <legend align='left'>Autorización</legend>
-                Autorizado por: <strong>".$visto_bueno."</strong> <br>
-                Cantidad a Entregar: <strong>".$cantidadE."</strong> <br>
-                Fecha y Hora de Autorización: <strong>".$fechaVB."</strong> <br>          
-            </fieldset>
-            <br />
-            ";
+echo "
 
-        echo "
+    <fieldset>      
+        <legend align='left'>Autorización</legend>
+        Autorizado por: <strong>".$visto_bueno."</strong> <br>
+        Cantidad a Entregar: <strong>".$cantidadE."</strong> <br>
+        Fecha y Hora de Autorización: <strong>".$fechaVB."</strong> <br>         
+         ";    ?>
+    </fieldset>
+    <br />
     
-            <fieldset>      
-                <legend align='left'>Vales a entregar</legend>
 
-            </fieldset>
-            <br />
-            ";
-    
-    ?>
+ 
+    <fieldset>      
+        <legend align='left'>Vales a entregar</legend>
         
-    
+        <table cellspacing='0' align='center' class='table_design'>
+            <thead>
+                <th>
+                    Numero inicial
+                </th>
+                <th>
+                    Numero final
+                </th>
+            </thead>
+            <tbody>
+            <?php
+
+                foreach($e as $r)
+                {
+                    echo "<tr><td align='center'>".$r->numero_inicial."</td>";
+                    echo "<td align='center'>".$r->numero_final."</td></tr>";
+                }
+                   ?>
+        
+            </tbody>
+        </table>
+    </fieldset>
+    <br />    
     <br>
     <fieldset>
         <legend align='left'> Vehiculos &nbsp;&nbsp;<img id="boton1"  src="<?php echo base_url()?>img/lupa.gif"/> </legend>
@@ -94,7 +108,10 @@
         </table>
     </div>
     </fieldset>
- 
+     <p style='text-align: center;'>
+        
+                <button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)">Entregar</button>        
+    </p>
 
 </form>
 <script type="text/javascript">
