@@ -82,6 +82,7 @@
 	
 	function enviar(v)
 	{
+		if(v==0) $('#vehiculo').destruirValidacion();
 		document.getElementById('resp').value=v;
 		if(v==0) {
 			$('#vehiculo').destruirValidacion();
