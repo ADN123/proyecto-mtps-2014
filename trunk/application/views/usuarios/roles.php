@@ -57,6 +57,8 @@
 			return false;
 		});
 
+		$('a[rel*=leanModal]').leanModal({ top : 50, closeButton: ".modal_close"});	
+
 		$(".modificar_rol").click(function(){
 			id=$(this).data("id_rol");
 			nom=$(this).data("nombre_rol");
