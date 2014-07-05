@@ -335,7 +335,6 @@ class Vales extends CI_Controller
 			$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
 			$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);
 			$this->vales_model->guardar_visto_bueno($_POST);
-		
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/autorizacion/'.$tr);		
@@ -788,7 +787,7 @@ function entrega($estado_transaccion=NULL)
 		function reporte_consumo()
 	{
 $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
-		$url='vales/reporte_consumo';
+		$url='vales/reporte_consumo2';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -820,6 +819,8 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
+			$data['a']=$this->vales_model->consumo_seccion_fuente();
+			$data['b']=json_encode($data['a']);
 			/*echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
 			print_r($data['oficinas']);  */
 			pantalla($url,$data);	
@@ -829,6 +830,8 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}
 		
 	}
+
+
 
 }
 

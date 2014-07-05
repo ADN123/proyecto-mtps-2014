@@ -38,10 +38,10 @@
                  $str="Creada";
             break;
         case 2:
-            $str="Dado Visto bueno";
+            $str="Autorizada";
             break;
         case 3:
-            $str="Autorizada";
+            $str="Entregado";
             break;
         
         default:

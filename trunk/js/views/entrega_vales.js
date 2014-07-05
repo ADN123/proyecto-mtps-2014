@@ -101,7 +101,7 @@ $.ajax({
         }); 
 }
 
-function refuerzo(obj) {
+function refuerzock() {
  	if($("#refuerzo").is(':checked')) {  
  		$("#cantidad_solicitada").prop('readonly', false);
  		

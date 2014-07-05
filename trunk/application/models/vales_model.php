@@ -331,9 +331,9 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 	
 	}
 	
-	function buscar_vales($formuInfo)
+	function buscar_vales($id_requisicion,$id_fuente_fondo, $cantidad)
 	{
-		extract($formuInfo);
+
 		$sentencia="SELECT id_vale, (final-cantidad_restante+1) AS inicial, cantidad_restante FROM tcm_vale WHERE tipo_vehiculo='".$id_fuente_fondo."' AND cantidad_restante>0 ORDER BY fecha_recibido, id_vale";
 		$query=$this->db->query($sentencia);
 		$res=(array)$query->result_array();
@@ -599,6 +599,22 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				$this->db->query($q);
 	
 	}	
+	function consumo_seccion_fuente($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL)
+	{
+		$q="SELECT
+				s.nombre_seccion as seccion,
+				SUM(cantidad_entregado - cantidad_restante ) AS consumido,
+				sa.cantidad as asignado
+			FROM
+				tcm_requisicion r
+			INNER JOIN tcm_requisicion_vale rv ON r.id_requisicion = rv.id_requisicion
+			INNER JOIN org_seccion s ON r.id_seccion = s.id_seccion
+			INNER JOIN tcm_seccion_asignacion sa ON (s.id_seccion = sa.id_seccion AND r.id_fuente_fondo= sa.id_fuente_fondo)
+			GROUP BY r.id_seccion ";
+			$query=$this->db->query($q);		
+			return $query->result();
+
+	}
 
 
 }	
