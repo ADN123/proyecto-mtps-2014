@@ -82,6 +82,9 @@ $.ajax({
 
 				$("#cantidad_solicitada").val(data.peticion);
 			    var txt = $("#id_seccion option:selected").text();
+
+			    if(txt=="") {txt=document.getElementById('nombre').value;}
+
 			    $('#justificacion').val("Cuota mensual asignada a "+ txt);
 			   
 
