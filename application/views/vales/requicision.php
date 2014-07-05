@@ -71,7 +71,7 @@ var ban= $(k).prop('checked');
             </p>
             <p>
      <label for="refuerzo" id="lrefuezo" >Refuerzo </label>
-          	<input  id="refuerzo"  name="refuerzo" type="checkbox"/>
+          	<input  id="refuerzo"  name="refuerzo" type="checkbox" onchange="refuerzock()"/>
             </p>
                         
             <p>

@@ -30,6 +30,11 @@
         <script src="<?php echo base_url()?>js/alertify.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/funciones.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/validador.js" type="text/javascript"></script>
+
+        <!-------- Graficos 
+        
+        <script src="<?php echo base_url()?>js/amcharts.js" type="text/javascript"></script>
+        <script src="<?php echo base_url()?>js/serial.js" type="text/javascript"></script>  -->
         
 
    

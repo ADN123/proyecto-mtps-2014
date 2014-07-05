@@ -20,8 +20,10 @@
                 ID Requisicion: <strong>".$id_requisicion."</strong> <br>
                 Fecha y hora de Solicitud: <strong>".$fecha."</strong> <br>
                 Cantidad Solicitada: <strong>".$cantidad."</strong> <br>
-                Justificacion: <strong>".$justificacion."</strong> <br></fieldset>
-    <br />";
+                Justificacion: <strong>".$justificacion."</strong> <br>
+                Refuerzo: <strong>"; echo ($refuerzo==1)?"Si":"No"; echo "</strong> <br></fieldset>
+
+                 <br />";
     ?>
         
     
