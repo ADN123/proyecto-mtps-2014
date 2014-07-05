@@ -97,6 +97,7 @@ var ban= $(k).prop('checked');
 							echo '<strong>'.ucwords($val['nombre_seccion']).'</strong>';
 				?>
                 			<input type="hidden" id="id_seccion" name="id_seccion" value="<?php echo $val['id_seccion']; ?>" />
+                            <input type="hidden" id="nombre" name="nombre" value="<?php echo $val['nombre_seccion']; ?>" />
                 <?php
 						}
 					}

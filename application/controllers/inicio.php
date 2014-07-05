@@ -28,9 +28,11 @@ class Inicio extends CI_Controller
 		$data['nick']=$this->session->userdata('usuario');
 		$data['nombre']=$this->session->userdata('nombre');
 		$data['menus']=$this->seguridad_model->buscar_menus($this->session->userdata('id_usuario'));
-	 	$this->load->view('encabezado',$data);
-	 	$this->load->view($vista);	
-	 	$this->load->view('piePagina');
+	 	
+	 //	echo"<pre>";print_r($data); echo "</pre>";
+	 	$this->load->view('encabezado',$data); $this->load->view($vista);	 $this->load->view('piePagina');
+	 	
+	 
 	}
 
 }
