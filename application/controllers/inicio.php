@@ -17,8 +17,8 @@ class Inicio extends CI_Controller
     }
 	
 	function index()
-
-	{	$data=$this->seguridad_model->sexoUsuario($this->session->userdata('id_usuario'));
+	{	
+		$data=$this->seguridad_model->sexoUsuario($this->session->userdata('id_usuario'));
 		$data=$data[0];
 	 	$this->pantalla('home',$data);
 	}
