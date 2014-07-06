@@ -638,7 +638,7 @@ class Vales extends CI_Controller
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
-			
+			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$id_gasolinera=$this->input->post('id_gasolinera');
 			$fec=str_replace("/","-",$this->input->post('fecha_factura'));
 			$fecha_factura=date("Y-m-d", strtotime($fec));
@@ -690,7 +690,8 @@ class Vales extends CI_Controller
 						'id_requisicion_vale'=>$id_requisicion_vale,
 						'cantidad'=>$cantidad_consumo[$i],
 						'id_gasolinera'=>$id_gasolinera,
-						'recibido'=>1
+						'recibido'=>1,
+						'id_seccion'=>$id_seccion['id_seccion']
 					);
 					$this->vales_model->buscar_requisicion_vale($formuInfo);
 				}
