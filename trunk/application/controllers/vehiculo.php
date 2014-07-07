@@ -57,7 +57,7 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
-	*	Nombre: rep_man_tmtps
+	*	Nombre: tallerMTPS
 	*	Objetivo: carga la vista de Reparación y mantenimiento en taller del MTPS
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
@@ -67,8 +67,25 @@ class Vehiculo extends CI_Controller
 	
 	function tallerMTPS()
 	{
-		$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculos(2);
 		pantalla('mantenimiento/taller_MTPS',$data);
+	}
+	
+	/*
+	*	Nombre: vehiculo_info
+	*	Objetivo: carga los datos de los vehiculos para la vista de Reparación y mantenimiento en taller del MTPS
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 05/07/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function vehiculo_info($id_vehiculo)
+	{
+		$vehiculo=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo,2);
+		
+		$j=json_encode($vehiculo);
+		echo $j;
 	}
 	
 	/*
@@ -161,6 +178,21 @@ class Vehiculo extends CI_Controller
 	function modifica_vehiculo()
 	{
 		$data['datos']=$this->transporte_model->consultar_vehiculos();
+	}
+	
+	/*
+	*	Nombre: guardar_taller
+	*	Objetivo: insertar en la Base de Datos un nuevo registro de mtto. del taller del MTPS
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 05/07/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function guardar_taller()
+	{
+		$this->db->trans_start();
+		
 	}
 }
 ?>

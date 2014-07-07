@@ -697,16 +697,32 @@ function solicitudes_por_asignar_depto(){
 	
 	
 	/////////////////////////////////CONSUlTAR VEHICUlOS//////////////////////////////////////////
-	function consultar_vehiculos()
+	function consultar_vehiculos($estado=NULL)
 	{
-		$query=$this->db->query("
-		select v.id_vehiculo id, v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
-		from tcm_vehiculo as v
-		inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
-		inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
-		inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
-		inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
-		");
+		if($estado==NULL)
+		{
+			$consulta="
+			select v.id_vehiculo id, v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
+			from tcm_vehiculo as v
+			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+			";
+		}
+		else
+		{
+			$consulta="
+			select v.id_vehiculo id, v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
+			from tcm_vehiculo as v
+			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+			where v.estado='$estado'
+			";
+		}
+		$query=$this->db->query($consulta);
 		return $query->result();
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -820,6 +836,26 @@ function solicitudes_por_asignar_depto(){
 		return $id;
 	}
 	////////////////////////////////////////////////////////////////////////////
+	
+	function consultar_vehiculo_taller($id)
+	{
+		$query=$this->db->query("
+		select v.placa, LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada)) AS nombre,
+		o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, max(vk.km_final) as kilometraje, v.anio
+		from tcm_vehiculo as v
+		inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+		inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+		inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+		inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+		inner join tcm_vehiculo_motorista as vmot on (v.id_vehiculo=vmot.id_vehiculo)
+		inner join tcm_vehiculo_kilometraje as vk on (vk.id_vehiculo=v.id_vehiculo)
+		inner join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
+		inner join org_seccion as o on (v.id_seccion=o.id_seccion)
+		where v.id_vehiculo='$id'
+		GROUP BY v.placa,nombre,seccion,marca,modelo,clase,condicion
+		");
+		return $query->result();
+	}
 	
 	//////////////////////Consultar los datos de los vehículos//////////////////
 	function consultar_datos_vehiculos($id)
