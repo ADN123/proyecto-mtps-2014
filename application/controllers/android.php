@@ -111,7 +111,8 @@ class Android extends CI_Controller {
 	*	Nombre: iniciar_session
 	*	Obejtivo: Verificar que el nick y password introducidos por el usuario sean correctos
 	*	Hecha por: Jhonatan
-	*	Ultima Modificacion: 13/05/2014
+	*	Modificada por: Oscar
+	*	Ultima Modificacion: 07/07/2014
 	*	Observaciones: 	*/
 
 	function iniciar_session(){
@@ -126,7 +127,7 @@ class Android extends CI_Controller {
 
 						
 					}else {
-					$data=$this->seguridad_model->consultar_permiso($v['id_usuario'],67);
+					$data=$this->seguridad_model->consultar_permiso($v['id_usuario'],73);
 						
 						if($data['id_permiso']!=NULL) {
 								echo 2; //todo bien

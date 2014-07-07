@@ -27,13 +27,13 @@ class Vales extends CI_Controller
 	*	Nombre: ingreso_vales
 	*	Objetivo: Carga la vista para el ingreso de vales de combustible
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 28/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function ingreso_vales($estado_transaccion=NULL) 
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),63); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),69); 
 		
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
@@ -56,13 +56,13 @@ class Vales extends CI_Controller
 	*	Nombre: guardar_vales
 	*	Objetivo: guarda los datos de los vales de combustible
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 28/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function guardar_vales() 
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),63); /*Verificacion de permiso para crear solicitudes*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),69); /*Verificacion de permiso para crear solicitudes*/
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
@@ -104,13 +104,13 @@ class Vales extends CI_Controller
 	*	Nombre: ingreso_requisicion
 	*	Objetivo: Cargar la vista de la requisicion (solicitud) de combustible
 	*	Hecha por: Leonel
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 28/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function ingreso_requisicion($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81); /*Verificacion de permiso para crear requisiciones*/
 		$url='vales/requicision';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
@@ -252,13 +252,13 @@ class Vales extends CI_Controller
 	*	Nombre: visto bueno
 	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 7/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function autorizacion($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),86); /*Verificacion de permiso para crear requisiciones*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -293,13 +293,13 @@ class Vales extends CI_Controller
 	*	Nombre: dialogo_ autorizacion 
 	*	Objetivo: Cargar el cuadro de dialogo mediante ajax en la pantalla de autorizacion de vales de combustible
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 28/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function dialogo_autorizacion($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),86);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$datos['d']=$this->vales_model->info_requisicion($id);
@@ -319,13 +319,13 @@ class Vales extends CI_Controller
 	*	Nombre: guardar_autorizacion
 	*	Objetivo: Guardar la informacion o respuesta del usuario en visto bueno
 	*	Hecha por: Jhonatan
-	*	Modificada por: Leonel
-	*	Última Modificación: 17/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
 	function guardar_autorizacion()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),80);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),86);
 		$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$_POST['id_empleado']=$id_empleado;
@@ -349,8 +349,8 @@ class Vales extends CI_Controller
 	*	Nombre: ver requiciciones de combustible 
 	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 8/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 
@@ -358,7 +358,7 @@ class Vales extends CI_Controller
 
 	function ver_requisiciones($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),83); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),89); /*Verificacion de permiso para crear requisiciones*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -392,13 +392,13 @@ class Vales extends CI_Controller
 	*	Nombre: dialogo detalle
 	*	Objetivo: 	Guardar la informacion o respuesta del usuario en visto bueno
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 8/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
 	function dialogo_detalles($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),83);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),89);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$datos['d']=$this->vales_model->info_requisicion($id);
@@ -418,13 +418,13 @@ class Vales extends CI_Controller
 	*	Nombre: Asignaciones de vales a cada seccion
 	*	Objetivo: Permite modificar, crear o elimnar las asignaciones mensuales de vales a las diferentes secciones
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 29/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function asignaciones($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); /*Verificacion de permiso gestionar asignaciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -442,8 +442,8 @@ class Vales extends CI_Controller
 	*	Nombre: dialogoM_asignacion 
 	*	Objetivo: 	Permite modificar las asignaciones
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 8/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
 	
@@ -451,7 +451,7 @@ class Vales extends CI_Controller
 	
 	function dialogoM_asignacion($id_seccion,$id_fuente_fondo)
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$data['d']=$this->vales_model->asignaciones($id_seccion,$id_fuente_fondo);
@@ -465,14 +465,14 @@ class Vales extends CI_Controller
 	*	Nombre: modificar_asignacion
 	*	Objetivo: 	modifica la asiganacion en la base de datos
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 30/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*/
 
 
 	function modificar_asignacion()
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
@@ -492,14 +492,14 @@ class Vales extends CI_Controller
 	*	Nombre: dialogoN_asignacion
 	*	Objetivo: 	Permite insertar una nueva asignación
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 30/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*/
 	
 
 	function dialogoN_asignacion()
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$data['oficinas']=$this->vales_model->consultar_oficinas();
@@ -514,13 +514,13 @@ class Vales extends CI_Controller
 	*	Nombre: Insertar_asignacion
 	*	Objetivo: 	guarda la asiganacion en la base de datos
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 30/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*/
 
 	function insertar_asignacion()
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
@@ -539,13 +539,13 @@ class Vales extends CI_Controller
 	*	Nombre: eliminar_asignacion
 	*	Objetivo: 	eliminar la asiganacion en la base de datos
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 30/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*/
 
 	function eliminar_asignacion($id_seccion, $id_fuente_fondo)
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
@@ -564,15 +564,15 @@ class Vales extends CI_Controller
 	*	Nombre: ingreso_consumo
 	*	Objetivo: Carga la vista para el ingreso de comsumo de vales de combustible or vehiculo.
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 10/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 
 
 	function ingreso_consumo($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); 
 		
 		if($data['id_permiso']!=NULL) {
 			$data['fuente']=$this->vales_model->consultar_fuente_fondo();
@@ -590,13 +590,13 @@ class Vales extends CI_Controller
 	*	Objetivo: Cargar por ajax los vehiculos de una seccion segun la gasolinera que se seleccione  
 	*	en la pantalla de ingrese de requisicion de combustible 
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 01/07/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function vehiculos_consumo($id_gasolinera = NULL, $fecha_factura_dia = NULL, $fecha_factura_mes = NULL, $fecha_factura_anio = NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); 
 		
 		if($data['id_permiso']!=NULL) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
@@ -629,12 +629,12 @@ class Vales extends CI_Controller
 	*	Objetivo: Guardar formulario del consumo de vales de combustible
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
-	*	Última Modificación: 01/07/2014
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function guardar_consumo()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); 
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
@@ -708,15 +708,15 @@ class Vales extends CI_Controller
 	*	Nombre: entrega de vales
 	*	Objetivo: Mostrar la informacion necesaria para entregar los vales
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 02/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 
 
 function entrega($estado_transaccion=NULL)
 {
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81); 
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),87); 
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -734,13 +734,13 @@ function entrega($estado_transaccion=NULL)
 	*	Nombre: dialogo entrega vales
 	*	Objetivo: Mostrar  informacion mas detallada de la entrega de vales
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 02/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function dialogo_entrega($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),87);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			
@@ -761,13 +761,13 @@ function entrega($estado_transaccion=NULL)
 	*	Nombre: guardar_entrega
 	*	Objetivo: Guardar el registro de entrega
 	*	Hecha por: Jhonatan
-	*	Modificada por: Leonel
-	*	Última Modificación: 02/07/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
 	function guardar_entrega()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),87);
 		$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$_POST['id_empleado']=$id_empleado;		

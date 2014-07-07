@@ -23,13 +23,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: roles
 	*	Objetivo: Carga la vista para la administracion de los roles
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 11/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function roles($estado_transaccion=NULL,$accion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78); /*Verificacion de permiso para administrara roles*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),84); /*Verificacion de permiso para administrara roles*/
 		
 		if($data['id_permiso']==3) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
@@ -61,13 +61,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: datos_de_rol
 	*	Objetivo: Carga la vista para crear o modificar los roles
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 11/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function datos_de_rol($id_rol=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78); /*Verificacion de permiso para administrara roles*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),84); /*Verificacion de permiso para administrara roles*/
 		
 		if($data['id_permiso']==3) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
@@ -98,13 +98,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: guardar_rol
 	*	Objetivo: Guarda los registros de roles
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 14/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function guardar_rol()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),84);
 		
 		if($data['id_permiso']==3) {
 			$this->db->trans_start();
@@ -173,7 +173,7 @@ class Usuarios extends CI_Controller
 			}
 			$formuInfo = array(
 				'id_rol'=>$id_rol,
-				'id_modulo'=>71,
+				'id_modulo'=>77,
 				'id_permiso'=>3,
 				'estado'=>1
 			);
@@ -192,13 +192,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: actualizar_rol
 	*	Objetivo: Actualiza los registros de roles
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 14/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function actualizar_rol() 
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),84);
 		
 		if($data['id_permiso']==3) {
 			$this->db->trans_start();
@@ -270,7 +270,7 @@ class Usuarios extends CI_Controller
 			}
 			$formuInfo = array(
 				'id_rol'=>$id_rol,
-				'id_modulo'=>71,
+				'id_modulo'=>77,
 				'id_permiso'=>3,
 				'estado'=>1
 			);
@@ -289,13 +289,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: eliminar_rol
 	*	Objetivo: Elimina los registros de roles
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 14/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function eliminar_rol($id_rol=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),78);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),84);
 		
 		if($data['id_permiso']==3) {
 			$this->db->trans_start();
@@ -314,13 +314,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: usuario
 	*	Objetivo: Carga la vista para la administracion de los usuarios
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 19/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function usuario($estado_transaccion=NULL,$accion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79); /*Verificacion de permiso para administrara usuarios*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),85); /*Verificacion de permiso para administrara usuarios*/
 		
 		if($data['id_permiso']==3) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
@@ -352,13 +352,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: datos_de_usuario
 	*	Objetivo: Carga la vista del formulario creación o actualización de usuarios
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 20/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function datos_de_usuario($id_usuario=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79); /*Verificacion de permiso para administrara usuarios*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),85); /*Verificacion de permiso para administrara usuarios*/
 		
 		if($data['id_permiso']==3) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
@@ -392,13 +392,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: buscar_info_adicional_usuario
 	*	Objetivo: Mostrar la informacion del usuario que se necesita crear
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 14/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function buscar_info_adicional_usuario()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79); /*Verificacion de permiso para crear solicitudes*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),85); /*Verificacion de permiso para crear solicitudes*/
 		
 		if($data['id_permiso']==3) {
 			$id_empleado=$this->input->post('id_empleado');
@@ -423,13 +423,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: guardar_usuario
 	*	Objetivo: Guarda los registros de usuarios
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 14/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function guardar_usuario()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),85);
 		
 		if($data['id_permiso']==3) {
 			$this->db->trans_start();
@@ -479,13 +479,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: actualizar_usuario
 	*	Objetivo: Actualiza los registros de usuarios
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 07/06/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function actualizar_usuario()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),85);
 		
 		if($data['id_permiso']==3) {
 			$this->db->trans_start();
@@ -524,13 +524,13 @@ class Usuarios extends CI_Controller
 	*	Nombre: eliminar_usuario
 	*	Objetivo: Desvactiva los registros de usuarios
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 20/05/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
 	*	Observaciones: No elimina, solo cambia a cero el estado del usuario.
 	*/
 	function eliminar_usuario($id_usuario=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),79);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),85);
 		
 		if($data['id_permiso']==3) {
 			$this->db->trans_start();
