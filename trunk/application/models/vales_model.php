@@ -423,7 +423,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			$where.=" AND tcm_vale.id_gasolinera='".$id_gasolinera."'";
 
 		if($fecha_factura!=NULL)
-			$where.=" AND tcm_requisicion.fecha_visto_bueno<='".$fecha_factura."'";
+			$where.=" AND DATE_FORMAT(tcm_requisicion.fecha_visto_bueno,'%Y-%m-%d')<='".$fecha_factura."'";
 		/*$sentencia="SELECT tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_fuente_fondo.nombre_fuente_fondo, tcm_vehiculo_marca.nombre as marca, tcm_vehiculo_modelo.modelo, tcm_vale.valor_nominal
 					FROM tcm_vehiculo
 					INNER JOIN tcm_req_veh ON tcm_req_veh.id_vehiculo = tcm_vehiculo.id_vehiculo
@@ -541,6 +541,10 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				$query=$this->db->query($sentencia);
 				
 				$sentencia="INSERT INTO tcm_consumo_vehiculo (id_consumo, id_vehiculo, actividad, tip_gas, cantidad_vales, inicial, recibido) VALUES (".$id_consumo.", ".$id_vehiculo.", '".$actividad_consumo."', '".$tip_gas."', ".$cantidad_entregado.", ".$r[inicial].", ".$recibido.")";
+				$query=$this->db->query($sentencia);
+				
+				$id_consumo_vehiculo=$this->db->insert_id();
+				$sentencia="INSERT INTO tcm_requisicion_vale_consumo_vehiculo (id_requisicion_vale, id_consumo_vehiculo) VALUES (".$r[id_requisicion_vale].", ".$id_consumo_vehiculo.")";
 				$query=$this->db->query($sentencia);
 			}
 		}
