@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 class Vales_model extends CI_Model {
     //constructor de la clase
@@ -619,6 +619,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			return $query->result();
 
 	}
+
+
 
 
 }	

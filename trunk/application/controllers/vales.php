@@ -788,7 +788,7 @@ function entrega($estado_transaccion=NULL)
 		function reporte_consumo()
 	{
 $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
-		$url='vales/reporte_consumo2';
+		$url='vales/reporte_consumo';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -797,7 +797,6 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 				case 2://seccion
 					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
 					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
-					$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
 					if(sizeof($data['vehiculos'])==0) {
 						$url.='Error';	
 					}
@@ -811,7 +810,6 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
 						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
 						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
-						$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
 						if(sizeof($data['vehiculos'])==0){
 							$url.='error';	
 						}
@@ -820,8 +818,6 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
-			$data['a']=$this->vales_model->consumo_seccion_fuente();
-			$data['b']=json_encode($data['a']);
 			/*echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
 			print_r($data['oficinas']);  */
 			pantalla($url,$data);	
@@ -831,7 +827,13 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}
 		
 	}
+	function consumo_json()
+	{
+		$data=$this->vales_model->consumo_seccion_fuente();
+		echo json_encode($data);	
+	}
 
+	
 
 
 }
