@@ -22,13 +22,13 @@ class Transporte extends CI_Controller
 	*	Nombre: solicitud
 	*	Objetivo: Carga la vista para la creacion del solicitudes de transporte
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 13/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function solicitud($estado_transaccion=NULL,$id_solicitud=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),65); /*Verificacion de permiso para crear solicitudes*/
 		$band=1;
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
@@ -78,12 +78,12 @@ class Transporte extends CI_Controller
 	*	Objetivo: Control 
 	*	Hecha por: Jhonatan
 	*	Modificada por: Oscar
-	*	Última Modificación: 02/07/2014
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function control_solicitudes($estado_transaccion=NULL,$accion=NULL)
 	{
- 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
+ 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),66);
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 				$id_seccion_val=$id_seccion['id_seccion'];
@@ -139,13 +139,13 @@ class Transporte extends CI_Controller
 	*	Nombre: datos_de_solictudes
 	*	Objetivo: Mostrar informacion General de una mision, a fin de que el Jefe de Unidad o Departamento tenga una aplia vision para aprobar o denegar un solicitud
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 08/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Cargada mediante Ajax desde la pantalla de control de solicitudes
 	*/
 	function datos_de_solicitudes($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),66);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$datos['d']=$this->transporte_model->datos_de_solicitudes($id, $id_seccion['id_seccion']);
@@ -164,13 +164,13 @@ class Transporte extends CI_Controller
 	*	Nombre: aprobar _solicitud
 	*	Objetivo: Registrar la aprobacion hecha por un Jefe de Unidad o Departamento
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 5/03/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function aprobar_solicitud()
 	{
-		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),60);
+		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),66);
 		if($data['permiso']>=2 && $data['permiso']!=NULL){
 			$this->db->trans_start();
 			$id=$this->input->post('ids'); //id solicitud
@@ -185,7 +185,7 @@ class Transporte extends CI_Controller
 				$this->db->trans_complete();
 				$tr=($this->db->trans_status()===FALSE)?0:1;
 				if($tr==1 && $estado==2) {
-					enviar_correo_automatico_administracion($id_solicitud_transporte,62);
+					enviar_correo_automatico_administracion($id_solicitud_transporte,68);
 				}
 				enviar_correo_automatico_usuarios($id_solicitud_transporte);
 				ir_a("index.php/transporte/control_solicitudes/".$tr."/".$estado);
@@ -205,12 +205,12 @@ class Transporte extends CI_Controller
 	*	Objetivo: Carga la vista de Asignaciones de vehículos y Motoristas
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 05/06/2014
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function asignar_vehiculo_motorista($estado_transaccion=NULL,$accion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),65);
 		if($data['id_permiso']!=NULL) {
 			if($data['id_permiso']==2) {// para solicitudes locales
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
@@ -254,12 +254,12 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para cargar datos de solicitudes
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 23/05/2014
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function cargar_datos_solicitud($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),65);
 		if($data['id_permiso']!=NULL) {
 			if($data['id_permiso']>2) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
@@ -484,12 +484,12 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para conocer el motorista que se ha de asignar a la misión oficial
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 05/06/2014
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function verificar_motoristas($id_vehiculo,$id_solicitud_actual)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),65);
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 		if($data['id_permiso']!=NULL) {
 			if($data['id_permiso']>=2) {
@@ -540,13 +540,13 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para registrar una asignación de vehículo con su correspondiente motorista
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 05/06/2014
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	
 	function asignar_veh_mot($estado_transaccion=NULL,$accion=NULL)
 	{
-		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59);
+		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),65);
 		$empleado=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 		
 		$id_empleado=$empleado['id_empleado'];
@@ -593,13 +593,13 @@ class Transporte extends CI_Controller
 	*	Nombre: buscar_info_adicional
 	*	Objetivo: Mostrar la informacion del puesto del empleado que necesita el transporte
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 01/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function buscar_info_adicional()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),65); /*Verificacion de permiso para crear solicitudes*/
 		
 		if($data['id_permiso']!=NULL) {
 			$id_empleado=$this->input->post('id_empleado');
@@ -635,13 +635,13 @@ class Transporte extends CI_Controller
 	*	Nombre: guardar_solicitud
 	*	Objetivo: Guardar el formulario de solicitud de transporte
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 01/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function guardar_solicitud()
 	{	
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),59); /*Verificacion de permiso para crear solicitudes*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),65); /*Verificacion de permiso para crear solicitudes*/
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
@@ -712,7 +712,7 @@ class Transporte extends CI_Controller
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			if($tr) {
-				enviar_correo_automatico_administracion($id_solicitud_transporte,60);
+				enviar_correo_automatico_administracion($id_solicitud_transporte,66);
 			}
 			if($id_solicitud_old!="") {
 				ir_a('index.php/transporte/ver_solicitudes/'.$tr);
@@ -729,13 +729,13 @@ class Transporte extends CI_Controller
 	*	Nombre: control de entradas y salidas
 	*	Objetivo: Mostrar la salida o ingreso de un vehiculo
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 08/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Falta mostrar datos segun el permiso que posea
 	*/
 	function control_salidas_entradas($estado_transaccion=NULL,$accion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),64);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),70);
 
 		if(isset($data['id_permiso'])&&$data['id_permiso']>1) {
 				$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
@@ -803,13 +803,13 @@ class Transporte extends CI_Controller
 	*	Nombre: guardar_despacho
 	*	Objetivo: Registrar la salida o ingreso de un vehiculo
 	*	Hecha por: Jhonatan
-	*	Modificada por: Jhonatan
-	*	Última Modificación: 08/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function guardar_despacho()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),64);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),70);
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
@@ -913,15 +913,15 @@ class Transporte extends CI_Controller
 	*	Nombre: ver_solicitudes
 	*	Objetivo: Ver el estado actual de las solicitudes. Permite editar o eliminar solicitudes
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 15/03/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function ver_solicitudes($estado_transaccion=NULL)
 	{ 
 
 							
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),61);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),67);
 
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
@@ -959,13 +959,13 @@ class Transporte extends CI_Controller
 	*	Nombre: eliminar_solicitud
 	*	Objetivo: Elimina (desactiva) una solicitud de transporte
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 15/03/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function eliminar_solicitud($id_solicitud)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),61);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),67);
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
@@ -983,13 +983,13 @@ class Transporte extends CI_Controller
 	*	Nombre: reporte_solicitud
 	*	Objetivo: Muestra solicitudes que ya tienen asignado vehiculo y motorista. Permite exportar a pdf
 	*	Hecha por: Leonel
-	*	Modificada por: Leonel
-	*	Última Modificación: 01/04/2014
+	*	Modificada por: Oscar
+	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function reporte_solicitud()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),66);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),72);
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
 				case 1:
@@ -1025,12 +1025,12 @@ class Transporte extends CI_Controller
 	*	Objetivo: Genera una archivo pdf de una solicitud
 	*	Hecha por: Leonel
 	*	Modificada por: Oscar
-	*	Ultima Modificacion: 02/06/2014
+	*	Ultima Modificacion: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function solicitud_pdf($id) 
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),66);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),72);
 		if($data['id_permiso']!=NULL) {
 			$seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$data['id_seccion']=$seccion['id_seccion'];
