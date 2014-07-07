@@ -58,7 +58,7 @@ function datos(data){ //carga informacion en el cuadro de dialogo
 					$('#km').destruirValidacion();
 					$('#km').validacion({
 						req: true,
-						numMin: minKM
+						numMin: (minKM-0.01)
 						});
 					
 			
