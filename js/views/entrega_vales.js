@@ -73,12 +73,13 @@ $.ajax({
 		    	$('#justificacion').val("");
 
 			    }else{
-				console.log(data.peticion);
+			/*	console.log(data.peticion);
 			    if(data.peticion!="0") {
 					$("#cantidad_solicitada").prop('readonly', true);
 			    	 }else{
 			    	$("#cantidad_solicitada").prop('readonly', false);
-			    	 }
+			    	 }*/
+			    $("#cantidad_solicitada").prop('readonly', true);
 
 				$("#cantidad_solicitada").val(data.peticion);
 			    var txt = $("#id_seccion option:selected").text();

@@ -1,5 +1,5 @@
  
-                    function startChange() {
+                 function startChange() {
                         var startDate = start.value(),
                         endDate = end.value();
 
@@ -45,8 +45,11 @@
                     end.min(start.value());
                 
 
+function grafico (chartData) {
 
-           AmCharts.ready(function () {
+
+              var chart;
+
                 // SERIAL CHART
                 chart = new AmCharts.AmSerialChart();
                 chart.dataProvider = chartData;
@@ -109,4 +112,18 @@
 
                 // WRITE
                 chart.write("chartdiv");
-            });
+
+}
+
+function tabla (json) {
+                var fila;
+            $('#datos tbody').remove();        
+            for (i=0;i<json.length;i++) {            
+             fila= "<tr>" +
+              "<td align='center'>" + json[i].seccion + "</td>" +
+              "<td align='center'>" + json[i].asignado + "</td>" +
+              "<td align='center'>" + json[i].consumido + "</td>" +
+            "</tr>";    
+                $('#datos').append(fila)    
+                }  
+}
