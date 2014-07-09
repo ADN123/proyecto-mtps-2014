@@ -31,13 +31,14 @@
 				$cont_valor_nominal=explode(",",$val['valor_nominal']);
 				$cont_valor_nominal2=explode(",",$val['valor_nominal2']);
 				$id_requisicion_vale=explode(",",$val['id_requisicion_vale']);
+				$id_fuente_fondo=$val['id_fuente_fondo'];
 		?>
                 <tr> 
                     <td align="left" title="<?php echo $val['marca'] ?> <?php echo $val['modelo'] ?> (<?php echo $val['nombre_fuente_fondo'] ?>)">
 						<?php echo $val['placa'] ?>
                         <?php 
 							if(count($cont_valor_nominal)==1)
-								echo '<input type="hidden" name="id_vehiculo[]" id="id_vehiculo'.$val['id_vehiculo'].'" value="'.$val['id_vehiculo'].'**'.$id_requisicion_vale[0].'**'.number_format($cont_valor_nominal2[0],2,'.',',').'" />';
+								echo '<input type="hidden" name="id_vehiculo[]" id="id_vehiculo'.$val['id_vehiculo'].'" value="'.$val['id_vehiculo'].'**'.$id_requisicion_vale[0].'**'.number_format($cont_valor_nominal2[0],2,'.',',').'**'.$id_fuente_fondo.'" />';
 						?> 
                     </td>
                     <!--<td><?php echo $val['nombre_fuente_fondo'] ?></td>-->
@@ -58,7 +59,7 @@
 							else {
 								echo '<select name="id_vehiculo[]" id="id_vehiculo'.$val['id_vehiculo'].'" class="valor_vale">';
 								for($i=0;$i<count($cont_valor_nominal2);$i++) {
-									echo '<option value="'.$val['id_vehiculo'].'**'.$id_requisicion_vale[$i].'**'.number_format($cont_valor_nominal2[$i],2,'.',',').'">'.number_format($cont_valor_nominal2[$i],2,'.',',').'</option>';
+									echo '<option value="'.$val['id_vehiculo'].'**'.$id_requisicion_vale[$i].'**'.number_format($cont_valor_nominal2[$i],2,'.',',').'**'.$id_fuente_fondo.'">'.number_format($cont_valor_nominal2[$i],2,'.',',').'</option>';
 								}
 								echo '</select>';
 							}

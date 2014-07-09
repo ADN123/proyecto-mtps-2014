@@ -110,7 +110,7 @@ class Vales extends CI_Controller
 	*/
 	function ingreso_requisicion($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
 		$url='vales/requicision';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
@@ -151,7 +151,7 @@ class Vales extends CI_Controller
 			pantalla($url,$data);	
 		}
 		else {
-			echo 'No tiene permisos para acceder';
+			echo 'No tiene permisos para acceder ';
 		}
 	}
 	
@@ -572,7 +572,7 @@ class Vales extends CI_Controller
 
 	function ingreso_consumo($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
 		
 		if($data['id_permiso']!=NULL) {
 			$data['fuente']=$this->vales_model->consultar_fuente_fondo();
@@ -596,7 +596,7 @@ class Vales extends CI_Controller
 	*/
 	function vehiculos_consumo($id_gasolinera = NULL, $fecha_factura_dia = NULL, $fecha_factura_mes = NULL, $fecha_factura_anio = NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
 		
 		if($data['id_permiso']!=NULL) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
@@ -609,7 +609,7 @@ class Vales extends CI_Controller
 					break;
 				case 3:
 				case 4:
-					if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66)  {
+					if(!$this->vales_model->es_san_salvador($id_seccion['id_seccion'])) {
 						$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura);
 					}
 					else {
@@ -634,7 +634,7 @@ class Vales extends CI_Controller
 	*/
 	function guardar_consumo()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),82); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
@@ -680,6 +680,7 @@ class Vales extends CI_Controller
 				$id_veh=$val[0];
 				$id_requisicion_vale=$val[1];
 				$valor_vale=$val[2];
+				$tipo_vehiculo=$val[3];
 				
 				if($tip_gas[$i]!="" && $cantidad_consumo[$i]!="") {
 					$formuInfo = array(
@@ -691,6 +692,7 @@ class Vales extends CI_Controller
 						'cantidad'=>$cantidad_consumo[$i],
 						'id_gasolinera'=>$id_gasolinera,
 						'recibido'=>1,
+						'tipo_vehiculo'=>$tipo_vehiculo,
 						'id_seccion'=>$id_seccion['id_seccion']
 					);
 					$this->vales_model->buscar_requisicion_vale($formuInfo);

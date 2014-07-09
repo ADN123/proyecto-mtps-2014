@@ -159,6 +159,16 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			return false;
 		}
 	}
+	
+	public function es_san_salvador($id_seccion)
+	{	
+		$secciones=array(52,53,54,55,56,57,58,59,60,61,64,65,66);
+		if(in_array($id_seccion,$secciones)){
+			return false;
+		}else{
+			return true;
+		}
+	}
 
 	function consultar_requisiciones($id_seccion=NULL, $estado=NULL)
 	{		
@@ -436,7 +446,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					WHERE tcm_requisicion_vale.cantidad_restante>0 AND ".$where." 
 					GROUP BY tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_fuente_fondo.nombre_fuente_fondo, marca, tcm_vehiculo_modelo.modelo, tcm_vale.valor_nominal
 					ORDER BY tcm_vehiculo.placa DESC";*/
-		$sentencia="SELECT tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_fuente_fondo.nombre_fuente_fondo, tcm_vehiculo_marca.nombre as marca, tcm_vehiculo_modelo.modelo, CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR) AS id_requisicion_vale, CAST(GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2, CAST(GROUP_CONCAT(DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
+		$sentencia="SELECT tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_vehiculo.id_fuente_fondo, tcm_fuente_fondo.nombre_fuente_fondo, tcm_vehiculo_marca.nombre as marca, tcm_vehiculo_modelo.modelo, CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR) AS id_requisicion_vale, CAST(GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2, CAST(GROUP_CONCAT(DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
 					FROM tcm_vehiculo
 					INNER JOIN tcm_req_veh ON tcm_req_veh.id_vehiculo = tcm_vehiculo.id_vehiculo
 					INNER JOIN tcm_requisicion ON tcm_req_veh.id_requisicion = tcm_requisicion.id_requisicion
@@ -446,7 +456,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					INNER JOIN tcm_vehiculo_modelo ON tcm_vehiculo.id_modelo = tcm_vehiculo_modelo.id_vehiculo_modelo
 					INNER JOIN tcm_fuente_fondo ON tcm_vehiculo.id_fuente_fondo = tcm_fuente_fondo.id_fuente_fondo
 					WHERE tcm_requisicion_vale.cantidad_restante>0 AND ".$where." 
-					GROUP BY tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_fuente_fondo.nombre_fuente_fondo, marca, tcm_vehiculo_modelo.modelo
+					GROUP BY tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_vehiculo.id_fuente_fondo, tcm_fuente_fondo.nombre_fuente_fondo, marca, tcm_vehiculo_modelo.modelo
 					ORDER BY tcm_vehiculo.placa DESC";
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();	
@@ -519,11 +529,18 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 	function buscar_requisicion_vale($formuInfo)
 	{
 		extract($formuInfo);
-		$sentencia="SELECT tcm_requisicion_vale.id_requisicion_vale, (tcm_requisicion_vale.cantidad_entregado-tcm_requisicion_vale.cantidad_restante+1) AS inicial, tcm_requisicion_vale.cantidad_restante
+		
+		$where='';
+		if(!$this->es_san_salvador($id_seccion))
+			$where="AND id_seccion=".$id_seccion; 
+		else
+			$where="AND id_seccion<>52 AND id_seccion<>53 AND id_seccion<>54 AND id_seccion<>55 AND id_seccion<>56 AND id_seccion<>57 AND id_seccion<>58 AND id_seccion<>59 AND id_seccion<>60 AND id_seccion<>61 AND id_seccion<>64 AND id_seccion<>65 AND id_seccion<>66";
+		
+		$sentencia="SELECT tcm_requisicion_vale.id_requisicion_vale, (tcm_requisicion_vale.cantidad_entregado-tcm_requisicion_vale.cantidad_restante+tcm_requisicion_vale.numero_inicial) AS inicial, tcm_requisicion_vale.cantidad_restante
 					FROM tcm_requisicion
 					INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
 					INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
-					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera." AND id_seccion=".$id_seccion." AND tcm_vale.fuente_fondo=".$fuente_fondo;
+					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera." AND tcm_vale.tipo_vehiculo=".$tipo_vehiculo." ".$where;
 		$query=$this->db->query($sentencia);
 		$res=(array)$query->result_array();
 		foreach($res as $r) {
