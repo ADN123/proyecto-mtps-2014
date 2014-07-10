@@ -3,7 +3,7 @@
 	echo '<span style="margin-left: 15px; float: left;">Cantidad de vales disponibles:</span><br><ul>';
 	foreach($vales as $val) { 
 		$band=false;
-		echo '<li style="text-align: left;">'.$val[nombre_fuente_fondo].': <strong>'.$val[total].'</strong> vale(s) <input type="text" class="cantidad_vales" name="total_vales'.$val[id_fuente_fondo].'" id="total_vales'.$val[id_fuente_fondo].'"  value="'.$val[total].'"></li>';
+		echo '<li style="text-align: left;">'.$val[nombre_fuente_fondo].': <strong>'.$val[total].'</strong> vale(s) disponible(s) <span></span> <input type="text" class="cantidad_vales" name="total_vales'.$val[id_fuente_fondo].'" id="total_vales'.$val[id_fuente_fondo].'"  value="'.$val[total].'" data-value="'.$val[total].'"></li>';
 	}
 	if($band)
 		echo '<li style="text-align: left;"><strong>(No hay vales disponibles)</strong></li>';
@@ -45,7 +45,7 @@
 				$id_fuente_fondo=$val['id_fuente_fondo'];
 		?>
                 <tr> 
-                    <td align="left" title="<?php echo $val['marca'] ?> <?php echo $val['modelo'] ?> (<?php echo $val['nombre_fuente_fondo'] ?>)">
+                    <td class="veh" align="left" title="<?php echo $val['marca'] ?> <?php echo $val['modelo'] ?> (<?php echo $val['nombre_fuente_fondo'] ?>)">
 						<?php echo $val['placa'] ?>
                         <?php 
 							if(count($cont_valor_nominal)==1)
@@ -107,7 +107,11 @@
 		var $abu=$(this).parents('li'); 
 		var $strong=$abu.find("strong");
 		var cant=$(this).val();
-		if(cant=="" || cant==null)
+		
+		if(Number(cant)<0)
+			$strong.html("0");
+		
+		if(cant=="" || cant==null || Number(cant)<0)
 			cant=0;
 		$strong.html(cant);
 	});
@@ -165,11 +169,30 @@
 		$(".tsub").html("<strong>$ "+parseFloat(su).toFixed(2)+" US</strong>");	
 		$("#total").val(parseFloat(su).toFixed(2));	
 		
+		if($abu.find(".veh").find("input").length!=0)
+			var id_fondo=Number($abu.find(".veh").find("input").val().split('**')[3]);
+		else
+			var id_fondo=Number($abu.find(".pre").find("select").val().split('**')[3]);
+		
 		var su=0;
+		var todos=0;
 		$(".cantidad").each(function (index) {
-			su=su+Number($(this).val());			
+			su=su+Number($(this).val());
+				
+			var $abu2=$(this).parents('tr'); 
+			
+			if($abu2.find(".veh").find("input").length!=0)
+				var id_fondo2=Number($abu2.find(".veh").find("input").val().split('**')[3]);
+			else
+				var id_fondo2=Number($abu2.find(".pre").find("select").val().split('**')[3]);
+			
+			if(id_fondo2==id_fondo)
+				todos=todos+Number($(this).val());
 		});
-		$(".tval").html("<strong>"+su+"</strong>");			
+		todos=Number($("#total_vales"+id_fondo).data("value"))-todos;
+		$("#total_vales"+id_fondo).val(todos);
+		$("#total_vales"+id_fondo).keyup();
+		$(".tval").html("<strong>"+su+"</strong>");	
 	});
 	$(".tipo_gas").change(function(){
 
