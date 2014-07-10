@@ -12,7 +12,7 @@
     <h2>Consumo de Vales</h2>
 </section>
 
-<form name="form_mision" method="post" id="form_mision" action="<?php //echo base_url()?>#">
+<form name="filtro" method="post" id="filtro" action="<?php //echo base_url()?>#">
 
             <p> 
                 <label for="start" >Fecha Inicio:</label><input id="start" style="width: 200px" tabindex="1"/>
@@ -78,6 +78,10 @@
 <script language="javascript" >
 
     $("#Filtrar").click(function(){
+
+            var formu = $('#filtro').serializeArray();
+            console.log(formu);
+
         reporte();
         });
 

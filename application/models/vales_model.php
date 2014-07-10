@@ -1,4 +1,4 @@
-	<?php
+<?php
 
 class Vales_model extends CI_Model {
     //constructor de la clase
