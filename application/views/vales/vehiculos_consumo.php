@@ -3,7 +3,7 @@
 	echo '<span style="margin-left: 15px; float: left;">Cantidad de vales disponibles:</span><br><ul>';
 	foreach($vales as $val) { 
 		$band=false;
-		echo '<li style="text-align: left;">'.$val[nombre_fuente_fondo].': <strong>'.$val[total].'</strong> vale(s) disponible(s) <span></span> <input type="text" class="cantidad_vales" name="total_vales'.$val[id_fuente_fondo].'" id="total_vales'.$val[id_fuente_fondo].'"  value="'.$val[total].'" data-value="'.$val[total].'"></li>';
+		echo '<li style="text-align: left;">Fondo '.$val[nombre_fuente_fondo].': <strong>'.$val[total].'</strong> vale(s) disponible(s) <span></span> <input type="hidden" class="cantidad_vales" name="total_vales'.$val[id_fuente_fondo].'" id="total_vales'.$val[id_fuente_fondo].'"  value="'.$val[total].'" data-value="'.$val[total].'"></li>';
 	}
 	if($band)
 		echo '<li style="text-align: left;"><strong>(No hay vales disponibles)</strong></li>';
@@ -37,7 +37,7 @@
         </th>
     </thead>
     <tbody id="content_table">
-		 <?php
+		<?php
             foreach($vehiculos as $val) { 
 				$cont_valor_nominal=explode(",",$val['valor_nominal']);
 				$cont_valor_nominal2=explode(",",$val['valor_nominal2']);
@@ -62,7 +62,17 @@
                             <option value="3">Diesel</option>
                         </select>
                     </td>
-                    <td><input class="cantidad" type="text" name="cantidad_consumo[]" id="cantidad_consumo<?php echo $val['id_vehiculo'] ?>" size="2" maxlength="2"/></td>
+                    <td>
+                    	<input class="cantidad" type="text" name="cantidad_consumo[]" id="cantidad_consumo<?php echo $val['id_vehiculo'] ?>" size="2" maxlength="2"/>
+                    	<script>
+							$("#cantidad_consumo<?php echo $val['id_vehiculo'] ?>").validacion({
+								numMin:0,
+								numMax:15,
+								ent: true,
+								req: false
+							});
+						</script>
+                    </td>
                     <td align="right" class="pre">
 						<?php 
 							if(count($cont_valor_nominal)==1)
@@ -93,12 +103,12 @@
 		autoBind: false,
 		filter: "contains"
 	});
-	$(".cantidad").validacion({
+	/*$(".cantidad").validacion({
 		numMin:0,
 		numMax:15,
 		ent: true,
 		req: false
-	});
+	});*/
 	$(".cantidad_vales").validacion({
 		numMin:-1,
 		ent: true
@@ -106,10 +116,13 @@
 	$(".cantidad_vales").keyup(function(){
 		var $abu=$(this).parents('li'); 
 		var $strong=$abu.find("strong");
+		var $span=$abu.find("span");
 		var cant=$(this).val();
 		
 		if(Number(cant)<0)
-			$strong.html("0");
+			$span.html(" - <i style='color:#F00;'>Se ha excedido "+(cant*(-1))+" vale(s)!</i>");
+		else
+			$span.html("");
 		
 		if(cant=="" || cant==null || Number(cant)<0)
 			cant=0;

@@ -633,7 +633,7 @@ class Vales extends CI_Controller
 	*	Hecha por: Leonel
 	*	Modificada por: Leonel
 	*	Última Modificación: 07/07/2014
-	*	Observaciones: Ninguna.
+	*	Observaciones: Falta la creacion de la tabla "configuraciones" para saber si los vales se pueden "mezclar".
 	*/
 	function guardar_consumo()
 	{
@@ -678,13 +678,16 @@ class Vales extends CI_Controller
 			);
 			$id_consumo=$this->vales_model->guardar_factura($formuInfo);
 			
+			/*$bandera=$this->vales_model->mezclar_tipo_vehiculo();*/
+			$bandera=1;
+			
 			for($i=0;$i<count($id_vehiculo);$i++){
 				$val=explode("**",$id_vehiculo[$i]);
 				$id_veh=$val[0];
 				$id_requisicion_vale=$val[1];
 				$valor_vale=$val[2];
 				$tipo_vehiculo=$val[3];
-				
+
 				if($tip_gas[$i]!="" && $cantidad_consumo[$i]!="") {
 					$formuInfo = array(
 						'id_consumo'=>$id_consumo,
@@ -696,6 +699,7 @@ class Vales extends CI_Controller
 						'id_gasolinera'=>$id_gasolinera,
 						'recibido'=>1,
 						'tipo_vehiculo'=>$tipo_vehiculo,
+						'bandera'=>$bandera,
 						'id_seccion'=>$id_seccion['id_seccion']
 					);
 					$this->vales_model->buscar_requisicion_vale($formuInfo);
