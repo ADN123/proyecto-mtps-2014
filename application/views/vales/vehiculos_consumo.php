@@ -1,3 +1,14 @@
+<?php
+	$band=true;
+	echo '<span style="margin-left: 15px; float: left;">Cantidad de vales disponibles:</span><br><ul>';
+	foreach($vales as $val) { 
+		$band=false;
+		echo '<li style="text-align: left;">'.$val[nombre_fuente_fondo].': <strong>'.$val[total].'</strong> vale(s) <input type="text" class="cantidad_vales" name="total_vales'.$val[id_fuente_fondo].'" id="total_vales'.$val[id_fuente_fondo].'"  value="'.$val[total].'"></li>';
+	}
+	if($band)
+		echo '<li style="text-align: left;"><strong>(No hay vales disponibles)</strong></li>';
+	echo '</ul>';
+?>
 <table cellspacing="0" align="center" class="table_design" style="width: 98%; min-width: 770px;">
     <thead>
         <th width="90">
@@ -87,6 +98,18 @@
 		numMax:15,
 		ent: true,
 		req: false
+	});
+	$(".cantidad_vales").validacion({
+		numMin:-1,
+		ent: true
+	});
+	$(".cantidad_vales").keyup(function(){
+		var $abu=$(this).parents('li'); 
+		var $strong=$abu.find("strong");
+		var cant=$(this).val();
+		if(cant=="" || cant==null)
+			cant=0;
+		$strong.html(cant);
 	});
 	/*$(".actividad").validacion({
 		lonMin: 5,

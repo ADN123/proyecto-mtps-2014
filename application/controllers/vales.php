@@ -606,14 +606,17 @@ class Vales extends CI_Controller
 					break;
 				case 2:
 					$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura);
+					$data['vales']=$this->vales_model->consultar_vales_seccion($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura);
 					break;
 				case 3:
 				case 4:
 					if(!$this->vales_model->es_san_salvador($id_seccion['id_seccion'])) {
 						$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura);
+						$data['vales']=$this->vales_model->consultar_vales_seccion($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura);
 					}
 					else {
 						$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion(NULL,$id_gasolinera,$fecha_factura);
+						$data['vales']=$this->vales_model->consultar_vales_seccion(NULL,$id_gasolinera,$fecha_factura);
 					}
 					break;
 			}
