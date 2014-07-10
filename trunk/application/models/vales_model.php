@@ -561,11 +561,14 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		else
 			$where="AND id_seccion<>52 AND id_seccion<>53 AND id_seccion<>54 AND id_seccion<>55 AND id_seccion<>56 AND id_seccion<>57 AND id_seccion<>58 AND id_seccion<>59 AND id_seccion<>60 AND id_seccion<>61 AND id_seccion<>64 AND id_seccion<>65 AND id_seccion<>66";
 		
+		if($bandera==1)
+			$where.=" AND tcm_vale.tipo_vehiculo=".$tipo_vehiculo;
+			
 		$sentencia="SELECT tcm_requisicion_vale.id_requisicion_vale, (tcm_requisicion_vale.cantidad_entregado-tcm_requisicion_vale.cantidad_restante+tcm_requisicion_vale.numero_inicial) AS inicial, tcm_requisicion_vale.cantidad_restante
 					FROM tcm_requisicion
 					INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
 					INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
-					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera." AND tcm_vale.tipo_vehiculo=".$tipo_vehiculo." ".$where;
+					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera." ".$where;
 		$query=$this->db->query($sentencia);
 		$res=(array)$query->result_array();
 		foreach($res as $r) {
