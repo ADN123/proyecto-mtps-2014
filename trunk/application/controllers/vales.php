@@ -332,9 +332,12 @@ class Vales extends CI_Controller
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
-			$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
-			$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);
-			$this->vales_model->guardar_visto_bueno($_POST);
+				if ($_POST['resp']!=0) {
+				$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
+				$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);				
+
+				}
+				$this->vales_model->guardar_visto_bueno($_POST);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/autorizacion/'.$tr);		
@@ -806,9 +809,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 				case 2://seccion
 					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
 					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
-					if(sizeof($data['vehiculos'])==0) {
-						$url.='Error';	
-					}
+					
 					break;
 				case 3://administrador
 					$data['oficinas']=$this->vales_model->consultar_oficinas();
@@ -819,9 +820,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
 						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
 						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
-						if(sizeof($data['vehiculos'])==0){
-							$url.='error';	
-						}
+					
 					}
 				
 					break;
@@ -836,7 +835,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}
 		
 	}
-	function consumo_json()
+	function consumo_json($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL)
 	{
 		$data=$this->vales_model->consumo_seccion_fuente();
 		echo json_encode($data);	

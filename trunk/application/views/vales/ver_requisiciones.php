@@ -34,6 +34,9 @@
     <?php
 
     switch ($fila['estado']) {
+        case 0:
+            $str="Denegado";
+            break;
         case 1:
                  $str="Creada";
             break;
