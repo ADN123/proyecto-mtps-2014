@@ -19,7 +19,7 @@ class Sessiones extends CI_Controller {
 	*/
 	function index(){
 	
-		$in=$this->verificar();
+		$in=$this->verificar(1);
 		if($in<=3){
 			$this->load->view('encabezadoLogin.php'); 
 			$this->load->view('login.php'); 
@@ -92,19 +92,24 @@ class Sessiones extends CI_Controller {
 		
 	   	redirect('index.php/sessiones/');
 	}
-	
-	function verificar(){
+	function verificar($get=NULL){
 		$in;
 				 	
 		  if(!isset($_COOKIE['contador']))
 		  { 		// Caduca en 15 minutos y se ajusta a uno la primera vez
 
-			 setcookie('contador', 1, time() + 15* 60); 
-//			 sleep (2); //es nesesario pausar debido a que se tiene que crear la cookie
+			 
+			 if($get==NULL)  {
+			 	setcookie('contador', 1, time() + 15* 60); 
+			 }
+
 			 	return 1;
 		  }else{ 
 		  // si existe cookie procede a contar  
-			setcookie('contador', $_COOKIE['contador'] + 1, time() + 15 * 60); 
+			if($get==NULL) {
+				setcookie('contador', $_COOKIE['contador'] + 1, time() + 15 * 60); 
+			}
+
 			 sleep (1); //es nesesario pausar debido a que se tiene que crear la cookie
 				return $_COOKIE['contador'];
 		  }//fin else de intentos
