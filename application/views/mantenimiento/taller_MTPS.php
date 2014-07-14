@@ -122,12 +122,16 @@ function cargar(id)
 		success: function(data) {
 			console.log(data);
 			json = data;
-			var cont='';
-			cont=cont+'<p><xmp><label>Modelo: </label><strong>'+json[0]['modelo']+'</strong>\t<label>Motorista asignado: </label><strong>'+json[0]['nombre']+'</strong></xmp></p>';
-			cont=cont+'<p><label>Marca: </label><strong>'+json[0]['marca']+'</strong>\t<label>Oficina en donde está asignado: </label><strong>'+json[0]['seccion']+'</strong></p>';
-			cont=cont+'<p><label>Clase: </label><strong>'+json[0]['clase']+'</strong>\t<label>Kilometraje Actual: </label><strong>'+json[0]['kilometraje']+'</strong></p>';
-			cont=cont+'<p><label>Clase: </label><strong>'+json[0]['anio']+'</strong>\t<label>Placa: </label><strong>'+json[0]['placa']+'</strong></p>';
-			cont=cont+'';
+			var cont="<table align='center'><tr>";
+			cont=cont+"<td><p><label>Modelo: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>"+json[0]['modelo']+"</strong></p></td><td width='600px'><p><label>Motorista asignado: </label>&nbsp;&nbsp;<strong>"+json[0].nombre.capitalize()+"</strong></p></td>";
+			cont=cont+'</tr><tr>'
+			cont=cont+'<td><p><label>Marca: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>'+json[0]['marca']+'</strong></p></td> <td><p><label>Oficina en donde está asignado: </label>&nbsp;<strong>'+json[0]['seccion']+'</strong></p></td>';
+			cont=cont+'</tr><tr>'
+			cont=cont+'<td><p><label>Clase: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>'+json[0]['clase']+'</strong></p></td><td><p><label>Kilometraje Actual: </label>&nbsp;<strong>'+json[0]['kilometraje']+' km</strong></p></td>';
+			cont=cont+'</tr><tr>'
+			cont=cont+'<td><p><label>Año: </label>&nbsp;&nbsp;&nbsp;<strong>'+json[0]['anio']+'</strong></p></td><td><p><label>Placa: </label>&nbsp;<strong>'+json[0]['placa']+'</strong></p></td>';
+			cont=cont+'</tr>'
+			cont=cont+'</table>';
 			$('#info_vehiculo').html(cont);
 		},
 		error:function(data) {
