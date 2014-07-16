@@ -44,7 +44,7 @@
 <script language="javascript" >
 	function dialogo(id)
 	{
-		$('#contenido-ventana').load(base_url()+'index.php/transporte/cargar_datos_solicitud/'+id);
+		$('#contenido-ventana').load(base_url()+'index.php/vehiculo/dialogo_vehiculo_info/'+id);
 		return false;
 	}
 

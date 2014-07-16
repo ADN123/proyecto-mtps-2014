@@ -254,7 +254,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Función para cargar datos de solicitudes
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 03/07/2014
+	*	Última Modificación: 16/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function cargar_datos_solicitud($id)
@@ -276,7 +276,7 @@ class Transporte extends CI_Controller
 					$salida=$row->salida;
 				}
 				
-				if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66)//Oficinas departamentales//
+				if(($data['id_permiso']==2 || $data['id_permiso']==4) && ($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66))//Oficinas departamentales//
 				{
 					$vehiculos_disponibles=$this->transporte_model->vehiculos_disponibles($fecha,$entrada,$salida,$id_seccion['id_seccion']);
 					/*aquí se comparan la fecha, hora de entrada y de salida de la solicitud actual con las que ya tiene vehículo asignado, para mostrar únicamente los posibles vehiculos a utilizar */
