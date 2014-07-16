@@ -1,10 +1,10 @@
-<form id='form' action="<?php echo base_url()?>index.php/vales/insertar_asignacion" method='post'>
+<form id='form' action="<?php echo base_url()?>index.php/vales/insertar_herramienta" method='post'>
 
     <fieldset>      
         <legend align='left'>Información general</legend>    
           <p> 
                 <label for="id_fuente_fondo" id="lid_fuente_fondo">Fuente de Fondo </label>
-                <select class="select" style="width:200px;" tabindex="1" id="id_fuente_fondo" name="id_fuente_fondo" >
+                <select class="select" style="width:200px;" tabindex="1" id="id_fuente_fondo" name="id_fuente_fondo"  >
                     <?php
                         foreach($fuente as $val) {
                     ?>
@@ -16,7 +16,7 @@
             </p>        
             <p>
                 <label for="id_seccion" id="lservicio_de">Sección</label>
-                <select class="select" style="width:300px;" tabindex="1" id="id_seccion" name="id_seccion">
+                <select class="select" style="width:300px;" tabindex="1" id="id_seccion" name="id_seccion" >
                         <?php
                             foreach($oficinas as $val) {
                         ?>
@@ -30,8 +30,15 @@
 <fieldset>      
         <legend align='left'>Información adicional</legend>
     
-        <label for="asignar" id="lasignar" class="tam-2">Cantidad</label>
-        <input class="tam-1" id='asignar' tabindex='3' name='cantidad' type="text"  value="<?php echo $cantidad?>"/>
+        <p>
+            <label for="nombre" id="lnombre" class="tam-1" >Nombre</label>
+            <input class="tam-2" id='nombre' tabindex='3' name='nombre' type="text" />
+        </p>
+        <p>
+
+            <label for="descripcion" id="ldescripcion" class="label_textarea">Descripción</label>
+            <textarea class="tam-3" id='descripcion' tabindex='4' name='descripcion' ></textarea>
+        </p>
     
 
  </fieldset>
@@ -43,9 +50,11 @@
     </p>
 </form>
 <script>
-	
-		$("#asignar").validacion({
-			ent: true,
-			numMin: 0
-		});
+    $("#nombre").validacion({
+        lonMin: 5
+    });
+    $("#descripcion").validacion({
+         lonMin: 5,
+         req: false
+        });
 </script>

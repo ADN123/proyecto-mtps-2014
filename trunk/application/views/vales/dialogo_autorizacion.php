@@ -9,7 +9,7 @@
                     $nombre=ucwords($datos->nombre);
                     $seccion=ucwords($datos->seccion);
                     $fecha=$datos->fecha;
-                    $cantidad=$datos->cantidad;
+                    $cantidad=$datos->cantidad_solicitada;;
                     $justificacion=$datos->justificacion;
                     $id_requisicion=$datos->id_requisicion;
                     $refuerzo=$datos->refuerzo;

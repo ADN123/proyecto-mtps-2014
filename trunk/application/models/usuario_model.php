@@ -398,6 +398,8 @@ class Usuario_model extends CI_Model {
 					INNER JOIN sir_empleado ON org_usuario.nr = sir_empleado.nr 
 					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado 
 					LEFT JOIN org_usuario_rol ON org_usuario_rol.id_usuario = org_usuario.id_usuario WHERE org_usuario.estado=1 ".$where_seccion.$where_usuario;
+			
+
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();
 	}

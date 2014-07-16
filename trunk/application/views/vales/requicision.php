@@ -46,6 +46,16 @@ var ban= $(k).prop('checked');
                     </span>
                 </a>
             </li>
+            <li>
+                <a href="#step-3">
+                    <span class="stepNumber">3<small>do</small></span>
+                    <span class="stepDesc">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
+                        <small>&nbsp;Otros</small>
+                    </span>
+                </a>
+            </li>
+            
         </ul>                 
 
         <div id="step-1">	
@@ -116,6 +126,14 @@ var ban= $(k).prop('checked');
             	
             </p>
         </div>
+        <div id="step-3">   
+            <h2 class="StepTitle">Seleccione las herramientas u otro tipo de articulo  en el que se aplicarán los vales</h2>
+
+                 Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)" >
+            <p ><div id="divHerramientas"></div>
+
+        </div>
+
     </div>
 </form>
 

@@ -61,10 +61,10 @@
                    Seccion
                 </th>
                 <th>
-                    Consumido
+                    Asignado
                 </th>
                 <th>
-                    Asignado
+                    Consumido
                 </th>            
 
             </thead>
