@@ -34,7 +34,7 @@
 
 <div id="ventana" style="height:600px">
     <div id='signup-header'>
-        <h2>Asignación de Vehículo y Motorista para Misión Oficial</h2>
+        <h2>Información del Vehículo</h2>
         <a class="modal_close"></a>
     </div>
     <div id='contenido-ventana'>
