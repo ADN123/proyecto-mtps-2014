@@ -167,7 +167,7 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
-	*	Nombre: modifica_vehiculo
+	*	Nombre: dialogo_vehiculo_info
 	*	Objetivo: Modificar los datos de un vehículo en la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
@@ -178,7 +178,7 @@ class Vehiculo extends CI_Controller
 	function dialogo_vehiculo_info($id_vehiculo)
 	{
 		$data['datos']=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo);
-		ir_a('index.php/mantenimiento/dialogo_vehiculo_info/'.$data);
+		$this->load->view('mantenimiento/dialogo_vehiculo_info',$data);
 	}
 	
 	/*
