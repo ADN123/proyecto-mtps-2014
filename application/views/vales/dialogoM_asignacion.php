@@ -1,7 +1,7 @@
 <form id='form' action="<?php echo base_url()?>index.php/vales/modificar_asignacion" method='post'>
 
     <fieldset>      
-        <legend align='left'>Informacion de la General</legend>
+        <legend align='left'>Información de la General</legend>
             <?php 
 
                 foreach($d as $datos)
@@ -23,7 +23,7 @@
     <input type='hidden' name='id_seccion' value="<?php echo $id_seccion?>" />
     <input type='hidden' name='id_fuente_fondo' value="<?php echo $id_fuente_fondo?>" />    	
 <fieldset>      
-        <legend align='left'>Informacion adicional</legend>
+        <legend align='left'>Información adicional</legend>
     
         <label for="asignar" id="lasignar" class="tam-2">Cantidad</label>
         <input class="tam-1" id='asignar' tabindex='2' name='cantidad' type="text"  value="<?php echo $cantidad?>"/>

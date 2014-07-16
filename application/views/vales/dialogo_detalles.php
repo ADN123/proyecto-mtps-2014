@@ -5,21 +5,27 @@
     <fieldset>      
         <legend align='left'>Información de la Solicitud</legend>
             <?php 
+           // echo"<pre>"; print_r($e); echo "</pre>";
                 foreach($d as $datos)
                 {
                     $nombre=ucwords($datos->nombre);
                     $seccion=ucwords($datos->seccion);
                     $fecha=$datos->fecha;
-                    $cantidad=$datos->cantidad;
+                    $cantidad=$datos->cantidad_solicitada;
                     $justificacion=$datos->justificacion;
                     $id_requisicion=$datos->id_requisicion;
-                    $cantidadE =$datos->entregado;
+                    $cantidadE =$datos->cantidad_entregado;
                     $fuente_fondo=$datos->fuente_fondo;
                     $fechaVB =$datos->fecha_visto_bueno;
                     $visto_bueno =ucwords($datos->visto_bueno);
                     $estado =$datos->estado;
                     $fecha_autorizado =$datos->fecha_autorizado;
                     $autorizado =ucwords($datos->autorizado);
+                    $fecha_entrega =$datos->fecha_entregado;
+                    $entrego =ucwords($datos->entrego);
+                    $correlativo= $datos->correlativo;
+                    
+
                 }
             
                 echo "
@@ -48,13 +54,41 @@
     echo "
     
             <fieldset>      
-                <legend align='left'>Autorización</legend>
-                Autorizado por: <strong>".$autorizado."</strong> <br>
-                Fecha y Hora de autorización: <strong>".$fecha_autorizado."</strong> <br>          
+                <legend align='left'>Entrega</legend>
+                Entregado por: <strong>".$entrego."</strong> <br>
+                Fecha y Hora de autorización: <strong>".$fecha_entrega."</strong> <br>  
+                Correlativo:    <strong>".$correlativo."</strong>
             </fieldset>
             <br />
-            ";
-    }
+            "; ?>
+
+    <fieldset>      
+        <legend align='left'>Vales Entregados</legend>
+        
+        <table cellspacing='0' align='center' class='table_design'>
+            <thead>
+                <th>
+                    Numero inicial
+                </th>
+                <th>
+                    Numero final
+                </th>
+            </thead>
+            <tbody>
+            <?php
+
+                foreach($e as $r)
+                {
+                    echo "<tr><td align='center'>".$r["inicial"]."</td>";
+                    echo "<td align='center'>".$r["final"]."</td></tr>";
+                }
+                   ?>
+        
+            </tbody>
+        </table>
+    </fieldset>
+   <?php }
+
     ?>
         
     

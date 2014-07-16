@@ -2,6 +2,7 @@
 
 class Vales extends CI_Controller
 {
+	public $INGRESO=3;
 
     
     function Vales()
@@ -110,9 +111,10 @@ class Vales extends CI_Controller
 	*/
 	function ingreso_requisicion($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81); /*Verificacion de permiso para crear requisiciones*/
 		$url='vales/requicision';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
@@ -146,8 +148,8 @@ class Vales extends CI_Controller
 					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
-			/*echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
-			print_r($data['oficinas']);  */
+		//	echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
+			//print_r($data['oficinas']);  
 			pantalla($url,$data);	
 		}
 		else {
@@ -183,9 +185,21 @@ class Vales extends CI_Controller
 		$id_requisicion=$this->vales_model->guardar_requisicion($_POST, $id_usuario, $id_empleado_solicitante);
 
 		$vehiculos=$this->input->post('values');
+
+		if (isset($_POST['values'])) {			
 			for($i=0;$i<count($vehiculos);$i++) {
-				$this->vales_model->guardar_req_veh($vehiculos[$i], $id_requisicion);
+				$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
 			}
+		}
+		
+		$vehiculos=$this->input->post('values2');
+		
+		if (isset($_POST['values2'])) {			
+			for($i=0;$i<count($vehiculos);$i++) {
+				$this->vales_model->guardar_req_veh(NULL,$vehiculos[$i], $id_requisicion);
+			}
+		}
+
 		$this->db->trans_complete();
 		
 		$tr=($this->db->trans_status()===FALSE)?0:1;
@@ -207,6 +221,20 @@ class Vales extends CI_Controller
 		$this->load->view("vales/vehiculos",$data);		
 	}
 	
+		/*
+	*	Nombre: Otros
+	*	Objetivo: Cargar por ajax herramientas u otros articulos consumidores de combustible de una seccion y fuente de fonodo segun selccione el usuario 
+	*	en la pantalla de ingrese de requisicion de combustible 
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 21/05/2014
+	*	Observaciones: Ninguna.
+	*/
+	function CargarOtros($id_seccion=NULL, $id_fuente_fondo = NULL)
+	{
+		$data['otros']=$this->vales_model->otros($id_seccion, $id_fuente_fondo);
+		$this->load->view("vales/otros",$data);		
+	}
 	
 /*
 	*	Nombre: consultar_consumo
@@ -332,12 +360,8 @@ class Vales extends CI_Controller
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
-				if ($_POST['resp']!=0) {
-				$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
-				$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);				
 
-				}
-				$this->vales_model->guardar_visto_bueno($_POST);
+			$this->vales_model->guardar_visto_bueno($_POST);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/autorizacion/'.$tr);		
@@ -403,8 +427,10 @@ class Vales extends CI_Controller
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),89);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
+
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-			$datos['d']=$this->vales_model->info_requisicion($id);
+			$datos['e']=$this->vales_model->vales_entregados($id);
+			$datos['d']=$this->vales_model->info_requisicion($id);;
 			$datos['f']=$this->vales_model->info_requisicion_vehiculos($id);
 			$datos['id']=$id;
 			//echo "<pre>";	print_r($datos);echo "</pre>";
@@ -756,12 +782,15 @@ function entrega($estado_transaccion=NULL)
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			
-			$t=$this->vales_model->info_cantidad_entregar($id);
+			$t=$this->vales_model->info_correlativo();
+			//$datos['b']=$this->vales_model->info_requisicion($id);
 			$datos['c']=$t[0];
 			$datos['d']=$this->vales_model->info_requisicion($id);
-			$datos['e']=$this->vales_model->info_requisicion_vales($id);
+			$datos['e']=$this->vales_model->vales_a_entregar($id);
 			$datos['f']=$this->vales_model->info_requisicion_vehiculos($id);
 			$datos['id']=$id;
+
+
 			//echo "<pre>";	print_r($datos);echo "</pre>";
 			$this->load->view('vales/dialogo_entrega',$datos);
 		}
@@ -788,6 +817,15 @@ function entrega($estado_transaccion=NULL)
 			
 			$this->vales_model->guardar_entrega($_POST);
 
+
+				$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
+				$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);							
+			/*
+				$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
+				$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);				
+
+				*/
+
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/entrega/'.$tr);		
@@ -796,6 +834,20 @@ function entrega($estado_transaccion=NULL)
 			echo 'No tiene permisos para acceder';
 		}
 	}
+
+	function vales_a_entregar($id){
+				$this->vales_model->vales_a_entregar($id);
+
+	}
+
+		/*
+	*	Nombre: reporte_consumo
+	*	Objetivo: Mostrar un reporte personalizado al usuario
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 10/07/2014
+	*	Observaciones: Ninguna
+	*/
 
 		function reporte_consumo()
 	{
@@ -835,14 +887,221 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}
 		
 	}
+		/*
+	*	Nombre: consumo_json
+	*	Objetivo: Proporiciona los datos segun los parametros recibidos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 10/07/2014
+	*	Observaciones: Ninguna
+	*/
+
 	function consumo_json($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL)
 	{
 		$data=$this->vales_model->consumo_seccion_fuente();
 		echo json_encode($data);	
 	}
 
+	/*
+	*	Nombre: estado
+	*	Objetivo: Mostrar un informe de los vales disponibles 
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 10/07/2014
+	*	Observaciones: Ninguna
+	*/
+	function estado()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),91); /*Verificacion de permisos*/
+		$url='vales/estado';
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		
+
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+				case 2://seccion
+					$data['e']=$this->vales_model->vales_de_seccion($id_seccion['id_seccion']);					
+					$data['s']=FALSE;
+					$data['g']=FALSE;					
+					break;
+				case 3://administrador
+					$data['ne']=$this->vales_model->vales_sin_entregar();
+					$data['e']=$this->vales_model->vales_de_seccion();
+					$data['s']=TRUE;
+					$data['g']=TRUE;
+
+					break;
+				case 4: //departamental
+					$data['g']=FALSE;
+
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
+						$data['e']=$this->vales_model->vales_de_seccion($id_seccion['id_seccion']);
+						$data['s']=FALSE;
+					}else{// en san salvador
+						$data['e']=$this->vales_model->vales_san_salvador();
+						$data['s']=TRUE;
+					}				
+					break;
+			}
+			pantalla($url,$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+
+	}
+
+
+/*
+	*	Nombre: Herramientas de cada seccion
+	*	Objetivo: Permite modificar, crear o elimnar las herramientas
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 12/07/2014
+	*	Observaciones: Ninguna.
+	*/
+	function herramientas($estado_transaccion=NULL)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		//$data['id_permiso']=$permiso;
+		if($data['id_permiso']!=NULL) {
+		
+			$data['datos']=$this->vales_model->herramientas();
+			$data['estado_transaccion']=$estado_transaccion;
+			//print_r($data);
+			pantalla("vales/herramientas",$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}		
+	}
+	/*
+	*	Nombre: dialogoM_herramienta
+	*	Objetivo: 	Permite modificar las asignaciones
+	*	Hecha por: Jhonatan
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
+	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
+	*/
 	
 
+	
+	function dialogoM_herramienta($id_herramienta)
+	{
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+		if($data['id_permiso']!=NULL) {
+
+			$data['oficinas']=$this->vales_model->consultar_oficinas();
+			$data['fuente']=$this->vales_model->consultar_fuente_fondo();		
+			$data['d']=$this->vales_model->consultar_herramientas($id_herramienta);		
+			$this->load->view("vales/dialogoM_herramienta",$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}		
+	}
+	/*
+	*	Nombre: modificar_herramienta
+	*	Objetivo: 	modifica la herramienta en la base de datos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
+	*/
+
+
+	function modificar_herramienta()
+	{
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+		if($data['id_permiso']!=NULL) {
+		
+			$this->db->trans_start();
+		$this->vales_model->modificar_herramienta($_POST);
+			
+
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/herramientas/'.$tr);		
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}		
+	}
+
+	/*
+	*	Nombre: dialogoN_herramienta
+	*	Objetivo: 	Permite insertar una nueva asignación
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 07/07/2014
+	*/
+	
+
+	function dialogoN_herramienta()
+	{
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+		if($data['id_permiso']!=NULL) {
+		
+			$data['oficinas']=$this->vales_model->consultar_oficinas();
+			$data['fuente']=$this->vales_model->consultar_fuente_fondo();		
+			$this->load->view("vales/dialogoN_herramienta",$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}		
+	}
+	/*
+	*	Nombre: Insertar_asignacion
+	*	Objetivo: 	guarda la asiganacion en la base de datos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
+	*/
+
+	function insertar_herramienta()
+	{
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+		if($data['id_permiso']!=NULL) {
+		
+			$this->db->trans_start();
+			print_r($_POST);
+			$this->vales_model->insertar_herramientas($_POST);		
+
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/herramientas/'.$tr);		
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}		
+	}
+
+	/*
+	*	Nombre: eliminar_herramienta
+	*	Objetivo: 	eliminar la asiganacion en la base de datos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/07/2014
+	*/
+
+	function eliminar_herramienta($id_seccion, $id_fuente_fondo)
+	{
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+		if($data['id_permiso']!=NULL) {
+		
+			$this->db->trans_start();
+			$this->vales_model->eliminar_asignaciones($id_seccion, $id_fuente_fondo);		
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/herramientas/'.$tr);		
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}		
+	}
+
+	
 
 }
 
