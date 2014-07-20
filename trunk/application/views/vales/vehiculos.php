@@ -20,7 +20,7 @@
                             <td><?php echo $val['placa'] ?></td>
                             <td><?php echo $val['marca'] ?></td>
                             <td><?php echo $val['modelo'] ?></td>
-                            <td><input type="checkbox"  name="values[]"  value="<?php echo $val['id_vehiculo'] ?>"  onChange="marcados()" class="cheke"/> </td>
+                            <td><input type="checkbox"  name="values[]"  value="<?php echo $val['id_vehiculo'] ?>"  onChange="marcados()" class="cheke1"/> </td>
                         </tr>
                 <?php } ?> 
 

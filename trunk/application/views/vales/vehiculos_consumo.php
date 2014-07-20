@@ -57,8 +57,8 @@
                     <td>
                     	<select name="tip_gas[]" id="tip_gas<?php echo $val['id_vehiculo'] ?>" class="tipo_gas">
                         	<option value=""></option>
-                            <option value="1">Super</option>
-                            <option value="2">Regular</option>
+                        	<option value="2">Super</option>
+                            <option value="1">Regular</option>
                             <option value="3">Diesel</option>
                         </select>
                     </td>

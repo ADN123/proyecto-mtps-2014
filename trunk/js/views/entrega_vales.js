@@ -47,6 +47,10 @@ function marcados() {
     $("input[name='values[]']:checked").each(function (){   //capturando los chekeados
         i++;
     }); 
+    $("input[name='values2[]']:checked").each(function (){   //capturando los chekeados
+        i++;
+    }); 
+    
 console.log(i);
     if(i==0){
         document.getElementById('verificando').value="";
