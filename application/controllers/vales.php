@@ -169,13 +169,16 @@ class Vales extends CI_Controller
 	*/
 	function guardar_requisicion()
 	{
-		
 
 		if(isset($_POST['refuerzo'])){
 
 			$_POST['refuerzo']=1;
+			$_POST['asignado']=0;
 		}else{
-			$_POST['refuerzo']=0;
+			$_POST['refuerzo']=0;			
+			$temp= $this->vales_model->asignaciones($_POST['id_seccion'],$_POST['id_fuente_fondo']);			
+			$_POST['asignado']=$temp[0][cantidad];
+
 		}
 
 		$this->db->trans_start();
@@ -186,9 +189,10 @@ class Vales extends CI_Controller
 
 		$vehiculos=$this->input->post('values');
 
+
 		if (isset($_POST['values'])) {			
-			for($i=0;$i<count($vehiculos);$i++) {
-				$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
+				
+				for($i=0;$i<count($vehiculos);$i++) {		//		$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
 			}
 		}
 		

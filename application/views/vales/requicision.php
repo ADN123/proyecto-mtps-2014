@@ -4,8 +4,8 @@
 	estado_correcto='La requisición se ha guardado correctamente';
 	estado_incorrecto='Error al intentar guardar la requisición: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
 
-function chekear(k){
-var obj = $('.cheke');
+function chekear(k, clase){
+var obj = $('.'+clase);
 var ban= $(k).prop('checked');
 
     for(i=0;i<obj.length;i++){
@@ -48,7 +48,7 @@ var ban= $(k).prop('checked');
             </li>
             <li>
                 <a href="#step-3">
-                    <span class="stepNumber">3<small>do</small></span>
+                    <span class="stepNumber">3<small>er</small></span>
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
                         <small>&nbsp;Otros</small>
@@ -116,7 +116,7 @@ var ban= $(k).prop('checked');
       	</div>
         <div id="step-2">	
             <h2 class="StepTitle">Selecci&oacute;n los vehiculos a los que se aplicarán los vales</h2>
-                 Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)" >
+                 Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this, 'cheke1')" >
             <p ><div id="divVehiculos"></div>
 
 
@@ -129,7 +129,7 @@ var ban= $(k).prop('checked');
         <div id="step-3">   
             <h2 class="StepTitle">Seleccione las herramientas u otro tipo de articulo  en el que se aplicarán los vales</h2>
 
-                 Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this)" >
+                 Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this,'cheke2')" >
             <p ><div id="divHerramientas"></div>
 
         </div>

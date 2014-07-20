@@ -512,7 +512,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 
 		if($fecha_factura!=NULL)
 			$where.=" AND DATE_FORMAT(tcm_requisicion.fecha_visto_bueno,'%Y-%m-%d')<='".$fecha_factura."'";
-
+/*
+//sentencia original por Leonel
 		$sentencia="SELECT tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_vehiculo.id_fuente_fondo, tcm_fuente_fondo.nombre_fuente_fondo, tcm_vehiculo_marca.nombre as marca, tcm_vehiculo_modelo.modelo, CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR) AS id_requisicion_vale, CAST(GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2, CAST(GROUP_CONCAT(DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
 					FROM tcm_vehiculo
 					INNER JOIN tcm_req_veh ON tcm_req_veh.id_vehiculo = tcm_vehiculo.id_vehiculo
@@ -525,6 +526,59 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					WHERE tcm_requisicion_vale.cantidad_restante>0 AND ".$where." 
 					GROUP BY tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_vehiculo.id_fuente_fondo, tcm_fuente_fondo.nombre_fuente_fondo, marca, tcm_vehiculo_modelo.modelo
 					ORDER BY tcm_vehiculo.placa DESC";
+*/
+// Modificacion por Jhonatan
+			$sentencia="SELECT 
+							tcm_vehiculo.id_vehiculo, 
+							0 as id_herramienta,
+							tcm_vehiculo.placa, 
+							tcm_vehiculo.id_fuente_fondo, 
+							tcm_fuente_fondo.nombre_fuente_fondo, 
+							tcm_vehiculo_marca.nombre as marca, 
+							tcm_vehiculo_modelo.modelo, 
+							CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR) AS id_requisicion_vale, 
+							CAST(GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2,
+							CAST(GROUP_CONCAT(DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
+						FROM tcm_vehiculo
+						INNER JOIN tcm_req_veh ON tcm_req_veh.id_vehiculo = tcm_vehiculo.id_vehiculo
+						INNER JOIN tcm_requisicion ON tcm_req_veh.id_requisicion = tcm_requisicion.id_requisicion
+						INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
+						INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
+						INNER JOIN tcm_vehiculo_marca ON tcm_vehiculo.id_marca = tcm_vehiculo_marca.id_vehiculo_marca
+						INNER JOIN tcm_vehiculo_modelo ON tcm_vehiculo.id_modelo = tcm_vehiculo_modelo.id_vehiculo_modelo
+						INNER JOIN tcm_fuente_fondo ON tcm_vehiculo.id_fuente_fondo = tcm_fuente_fondo.id_fuente_fondo
+						WHERE tcm_requisicion_vale.cantidad_restante>0 AND ".$where." 
+						GROUP BY tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_vehiculo.id_fuente_fondo, tcm_fuente_fondo.nombre_fuente_fondo, marca, tcm_vehiculo_modelo.modelo
+					
+					UNION
+						SELECT
+							'' as id_vehiculo,
+							h.id_herramienta,
+							'' as placa,
+							h.id_fuente_fondo,
+							f.nombre_fuente_fondo,
+							0  AS marca,
+							0 AS modelo,
+							CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR	) AS id_requisicion_vale,
+							CAST(	GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2,
+							CAST(		GROUP_CONCAT(	DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
+						FROM
+							tcm_herramienta h
+						INNER JOIN tcm_req_veh ON tcm_req_veh.id_herramienta = h.id_herramienta
+						INNER JOIN tcm_requisicion ON tcm_req_veh.id_requisicion = tcm_requisicion.id_requisicion
+						INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
+						INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
+						INNER JOIN tcm_fuente_fondo f ON h.id_fuente_fondo = f.id_fuente_fondo
+						WHERE tcm_requisicion_vale.cantidad_restante>0 AND ".$where."
+
+						GROUP BY
+							h.id_herramienta,
+							h.id_fuente_fondo,
+							f.nombre_fuente_fondo
+					";
+
+
+
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();	
 	}
@@ -843,6 +897,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		$query=$this->db->query($sentencia);
 		return (array)$query->result();		
 	}
+
+
 
 }	
 ?>
