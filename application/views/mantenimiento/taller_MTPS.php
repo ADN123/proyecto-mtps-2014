@@ -54,61 +54,104 @@
         </div>
         <div id="step-2">	
             <h2 class="StepTitle">Informaci&oacute;n del mantenimiento realizado al vehículo</h2>
-            <table cellspacing="0" align="center" class="table_deisgn">
-            <thead>
-            <tr>
-            <td><label>Cambio de Aceite y Filtro</label> </td>
-            <td><input type="checkbox" name="aceite"></td>
-			</tr>
+            <table width="500px" align="center">
             <tr><td>
-                <label>Ajuste/Limpieza de Frenos</label></td><td><input type="checkbox" name="frenos"></td>
+            <table align="center" class="table_design" cellspacing="0">
+            	<thead>
+                	<tr>
+                    	<th>Mantenimiento</th>
+                        <th width="250">Realizado</th>
+                    </tr>
+                </thead>
+            	<tbody>
+                <tr>
+                    <td align="right">Cambio de Aceite y Filtro</td>
+                    <td><input type="checkbox" name="aceite"></td>
                 </tr>
-            <tr><td>
-                <label>Limpieza de Bornes de Batería</label></td><td><input type="checkbox" name="bateria"></td>
-             </tr>
-             <tr><td>
-                <label>Sistema Eléctrico y Luces</label></td><td><input type="checkbox" name="electricidad"></td>
-            </tr>
-            <tr><td>
-			
-                <label>Amortiguadores</label></td><td><input type="checkbox" name="amortiguadores"></td>
-			
-            <p>
-                <label>Llantas</label><input type="checkbox" name="llantas">
-
-                <label>Limpieza General de Motor</label><input type="checkbox" name="motor">
-            </p>
-            </table>
-            <p>
-            	<label class="label_textarea">Otros (Especifíque)</label>
-                <textarea class="tam-4" name="otros"></textarea>
-            </p>
+                <tr>
+                    <td align="right">Ajuste/Limpieza de Frenos</td>
+                    <td><input type="checkbox" name="frenos"></td>
+                </tr>
+                <tr>
+                    <td align="right">Limpieza de Bornes de Batería</td>
+                    <td><input type="checkbox" name="bateria"></td>
+                </tr>
+                <tr>
+                    <td align="right">Sistema Eléctrico y Luces</td>
+                    <td><input type="checkbox" name="electricidad"></td>
+                </tr>
+                <tr>
+                    <td align="right">Amortiguadores</td>
+                    <td><input type="checkbox" name="amortiguadores"></td>
+                </tr>
+                <tr>
+                    <td align="right">Llantas</td>
+                    <td><input type="checkbox" name="llantas"></td>
+                </tr>
+                <tr>
+                    <td align="right">Limpieza General de Motor</td>
+                    <td><input type="checkbox" name="motor"></td>
+                </tr>
+                <tr>
+                    <td align="right">Otros (Especifíque)</td>
+                    <td><textarea name="otros" class="tam-4" style="resize:none"></textarea></td>
+                </tr>
+               </tbody>
+            </table></td></tr></table>
         </div>
         <div id="step-3">	
             <h2 class="StepTitle">Informaci&oacute;n de inspección o chequeo realizado al vehículo</h2>
-            <p>
-                <label>Niveles de aceite motor, refrigerante del radiador y fluido de frenos</label><input type="checkbox" name="naceite">
-
-                <label>Presión/Calibración de llantas</label><input type="checkbox" name="presion">
-
-                <label>Niveles de agua/Refrigerante</label><input type="checkbox" name="agua">
-
-                <label>Revisión y calibración de llantas</label><input type="checkbox" name="rllantas">
-
-                
-			</p>
-            <p>
-            	<label>Caja de velocidades</label><input type="checkbox" name="caja_velocidades">
-                <label>Revisión de clutch, mangueras</label><input type="checkbox" name="clutch">
-
-                <label>Refrigerante del motor, líquido de frenos y clutch, líquido de timón hidráulico, batería</label><input type="checkbox" name="r_motor">
-
-                <label>Limpieza exterior de vehículo (lavado)</label><input type="checkbox" name="lavado">
-            </p>
-            <p>
-            	<label class="label_textarea">Observaciones (Especifíque)</label>
-                <textarea name="observaciones" class="tam-4"></textarea>
-            </p>
+             <table width="600px" align="center">
+            <tr><td>
+            <table align="center" class="table_design" cellspacing="0">
+            	<thead>
+                	<tr>
+                    	<th>Inspección/Chequeo</th>
+                        <th width="250px">Realizado</th>
+                    </tr>
+                </thead>
+            	<tbody>
+                <tr>
+                    <td align="right">Niveles de aceite motor, refrigerante del radiador y fluido de frenos</td>
+                    <td><input type="checkbox" name="naceite"></td>
+                </tr>
+                <tr>
+                    <td align="right">Presión/Calibración de llantas</td>
+                    <td><input type="checkbox" name="presion"></td>
+                </tr>
+                <tr>
+                    <td align="right">Niveles de agua/Refrigerante</td>
+                    <td><input type="checkbox" name="agua"></td>
+                </tr>
+                <tr>
+                    <td align="right">Revisión y calibración de llantas</td>
+                    <td><input type="checkbox" name="rllantas"></td>
+                </tr>				
+                <tr>
+                    <td align="right">Caja de velocidades</td>
+                    <td><input type="checkbox" name="caja_velocidades"></td>
+                </tr>
+                <tr>
+                    <td align="right">Revisión de clutch, mangueras</td>
+                    <td><input type="checkbox" name="clutch"></td>
+                </tr>
+                <tr>
+                    <td align="right">Refrigerante del motor, líquido de frenos y clutch, líquido de timón hidráulico, batería</td>
+                    <td><input type="checkbox" name="r_motor"></td>
+                </tr>
+                <tr>
+                    <td align="right">Limpieza exterior de vehículo (lavado)</td>
+                    <td><input type="checkbox" name="lavado"></td>
+            	</tr>
+                <tr>
+                    <td align="right">Observaciones (Especifíque)</td>
+                	<td><textarea name="observaciones" class="tam-4" style="resize:none"></textarea></td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+         </tr>
+        </table>
         </div>
     </div>
 </form>
@@ -130,14 +173,15 @@ function cargar(id)
 		success: function(data) {
 			console.log(data);
 			json = data;
-			var cont="<table align='center'><tr>";
-			cont=cont+"<td><p><label>Modelo: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>"+json[0]['modelo']+"</strong></p></td><td width='600px'><p><label>Motorista asignado: </label>&nbsp;&nbsp;<strong>"+json[0].nombre.capitalize()+"</strong></p></td>";
+			var cont="<br><br><table align='center' class='table_design'>";
+			/*cont=cont+"<thead><tr><td>Datos Generales del Vehículo</td></tr></thead>";*/
+			cont=cont+"<tr><td>Modelo: <strong>"+json[0]['modelo']+"</strong></td><td>Motorista Asignado: <strong>"+json[0]['motorista']+"</strong></td>";
 			cont=cont+'</tr><tr>'
-			cont=cont+'<td><p><label>Marca: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>'+json[0]['marca']+'</strong></p></td> <td><p><label>Oficina en donde está asignado: </label>&nbsp;<strong>'+json[0]['seccion']+'</strong></p></td>';
+			cont=cont+'<td>Marca: <strong>'+json[0]['marca']+'</strong></td> <td>Oficina Asiganada: <strong>'+json[0]['seccion']+'</strong></td>';
 			cont=cont+'</tr><tr>'
-			cont=cont+'<td><p><label>Clase: </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>'+json[0]['clase']+'</strong></p></td><td><p><label>Kilometraje Actual: </label>&nbsp;<strong>'+json[0]['kilometraje']+' km</strong></p></td>';
+			cont=cont+'<td>Clase: <strong>'+json[0]['clase']+'</strong></td><td>Kilometraje Actual: <strong>'+json[0]['kilometraje']+' km</strong></td>';
 			cont=cont+'</tr><tr>'
-			cont=cont+'<td><p><label>Año: </label>&nbsp;&nbsp;&nbsp;<strong>'+json[0]['anio']+'</strong></p></td><td><p><label>Placa: </label>&nbsp;<strong>'+json[0]['placa']+'</strong></p></td>';
+			cont=cont+'<td>Año: <strong>'+json[0]['anio']+'</strong></td><td>ID vehículo: <strong>'+json[0]['id_vehiculo']+'</strong></td>';
 			cont=cont+'</tr>'
 			cont=cont+'</table>';
 			$('#info_vehiculo').html(cont);
