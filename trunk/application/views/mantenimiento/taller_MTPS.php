@@ -54,23 +54,31 @@
         </div>
         <div id="step-2">	
             <h2 class="StepTitle">Informaci&oacute;n del mantenimiento realizado al vehículo</h2>
-            <p>
-                <label>Cambio de Aceite y Filtro</label><input type="checkbox" name="aceite">
-
-                <label>Ajuste/Limpieza de Frenos</label><input type="checkbox" name="frenos">
-                
-                <label>Limpieza de Bornes de Batería</label><input type="checkbox" name="bateria">
-			</p>
-            <p>
-                <label>Sistema Eléctrico y Luces</label><input type="checkbox" name="electricidad">
+            <table cellspacing="0" align="center" class="table_deisgn">
+            <thead>
+            <tr>
+            <td><label>Cambio de Aceite y Filtro</label> </td>
+            <td><input type="checkbox" name="aceite"></td>
+			</tr>
+            <tr><td>
+                <label>Ajuste/Limpieza de Frenos</label></td><td><input type="checkbox" name="frenos"></td>
+                </tr>
+            <tr><td>
+                <label>Limpieza de Bornes de Batería</label></td><td><input type="checkbox" name="bateria"></td>
+             </tr>
+             <tr><td>
+                <label>Sistema Eléctrico y Luces</label></td><td><input type="checkbox" name="electricidad"></td>
+            </tr>
+            <tr><td>
 			
-                <label>Amortiguadores</label><input type="checkbox" name="amortiguadores">
-			</p>
+                <label>Amortiguadores</label></td><td><input type="checkbox" name="amortiguadores"></td>
+			
             <p>
                 <label>Llantas</label><input type="checkbox" name="llantas">
 
                 <label>Limpieza General de Motor</label><input type="checkbox" name="motor">
             </p>
+            </table>
             <p>
             	<label class="label_textarea">Otros (Especifíque)</label>
                 <textarea class="tam-4" name="otros"></textarea>
