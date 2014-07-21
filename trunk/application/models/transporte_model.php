@@ -837,25 +837,48 @@ function solicitudes_por_asignar_depto(){
 	}
 	////////////////////////////////////////////////////////////////////////////
 	
-	function consultar_vehiculo_taller($id)
+	function consultar_vehiculo_taller($id, $estado=NULL)
 	{
-		$query=$this->db->query("
-		select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
-		o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, IF(max(vk.km_final)=NULL,'0',max(vk.km_final)) as kilometraje, v.anio, v.estado,
-		ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado
-		from tcm_vehiculo as v
-		inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
-		inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
-		inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
-		inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
-		left join tcm_vehiculo_motorista as vmot on (v.id_vehiculo=vmot.id_vehiculo)
-		left join tcm_vehiculo_kilometraje as vk on (vk.id_vehiculo=v.id_vehiculo)
-		left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
-		inner join org_seccion as o on (v.id_seccion=o.id_seccion)
-		inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
-		where v.id_vehiculo='$id'
-		GROUP BY v.placa,nombre,seccion,marca,modelo,clase,condicion
-		");
+		if($estado==NULL)
+		{
+			$query=$this->db->query("
+			select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
+			o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
+			ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado
+			from tcm_vehiculo as v
+			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+			left join tcm_vehiculo_motorista as vmot on (v.id_vehiculo=vmot.id_vehiculo)
+			left join tcm_vehiculo_kilometraje as vk on (vk.id_vehiculo=v.id_vehiculo)
+			left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
+			inner join org_seccion as o on (v.id_seccion=o.id_seccion)
+			inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
+			where v.id_vehiculo='$id'
+			GROUP BY v.placa,motorista,seccion,marca,modelo,clase,condicion
+			");
+		}
+		else
+		{
+			$query=$this->db->query("
+			select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
+			o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
+			ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado
+			from tcm_vehiculo as v
+			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+			left join tcm_vehiculo_motorista as vmot on (v.id_vehiculo=vmot.id_vehiculo)
+			left join tcm_vehiculo_kilometraje as vk on (vk.id_vehiculo=v.id_vehiculo)
+			left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
+			inner join org_seccion as o on (v.id_seccion=o.id_seccion)
+			inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
+			where v.id_vehiculo='$id' and v.estado='$estado'
+			GROUP BY v.placa,nombre,seccion,marca,modelo,clase,condicion
+			");
+		}
 		return $query->result();
 	}
 	
