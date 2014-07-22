@@ -15,7 +15,7 @@
 <form name="filtro" method="post" id="filtro" action="<?php //echo base_url()?>#">
 
             <p> 
-                <label for="start" >Fecha Inicio:</label><input id="start" style="width: 200px" tabindex="1"/>
+                <label for="start" >Fecha Inicio:</label><input id="start" name="start" style="width: 200px" tabindex="1"/>
             
                 <label for="id_fuente_fondo" id="lid_fuente_fondo">Fuente de Fondo </label>
                     <select class="select" style="width:300px;" tabindex="2" id="id_fuente_fondo" name="id_fuente_fondo">
@@ -32,9 +32,9 @@
 
             </p>
             <p>
-                    <label for="end">Fecha Final:</label><input id="end" style="width: 200px" tabindex="4"/>                    
+                    <label for="end">Fecha Final:</label><input id="end" name="end" style="width: 200px" tabindex="4"/>                    
                     <label for="id_seccion" id="lservicio_de">Sección</label>
-                    <select class="select" style="width:300px;" tabindex="4" id="id_seccion" name="id_seccion" onChange="cargar_vehiculo()">
+                    <select class="select" style="width:300px;" tabindex="4" id="id_seccion" name="id_seccion" >
                             <?php
                                 foreach($oficinas as $val) {
                             ?>
@@ -77,25 +77,30 @@
 
 <script language="javascript" >
 
-    $("#Filtrar").click(function(){
+    $("#Filtrar").click(function(){             
 
             var formu = $('#filtro').serializeArray();
-            console.log(formu);
+        //    console.log(formu); 
 
-        reporte();
+        reporte(formu);
         });
 
-    function reporte(){  
+    function reporte(formu){  
                 $.ajax({
             async:  true, 
             url:    base_url()+"index.php/vales/consumo_json",
-            dataType:"json",
+         //   dataType:"json",
+             type: "POST",
+            data: formu,
             success: function(data){
-                grafico(data);//contructor del grafico
-                tabla(data) 
+                console.log(data);
+
+             //   grafico(data);//contructor del grafico
+               // tabla(data) 
 
                 },
             error:function(data){
+                     console.log(data);
                  alertify.alert('Error al cargar datos');
                 console.log(data);
                 }

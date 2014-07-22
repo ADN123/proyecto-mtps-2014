@@ -23,7 +23,7 @@
                     <span class="stepNumber">2<small>do</small></span>
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Consumo vehicular</small>
+                        <small>&nbsp;Detalle de consumo </small>
                     </span>
                 </a>
             </li>

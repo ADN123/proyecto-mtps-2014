@@ -531,11 +531,13 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			$sentencia="SELECT 
 							tcm_vehiculo.id_vehiculo, 
 							0 as id_herramienta,
+							0 as herramienta, 
 							tcm_vehiculo.placa, 
 							tcm_vehiculo.id_fuente_fondo, 
 							tcm_fuente_fondo.nombre_fuente_fondo, 
 							tcm_vehiculo_marca.nombre as marca, 
 							tcm_vehiculo_modelo.modelo, 
+							'' as  descripcion,
 							CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR) AS id_requisicion_vale, 
 							CAST(GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2,
 							CAST(GROUP_CONCAT(DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
@@ -552,13 +554,15 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					
 					UNION
 						SELECT
-							'' as id_vehiculo,
+							0 as id_vehiculo,
 							h.id_herramienta,
+							h.nombre as herramienta, 
 							'' as placa,
 							h.id_fuente_fondo,
 							f.nombre_fuente_fondo,
-							0  AS marca,
-							0 AS modelo,
+							''  AS marca,
+							'' AS modelo,
+							h.descripcion, 
 							CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR	) AS id_requisicion_vale,
 							CAST(	GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2,
 							CAST(		GROUP_CONCAT(	DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
@@ -706,7 +710,9 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				}	
 				$query=$this->db->query($sentencia);
 				
-				$sentencia="INSERT INTO tcm_consumo_vehiculo (id_consumo, id_vehiculo, actividad, tip_gas, cantidad_vales, inicial, recibido) VALUES (".$id_consumo.", ".$id_vehiculo.", '".$actividad_consumo."', '".$tip_gas."', ".$cantidad_entregado.", ".$r[inicial].", ".$recibido.")";
+				if ($id_vehiculo==0) {	$id_vehiculo="NULL";	}
+				if ($id_herramienta==0) {	$id_herramienta="NULL";	}
+				$sentencia="INSERT INTO tcm_consumo_vehiculo (id_consumo, id_vehiculo,id_herramienta, actividad, tip_gas, cantidad_vales, inicial, recibido) VALUES (".$id_consumo.", ".$id_vehiculo.",".$id_herramienta.", '".$actividad_consumo."', '".$tip_gas."', ".$cantidad_entregado.", ".$r[inicial].", ".$recibido.")";
 				$query=$this->db->query($sentencia);
 				
 				$id_consumo_vehiculo=$this->db->insert_id();
