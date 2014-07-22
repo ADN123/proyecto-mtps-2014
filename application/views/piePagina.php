@@ -11,5 +11,6 @@
                 &copy; Todos los derechos reservados UES-FMP 2014
             </span>
         </div>
+    </div> <!--  fin de div ok  -->
 	</body>
 </html>

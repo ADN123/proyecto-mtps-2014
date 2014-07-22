@@ -682,7 +682,7 @@ class Vales extends CI_Controller
 			$valor_super=$this->input->post('valor_super');
 			$valor_regular=$this->input->post('valor_regular');
 			$valor_diesel=$this->input->post('valor_diesel');
-			
+			$id_herramienta= $this->input->post('id_herramienta');
 			$id_vehiculo=$this->input->post('id_vehiculo');
 			$actividad_consumo=$this->input->post('actividad_consumo');
 			$tip_gas_bruto=$this->input->post('tip_gas');
@@ -733,7 +733,8 @@ class Vales extends CI_Controller
 						'recibido'=>1,
 						'tipo_vehiculo'=>$tipo_vehiculo,
 						'bandera'=>$bandera,
-						'id_seccion'=>$id_seccion['id_seccion']
+						'id_seccion'=>$id_seccion['id_seccion'],
+						'id_herramienta'=>$id_herramienta[$i]
 					);
 					$this->vales_model->buscar_requisicion_vale($formuInfo);
 				}
@@ -900,8 +901,23 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	*	Observaciones: Ninguna
 	*/
 
-	function consumo_json($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL)
-	{
+	function consumo_json()
+	{	//	print_r($_POST);
+		$id_seccion=$this->input->post('id_seccion');
+		$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+		$fecha_inicio=$this->input->post('start');
+		
+		try {			
+			$fec=str_replace("/","-",$this->input->post('start');
+			$fecha_inicio=date("Y-m-d", strtotime($fec));
+			$fec=str_replace("/","-",$this->input->post('start');
+			$fecha_fin=date("Y-m-d", strtotime($fec));
+
+		} catch (Exception $e) {
+			$fecha_inicio=NULL;
+			$fecha_fin=NULL;
+		}
+
 		$data=$this->vales_model->consumo_seccion_fuente();
 		echo json_encode($data);	
 	}

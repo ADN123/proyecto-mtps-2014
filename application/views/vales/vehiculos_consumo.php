@@ -12,7 +12,7 @@
 <table cellspacing="0" align="center" class="table_design" style="width: 98%; min-width: 770px;">
     <thead>
         <th width="90">
-            Placa
+            Aplicado a 
         </th>
         <!--<th>
             Fuente
@@ -38,24 +38,35 @@
     </thead>
     <tbody id="content_table">
 		<?php
+		$i=1;
             foreach($vehiculos as $val) { 
 				$cont_valor_nominal=explode(",",$val['valor_nominal']);
 				$cont_valor_nominal2=explode(",",$val['valor_nominal2']);
 				$id_requisicion_vale=explode(",",$val['id_requisicion_vale']);
 				$id_fuente_fondo=$val['id_fuente_fondo'];
+				$id_herramienta=$val['id_herramienta'];
+				$herramienta=$val['herramienta'];
+				$i++;
+				$tooltip= $val['marca']." ".$val['modelo'].$val['descripcion']."(".$val['nombre_fuente_fondo'].")";
+
+				$nombre=($val['id_vehiculo']!=0)?$val['placa']:$herramienta;
 		?>
+
                 <tr> 
-                    <td class="veh" align="left" title="<?php echo $val['marca'] ?> <?php echo $val['modelo'] ?> (<?php echo $val['nombre_fuente_fondo'] ?>)">
-						<?php echo $val['placa'] ?>
+                    <td class="veh" align="left" title=" <?php echo $tooltip   ?>">
+						<?php echo $nombre ?>
                         <?php 
 							if(count($cont_valor_nominal)==1)
-								echo '<input type="hidden" name="id_vehiculo[]" id="id_vehiculo'.$val['id_vehiculo'].'" value="'.$val['id_vehiculo'].'**'.$id_requisicion_vale[0].'**'.number_format($cont_valor_nominal2[0],2,'.',',').'**'.$id_fuente_fondo.'" />';
+								echo '
+							<input type="hidden" name="id_vehiculo[]" id="id_vehiculo'.$i.'" value="'.$val['id_vehiculo'].'**'.$id_requisicion_vale[0].'**'.number_format($cont_valor_nominal2[0],2,'.',',').'**'.$id_fuente_fondo.'" />';
+								echo '
+							<input type="hidden" name="id_herramienta[]" id="id_herramienta'.$i.'" value="'.$id_herramienta.'" />';
 						?> 
                     </td>
                     <!--<td><?php echo $val['nombre_fuente_fondo'] ?></td>-->
-                    <td><input class="actividad" type="text" name="actividad_consumo[]" id="actividad_consumo<?php echo $val['id_vehiculo'] ?>" style="width:90%"/></td>
+                    <td><input class="actividad" type="text" name="actividad_consumo[]" id="actividad_consumo<?php echo $i ?>" style="width:90%"/></td>
                     <td>
-                    	<select name="tip_gas[]" id="tip_gas<?php echo $val['id_vehiculo'] ?>" class="tipo_gas">
+                    	<select name="tip_gas[]" id="tip_gas<?php echo $i?>" class="tipo_gas">
                         	<option value=""></option>
                         	<option value="2">Super</option>
                             <option value="1">Regular</option>
@@ -63,9 +74,9 @@
                         </select>
                     </td>
                     <td>
-                    	<input class="cantidad" type="text" name="cantidad_consumo[]" id="cantidad_consumo<?php echo $val['id_vehiculo'] ?>" size="2" maxlength="2"/>
+                    	<input class="cantidad" type="text" name="cantidad_consumo[]" id="cantidad_consumo<?php echo $i ?>" size="2" maxlength="2"/>
                     	<script>
-							$("#cantidad_consumo<?php echo $val['id_vehiculo'] ?>").validacion({
+							$("#cantidad_consumo<?php echo $i?>").validacion({
 								numMin:0,
 								numMax:15,
 								ent: true,
@@ -78,7 +89,7 @@
 							if(count($cont_valor_nominal)==1)
 								echo number_format($cont_valor_nominal[0],2,'.',',');
 							else {
-								echo '<select name="id_vehiculo[]" id="id_vehiculo'.$val['id_vehiculo'].'" class="valor_vale">';
+								echo '<select name="id_vehiculo[]" id="id_vehiculo'.$i.'" class="valor_vale">';
 								for($i=0;$i<count($cont_valor_nominal2);$i++) {
 									echo '<option value="'.$val['id_vehiculo'].'**'.$id_requisicion_vale[$i].'**'.number_format($cont_valor_nominal2[$i],2,'.',',').'**'.$id_fuente_fondo.'">'.number_format($cont_valor_nominal2[$i],2,'.',',').'</option>';
 								}
@@ -273,7 +284,9 @@
 	var data = [
 		"Misión Oficial",
 		"Entrega notificaciones",
-		"Otros"
+		"Otros",
+		"Podar cesped" ,
+		"Generar energia electrica"
 	];
 	$(".actividad").kendoAutoComplete({
 		dataSource: data,

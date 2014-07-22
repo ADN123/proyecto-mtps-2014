@@ -41,6 +41,15 @@
 
 
         <script type="text/javascript">
+
+				function paginaOK(){
+					//document.getElementById('loader').style.display='none';					    
+					   $("#loader").fadeOut();
+					   $("#ok").fadeIn();					  
+					//document.getElementById('ok').style.display='block';
+
+					}
+
 			function base_url() {
 				return "<?php echo base_url()?>";
 			}
@@ -143,7 +152,10 @@
 							$head.attr('class', 'ha-header ha-header-subshow');
 						}
 				});
+
+				setTimeout ("paginaOK();", 200);
 			});
+
 		</script>
 
 
@@ -152,6 +164,19 @@
 		
 	</head>
 	<body>
+<!------------------------PARA QUE NO MUESTRE TODO UNA SOLA VEZ-------------->
+
+<div id="loader" style="position:absolute; width:100%; height:100%; background-color:#ffffff; z-index:1005; text-align:center; padding-top:100px; font-size:20px; font-family:Arial; color:#000000;">
+
+<img src="<?php echo base_url()?>css/Bootstrap/loading.gif" />
+</div>
+<div id="ok" style="display:none">
+<!--    el contenido de la pagina siempre estara dentro del div ok     este se cierra en el archivo pie de pagina -->
+
+
+
+
+
         <header id="ha-header" class="ha-header ha-header-subshow">
             <div class="ha-header-perspective">
                 <div class="ha-header-front" style="height: 98px;">
