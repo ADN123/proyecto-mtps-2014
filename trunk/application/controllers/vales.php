@@ -114,7 +114,7 @@ class Vales extends CI_Controller
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81); /*Verificacion de permiso para crear requisiciones*/
 		$url='vales/requicision';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
-
+		$data['m']=$this->vales_model->meses_requisicion();
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
@@ -157,8 +157,21 @@ class Vales extends CI_Controller
 		}
 	}
 	
+	/*
+	*	Nombre: consultar_refuerzo
+	*	Objetivo: Verificar que la seccion no tenga requisiciones para un mismo mes
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 22/07/2014
+	*	Observaciones: Ninguna.
+	*/
 	
 
+function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
+{
+		echo json_encode($this->vales_model->consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes));	
+
+}
 	/*
 	*	Nombre: guardar_requisicion
 	*	Objetivo: Guardar la requisicion de una seccion
@@ -170,15 +183,11 @@ class Vales extends CI_Controller
 	function guardar_requisicion()
 	{
 
-		if(isset($_POST['refuerzo'])){
-
-			$_POST['refuerzo']=1;
+		if($_POST['refuerzo']==1){
 			$_POST['asignado']=0;
-		}else{
-			$_POST['refuerzo']=0;			
+		}else{			
 			$temp= $this->vales_model->asignaciones($_POST['id_seccion'],$_POST['id_fuente_fondo']);			
 			$_POST['asignado']=$temp[0][cantidad];
-
 		}
 
 		$this->db->trans_start();
@@ -902,15 +911,15 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	*/
 
 	function consumo_json()
-	{	//	print_r($_POST);
+	{		
 		$id_seccion=$this->input->post('id_seccion');
 		$id_fuente_fondo=$this->input->post('id_fuente_fondo');
 		$fecha_inicio=$this->input->post('start');
 		
 		try {			
-			$fec=str_replace("/","-",$this->input->post('start');
+			$fec=str_replace("/","-",$fecha_inicio);
 			$fecha_inicio=date("Y-m-d", strtotime($fec));
-			$fec=str_replace("/","-",$this->input->post('start');
+			$fec=str_replace("/","-",$fecha_fin);
 			$fecha_fin=date("Y-m-d", strtotime($fec));
 
 		} catch (Exception $e) {

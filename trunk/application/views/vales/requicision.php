@@ -59,7 +59,7 @@ var ban= $(k).prop('checked');
         </ul>                 
 
         <div id="step-1">	
-            <h2 class="StepTitle">Ingrese los de datos de los vales de combustible</h2>
+            <h2 class="StepTitle">Ingrese los datos de la requisición</h2>
            
             <p> 
                 <label for="cantidad_solicitada" id="lcantidad_solicitada">Cantidad Solicitada </label>
@@ -80,44 +80,65 @@ var ban= $(k).prop('checked');
               	<textarea class="tam-4" id="justificacion" tabindex="3" name="justificacion"/></textarea>
             </p>
             <p>
-     <label for="refuerzo" id="lrefuezo" >Refuerzo </label>
-          	<input  id="refuerzo"  name="refuerzo" type="checkbox" onchange="refuerzock()"/>
-            </p>
-                        
-            <p>
-            	<label for="id_seccion" id="lservicio_de">Al servicio de </label>
+                <label for="id_seccion" id="lservicio_de">Al servicio de </label>
                 <?php 
-					if(sizeof($oficinas)!=1) {
-				?>
+                    if(sizeof($oficinas)!=1) {
+                ?>
                     <select class="select" style="width:300px;" tabindex="4" id="id_seccion" name="id_seccion" onChange="cargar_vehiculo()">
                         <?php
-							foreach($oficinas as $val) {
-						?>
-                        		<option value="<?php echo $val['id_seccion'] ?>"><?php echo $val['nombre_seccion'] ?></option>
-                        <?php	
-							}
-						?>
+                            foreach($oficinas as $val) {
+                        ?>
+                                <option value="<?php echo $val['id_seccion'] ?>"><?php echo $val['nombre_seccion'] ?></option>
+                        <?php   
+                            }
+                        ?>
                     </select>
-             	<?php 
-					} else {
+                <?php 
+                    } else {
                         if(sizeof($oficinas)==0)
-                            echo '<strong> La seccion no cuenta con vehiculos </strong>';
+                            echo '<strong> La sección no cuenta con vehiculos </strong>';
 
-						foreach($oficinas as $val) {
-							echo '<strong>'.ucwords($val['nombre_seccion']).'</strong>';
-				?>
-                			<input type="hidden" id="id_seccion" name="id_seccion" value="<?php echo $val['id_seccion']; ?>" />
+                                      foreach($oficinas as $val) {
+                            echo '<strong>'.ucwords($val['nombre_seccion']).'</strong>';
+                ?>
+                            <input type="hidden" id="id_seccion" name="id_seccion" value="<?php echo $val['id_seccion']; ?>" />
                             <input type="hidden" id="nombre" name="nombre" value="<?php echo $val['nombre_seccion']; ?>" />
                 <?php
-						}
-					}
-				?>
+                        }
+                    }
+                ?>
+
+            </p>
+            <p>
+
+                <label for="mes" id="lmes">Para el mes de </label>
+                <select class="select" style="width:200px;" tabindex="5" id="mes" name="mes" onChange="cargar_vehiculo()">
+                    <?php
+                        foreach($m as $val) {
+                    ?>
+                       <option value="<?php echo $val['mes'] ?>"><?php echo strtoupper($val['mes_nombre']) ?></option>
+                    <?php   
+                        }
+                    ?>
+                </select>
+            </p>
+            <br>
+            <p>
+                <label for="lbl" id="lrefuezo" >Refuerzo: </label>
+                <input  id="refuerzo"  name="refuerzo" type="hidden" />
+                <strong id="lbl"></strong> 
+                <label for="lbl2" id="lrefuezo" >Cuota Asignada: </label>
+                <strong id="lbl2"></strong> 
+
             </p>
       	</div>
         <div id="step-2">	
             <h2 class="StepTitle">Selecci&oacute;n los vehiculos a los que se aplicarán los vales</h2>
                  Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this, 'cheke1')" >
-            <p ><div id="divVehiculos"></div>
+            <p ><div id="divVehiculos">
+                    
+                    <br/><br/><br/>Debe seleccionar <strong>Fuente de Fondo, Sección </strong> y <strong>Mes </strong>...
+            </div>
 
 
                 <div style="display:none;">   
@@ -125,12 +146,15 @@ var ban= $(k).prop('checked');
                     <input type="text" id="verificando" name="verificando"  >  </div>
             	
             </p>
+
         </div>
         <div id="step-3">   
             <h2 class="StepTitle">Seleccione las herramientas u otro tipo de articulo  en el que se aplicarán los vales</h2>
 
                  Seleccionar/Deseleccionar todo <input type="checkbox"  onchange="chekear(this,'cheke2')" >
-            <p ><div id="divHerramientas"></div>
+            <p ><div id="divHerramientas">
+                        <br/><br/><br/>Debe seleccionar <strong>Fuente de Fondo, Sección </strong> y <strong>Mes </strong>...
+            </div>
 
         </div>
 
