@@ -152,8 +152,8 @@ class Vales_model extends CI_Model {
 	{ 
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_requisicion 
-		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion, refuerzo) 
-VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()), $refuerzo)";
+		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion, refuerzo, mes) 
+VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()), $refuerzo, $mes)";
 		
 
 		$this->db->query($sentencia);
@@ -778,19 +778,60 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 	}	
 	function consumo_seccion_fuente($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL)
 	{
-		$q="SELECT
-				s.nombre_seccion as seccion,
-				SUM(rv.cantidad_entregado - rv.cantidad_restante ) AS consumido,
-				sa.cantidad as asignado
-			FROM
-				tcm_requisicion r
-			INNER JOIN tcm_requisicion_vale rv ON r.id_requisicion = rv.id_requisicion
-			INNER JOIN org_seccion s ON r.id_seccion = s.id_seccion
-			INNER JOIN tcm_seccion_asignacion sa ON (s.id_seccion = sa.id_seccion AND r.id_fuente_fondo= sa.id_fuente_fondo)
-			GROUP BY r.id_seccion ";
+	/*		$q="SELECT
+					s.nombre_seccion as seccion,
+					SUM(rv.cantidad_entregado - rv.cantidad_restante ) AS consumido,
+					sa.cantidad as asignado
+				FROM
+					tcm_requisicion r
+				INNER JOIN tcm_requisicion_vale rv ON r.id_requisicion = rv.id_requisicion
+				INNER JOIN org_seccion s ON r.id_seccion = s.id_seccion
+				INNER JOIN tcm_seccion_asignacion sa ON (s.id_seccion = sa.id_seccion AND r.id_fuente_fondo= sa.id_fuente_fondo)
+				GROUP BY r.id_seccion "; */
+
+			$q="SELECT
+					r.id_seccion, 
+					CONCAT( s.nombre_seccion, ' (', f.nombre_fuente_fondo, ' )') as seccion,
+					r.asignado asignado,
+					SUM( cv.cantidad_vales) consumido, 
+					SUM(cv.cantidad_vales) * v.valor_nominal as  dinero, 
+					fecha_factura
+				FROM
+					tcm_consumo_vehiculo cv
+				INNER JOIN tcm_consumo c ON c.id_consumo = cv.id_consumo
+				INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
+				INNER JOIN tcm_requisicion_vale rv ON rv.id_requisicion_vale = rvcv.id_requisicion_vale
+				INNER JOIN tcm_requisicion r ON r.id_requisicion = rv.id_requisicion
+				INNER JOIN org_seccion s ON s.id_seccion= r.id_seccion
+				INNER JOIN tcm_vale v ON v.id_vale  = rv.id_vale
+				INNER JOIN tcm_fuente_fondo f ON f.id_fuente_fondo = r.id_fuente_fondo 
+				WHERE DATE_FORMAT(DATE(fecha_factura),'%Y-%m') = DATE_FORMAT(CURDATE(),'%Y-%m')	
+				 GROUP BY r.id_seccion
+				ORDER BY c.fecha_factura";
 			$query=$this->db->query($q);		
 			return $query->result();
 
+	}
+	function meses_requisicion()
+	{
+
+		$query=$this->db->query(" SET lc_time_names = 'es_ES'");		
+
+		$q="
+			
+			SELECT DATE_FORMAT(CURDATE(),'%M') mes_nombre, DATE_FORMAT(CURDATE(),'%Y%m') mes
+			UNION
+			SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL 7 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL 7 DAY),'%Y%m') mes 
+
+		";
+		$query=$this->db->query($q);		
+		return $query->result_array();
+
+	}
+	function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
+	{		$q="SELECT COUNT(mes)  as num FROM tcm_requisicion WHERE id_fuente_fondo = ".$id_fuente_fondo." AND id_seccion = ".$id_seccion." AND mes LIKE '".$mes."'";
+			$query=$this->db->query($q);		
+			return $query->result();
 	}
 
 	function vales_sin_entregar()

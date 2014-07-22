@@ -89,18 +89,17 @@
                 $.ajax({
             async:  true, 
             url:    base_url()+"index.php/vales/consumo_json",
-         //   dataType:"json",
+            dataType:"json",
              type: "POST",
             data: formu,
             success: function(data){
-                console.log(data);
-
-             //   grafico(data);//contructor del grafico
-               // tabla(data) 
+//                console.log(data);
+                grafico(data);//contructor del grafico
+                tabla(data) 
 
                 },
             error:function(data){
-                     console.log(data);
+  //                   console.log(data);
                  alertify.alert('Error al cargar datos');
                 console.log(data);
                 }
