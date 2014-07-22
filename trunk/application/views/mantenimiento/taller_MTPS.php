@@ -164,7 +164,7 @@ $(document).ready(function(){
 function cargar(id)
 {
 	$('#info_vehiculo').html("");
-	var  dur = "<?php echo base_url()?>index.php/vehiculo/vehiculo_info/"+id;
+	var  dur = "<?php echo base_url()?>index.php/vehiculo/vehiculo_info/"+id+"/2";
 	console.log(dur);
 	$.ajax({
 		async:	true, 
@@ -175,9 +175,9 @@ function cargar(id)
 			json = data;
 			var cont="<br><br><table align='center' class='table_design'>";
 			/*cont=cont+"<thead><tr><td>Datos Generales del Vehículo</td></tr></thead>";*/
-			cont=cont+"<tr><td>Modelo: <strong>"+json[0]['modelo']+"</strong></td><td>Motorista Asignado: <strong>"+json[0]['motorista']+"</strong></td>";
+			cont=cont+"<tr><td>Marca: <strong>"+json[0]['marca']+"</strong></td><td>Motorista Asignado: <strong>"+json[0]['motorista'].capitalize()+"</strong></td>";
 			cont=cont+'</tr><tr>'
-			cont=cont+'<td>Marca: <strong>'+json[0]['marca']+'</strong></td> <td>Oficina Asiganada: <strong>'+json[0]['seccion']+'</strong></td>';
+			cont=cont+'<td>Modelo: <strong>'+json[0]['modelo']+'</strong></td> <td>Oficina Asiganada: <strong>'+json[0]['seccion']+'</strong></td>';
 			cont=cont+'</tr><tr>'
 			cont=cont+'<td>Clase: <strong>'+json[0]['clase']+'</strong></td><td>Kilometraje Actual: <strong>'+json[0]['kilometraje']+' km</strong></td>';
 			cont=cont+'</tr><tr>'

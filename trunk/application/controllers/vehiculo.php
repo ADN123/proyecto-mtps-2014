@@ -57,6 +57,21 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
+	*	Nombre: controlMtto
+	*	Objetivo: carga la vista de control de mantenimiento del vehículo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 22/07/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function controlMtto()
+	{
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
+		pantalla('mantenimiento/control_mantenimiento',$data);
+	}
+	
+	/*
 	*	Nombre: tallerMTPS
 	*	Objetivo: carga la vista de Reparación y mantenimiento en taller del MTPS
 	*	Hecha por: Oscar
@@ -76,13 +91,13 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: carga los datos de los vehiculos para la vista de Reparación y mantenimiento en taller del MTPS
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 05/07/2014
+	*	Última Modificación: 22/07/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function vehiculo_info($id_vehiculo)
+	function vehiculo_info($id_vehiculo,$estado)
 	{
-		$vehiculo=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo,2);
+		$vehiculo=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo,$estado);
 		
 		$j=json_encode($vehiculo);
 		echo $j;
