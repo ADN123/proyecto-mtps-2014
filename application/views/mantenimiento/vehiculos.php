@@ -1,12 +1,6 @@
-<script>
-	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='La asignación de vehículo/motorista se ha realizado exitosamente.';
-	estado_incorrecto='Error al intentar asignar vehículo/motorista: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
-</script>
 <section>
     <h2>Catálogo de Vehículos</h2>
 </section>
-<input class="button" type="button" name="Agregar" value="Agregar" onclick="window.open('<?php echo base_url() ?>index.php/vehiculo/nuevo_vehiculo','_parent')" />
 <table  class="grid">
     <thead>
       <tr>

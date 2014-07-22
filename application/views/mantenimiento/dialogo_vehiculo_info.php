@@ -49,7 +49,7 @@
         <?php
 			 echo "Condición del vehículo: <strong>".$condicion."</strong> <br>
                 Estado Actual: <strong>".$estado."</strong> <br>
-                Kilometraje Recorrido: <strong>".$kilometraje."</strong> <br></fieldset>
+                Kilometraje Recorrido: <strong>".$kilometraje." km</strong> <br></fieldset>
     <br />";
 		?>
     </fieldset>
