@@ -27,7 +27,7 @@
 </table>
 
 
-<div id="ventana" style="height:600px; width:650px" align="center">
+<div id="ventana" style="height:600px; width:650px">
     <div id='signup-header'>
         <h2>Información del Vehículo</h2>
         <a class="modal_close"></a>

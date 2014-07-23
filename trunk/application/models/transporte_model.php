@@ -899,7 +899,7 @@ function solicitudes_por_asignar_depto(){
 	
 	//////////////////////////FUNCIÓN PARA REGISTRAR UN NUEVO VEHÍCULO/////////////////////////////
 	
-	function registrar_vehiculo($nplaca,$marca,$modelo,$clase,$year,$condicion,$departamento,$seccion,$motorista,$fuente_fondo,$foto)
+	function registrar_vehiculo($nplaca,$marca,$modelo,$clase,$year,$condicion,$seccion_vales,$seccion,$motorista,$fuente_fondo,$foto)
 	{
 		$query="INSERT INTO tcm_vehiculo(placa,id_seccion,id_marca,id_modelo,id_clase,id_condicion,anio,imagen,id_fuente_fondo,estado)
 				values('$nplaca','$seccion','$marca','$modelo','$clase','$condicion','$year','$foto','$fuente_fondo',1)";

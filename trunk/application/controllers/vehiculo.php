@@ -108,7 +108,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: funcion creada para subir imagenes
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 22/07/2014
+	*	Última Modificación: 23/07/2014
 	*	Observaciones: Ninguna
 	*/
 	
@@ -141,7 +141,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Registra los datos de un nuevo vehículo en la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 22/07/2014
+	*	Última Modificación: 23/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function guardar_vehiculo()
@@ -153,7 +153,7 @@ class Vehiculo extends CI_Controller
 		$id_clase=$this->input->post('clase');
 		$anio=$this->input->post('anio');
 		$id_condicion=$this->input->post('condicion');
-		$id_departamento=$this->input->post('oficina');
+		$id_seccion_vales=$this->input->post('seccion_vales');
 		$id_seccion=$this->input->post('seccion');
 		$id_empleado=$this->input->post('motorista');
 		$id_fuente_fondo=$this->input->post('fuente');
@@ -204,7 +204,7 @@ class Vehiculo extends CI_Controller
 		}
 		if($id_marca!=0 && $id_modelo!=0 && $id_clase!=0 && $id_fuente_fondo!=0)
 		{
-			$this->transporte_model->registrar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$id_departamento,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen);
+			$this->transporte_model->registrar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$id_seccion_vales,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a("index.php/vehiculo/nuevo_vehiculo/".$tr);
