@@ -876,7 +876,7 @@ function solicitudes_por_asignar_depto(){
 			inner join org_seccion as o on (v.id_seccion=o.id_seccion)
 			inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
 			where v.id_vehiculo='$id' and v.estado='$estado'
-			GROUP BY v.placa,nombre,seccion,marca,modelo,clase,condicion
+			GROUP BY v.placa,motorista,seccion,marca,modelo,clase,condicion
 			");
 		}
 		return $query->result();

@@ -6,7 +6,8 @@
 <section>
     <h2>Nuevo Vehículo</h2>
 </section>
-<form name="form_vehiculo" method="post" action="<?php echo base_url()?>index.php/vehiculo/guardar_vehiculo" enctype="multipart/form-data">
+<form name="form_vehiculo" method="post" action="<?php echo base_url()?>index.php/vehiculo/guardar_vehiculo" enctype="multipart/form-data" accept-charset="utf-8">
+
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -91,7 +92,9 @@
             </p>
             <p>
                 <label>Fotografía: </label>
-                <input type="file" name="imagen" />
+                <input type="file" name="userfile" id="userfile" disabled="disabled" />
+                <label>Imagen por defecto</label>
+                <input type="checkbox" name="img_df" id="img_df" value="si" checked="checked"  />
             </p>
         </div>
         <div id="step-2">	
@@ -227,6 +230,19 @@ $(document).ready(function(){
 				$("#nfuente").attr("disabled",true);
 				$("#nfuente").val("");
 			}
+		}
+	);
+	$('#img_df').change(
+		function()
+		{
+			if($("#img_df").is(':checked'))
+			{  
+				$("#userfile").attr("disabled",true); 
+			}
+			else
+			{  
+				$("#userfile").attr("disabled",false);
+			} 
 		}
 	);
 });

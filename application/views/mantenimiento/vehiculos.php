@@ -26,7 +26,8 @@
     </tbody>
 </table>
 
-<div id="ventana" style="height:600px">
+
+<div id="ventana" style="height:600px; width:650px" align="center">
     <div id='signup-header'>
         <h2>Información del Vehículo</h2>
         <a class="modal_close"></a>
@@ -34,7 +35,6 @@
     <div id='contenido-ventana'>
     </div>
 </div>
-
 <script language="javascript" >
 	function dialogo(id)
 	{
