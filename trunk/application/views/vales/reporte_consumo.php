@@ -12,14 +12,15 @@
     <h2>Consumo de Vales</h2>
 </section>
 
-<form name="filtro" method="post" id="filtro" action="<?php //echo base_url()?>#">
+
+<form name="filtro" method="post" id="filtro" action="<? echo base_url()?>index.php/vales/consumo_pdf" target="_blank">
 
             <p> 
                 <label for="start" >Fecha Inicio:</label><input id="start" name="start" style="width: 200px" tabindex="1"/>
             
                 <label for="id_fuente_fondo" id="lid_fuente_fondo">Fuente de Fondo </label>
                     <select class="select" style="width:300px;" tabindex="2" id="id_fuente_fondo" name="id_fuente_fondo">
-                    
+                        <option value="0">[Todo]</option>  
                     <?php     
                         foreach($fuente as $val) 
                         {                    ?>
@@ -27,7 +28,7 @@
                     <?php
                         } 
                     ?>
-                                    <option value="0">[Todo]</option>
+                                                                
                     </select>
 
             </p>
@@ -35,6 +36,7 @@
                     <label for="end">Fecha Final:</label><input id="end" name="end" style="width: 200px" tabindex="4"/>                    
                     <label for="id_seccion" id="lservicio_de">Sección</label>
                     <select class="select" style="width:300px;" tabindex="4" id="id_seccion" name="id_seccion" >
+                             <option value="0">[Todo]</option>  
                             <?php
                                 foreach($oficinas as $val) {
                             ?>
@@ -42,11 +44,12 @@
                             <?php   
                                 }
                             ?>
-                                    <option value="0">[Todo]</option>
+                           
                     </select>               
             </p>
             <p align="center">
-                    <button type="button" id="Filtrar" class="button tam-1">Filtrar</button>
+                    <button type="button" id="Filtrar" class="button tam-1">Filtrar</button>                    
+                    <button   id="imp1" class="button tam-1" >Imprimir</button
 
             </p>
 </form>
@@ -57,6 +60,9 @@
 <br>
 <table cellspacing='0' align='center' class='table_design' id="datos" >
             <thead>
+               <th>
+                   N°
+                </th>
                 <th>
                    Seccion
                 </th>
@@ -65,7 +71,10 @@
                 </th>
                 <th>
                     Consumido
-                </th>            
+                </th> 
+                 <th>
+                    Consumido ($)
+                </th>             
 
             </thead>
             <tbody>
@@ -93,19 +102,22 @@
              type: "POST",
             data: formu,
             success: function(data){
-//                console.log(data);
-                grafico(data);//contructor del grafico
+              console.log(data);
+                grafico(data,"seccion");//contructor del grafico
                 tabla(data) 
 
                 },
             error:function(data){
-  //                   console.log(data);
-                 alertify.alert('Error al cargar datos');
-                console.log(data);
+
+                
+
+         //        alertify.alert('Error al cargar datos');
+          console.log(data);
                 }
         });          
         
     }
+
 
 reporte();///llamada al finalizar la contrucion del archivo
 </script>
