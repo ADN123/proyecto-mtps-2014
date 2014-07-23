@@ -28,7 +28,7 @@
 					$estado=$v->estado;
                 }
             
-				echo "<img src='".base_url()."fotografias_vehiculos/".$imagen."' align='center' width='100px'></img><br/>";
+				echo "<img src='".base_url()."fotografias_vehiculos/".$imagen."' align='center' width='200px'></img><br/>";
                 echo "Placa: <strong>".$placa."</strong> <br>
                 Marca: <strong>".$marca."</strong> <br>
                 Modelo: <strong>".$modelo."</strong> <br>
