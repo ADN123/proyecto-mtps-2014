@@ -104,11 +104,44 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
+	*	Nombre: upload
+	*	Objetivo: funcion creada para subir imagenes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 22/07/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function upload()
+	{
+		$config['upload_path'] = './fotografias_vehiculos/';
+		$config['allowed_types'] = 'gif|jpg|jpeg|png';
+				
+		$this->load->library('upload', $config);
+		if (!$this->upload->do_upload())
+		{
+			echo "<script language='javascript'>
+			alert('Seleccione Un Archivo valido de formato: .gif | .jpg | .png | .jpeg');
+			</script>";
+			pantalla('mantenimiento/nuevo_vehiculo');
+		}	
+		else
+		{
+			echo "<script language='javascript'>
+			alert('Fotografía subida correctamente');
+			</script>";
+			$file_data = $this->upload->data();
+			$imagen=$file_data['file_name'];
+		}
+		
+	}
+	
+	/*
 	*	Nombre: guardar_vehiculo
 	*	Objetivo: Registra los datos de un nuevo vehículo en la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 14/05/2014
+	*	Última Modificación: 22/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function guardar_vehiculo()
@@ -124,29 +157,30 @@ class Vehiculo extends CI_Controller
 		$id_seccion=$this->input->post('seccion');
 		$id_empleado=$this->input->post('motorista');
 		$id_fuente_fondo=$this->input->post('fuente');
-		$imagen=$this->input->post('imagen');
-		
-		if($imagen=="") $imagen="vehiculo.jpg"; ////////////// si no se sube una fotografía se pondrá una por defecto.
+		$img_df=$this->input->post('img_df');
+		if($img_df=="si") $imagen="vehiculo.jpg";
 		else
 		{
 			$config['upload_path'] = './fotografias_vehiculos/';
-			$config['allowed_types'] = 'gif|jpg|png';
-		//	$config['max_size']    = '100';
-		//	$config['max_width']  = '1024';
-		//	$config['max_height']  = '768';
-		 
+			$config['allowed_types'] = 'gif|jpg|jpeg|png';
+					
 			$this->load->library('upload', $config);
-		 
-			if ( ! $this->upload->do_upload())
+			if (!$this->upload->do_upload())
 			{
-				//$error = array('error' = $this->upload->display_errors());
-			}
+				echo "<script language='javascript'>
+				alert('Seleccione Un Archivo valido de formato: .gif | .jpg | .png | .jpeg');
+				</script>";
+				pantalla('mantenimiento/nuevo_vehiculo');
+			}	
 			else
 			{
-				$data = array('upload_data' => $this->upload->data());
+				echo "<script language='javascript'>
+				alert('Fotografia subida correctamente');
+				</script>";
+				$file_data = $this->upload->data();
+				$imagen=$file_data['file_name'];
 			}
-		}
-		
+		}		
 		$nmarca=$this->input->post('nmarca');
 		$nmodelo=$this->input->post('nmodelo');
 		$nclase=$this->input->post('nclase');

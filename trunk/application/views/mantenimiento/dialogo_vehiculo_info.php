@@ -28,6 +28,7 @@
 					$estado=$v->estado;
                 }
             
+				echo "<img src='".base_url()."fotografias_vehiculos/".$imagen."' align='center' width='100px'></img><br/>";
                 echo "Placa: <strong>".$placa."</strong> <br>
                 Marca: <strong>".$marca."</strong> <br>
                 Modelo: <strong>".$modelo."</strong> <br>
@@ -47,8 +48,13 @@
     <fieldset>
         <legend align='left'>Estado</legend>
         <?php
+		if($estado==1) $msj="Activo";
+		else if($estado==2) $msj="En Reparación(Taller Interno)";
+		else if($estado==3) $msj="En Reparación(Taller Externo)";
+		else if($estado==4) $msj="Robado";
+		else if($estado==0) $msj="Inactivo";
 			 echo "Condición del vehículo: <strong>".$condicion."</strong> <br>
-                Estado Actual: <strong>".$estado."</strong> <br>
+                Estado Actual: <strong>".$msj."</strong> <br>
                 Kilometraje Recorrido: <strong>".$kilometraje." km</strong> <br></fieldset>
     <br />";
 		?>
