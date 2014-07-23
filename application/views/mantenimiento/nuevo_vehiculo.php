@@ -101,7 +101,7 @@
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n de fuente de fondo del vehículo</h2>
             <p>
                 <label>Fuente de Fondo: </label>
-                <select name="fuente" id="fuente" class="select" style="width:250px">
+                <select name="fuente" id="fuente" class="select" style="width:250px"onChange="asignacion(this.value)">
                 <?php                
 					foreach($fuente_fondo as $fue)
 					{
@@ -140,7 +140,7 @@
             </p>
             <p>
                 <label>Sección de Asignación de vales: </label>
-                <select name="seccion_vales" class="select" style="width:350px">
+                <select name="seccion_vales" id="seccion_vales"  class="select" style="width:350px">
                 <?php
                 
                 foreach($seccion as $sec)
@@ -238,6 +238,11 @@ $(document).ready(function(){
 			} 
 		}
 	);
+    function asignacion (id_fuente_fondo) {
+        
+            $('#seccion_vales').empty();
+
+    }
 });
 
 

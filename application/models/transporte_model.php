@@ -881,7 +881,6 @@ function solicitudes_por_asignar_depto(){
 		}
 		return $query->result();
 	}
-	
 	//////////////////////Consultar los datos de los vehículos//////////////////
 	function consultar_datos_vehiculos($id)
 	{
@@ -919,6 +918,15 @@ function solicitudes_por_asignar_depto(){
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	
+	function guardar_taller($datos)
+	{
+		extract($datos);
+		$consulta="INSERT INTO tcm_mantenimiento_interno (id_vehiculo, aceite, frenos, bateria, electricidad, amortiguadores, llantas, motor, otro_mtto, naceite, presion, agua, rllantas, caja_velocidades, clutch, r_motor, lavado, observaciones, fecha, id_usuario) 
+		VALUES ('$id_vehiculo', '$aceite', '$frenos', '$bateria', '$electricidad', '$amortiguadores', '$llantas', '$motor', '$otro_mtto', '$naceite', '$presion', '$agua', '$rllantas', '$caja_velocidades', '$clutch', '$r_motor', '$lavado', '$observaciones', '$fecha', '$id_usuario');";
+		$this->db->query($consulta);
+	}
+
+
 	///////////////////////////FUNCIÓN PARA VALIDAR LA FECHA Y LA HORA DE UNA SOLICITUD//////////
 	
 	function validar_fecha_hora()

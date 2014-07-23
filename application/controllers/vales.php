@@ -201,7 +201,8 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 
 		if (isset($_POST['values'])) {			
 				
-				for($i=0;$i<count($vehiculos);$i++) {		//		$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
+				for($i=0;$i<count($vehiculos);$i++) {		
+						$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
 			}
 		}
 		
@@ -214,7 +215,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 		}
 
 		$this->db->trans_complete();
-		
+		//print_r($_POST);
 		$tr=($this->db->trans_status()===FALSE)?0:1;
 		ir_a('index.php/vales/ingreso_requisicion/'.$tr);		
 	}
@@ -914,23 +915,63 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	{		
 		$id_seccion=$this->input->post('id_seccion');
 		$id_fuente_fondo=$this->input->post('id_fuente_fondo');
-		$fecha_inicio=$this->input->post('start');
 		
-		try {			
-			$fec=str_replace("/","-",$fecha_inicio);
-			$fecha_inicio=date("Y-m-d", strtotime($fec));
-			$fec=str_replace("/","-",$fecha_fin);
-			$fecha_fin=date("Y-m-d", strtotime($fec));
-
-		} catch (Exception $e) {
-			$fecha_inicio=NULL;
-			$fecha_fin=NULL;
+		if($_POST['start']!="" && $_POST['end']!=""){
+				$fecha_inicio=$this->input->post('start');
+				$fecha_fin=$this->input->post('end');
+				$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+				$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+		}else{
+				$fecha_inicio=NULL;
+				$fecha_fin=NULL;
+		}
+		if($id_seccion==0){
+			$id_seccion=NULL;
+		}
+		if($id_fuente_fondo==0){
+			$id_fuente_fondo= NULL;
 		}
 
-		$data=$this->vales_model->consumo_seccion_fuente();
-		echo json_encode($data);	
+		$data=$this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+
+	echo json_encode($data);	
 	}
 
+		/*
+	*	Nombre: consumo_pdf
+	*	Objetivo: imprimir reporte segun parametros recibidos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 20/07/2014
+	*	Observaciones: Ninguna
+	*/
+
+	function consumo_pdf()
+	{		
+		$id_seccion=$this->input->post('id_seccion');
+		$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+		
+		if($_POST['start']!="" && $_POST['end']!=""){
+				$fecha_inicio=$this->input->post('start');
+				$fecha_fin=$this->input->post('end');
+				$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+				$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+		}else{
+				$fecha_inicio=NULL;
+				$fecha_fin=NULL;
+		}
+		if($id_seccion==0){
+			$id_seccion=NULL;
+		}
+		if($id_fuente_fondo==0){
+			$id_fuente_fondo= NULL;
+		}
+		
+
+		$data=$this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+	$data['j']= json_encode($data);	
+	$this->load->view('vales/consumo_pdf');
+	}
 	/*
 	*	Nombre: estado
 	*	Objetivo: Mostrar un informe de los vales disponibles 

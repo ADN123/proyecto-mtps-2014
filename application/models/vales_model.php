@@ -152,8 +152,8 @@ class Vales_model extends CI_Model {
 	{ 
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_requisicion 
-		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion, refuerzo, mes) 
-VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()), $refuerzo, $mes)";
+		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion, refuerzo, mes, asignado) 
+VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()), $refuerzo, $mes, $asignado)";
 		
 
 		$this->db->query($sentencia);
@@ -789,7 +789,26 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				INNER JOIN tcm_seccion_asignacion sa ON (s.id_seccion = sa.id_seccion AND r.id_fuente_fondo= sa.id_fuente_fondo)
 				GROUP BY r.id_seccion "; */
 
+				$fechaF=" DATE_FORMAT(DATE(fecha_factura),'%Y-%m') = DATE_FORMAT(CURDATE(),'%Y-%m')	";
+				$fuenteF="";
+				$seccionF="";
+				if($fecha_inicio !=NULL && $fecha_fin!=NULL){
+
+					$fechaF="  fecha_factura  BETWEEN DATE('".$fecha_inicio."') AND DATE('".$fecha_fin."')";
+				}
+				if($id_seccion!=NULL){
+
+					$seccionF=" AND r.id_seccion = ".$id_seccion;
+				}
+				if($id_fuente_fondo!=NULL){
+
+					$fuenteF=" AND r.id_fuente_fondo = ".$id_fuente_fondo;
+				}
+
+				$where= $fechaF.$seccionF.$fuenteF;
+			$query=$this->db->query(" SET @row_number:=0;");
 			$q="SELECT
+					@row_number:=@row_number+1 AS row_number, 
 					r.id_seccion, 
 					CONCAT( s.nombre_seccion, ' (', f.nombre_fuente_fondo, ' )') as seccion,
 					r.asignado asignado,
@@ -805,10 +824,12 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				INNER JOIN org_seccion s ON s.id_seccion= r.id_seccion
 				INNER JOIN tcm_vale v ON v.id_vale  = rv.id_vale
 				INNER JOIN tcm_fuente_fondo f ON f.id_fuente_fondo = r.id_fuente_fondo 
-				WHERE DATE_FORMAT(DATE(fecha_factura),'%Y-%m') = DATE_FORMAT(CURDATE(),'%Y-%m')	
+				WHERE ".$where."	
 				 GROUP BY r.id_seccion
 				ORDER BY c.fecha_factura";
-			$query=$this->db->query($q);		
+
+			$query=$this->db->query($q);
+
 			return $query->result();
 
 	}
