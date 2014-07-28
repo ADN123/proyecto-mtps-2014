@@ -68,25 +68,7 @@ $(document).ready(function() {
 		min: new Date(f.getFullYear(), f.getMonth(), f.getDate()+1),
 	});
 	$(".hora").kendoTimePicker();
-	/*$(".grid").kendoGrid({
-		height: 450,
-		width: 800,
-		sortable: true,
-		dataSource: {
-			type: "odata",
-			pageSize: 9
-		},
-		pageable: true,
-        dataBound: recargar_javascript
-	});
-	
-	$('#grid').dataTable( {
-		"sScrollY": 350,
-		"bJQueryUI": false,
-		"sPaginationType": "full_numbers",
-		"aLengthMenu": [ 18, 25, 50, 100 ],
-		"iDisplayLength": 18
-	}); */
+
 
 $('.grid').dataTable( {
         "language": {

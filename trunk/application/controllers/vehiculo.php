@@ -239,10 +239,47 @@ class Vehiculo extends CI_Controller
 	*	Observaciones: Ninguna
 	*/
 	
-	function guardar_taller()
+	function guardar_mtto_taller()
 	{
 		$this->db->trans_start();
 		
+	}
+
+	function guardar_taller()
+	{
+		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$this->transporte_model->guardar_taller($_POST);
+
+	}
+
+	/*
+	*	Nombre: vehiculos_pdf
+	*	Objetivo: llama a la vista de vehiculo_pdf para odservar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 28/07/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function reporte_vehiculos()
+	{
+		$data['']=$this->transporte_model->full_vehiculos();
+		pantalla('mantenimiento/reporte_vehiculos');	
+	}
+
+	/*
+	*	Nombre: vehiculos_pdf
+	*	Objetivo: llama a la vista de vehiculo_pdf para odservar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 28/07/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function vehiculos_pdf()
+	{
+		pantalla('mantenimiento/vehiculos_pdf');	
 	}
 }
 ?>

@@ -380,14 +380,21 @@ class Usuario_model extends CI_Model {
 	
 	function mostrar_usuarios($id_usuario=NULL,$id_seccion=NULL)
 	{
-		if($id_usuario!=NULL)
+		$grup="";
+
+		if($id_usuario!=NULL){
 			$where_usuario=" AND org_usuario.id_usuario=".$id_usuario;
-		else
+			$grup="";
+		}else{
 			$where_usuario="";
+			$grup=" GROUP BY usuario";
+			}
 		if($id_seccion!=NULL)
 			$where_seccion=" AND sir_empleado_informacion_laboral.id_seccion=".$id_seccion;
 		else
 			$where_seccion="";
+
+
 		$sentencia="SELECT DISTINCT
 					org_usuario.id_usuario,
 					nombre_completo,
@@ -397,7 +404,7 @@ class Usuario_model extends CI_Model {
 					org_usuario
 					INNER JOIN sir_empleado ON org_usuario.nr = sir_empleado.nr 
 					LEFT JOIN sir_empleado_informacion_laboral ON sir_empleado.id_empleado = sir_empleado_informacion_laboral.id_empleado 
-					LEFT JOIN org_usuario_rol ON org_usuario_rol.id_usuario = org_usuario.id_usuario WHERE org_usuario.estado=1 ".$where_seccion.$where_usuario;
+					LEFT JOIN org_usuario_rol ON org_usuario_rol.id_usuario = org_usuario.id_usuario WHERE org_usuario.estado=1 ".$where_seccion.$where_usuario.$grup;
 			
 
 		$query=$this->db->query($sentencia);

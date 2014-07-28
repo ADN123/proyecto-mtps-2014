@@ -9,11 +9,11 @@
 </script>
 
 <section>
-    <h2>Consumo de vales por sección</h2>
+    <h2>Consumo Historico </h2>
 </section>
 
 
-<form name="filtro" method="post" id="filtro" action="<? echo base_url()?>index.php/vales/consumo_pdf" target="_blank">
+<form name="filtro" method="post" id="filtro" action="<? echo base_url()?>index.php/vales/historico_pdf" target="_blank">
 
             <p> 
                 <label for="start" >Fecha Inicio:</label><input id="start" name="start" style="width: 200px" tabindex="1"/>
@@ -48,10 +48,16 @@
                     </select>               
             </p>
             <p>
-                <label for="color1" style="width: 300px">Color Consumido</label>
+                <label for="color1" style="width: 300px">Color de grafico</label>
                  <input id="color1" style="width: 200px" name="color1"/>
-                <label for="color2" style="width: 200px">Color Asignado</label>
-                 <input id="color2" style="width: 200px" name="color2"/>
+                <label for="grupo" style="width: 160px">Ver por</label>
+                <select class="select" style="width:200px;" tabindex="4" id="agrupar" name="agrupar" >
+                     <option value="1" selected>Día</option>
+                     <option value="2" >Mes</option>
+                     <option value="3" >Año</option>                    
+                </select>   
+
+                 
 
             </p>
 
@@ -59,7 +65,7 @@
                     <button type="button" id="Filtrar" class="button tam-1" >Filtrar</button>                    
                     <button   id="imp1" class="button tam-1" >Imprimir</button
 
-            </p>
+            ></p>
 </form>
 
     <!------------------------------------------Plantilla de carga de grafico y tabla----------------------------------------------------------------------- -->
@@ -72,10 +78,7 @@
                    N°
                 </th>
                 <th>
-                   Seccion
-                </th>
-                <th>
-                    Asignado
+                   Fecha
                 </th>
                 <th>
                     Consumido
@@ -105,14 +108,23 @@
     function reporte(formu){  
                 $.ajax({
             async:  true, 
-            url:    base_url()+"index.php/vales/consumo_json",
+            url:    base_url()+"index.php/vales/historico_json",
             dataType:"json",
              type: "POST",
             data: formu,
             success: function(data){
               console.log(data);
-                grafico(data,"seccion");//contructor del grafico
-                tabla(data) 
+
+              var label;
+                      if(data.length<=12){
+                           label="fecha";
+                      }else{
+                            label="row_number";
+                            
+                        }
+                        grafico1(data,label);//contructor del grafico
+                        tabla1(data) 
+
 
                 },
             error:function(data){
@@ -126,8 +138,48 @@
         
     }
 
-setTimeout ("reporte();", 2000);
-///llamada al finalizar la contrucion del archivo
-</script>
+function  grafico1(chartData, label){
 
+           var color1 = $("#color1").val();
+
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+                chart.dataProvider = chartData;
+                chart.categoryField = label;
+                chart.startDuration = 1;
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.labelRotation = 0;
+                categoryAxis.gridPosition = "start";
+
+                // value
+                // in case you don't want to change default settings of value axis,
+                // you don't need to create it, as one value axis is created automatically.
+
+                // GRAPH
+                var graph = new AmCharts.AmGraph();
+                graph.valueField = "consumido";
+                graph.balloonText = "[[category]]: <b>[[value]] Vales de combustible</b>";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.8;
+                graph.fillColors = color1;
+                chart.addGraph(graph);
+
+                // CURSOR
+                var chartCursor = new AmCharts.ChartCursor();
+                chartCursor.cursorAlpha = 0;
+                chartCursor.zoomable = false;
+                chartCursor.categoryBalloonEnabled = false;
+                chart.addChartCursor(chartCursor);
+
+
+                chart.write("chartdiv");
+    }   
+
+setTimeout ("reporte();", 2000);
+/*//llamada al finalizar la contrucion del archivo  */
+</script>
 <script src="<?php echo base_url()?>js/views/reporte_consumo.js" type="text/javascript"></script>

@@ -50,6 +50,7 @@
                     <label for="numero_factura" id="lnumero_factura" style="width:35%;">N&deg; Factura </label>
                     <input type="text" size="15" tabindex="3" id="numero_factura" name="numero_factura"/> 
                 </p>
+
            	</div>
             <div style="width: 40%; display: inline-block; margin-right: 9%; text-align: left;">
                 <p>
@@ -65,6 +66,23 @@
                     $ <input tabindex="6" id="valor_diesel" name="valor_diesel" type="text" size="5"/> US
                 </p>
             </div>
+            <?php /* if (sizeof($seccion)!=1) {  ?>
+
+                  <p align="left">
+                    <label for="seccion" id="lseccion" style="width:20%;">Sección </label>
+                   <select tabindex="7" class="select" id="id_seccion" name="id_seccion" style="width:275px">
+                        <?php
+                             foreach($seccion as $val) {
+                                 echo '<option value="'.$val['id_seccion'].'">'.$val['seccion'].'</option>';
+                             }
+                        ?>
+                    </select>
+            </p>
+            <?php }else{ ?>    
+            
+                    <input  id="id_seccion" name="id_seccion" type="hidden" value="<?php echo $seccion; ?>"/> US
+
+            <?php } */?>    
         </div>
         <div id="step-2" style="text-align: center;">	
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n de la cantidad suministrada a cada veh&iacute;culo</h2>
