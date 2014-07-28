@@ -1,10 +1,23 @@
 <?php
+	define("INGRESO",69);
+	define("REQUISICION",81);
+	define("AUTORIZAR",86);
+	define("ENTREGAR",87);
+	define("CONSUMO",82);
+	define("ASIGNACION",88);
+	define("ESTADO",111);
+	define("VER_REQUISICIONES",89);
+	define("CONSUMO_S",114);
+	define("CONSUMO_H",114);	//consumo historico
+	define("CONSUMO_V",115);
+	define("REQUISICION_PDF",115); //NO ESTA
+	define("HERRAMIENTA",112);
 
 class Vales extends CI_Controller
 {
-	public $INGRESO=3;
 
-    
+
+
     function Vales()
 	{
         parent::__construct();
@@ -16,25 +29,26 @@ class Vales extends CI_Controller
 			redirect('index.php/sessiones');
 		}
 
+		
     }
 	
 	function index()
 	{
-		$this->ingreso_vales();		
 
+		$this->ingreso_consumo();
   	}
 
 	/*
 	*	Nombre: ingreso_vales
 	*	Objetivo: Carga la vista para el ingreso de vales de combustible
 	*	Hecha por: Leonel
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function ingreso_vales($estado_transaccion=NULL) 
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),69); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),INGRESO); 
 		
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) {
@@ -57,13 +71,13 @@ class Vales extends CI_Controller
 	*	Nombre: guardar_vales
 	*	Objetivo: guarda los datos de los vales de combustible
 	*	Hecha por: Leonel
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function guardar_vales() 
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),69); /*Verificacion de permiso para crear solicitudes*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),INGRESO); /*Verificacion de permiso para crear solicitudes*/
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
@@ -105,13 +119,13 @@ class Vales extends CI_Controller
 	*	Nombre: ingreso_requisicion
 	*	Objetivo: Cargar la vista de la requisicion (solicitud) de combustible
 	*	Hecha por: Leonel
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function ingreso_requisicion($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),81); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
 		$url='vales/requicision';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		$data['m']=$this->vales_model->meses_requisicion();
@@ -169,8 +183,14 @@ class Vales extends CI_Controller
 
 function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 {
-		echo json_encode($this->vales_model->consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes));	
 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+	
+		echo json_encode($this->vales_model->consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes));	
+		}else{
+			echo 'No tiene permisos para acceder ';
+		}
 }
 	/*
 	*	Nombre: guardar_requisicion
@@ -183,41 +203,41 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	function guardar_requisicion()
 	{
 
-		if($_POST['refuerzo']==1){
-			$_POST['asignado']=0;
-		}else{			
-			$temp= $this->vales_model->asignaciones($_POST['id_seccion'],$_POST['id_fuente_fondo']);			
-			$_POST['asignado']=$temp[0][cantidad];
-		}
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+		
+			if($_POST['refuerzo']==1){
+				$_POST['asignado']=0;
+			}else{			
+				$temp= $this->vales_model->asignaciones($_POST['id_seccion'],$_POST['id_fuente_fondo']);			
+				$_POST['asignado']=$temp[0][cantidad];
+			}
+			$this->db->trans_start();
+				$id_usuario=$this->session->userdata('id_usuario');
+				$id_empleado_solicitante=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
+				$id_requisicion=$this->vales_model->guardar_requisicion($_POST, $id_usuario, $id_empleado_solicitante);
+				$vehiculos=$this->input->post('values');
 
-		$this->db->trans_start();
-
-		$id_usuario=$this->session->userdata('id_usuario');
-		$id_empleado_solicitante=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
-		$id_requisicion=$this->vales_model->guardar_requisicion($_POST, $id_usuario, $id_empleado_solicitante);
-
-		$vehiculos=$this->input->post('values');
-
-
-		if (isset($_POST['values'])) {			
+				if (isset($_POST['values'])) {			
+						
+						for($i=0;$i<count($vehiculos);$i++) {		
+								$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
+					}
+				}
 				
-				for($i=0;$i<count($vehiculos);$i++) {		
-						$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
-			}
-		}
-		
-		$vehiculos=$this->input->post('values2');
-		
-		if (isset($_POST['values2'])) {			
-			for($i=0;$i<count($vehiculos);$i++) {
-				$this->vales_model->guardar_req_veh(NULL,$vehiculos[$i], $id_requisicion);
-			}
-		}
+				$vehiculos=$this->input->post('values2');
 
-		$this->db->trans_complete();
-		//print_r($_POST);
-		$tr=($this->db->trans_status()===FALSE)?0:1;
-		ir_a('index.php/vales/ingreso_requisicion/'.$tr);		
+				if (isset($_POST['values2'])) {			
+					for($i=0;$i<count($vehiculos);$i++) {
+						$this->vales_model->guardar_req_veh(NULL,$vehiculos[$i], $id_requisicion);
+					}
+				}
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/ingreso_requisicion/'.$tr);		
+		}else{
+			echo 'No tiene permisos para acceder ';	
+		}
 	}
 	
 	/*
@@ -231,11 +251,17 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*/
 	function vehiculos($id_seccion=NULL, $id_fuente_fondo = NULL)
 	{
-		$data['vehiculos']=$this->vales_model->vehiculos($id_seccion, $id_fuente_fondo);
-		$this->load->view("vales/vehiculos",$data);		
-	}
-	
-		/*
+
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+		
+			$data['vehiculos']=$this->vales_model->vehiculos($id_seccion, $id_fuente_fondo);
+			$this->load->view("vales/vehiculos",$data);		
+		}else{
+			echo 'No tiene permisos para acceder ';		
+		}
+	}	
+	/*
 	*	Nombre: Otros
 	*	Objetivo: Cargar por ajax herramientas u otros articulos consumidores de combustible de una seccion y fuente de fonodo segun selccione el usuario 
 	*	en la pantalla de ingrese de requisicion de combustible 
@@ -246,8 +272,13 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*/
 	function CargarOtros($id_seccion=NULL, $id_fuente_fondo = NULL)
 	{
-		$data['otros']=$this->vales_model->otros($id_seccion, $id_fuente_fondo);
-		$this->load->view("vales/otros",$data);		
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {		
+			$data['otros']=$this->vales_model->otros($id_seccion, $id_fuente_fondo);
+			$this->load->view("vales/otros",$data);		
+		}else{
+			echo 'No tiene permisos para acceder ';		
+		}
 	}
 	
 /*
@@ -261,6 +292,9 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	function consultar_consumo($id_seccion, $id_fuente_fondo)
 	{
 		
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
+			if($data['id_permiso']!=NULL) {		
+			
 				$a=$this->vales_model->consultar_consumo($id_seccion, $id_fuente_fondo);
 				$a=$a[0];
 				$b=$this->vales_model->asignaciones($id_seccion, $id_fuente_fondo);
@@ -270,15 +304,17 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 							'asignado'=>$b['cantidad'],
 							'restante'=>$a['suma']);
 					echo json_encode($c);
-
+			}else{
+				echo 'No tiene permisos para acceder ';		
+			}
 
 
 	}
 	/*
 	*	Nombre: requisiciones_pdf
 	*	Objetivo: Cargar el PDF 
-	*	Hecha por: Oscar
-	*	Modificada por: Oscar
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/06/2014
 	*	Observaciones: Ninguna.
 	*/
@@ -286,21 +322,28 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 
 	function requisiciones_pdf($id)
 	{
-		$data['datos']=$this->vales_model->req_pdf($id);
-		$this->load->view("vales/requisicion_pdf",$data);
+
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION_PDF); /*Verificacion de permiso para imprimir requisiciones*/
+			if($data['id_permiso']!=NULL) {		
+				$data['datos']=$this->vales_model->req_pdf($id);
+				$this->load->view("vales/requisicion_pdf",$data);
+					
+				}else{
+				echo 'No tiene permisos para acceder ';		
+			}
 	}
 
 	/*
 	*	Nombre: visto bueno
 	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function autorizacion($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),86); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),AUTORIZAR); /*Verificacion de permiso para autorizacion*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -335,13 +378,13 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: dialogo_ autorizacion 
 	*	Objetivo: Cargar el cuadro de dialogo mediante ajax en la pantalla de autorizacion de vales de combustible
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function dialogo_autorizacion($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),86);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),AUTORIZAR);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			$datos['d']=$this->vales_model->info_requisicion($id);
@@ -361,13 +404,13 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: guardar_autorizacion
 	*	Objetivo: Guardar la informacion o respuesta del usuario en visto bueno
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
 	function guardar_autorizacion()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),86);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),AUTORIZAR);
 		$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$_POST['id_empleado']=$id_empleado;
@@ -390,7 +433,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: ver requiciciones de combustible 
 	*	Objetivo: Aprobar y asignar los vales a entregar a la oficina, o en su defecto rechazar la peticion
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
@@ -399,7 +442,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 
 	function ver_requisiciones($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),89); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),VER_REQUISICIONES); /*Verificacion de permiso para crear requisiciones*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -433,13 +476,13 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: dialogo detalle
 	*	Objetivo: 	Guardar la informacion o respuesta del usuario en visto bueno
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
 	function dialogo_detalles($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),89);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),VER_REQUISICIONES);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
@@ -461,13 +504,13 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: Asignaciones de vales a cada seccion
 	*	Objetivo: Permite modificar, crear o elimnar las asignaciones mensuales de vales a las diferentes secciones
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function asignaciones($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -485,7 +528,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: dialogoM_asignacion 
 	*	Objetivo: 	Permite modificar las asignaciones
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
@@ -494,7 +537,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	
 	function dialogoM_asignacion($id_seccion,$id_fuente_fondo)
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$data['d']=$this->vales_model->asignaciones($id_seccion,$id_fuente_fondo);
@@ -508,14 +551,14 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: modificar_asignacion
 	*	Objetivo: 	modifica la asiganacion en la base de datos
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*/
 
 
 	function modificar_asignacion()
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
@@ -535,14 +578,14 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: dialogoN_asignacion
 	*	Objetivo: 	Permite insertar una nueva asignación
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*/
 	
 
 	function dialogoN_asignacion()
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$data['oficinas']=$this->vales_model->consultar_oficinas();
@@ -557,13 +600,13 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: Insertar_asignacion
 	*	Objetivo: 	guarda la asiganacion en la base de datos
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*/
 
 	function insertar_asignacion()
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
@@ -582,13 +625,13 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: eliminar_asignacion
 	*	Objetivo: 	eliminar la asiganacion en la base de datos
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*/
 
 	function eliminar_asignacion($id_seccion, $id_fuente_fondo)
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
@@ -605,9 +648,9 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 
 	/*
 	*	Nombre: ingreso_consumo
-	*	Objetivo: Carga la vista para el ingreso de comsumo de vales de combustible or vehiculo.
+	*	Objetivo: Carga la vista para el ingreso de comsumo de vales de combustible por vehiculo.
 	*	Hecha por: Leonel
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
@@ -615,11 +658,32 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 
 	function ingreso_consumo($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO); 
 		
 		if($data['id_permiso']!=NULL) {
 			$data['fuente']=$this->vales_model->consultar_fuente_fondo();
 			$data['gasolineras']=$this->vales_model->consultar_gasolineras();
+			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			
+	
+/*			switch ($data['id_permiso']) {
+				case 2: //seccion
+					$data['seccion']=$id_seccion['id_seccion'];
+					break;
+				case 3: //administrador nacional
+					$data['seccion']=$this->vales_model->secciones_vales();
+					break;
+				case 4: //administrador departamental
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
+						$data['seccion']=$id_seccion['id_seccion'];
+
+
+					}else{
+						$data['seccion']=$this->vales_model->secciones_vales(TRUE);
+					}
+					break;
+			}
+*/
 			$data['estado_transaccion']=$estado_transaccion;
 			pantalla("vales/consumo",$data);	
 		}
@@ -633,16 +697,16 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Objetivo: Cargar por ajax los vehiculos de una seccion segun la gasolinera que se seleccione  
 	*	en la pantalla de ingrese de requisicion de combustible 
 	*	Hecha por: Leonel
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function vehiculos_consumo($id_gasolinera = NULL, $fecha_factura_dia = NULL, $fecha_factura_mes = NULL, $fecha_factura_anio = NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO); 
 		
 		if($data['id_permiso']!=NULL) {
-			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));			
 			$fecha_factura=$fecha_factura_anio."-".$fecha_factura_mes."-".$fecha_factura_dia;
 			switch($data['id_permiso']) {
 				case 1:
@@ -680,7 +744,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*/
 	function guardar_consumo()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),76); 
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO); 
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
@@ -761,7 +825,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Nombre: entrega de vales
 	*	Objetivo: Mostrar la informacion necesaria para entregar los vales
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
@@ -769,7 +833,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 
 function entrega($estado_transaccion=NULL)
 {
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),87); 
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ENTREGAR); 
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -787,13 +851,13 @@ function entrega($estado_transaccion=NULL)
 	*	Nombre: dialogo entrega vales
 	*	Objetivo: Mostrar  informacion mas detallada de la entrega de vales
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
 	function dialogo_entrega($id)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),87);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ENTREGAR);
 		if(isset($data['id_permiso'])&& $data['id_permiso']>=2 ) {
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			
@@ -806,7 +870,6 @@ function entrega($estado_transaccion=NULL)
 			$datos['id']=$id;
 
 
-			//echo "<pre>";	print_r($datos);echo "</pre>";
 			$this->load->view('vales/dialogo_entrega',$datos);
 		}
 		else {
@@ -817,13 +880,13 @@ function entrega($estado_transaccion=NULL)
 	*	Nombre: guardar_entrega
 	*	Objetivo: Guardar el registro de entrega
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
 	function guardar_entrega()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),87);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ENTREGAR);
 		$id_empleado=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$_POST['id_empleado']=$id_empleado;		
@@ -835,11 +898,6 @@ function entrega($estado_transaccion=NULL)
 
 				$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
 				$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);							
-			/*
-				$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
-				$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);				
-
-				*/
 
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
@@ -851,7 +909,12 @@ function entrega($estado_transaccion=NULL)
 	}
 
 	function vales_a_entregar($id){
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ENTREGAR);
+		if($data['id_permiso']!=NULL) {			
 				$this->vales_model->vales_a_entregar($id);
+		}else{
+			echo 'No tiene permisos para acceder';
+		}
 
 	}
 
@@ -866,7 +929,7 @@ function entrega($estado_transaccion=NULL)
 
 		function reporte_consumo()
 	{
-$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),75); /*Verificacion de permiso para crear requisiciones*/
+$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
 		$url='vales/reporte_consumo';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
@@ -913,28 +976,35 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 
 	function consumo_json()
 	{		
-		$id_seccion=$this->input->post('id_seccion');
-		$id_fuente_fondo=$this->input->post('id_fuente_fondo');
-		
-		if($_POST['start']!="" && $_POST['end']!=""){
-				$fecha_inicio=$this->input->post('start');
-				$fecha_fin=$this->input->post('end');
-				$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
-				$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
-		}else{
-				$fecha_inicio=NULL;
-				$fecha_fin=NULL;
-		}
-		if($id_seccion==0){
-			$id_seccion=NULL;
-		}
-		if($id_fuente_fondo==0){
-			$id_fuente_fondo= NULL;
-		}
 
-		$data=$this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+			$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
 
-	echo json_encode($data);	
+			$id_seccion=$this->input->post('id_seccion');
+			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			
+			if($_POST['start']!="" && $_POST['end']!=""){
+					$fecha_inicio=$this->input->post('start');
+					$fecha_fin=$this->input->post('end');
+					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+			}else{
+					$fecha_inicio=NULL;
+					$fecha_fin=NULL;
+			}
+			if($id_seccion==0){
+				$id_seccion=NULL;
+			}
+			if($id_fuente_fondo==0){
+				$id_fuente_fondo= NULL;
+			}
+
+			$data=$this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+			echo json_encode($data);
+		}else {
+			echo 'No tiene permisos para acceder';
+		}
+			
 	}
 
 		/*
@@ -948,29 +1018,44 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 
 	function consumo_pdf()
 	{		
-		$id_seccion=$this->input->post('id_seccion');
-		$id_fuente_fondo=$this->input->post('id_fuente_fondo');
-		
-		if($_POST['start']!="" && $_POST['end']!=""){
-				$fecha_inicio=$this->input->post('start');
-				$fecha_fin=$this->input->post('end');
-				$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
-				$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
-		}else{
-				$fecha_inicio=NULL;
-				$fecha_fin=NULL;
-		}
-		if($id_seccion==0){
-			$id_seccion=NULL;
-		}
-		if($id_fuente_fondo==0){
-			$id_fuente_fondo= NULL;
-		}
-		
 
-		$data=$this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
-	$data['j']= json_encode($data);	
-	$this->load->view('vales/consumo_pdf');
+
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+				///Preparacion de datos
+			$id_seccion=$this->input->post('id_seccion');
+			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			$data['color1']=$this->input->post('color1');
+			$data['color2']=$this->input->post('color2');
+			
+			if($_POST['start']!="" && $_POST['end']!=""){
+					$fecha_inicio=$this->input->post('start');
+					$fecha_fin=$this->input->post('end');
+					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+			}else{
+					$fecha_inicio=NULL;
+					$fecha_fin=NULL;
+			}
+			if($id_seccion==0){
+				$id_seccion=NULL;
+			}
+			if($id_fuente_fondo==0){
+				$id_fuente_fondo= NULL;
+			}
+
+
+			$aux= $this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+			$data['j']=json_encode($aux);
+			
+
+			//print_r($data);
+			$this->load->view('vales/consumo_pdf',$data);
+
+		}else {
+			echo 'No tiene permisos para acceder';
+		}
+
 	}
 	/*
 	*	Nombre: estado
@@ -982,7 +1067,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	*/
 	function estado()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),91); /*Verificacion de permisos*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ESTADO); /*Verificacion de permisos*/
 		$url='vales/estado';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		
@@ -1033,7 +1118,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	*/
 	function herramientas($estado_transaccion=NULL)
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),HERRAMIENTA); /*Verificacion de permiso gestionar herramientas*/
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
@@ -1051,7 +1136,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	*	Nombre: dialogoM_herramienta
 	*	Objetivo: 	Permite modificar las asignaciones
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Utilizo el arreglo POST para faciclitar la transferencia de datos al modelo
 	*/
@@ -1060,7 +1145,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	
 	function dialogoM_herramienta($id_herramienta)
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),HERRAMIENTA); /*Verificacion de permiso gestionar herramientas*/
 		if($data['id_permiso']!=NULL) {
 
 			$data['oficinas']=$this->vales_model->consultar_oficinas();
@@ -1076,14 +1161,14 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	*	Nombre: modificar_herramienta
 	*	Objetivo: 	modifica la herramienta en la base de datos
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*/
 
 
 	function modificar_herramienta()
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),HERRAMIENTA); /*Verificacion de permiso gestionar herramientas*/
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
@@ -1093,8 +1178,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/herramientas/'.$tr);		
-		}
-		else {
+		}else{
 			echo 'No tiene permisos para acceder';
 		}		
 	}
@@ -1110,7 +1194,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 
 	function dialogoN_herramienta()
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),HERRAMIENTA); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$data['oficinas']=$this->vales_model->consultar_oficinas();
@@ -1125,13 +1209,13 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	*	Nombre: Insertar_asignacion
 	*	Objetivo: 	guarda la asiganacion en la base de datos
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*/
 
 	function insertar_herramienta()
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),HERRAMIENTA); /*Verificacion de permiso gestionar herramientas*/
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
@@ -1151,13 +1235,13 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	*	Nombre: eliminar_herramienta
 	*	Objetivo: 	eliminar la asiganacion en la base de datos
 	*	Hecha por: Jhonatan
-	*	Modificada por: Oscar
+	*	Modificada por: Jhonatan
 	*	Última Modificación: 07/07/2014
 	*/
 
 	function eliminar_herramienta($id_seccion, $id_fuente_fondo)
 	{
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),88); /*Verificacion de permiso gestionar asignaciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),HERRAMIENTA); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
@@ -1171,6 +1255,146 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}		
 	}
 
+
+			/*
+	*	Nombre: reporte_historico
+	*	Objetivo: Mostrar un reporte personalizado al usuario
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 27/07/2014
+	*	Observaciones: Ninguna
+	*/
+
+		function reporte_historico()
+	{
+$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		$url='vales/consumo_historico';
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		//$data['id_permiso']=$permiso;
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+				case 2://seccion
+					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
+					
+					break;
+				case 3://administrador
+					$data['oficinas']=$this->vales_model->consultar_oficinas();
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo();
+
+					break;
+				case 4: //departamental
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
+						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);					
+					}
+				
+					break;
+			}
+			$data['estado_transaccion']=$estado_transaccion;
+			/*echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
+			print_r($data['oficinas']);  */
+			pantalla($url,$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+		
+	}
+		/*
+	*	Nombre: consumo_json
+	*	Objetivo: Proporiciona los datos segun los parametros recibidos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 27/07/2014
+	*	Observaciones: Ninguna
+	*/
+
+	function historico_json()
+	{		
+
+			$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+
+			$id_seccion=$this->input->post('id_seccion');
+			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			
+			if($_POST['start']!="" && $_POST['end']!=""){
+					$fecha_inicio=$this->input->post('start');
+					$fecha_fin=$this->input->post('end');
+					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+			}else{
+					$fecha_inicio=NULL;
+					$fecha_fin=NULL;
+			}
+			if($id_seccion==0){
+				$id_seccion=NULL;
+			}
+			if($id_fuente_fondo==0){
+				$id_fuente_fondo= NULL;
+			}
+			$agrupar=$this->input->post('agrupar');
+
+			$data=$this->vales_model->consumo_seccion_fuente_d($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin, $agrupar);
+			echo json_encode($data);
+		}else {
+			echo 'No tiene permisos para acceder';
+		}
+			
+	}
+
+		/*
+	*	Nombre: consumo_pdf
+	*	Objetivo: imprimir reporte segun parametros recibidos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 20/07/2014
+	*	Observaciones: Ninguna
+	*/
+
+	function historico_pdf()
+	{		
+
+
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+				///Preparacion de datos
+			$id_seccion=$this->input->post('id_seccion');
+			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			$data['color1']=$this->input->post('color1');
+			$data['color2']=$this->input->post('color2');
+			
+			if($_POST['start']!="" && $_POST['end']!=""){
+					$fecha_inicio=$this->input->post('start');
+					$fecha_fin=$this->input->post('end');
+					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+			}else{
+					$fecha_inicio=NULL;
+					$fecha_fin=NULL;
+			}
+			if($id_seccion==0){
+				$id_seccion=NULL;
+			}
+			if($id_fuente_fondo==0){
+				$id_fuente_fondo= NULL;
+			}
+
+			$agrupar=$this->input->post('agrupar');
+			$aux=$this->vales_model->consumo_seccion_fuente_d($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin, $agrupar);
+			//$data['j']=json_encode($aux);
+			
+echo $agrupar;
+			print_r($_POST);
+			//$this->load->view('vales/historico_pdf',$data);
+
+		}else {
+			echo 'No tiene permisos para acceder';
+		}
+
+	}
 	
 
 }

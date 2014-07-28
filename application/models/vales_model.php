@@ -810,7 +810,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			$q="SELECT
 					@row_number:=@row_number+1 AS row_number, 
 					r.id_seccion, 
-					CONCAT( s.nombre_seccion, ' (', f.nombre_fuente_fondo, ' )') as seccion,
+					CONCAT( s.nombre_seccion, ' <br>',' (', f.nombre_fuente_fondo, ' )') as seccion,
 					r.asignado asignado,
 					SUM( cv.cantidad_vales) consumido, 
 					SUM(cv.cantidad_vales) * v.valor_nominal as  dinero, 
@@ -965,8 +965,98 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		$query=$this->db->query($sentencia);
 		return (array)$query->result();		
 	}
+	function secciones_vales($san_salvador=false)
+	{
+		$where="";
+		if($san_salvador){//todas de san salvador
+			$where=" WHERE a.id_seccion NOT BETWEEN 52 AND 66 ";
+		}
+
+	$query="SELECT
+				s.nombre_seccion AS seccion,
+				s.id_seccion
+			FROM
+				tcm_seccion_asignacion a
+			INNER JOIN org_seccion s ON a.id_seccion = s.id_seccion
+				".$where."
+			GROUP BY
+				a.id_seccion
+			ORDER BY a.id_seccion ";
+		$query=$this->db->query($query);
+		return (array)$query->result_array();		
+
+	}
+
+function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL, $agrupar=NULL)
+	{
+//FILTROS
+	
+				$fechaF=" DATE_FORMAT(DATE(fecha_factura),'%Y-%m') = DATE_FORMAT(CURDATE(),'%Y-%m')	";
+				$fuenteF="";
+				$seccionF="";
+				if($fecha_inicio !=NULL && $fecha_fin!=NULL){
+
+					$fechaF="  fecha_factura  BETWEEN DATE('".$fecha_inicio."') AND DATE('".$fecha_fin."')";
+				}
+				if($id_seccion!=NULL){
+
+					$seccionF=" AND r.id_seccion = ".$id_seccion;
+				}
+				if($id_fuente_fondo!=NULL){
+
+					$fuenteF=" AND r.id_fuente_fondo = ".$id_fuente_fondo;
+				}
+
+///PREPARACION DE DATOS
+
+				switch ($agrupar){
+					case 1:
+						
+						$fecha=" DATE_FORMAT(c.fecha_factura,'%d-%m-%Y')	as fecha";
+						$grup= " c.fecha_factura";
+						break;
+					case 2:
+						$fecha=" DATE_FORMAT(c.fecha_factura,'%M') fecha ";
+						$grup= " DATE_FORMAT(c.fecha_factura,'%Y%m')";
+						break;
+					case 3:
+						$fecha=" DATE_FORMAT(c.fecha_factura,'%Y') fecha ";
+						$grup= " DATE_FORMAT(c.fecha_factura,'%Y')";
+						break;
+					default:
+						$fecha=" DATE_FORMAT(c.fecha_factura,'%d-%m-%Y')	as fecha";
+						$grup= " c.fecha_factura";
+						break;
+				}
 
 
+				$where= $fechaF.$seccionF.$fuenteF;
+			$query=$this->db->query(" SET @row_number:=0;");
+			$query=$this->db->query(" SET lc_time_names = 'es_ES'");		
 
+			$q=" 		SELECT		@row_number:=@row_number+1 AS row_number, 
+									r.id_seccion, 
+									CONCAT( s.nombre_seccion, ' (', f.nombre_fuente_fondo, ' )') as seccion,
+									SUM( cv.cantidad_vales) consumido, 
+									SUM(cv.cantidad_vales) * v.valor_nominal as  dinero,
+									".$fecha."				
+								FROM
+									tcm_consumo_vehiculo cv
+								INNER JOIN tcm_consumo c ON c.id_consumo = cv.id_consumo
+								INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
+								INNER JOIN tcm_requisicion_vale rv ON rv.id_requisicion_vale = rvcv.id_requisicion_vale
+								INNER JOIN tcm_requisicion r ON r.id_requisicion = rv.id_requisicion
+								INNER JOIN org_seccion s ON s.id_seccion= r.id_seccion
+								INNER JOIN tcm_vale v ON v.id_vale  = rv.id_vale
+								INNER JOIN tcm_fuente_fondo f ON f.id_fuente_fondo = r.id_fuente_fondo 
+										WHERE ".$where."				
+						GROUP BY ".$grup."
+						ORDER BY c.fecha_factura";
+
+			$query=$this->db->query($q);
+
+			return $query->result();
+
+	}	
 }	
 ?>
