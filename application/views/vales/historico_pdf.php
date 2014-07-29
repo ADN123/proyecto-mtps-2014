@@ -1,91 +1,132 @@
-<?php 
-foreach($datos as $fila)
-{
-	$id_requisicion=$fila->id_requisicion;
-	$fecha=$fila->fecha;
-	$seccion=$fila->seccion;
-	$cantidad_solicitada=$fila->cantidad_solicitada;
-	$nombre=$fila->nombre;
-	$justificacion=$fila->justificacion;
-	$cantidad_entregado=$fila->cantidad_entregado;
-}
+
+<?php
+header('Content-Type: text/html; charset=UTF-8'); 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-</head>
+<html>
+    <head>
+        <link href="<?php echo base_url()?>css/style-base.css" rel="stylesheet" type="text/css" />
+        <script src="<?php echo base_url()?>js/jquery-1.8.2.js"></script>
 
-<body>
+<!----------------------------------------------------------------------------------------------------------------- -->
+        <script src="<?php echo base_url()?>js/views/reporte_consumo.js" type="text/javascript"></script>
+        <script src="<?php echo base_url()?>/js/amcharts.js" type="text/javascript"></script>
+        <script src="<?php echo base_url()?>/js/serial.js" type="text/javascript"></script>  
 
-<table align="center">
-	<tr>
-    	<th colspan="2"><strong><u>MINISTERIO DE TRABAJO Y PREVISIÓN SOCIAL</u></strong></th>
-    </tr>
-    <tr>
-    	<td><div style="border:thin; border:#000; width:340px">CONTROL DE ENTREGA DE COMBUSTIBLE</div></td>
-        <td align="right">Requisición No. <b><?php echo $id_requisicion; ?></b></td>
-    </tr>
-    <tr>
-    	<td>Unidad Presupuestaria: <b><?php echo "UACI"; ?></b></td>
-        <td>Sección: <b><?php echo $seccion; ?></b></td>
-    </tr>
-    <tr>
-    	<td>Línea de Trabajo: <b><?php echo "No sé que escribir aquí"; ?></b></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-    	<td>Fecha: <b><?php echo $fecha; ?></b></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-    	<td>Cantidad de Cupones Solicitados: <b>Un millón trescientos cuarentitres mil doscientos veintinueve</b></td>
-        <td align="right">Cantidad Entregada: <b><?php echo $cantidad_entregado; ?></b></td>
-    </tr>
-    <tr>
-    	<td align="center" valign="top"><sup>(Letras y Números)</sup></td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-    	<td colspan="2" rowspan="3">Justificación: <b><?php echo $justificacion ?></b></td>
-    </tr>
-    <tr></tr><tr></tr><tr></tr>
-    <tr>
-    	<td colspan="2">No. de Serie del Cupón o Vale: <b><?php echo "123456789ABCDEF" ?></b></td>
-    </tr>
-    <tr>
-    	<td>&nbsp;</td>
-        <td align="right">Al Servicio de: <b><?php echo "Oficina Departamental de San Vicente"; ?></b></td>
-    </tr>
-    <tr>
-    	<td colspan="2">Vehículo Placas: <b><?php echo "Aquí irán muchas placas"; ?></b></td>
-    </tr>
-    <tr>
-    	<td colspan="2">Clase de Vehículo: <b><?php echo "Aquí irán muchas clases"; ?></b></td>
-    </tr>
-</table>
+    </head>
+    <body >
+    <div style="height:100px; background:#FFFFFF; width:600px; margin:auto" > 
 
-<table align="center">
-	<tr align="center">
-    	<td><b><?php echo "Firma Solicitante"; ?></b></td>
-        <td><b><?php echo "Firma Recibido"; ?></b></td>
-        <td><b><?php echo "Firma Entregado"; ?></b></td>
-    </tr>
-    <tr align="center" valign="top">
-    	<td>Solicitante:</td>
-        <td>Recibido:</td>
-        <td>Entregado:</td>
-    </tr>
-    <tr align="center">
-    	<td><u><?php echo "Firma Visto Bueno"; ?></u></td>
-        <td>&nbsp;</td>
-        <td><u><?php echo "Firma Autorizado"; ?></u></td>
-    </tr>
-    <tr align="center" valign="top">
-    	<td>Visto Bueno:</td>
-        <td>&nbsp;</td>
-        <td>Autorizado:</td>
-    </tr>
-</table>
-</body>
+    <table align="center" border="0" cellspacing="0" style="width:100%;">
+        <tr>
+            <td align="left" id="imagen">
+                <img src="<?php echo base_url()?>/img/mtps_report.jpg" />
+            </td>
+            <td align="right">
+                <h3>REPORTE DE VALES DE COMBUSTIBLE</h3>
+                <h6>Fecha: <strong><?php echo date('d-m-Y') ?></strong> </h6>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <br>
+                <strong id="titulo">HISTORICO DE CONSUMO DE VALES</strong>
+            </td>
+        </tr>
+    </table>
+    </div>
+<br><br><br>
+ <!--------------------Plantilla de carga de grafico y tabla------------------------------------------------------------ -->
+        <div style="height:400px; background:#FFFFFF; width:600px; margin:auto" id="chartdiv">
+        </div>
+        <br>
+    <div  style="height:400px; width:600px;  margin:auto">
+        
+        <table cellspacing='0' align='center' class='table_design' id="datos" >
+            <thead>
+               <th>
+                   N°
+                </th>
+                <th>
+                   Fecha
+                </th>
+                <th>
+                    Consumido
+                </th> 
+                 <th>
+                    Consumido ($)
+                </th>             
+
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <br><br>
+        <p style="width:650px; margin:auto;"> <?php echo$f; ?></p>
+    </div>
+    </body>
+
 </html>
+                
+
+<script language="javascript" >
+
+
+
+
+                data=<?php echo $j; ?>
+                //grafico(data,"row_number");//contructor del grafico
+                tabla1(data)
+
+            var label="row_number";
+              var chart;
+              var chartData=data;
+              var color1="<?php echo $color1; ?>";
+              
+                
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+                chart.dataProvider = chartData;
+                chart.categoryField = label;
+                chart.startDuration = 1;
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.labelRotation = 0;
+                categoryAxis.gridPosition = "start";
+
+                // value
+                // in case you don't want to change default settings of value axis,
+                // you don't need to create it, as one value axis is created automatically.
+
+                // GRAPH
+                var graph = new AmCharts.AmGraph();
+                graph.valueField = "consumido";
+                graph.balloonText = "[[category]]: <b>[[value]] Vales de combustible</b>";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.8;
+                graph.fillColors = color1;
+                chart.addGraph(graph);
+
+                // CURSOR
+                var chartCursor = new AmCharts.ChartCursor();
+                chartCursor.cursorAlpha = 0;
+                chartCursor.zoomable = false;
+                chartCursor.categoryBalloonEnabled = false;
+                chart.addChartCursor(chartCursor);
+
+
+                chart.write("chartdiv");
+
+
+
+function imprimir() {
+if (window.print)
+window.print()
+}
+setTimeout ("imprimir();", 2000);
+
+</script>
+
