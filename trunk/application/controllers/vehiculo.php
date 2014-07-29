@@ -243,8 +243,14 @@ class Vehiculo extends CI_Controller
 	
 	function reporte_vehiculos()
 	{
-		$data['']=$this->transporte_model->full_vehiculos();
-		pantalla('mantenimiento/reporte_vehiculos');	
+		$data['motoristas']=$this->transporte_model->consultar_motoristas2();
+		$data['marca']=$this->transporte_model->consultar_marcas();
+		$data['modelo']=$this->transporte_model->consultar_modelos();
+		$data['clase']=$this->transporte_model->consultar_clases();
+		$data['condicion']=$this->transporte_model->consultar_condiciones();
+		$data['seccion']=$this->transporte_model->consultar_secciones();
+		$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
+		pantalla('mantenimiento/reporte_vehiculos',$data);	
 	}
 
 	/*
