@@ -260,6 +260,5 @@ class Vehiculo extends CI_Controller
 	{
 		pantalla('mantenimiento/vehiculos_pdf');	
 	}
->>>>>>> .r339
 }
 ?>
