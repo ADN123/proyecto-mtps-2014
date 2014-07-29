@@ -1,7 +1,7 @@
 <section>
     <h2>Ingreso de Vehículo al Taller Interno</h2>
 </section>
-<form name="form_mtto" method="post" action="<?php echo base_url()?>index.php/vehiculo/mantenimiento" >
+<form name="form_mtto" method="post" action="<?php echo base_url()?>index.php/vehiculo/guardar_mantenimiento" >
 	<div id="wizard" class="swMain">
         <ul>
             <li>
