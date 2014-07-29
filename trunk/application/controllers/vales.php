@@ -7,11 +7,11 @@
 	define("ASIGNACION",88);
 	define("ESTADO",111);
 	define("VER_REQUISICIONES",89);
-	define("CONSUMO_S",114);
+	define("CONSUMO_S",114);	//consumo vr asignacion
 	define("CONSUMO_H",114);	//consumo historico
 	define("CONSUMO_V",115);
-	define("REQUISICION_PDF",115); //NO ESTA
-	define("HERRAMIENTA",112);
+	define("REQUISICION_PDF",115); ///no esta 
+	define("HERRAMIENTA",112); ///son herramientas y otros posibles consumidores de combustibles
 
 class Vales extends CI_Controller
 {
@@ -1027,23 +1027,37 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
 			$data['color1']=$this->input->post('color1');
 			$data['color2']=$this->input->post('color2');
+		
 			
+		//para formar mensaje
+			$f="Consumo de vales de combustible ";
+
+
 			if($_POST['start']!="" && $_POST['end']!=""){
 					$fecha_inicio=$this->input->post('start');
 					$fecha_fin=$this->input->post('end');
 					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
 					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+
+
+					$f.="del ".$fecha_inicio." al ".$fecha_fin;
 			}else{
+					$f.="del ".date('01-m-Y')." al ".date('d-m-Y'); 
 					$fecha_inicio=NULL;
 					$fecha_fin=NULL;
 			}
 			if($id_seccion==0){
 				$id_seccion=NULL;
+			}else{
+
+				$f.=" en ".$_POST['id_seccion_input'];
 			}
 			if($id_fuente_fondo==0){
 				$id_fuente_fondo= NULL;
+			}else{
+				$f.=" con fuente de fondo ".$_POST['id_fuente_fondo_input'];	
 			}
-
+			$data['f']=$f;
 
 			$aux= $this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
 			$data['j']=json_encode($aux);
@@ -1267,7 +1281,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 
 		function reporte_historico()
 	{
-$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_H); /*Verificacion de permiso para crear requisiciones*/
 		$url='vales/consumo_historico';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
@@ -1314,7 +1328,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	function historico_json()
 	{		
 
-			$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+			$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_H); /*Verificacion de permiso para crear requisiciones*/
 		if($data['id_permiso']!=NULL) {
 
 			$id_seccion=$this->input->post('id_seccion');
@@ -1358,44 +1372,65 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	{		
 
 
-	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_H); /*Verificacion de permiso para crear requisiciones*/
 		if($data['id_permiso']!=NULL) {
 				///Preparacion de datos
 			$id_seccion=$this->input->post('id_seccion');
 			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
 			$data['color1']=$this->input->post('color1');
-			$data['color2']=$this->input->post('color2');
+
 			
+					//para formar mensaje
+			$f="Consumo de vales de combustible ";
+
+
 			if($_POST['start']!="" && $_POST['end']!=""){
 					$fecha_inicio=$this->input->post('start');
 					$fecha_fin=$this->input->post('end');
 					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
 					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+
+
+					$f.="del ".$fecha_inicio." al ".$fecha_fin;
 			}else{
+						$f.="del ".date('01-m-Y')." al ".date('d-m-Y'); 
 					$fecha_inicio=NULL;
 					$fecha_fin=NULL;
 			}
 			if($id_seccion==0){
 				$id_seccion=NULL;
+			}else{
+
+				$f.=" en ".$_POST['id_seccion_input'];
 			}
 			if($id_fuente_fondo==0){
 				$id_fuente_fondo= NULL;
+			}else{
+				$f.=" con fuente de fondo ".$_POST['id_fuente_fondo_input'];	
 			}
+			$data['f']=$f;
 
 			$agrupar=$this->input->post('agrupar');
 			$aux=$this->vales_model->consumo_seccion_fuente_d($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin, $agrupar);
-			//$data['j']=json_encode($aux);
+			$data['j']=json_encode($aux);
 			
-echo $agrupar;
-			print_r($_POST);
-			//$this->load->view('vales/historico_pdf',$data);
+		
+			//print_r($_POST);
+			$this->load->view('vales/historico_pdf',$data);
 
 		}else {
 			echo 'No tiene permisos para acceder';
 		}
 
 	}
-	
+
+	function reporte_vehiculo()
+	{
+		
+
+
+
+	}
 
 }
 

@@ -24,7 +24,7 @@
                     <?php     
                         foreach($fuente as $val) 
                         {                    ?>
-                                     <option value="<?php echo $val['id_fuente_fondo'] ?>"><?php echo $val['nombre_fuente'] ?></option>                
+                                <option value="<?php echo $val['id_fuente_fondo'] ?>"><?php echo $val['nombre_fuente'] ?></option>                
                     <?php
                         } 
                     ?>
