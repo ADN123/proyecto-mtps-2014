@@ -18,9 +18,6 @@ class Vehiculo extends CI_Controller
 	{
 		echo"ok";
   	}
-	function  mantenimiento(){
-		
-		}
 	
 	/*
 	*	Nombre: vehiculos
@@ -101,39 +98,6 @@ class Vehiculo extends CI_Controller
 		
 		$j=json_encode($vehiculo);
 		echo $j;
-	}
-	
-	/*
-	*	Nombre: upload
-	*	Objetivo: funcion creada para subir imagenes
-	*	Hecha por: Oscar
-	*	Modificada por: Oscar
-	*	Última Modificación: 23/07/2014
-	*	Observaciones: Ninguna
-	*/
-	
-	function upload()
-	{
-		$config['upload_path'] = './fotografias_vehiculos/';
-		$config['allowed_types'] = 'gif|jpg|jpeg|png';
-				
-		$this->load->library('upload', $config);
-		if (!$this->upload->do_upload())
-		{
-			echo "<script language='javascript'>
-			alert('Seleccione Un Archivo valido de formato: .gif | .jpg | .png | .jpeg');
-			</script>";
-			pantalla('mantenimiento/nuevo_vehiculo');
-		}	
-		else
-		{
-			echo "<script language='javascript'>
-			alert('Fotografía subida correctamente');
-			</script>";
-			$file_data = $this->upload->data();
-			$imagen=$file_data['file_name'];
-		}
-		
 	}
 	
 	/*
@@ -244,6 +208,21 @@ class Vehiculo extends CI_Controller
 		$this->db->trans_start();
 		
 	}
+	
+	/*
+	*	Nombre: guardar_mantenimiento
+	*	Objetivo: insertar en la Base de Datos un nuevo registro de ingreso de un vehiculo al taller del MTPS
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 26/07/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function guardar_mantenimiento()
+	{
+		$this->db->trans_start();
+		
+	}
 
 	function guardar_taller()
 	{
@@ -281,5 +260,6 @@ class Vehiculo extends CI_Controller
 	{
 		pantalla('mantenimiento/vehiculos_pdf');	
 	}
+>>>>>>> .r339
 }
 ?>
