@@ -908,10 +908,10 @@ function solicitudes_por_asignar_depto(){
 	
 	//////////////////////////FUNCIÓN PARA REGISTRAR UN NUEVO VEHÍCULO/////////////////////////////
 	
-	function registrar_vehiculo($nplaca,$marca,$modelo,$clase,$year,$condicion,$seccion_vales,$seccion,$motorista,$fuente_fondo,$foto)
+	function registrar_vehiculo($nplaca,$marca,$modelo,$clase,$year,$condicion,$tcombustible,$seccion,$motorista,$fuente_fondo,$foto)
 	{
-		$query="INSERT INTO tcm_vehiculo(placa,id_seccion,id_marca,id_modelo,id_clase,id_condicion,anio,imagen,id_fuente_fondo,estado)
-				values('$nplaca','$seccion','$marca','$modelo','$clase','$condicion','$year','$foto','$fuente_fondo',1)";
+		$query="INSERT INTO tcm_vehiculo(placa,id_seccion,id_marca,id_modelo,id_clase,id_condicion,anio,imagen,id_fuente_fondo,estado,cantidad_combustible,id_seccion_vale,tipo_combustible)
+				values('$nplaca','$seccion','$marca','$modelo','$clase','$condicion','$year','$foto','$fuente_fondo',1,50,21,'$tcombustible')";
 		$this->db->query($query);
 		
 		$q=$this->db->query("select max(id_vehiculo) as id from tcm_vehiculo");
@@ -1016,7 +1016,13 @@ function solicitudes_por_asignar_depto(){
 			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion) ".$where.";";
 
 		$query=$this->db->query($consulta);
-		return $query->result();
+		return $query->result_array();
+		/*if($query->num_rows()>0) {
+			return (array)$query->result_array();
+		}
+		else {
+			return 0;
+		}*/
 	}
 
 	///////////////////////////FUNCIÓN PARA VALIDAR LA FECHA Y LA HORA DE UNA SOLICITUD//////////
