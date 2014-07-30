@@ -1058,5 +1058,66 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 			return $query->result();
 
 	}	
+
+		function consumo_vehiculo($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL)
+	{
+				$fechaF1=" DATE_FORMAT(hora_entrada,'%Y-%m-%d') <= DATE_FORMAT(CURDATE(),'%Y-%m-%d')";
+				$fechaF2=" fecha_factura <CURDATE() ";
+				
+				$fuenteF="";
+				$seccionF="";
+				
+				if($fecha_inicio !=NULL && $fecha_fin!=NULL){
+				
+
+					$fechaF="  fecha_factura  BETWEEN DATE('".$fecha_inicio."') AND DATE('".$fecha_fin."')";
+				}
+				if($id_seccion!=NULL){
+
+					$seccionF=" AND r.id_seccion = ".$id_seccion;
+				}
+				if($id_fuente_fondo!=NULL){
+
+					$fuenteF=" AND r.id_fuente_fondo = ".$id_fuente_fondo;
+				}
+
+				//$where= $fechaF.$seccionF.$fuenteF;
+				$where1 ="";
+				$where2= "";	
+
+			$query=$this->db->query(" SET @row_number:=0;");
+			$q="SELECT *, 
+						ROUND( COALESCE(glxv * vales / recorrido ,0), 2 )  as rendimiento 
+						FROM (
+										SELECT
+											d.id_vehiculo, 
+											d.modelo, 
+											d.placa,
+											d.marca,			
+											SUM(cv.cantidad_vales) as vales,
+											COALESCE(k.recor ,0) as recorrido, 
+											vg.valor_gasolina, 
+											vg.valor_nominal, 
+											(vg.valor_nominal/valor_gasolina)as glxv			
+										FROM
+											tcm_consumo c
+										INNER JOIN tcm_consumo_vehiculo cv ON cv.id_consumo = c.id_consumo
+										INNER JOIN tcm_vehiculo_datos d ON d.id_vehiculo = cv.id_vehiculo
+										LEFT  JOIN (
+													SELECT id_vehiculo, SUM(km_final-km_inicial ) as recor FROM tcm_vehiculo_kilometraje 
+													WHERE DATE_FORMAT(hora_entrada,'%Y-%m-%d') <= DATE_FORMAT(CURDATE(),'%Y-%m-%d')
+													GROUP BY id_vehiculo ) AS K  ON k.id_vehiculo = d.id_vehiculo
+															".$where1."			
+										INNER JOIN tcm_consumo_vehiculo_valores vg ON cv.id_consumo_vehiculo = vg.id_consumo_vehiculo 
+									".$where2."
+								GROUP BY id_vehiculo
+								) AS X";
+
+			$query=$this->db->query($q);
+
+			return $query->result();
+
+	}
+
 }	
 ?>

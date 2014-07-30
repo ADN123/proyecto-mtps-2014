@@ -1426,12 +1426,54 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 
 	function reporte_vehiculo()
 	{
-		
 
 
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_V); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+				///Preparacion de datos
+					
+		pantalla('vales/reporte_vehiculos');
 
+
+		}else {
+			echo 'No tiene permisos para acceder';
+		}		
 	}
+	
+	function reporte_vehiculo_json()
+	{
 
+
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_V); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+				///Preparacion de datos
+
+			$id_seccion=$this->input->post('id_seccion');
+			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			
+			if($_POST['start']!="" && $_POST['end']!=""){
+					$fecha_inicio=$this->input->post('start');
+					$fecha_fin=$this->input->post('end');
+					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+			}else{
+					$fecha_inicio=NULL;
+					$fecha_fin=NULL;
+			}
+			if($id_seccion==0){
+				$id_seccion=NULL;
+			}
+			if($id_fuente_fondo==0){
+				$id_fuente_fondo= NULL;
+			}			
+
+			$data=$this->vales_model->consumo_vehiculo($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+			echo json_encode($data);	
+
+		}else {
+			echo 'No tiene permisos para acceder';
+		}		
+	}
 }
 
 ?>
