@@ -926,6 +926,17 @@ function solicitudes_por_asignar_depto(){
 		$this->db->query($query2);
 	}
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	function modificar_vehiculo($nplaca,$marca,$modelo,$clase,$year,$condicion,$tcombustible,$seccion,$motorista,$fuente_fondo,$foto,$id_vehiculo,$estado)
+	{
+		$query="UPDATE tcm_vehiculo SET placa='$nplaca', id_seccion='$seccion', id_marca='$marca', id_modelo='$modelo', id_clase='$clase', id_condicion='$condicion', anio='$year', imagen='$foto', id_fuente_fondo='$fuente_fondo', estado='$estado', tipo_combustible='$tcombustible' WHERE (id_vehiculo='$id_vehiculo');";
+		$this->db->query($query);
+				
+		$query2="update tcm_vehiculo_motorista set id_empleado='$motorista' where id_vehiculo='$id_vehiculo'";
+		$this->db->query($query2);
+	}
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function guardar_taller($datos)
