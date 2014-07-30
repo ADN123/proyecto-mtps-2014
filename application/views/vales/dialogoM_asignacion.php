@@ -1,7 +1,7 @@
 <form id='form' action="<?php echo base_url()?>index.php/vales/modificar_asignacion" method='post'>
 
     <fieldset>      
-        <legend align='left'>Información de la General</legend>
+        <legend align='left'>Información  General</legend>
             <?php 
 
                 foreach($d as $datos)

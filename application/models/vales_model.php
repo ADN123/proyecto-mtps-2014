@@ -30,10 +30,26 @@ class Vales_model extends CI_Model {
 	{
 		if($id_seccion!=NULL){
 			$where.= "	WHERE s.id_seccion = '".$id_seccion."'";
-		}			
+		}
 		$sentencia="SELECT 	s.id_seccion,s.nombre_seccion
 					FROM 	org_seccion s
 				INNER JOIN tcm_vehiculo v ON s.id_seccion = v.id_seccion_vale
+				".$where."
+				 GROUP BY s.id_seccion";
+
+		$query=$this->db->query($sentencia);	
+		return (array)$query->result_array();
+
+	}
+		function consultar_oficinas_fuente( $id_fuente_fondo =NULL)
+	{
+
+		if($id_fuente_fondo!=NULL){
+			$where.= "	WHERE sa.id_fuente_fondo =".$id_seccion;
+		}						
+		$sentencia="SELECT 	s.id_seccion,s.nombre_seccion
+					FROM 	org_seccion s
+				INNER JOIN tcm_seccion_asignacion sa ON sa.id_seccion= s.id_seccion
 				".$where."
 				 GROUP BY s.id_seccion";
 
@@ -806,18 +822,23 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				}
 
 				if($agrupar==NULL || $agrupar==2){ //por mes
+	
+					$selecM="	CONCAT( s.nombre_seccion, ' <br>', f.nombre_fuente_fondo, ' - ',DATE_FORMAT(DATE( CONCAT_WS('-',LEFT(x.mes,4),RIGHT(x.mes,2),'01')),'%M %Y'))  as seccion,";
+					$mes ="r.mes";
 
-				
 				}else{ // por año
+					$selecM="	CONCAT( s.nombre_seccion, ' <br>', f.nombre_fuente_fondo, '-', x.mes) as seccion,";
+					$mes="LEFT(r.mes,4)";
 
 				}
 
 				$where= $fechaF.$seccionF.$fuenteF;
+			$query=$this->db->query(" SET lc_time_names = 'es_ES'");		
 			$query=$this->db->query(" SET @row_number:=0;");
 			$q="SELECT
 					@row_number:=@row_number+1 AS row_number, 
 					r.id_seccion, 
-					CONCAT( s.nombre_seccion, ' <br>',' (', f.nombre_fuente_fondo, ' )') as seccion,
+							".$selecM."
 					x.asignado asignado,
 					SUM( cv.cantidad_vales) consumido, 
 					SUM(cv.cantidad_vales) * v.valor_nominal as  dinero, 
@@ -834,14 +855,14 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				LEFT  JOIN (	SELECT
 						SUM(asignado) asignado,
 						id_seccion, 
-						mes
+						".$mes." as mes
 					FROM
-						tcm_requisicion
+						tcm_requisicion r
 					GROUP BY
 						id_seccion,
-						mes ) as x ON r.id_seccion = x.id_seccion AND r.mes = x.mes
+						".$mes." ) as x ON r.id_seccion = x.id_seccion AND ".$mes." = x.mes
 				WHERE ".$where."	
-				 GROUP BY r.id_seccion, r.mes";
+				 GROUP BY r.id_seccion, ".$mes;
 
 			$query=$this->db->query($q);
 
@@ -1131,6 +1152,44 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 			$query=$this->db->query($q);
 
 			return $query->result();
+
+	}
+
+	function asignaciones_vehiculo()
+	{
+		$q="SELECT
+				v.id_vehiculo,
+				v.placa,
+				COALESCE(s.nombre_seccion, '----NO TIENE ASIGNACION----')  AS seccion_vale,
+				m.nombre as marca, 
+				v.id_fuente_fondo
+			FROM
+				tcm_vehiculo v
+			LEFT  JOIN org_seccion s ON s.id_seccion = v.id_seccion_vale
+			INNER JOIN tcm_vehiculo_marca m ON m.id_vehiculo_marca = v.id_marca ORDER BY s.nombre_seccion";
+
+			$query=$this->db->query($q);
+
+			return $query->result_array();
+		
+	}
+	function consultar_datos_vehiculos($id_vehiculo= NULL)
+	{
+				$q="SELECT * FROM tcm_vehiculo_datos WHERE id_vehiculo = ".$id_vehiculo;
+
+			$query=$this->db->query($q);
+
+			return $query->result_array();
+		
+
+	}
+	function seccion_asignada($datos)
+	{
+		extract($datos);
+			$q="UPDATE tcm_vehiculo SET id_seccion_vale = ".$id_seccion." WHERE  id_vehiculo =".$id_vehiculo;
+
+			$query=$this->db->query($q);
+
 
 	}
 

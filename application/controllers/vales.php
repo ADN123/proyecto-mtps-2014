@@ -1559,7 +1559,7 @@ function asignacion_vehiculo()
 		//$data['id_permiso']=$permiso;
 		if($data['id_permiso']!=NULL) {
 		
-			$data['datos']=$this->vales_model->asignaciones();
+			$data['datos']=$this->vales_model->asignaciones_vehiculo();
 			$data['estado_transaccion']=$estado_transaccion;
 			//print_r($data);
 			pantalla("vales/asignaciones_vehiculo",$data);	
@@ -1568,17 +1568,27 @@ function asignacion_vehiculo()
 			echo 'No tiene permisos para acceder';
 		}	
 }
-	function dialogo_asignacion_vehiculo($id_vehiculo)
+	function dialogo_asignacion_vehiculo($id_vehiculo = NULL)
 	{
 	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
-			$data['d']=$this->vales_model->asignaciones();
-			$this->load->view("vales/dialogo_asignacion_vehiculo",$data);	
+			$data['d']=$this->vales_model->consultar_datos_vehiculos($id_vehiculo);
+			$data['oficinas']=$this->vales_model->consultar_oficinas(NULL, $data['d'][0]['id_fuente_fondo']);
+		
+		$this->load->view("vales/dialogo_asignacion_vehiculo",$data);	
 		}
 		else {
 			echo 'No tiene permisos para acceder';
 		}		
+	}
+	function modificar_asignacion_vehiculo()
+	{
+			$this->db->trans_start();
+			$this->vales_model->seccion_asignada($_POST);		
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/asignacion_vehiculo/'.$tr);		
 	}
 
 }
