@@ -844,7 +844,8 @@ function solicitudes_por_asignar_depto(){
 			$query=$this->db->query("
 			select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
 			o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
-			ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado
+			ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
+			v.tipo_combustible
 			from tcm_vehiculo as v
 			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
@@ -864,7 +865,8 @@ function solicitudes_por_asignar_depto(){
 			$query=$this->db->query("
 			select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
 			o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
-			ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado
+			ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
+			v.tipo_combustible
 			from tcm_vehiculo as v
 			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
@@ -885,13 +887,21 @@ function solicitudes_por_asignar_depto(){
 	function consultar_datos_vehiculos($id)
 	{
 		$query=$this->db->query("
-		select v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
+		select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
+		o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
+		ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado
 		from tcm_vehiculo as v
 		inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 		inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
 		inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
 		inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+		left join tcm_vehiculo_motorista as vmot on (v.id_vehiculo=vmot.id_vehiculo)
+		left join tcm_vehiculo_kilometraje as vk on (vk.id_vehiculo=v.id_vehiculo)
+		left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
+		inner join org_seccion as o on (v.id_seccion=o.id_seccion)
+		inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
 		where v.id_vehiculo='$id' and v.estado=1;
+		GROUP BY v.placa,motorista,seccion,marca,modelo,clase,condicion
 		");
 		return $query->result();
 	}
@@ -925,7 +935,85 @@ function solicitudes_por_asignar_depto(){
 		VALUES ('$id_vehiculo', '$aceite', '$frenos', '$bateria', '$electricidad', '$amortiguadores', '$llantas', '$motor', '$otro_mtto', '$naceite', '$presion', '$agua', '$rllantas', '$caja_velocidades', '$clutch', '$r_motor', '$lavado', '$observaciones', '$fecha', '$id_usuario');";
 		$this->db->query($consulta);
 	}
-
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	
+	function filtro_vehiculo($datos)
+	{
+		extract($datos);
+		
+		$where='';
+		$select='';
+		
+		/*///////////////declaración de los where, por defecto vacios//////////*/
+		$where_marca='';
+		$where_modelo='';
+		$where_clase='';
+		$where_condicion='';
+		
+		
+		/*/////////////////////verificación de los select y los where para generar la consulta///////////*/
+		if($marca!='') $where_marca = " vm.marca like '".$marca."%' ";
+		else $select = $select.', vm.marca as marca';
+		
+		if($modelo!='') $where_modelo = " vmo.modelo like '".$modelo."%' ";
+		else $select = $select.', vm.modelo';
+		
+		if($clase!='') $where_clase = " vc.nombre_clase like '".$clase."%' ";
+		else $select = $select.', vc.nombre_clase clase';
+		
+		if($condicion!='') $where_condicion = " vcon.condicion like '".$condicion."%' ";
+		else $select = $select.', vcon.condicion';
+		
+		/*/////////////concatenación de los where/////////////*/
+		$cont=0;
+		if($where_marca=='' && $where_modelo=='' && $where_clase=='' && $where_condicion=='') $where='';
+		else
+		{
+			$where='where (';
+			
+			if($where_marca!='')
+			{
+				$where=$where.$where_marca;
+				$cont++;
+			}
+			if($where_modelo!='')
+			{
+				if($cont==0)
+				{
+					$where=$where.$where_modelo;
+					$cont++;
+				}
+				else $where=$where.' and '.$where_modelo;
+			}
+			if($where_clase!='')
+			{
+				if($cont==0)
+				{
+					$where=$where.$where_clase;
+					$cont++;
+				}
+				else $where=$where.' and '.$where_clase;
+			}
+			if($where_condicion!='')
+			{
+				if($cont==0)
+				{
+					$where=$where.$where_condicion;
+					$cont++;
+				}
+				else $where=$where.' and '.$where_condicion;
+			}
+			
+			$where=$where.' )';
+		}
+		
+		$consulta="select v.placa, ".$select
+			."from tcm_vehiculo as v
+			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)".$where;
+	}
 
 	///////////////////////////FUNCIÓN PARA VALIDAR LA FECHA Y LA HORA DE UNA SOLICITUD//////////
 	
