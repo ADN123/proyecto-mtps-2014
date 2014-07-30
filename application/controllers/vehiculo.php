@@ -67,7 +67,7 @@ class Vehiculo extends CI_Controller
 			$data['bandera']='true';
 			$data['vehiculo_info']=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo);
 		}
-		if($estado_transaccion==NULL)
+		//if($estado_transaccion==NULL)
 		pantalla("mantenimiento/nuevo_vehiculo",$data);
 	}
 	
@@ -220,8 +220,8 @@ class Vehiculo extends CI_Controller
 		$id_fuente_fondo=$this->input->post('fuente');
 		$tipo_combustible=$this->input->post('tipo_combustible');
 		$estado=$this->input->post('estado');
-		
-		if($img_df=="si") $imagen="vehiculo.jpg";
+		$img_df=$this->input->post('img_df');
+		if($img_df=="si") $imagen=$this->input->post('imagen');
 		else
 		{
 			$config['upload_path'] = './fotografias_vehiculos/';
