@@ -1431,8 +1431,31 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_V); /*Verificacion de permiso para crear requisiciones*/
 		if($data['id_permiso']!=NULL) {
 				///Preparacion de datos
+	
+		switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+				case 2://seccion
+					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
 					
-		pantalla('vales/reporte_vehiculos');
+					break;
+				case 3://administrador
+					$data['oficinas']=$this->vales_model->consultar_oficinas();
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo();
+
+					break;
+				case 4: //departamental
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
+						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);					
+					}
+				
+					break;
+			}
+	
+
+
+		pantalla('vales/reporte_vehiculos',$data);
 
 
 		}else {
@@ -1447,6 +1470,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_V); /*Verificacion de permiso para crear requisiciones*/
 		if($data['id_permiso']!=NULL) {
 				///Preparacion de datos
+
 
 			$id_seccion=$this->input->post('id_seccion');
 			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
@@ -1473,6 +1497,58 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}else {
 			echo 'No tiene permisos para acceder';
 		}		
+	}
+	function reporte_vehiculo_pdf()
+	{
+
+				$id_seccion=$this->input->post('id_seccion');
+			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			
+					//para formar mensaje
+			$f="Consumo de vales de combustible aplicacados a vehiculos";
+
+
+			if($_POST['start']!="" && $_POST['end']!=""){
+					$fecha_inicio=$this->input->post('start');
+					$fecha_fin=$this->input->post('end');
+					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+
+
+					$f.="del ".$fecha_inicio." al ".$fecha_fin;
+			}else{
+						$f.=" hasta  el ".date('d-m-Y'); 
+					$fecha_inicio=NULL;
+					$fecha_fin=NULL;
+			}
+			if($id_seccion==0){
+				$id_seccion=NULL;
+			}else{
+
+				$f.=" en ".$_POST['id_seccion_input'];
+			}
+			if($id_fuente_fondo==0){
+				$id_fuente_fondo= NULL;
+			}else{
+				$f.=" con fuente de fondo ".$_POST['id_fuente_fondo_input'];	
+			}
+			$data['f']=$f;			
+
+		$data['datos']=$this->vales_model->consumo_vehiculo($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+	
+		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
+		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
+		//$data['nombre'] = "Renatto NL";
+		$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
+		//if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
+		//	$this->mpdf->AddPage();
+		//	$html = $this->load->view('transporte/reverso_solicitud_pdf.php', $data, true);
+		//	$this->mpdf->WriteHTML($html,2);
+		//}
+		$this->mpdf->Output(); /*Salida del pdf*/	
+	
 	}
 }
 

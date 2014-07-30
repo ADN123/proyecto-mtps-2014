@@ -1061,8 +1061,8 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 
 		function consumo_vehiculo($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL)
 	{
-				$fechaF1=" DATE_FORMAT(hora_entrada,'%Y-%m-%d') <= DATE_FORMAT(CURDATE(),'%Y-%m-%d')";
-				$fechaF2=" fecha_factura <CURDATE() ";
+				$fechaF1=" WHERE DATE_FORMAT(hora_entrada,'%Y-%m-%d') <= DATE_FORMAT(CURDATE(),'%Y-%m-%d') ";
+				$fechaF2=" WHERE fecha_factura <CURDATE()  ";
 				
 				$fuenteF="";
 				$seccionF="";
@@ -1070,20 +1070,21 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 				if($fecha_inicio !=NULL && $fecha_fin!=NULL){
 				
 
-					$fechaF="  fecha_factura  BETWEEN DATE('".$fecha_inicio."') AND DATE('".$fecha_fin."')";
+					$fechaF1=" WHERE DATE_FORMAT(hora_entrada,'%Y-%m-%d') BETWEEN DATE('".$fecha_inicio."') AND DATE('".$fecha_fin."')";
+					$fechaF2=" WHERE fecha_factura BETWEEN DATE('".$fecha_inicio."') AND DATE('".$fecha_fin."')";
 				}
 				if($id_seccion!=NULL){
 
-					$seccionF=" AND r.id_seccion = ".$id_seccion;
+					$seccionF=" AND id_seccion_vale = ".$id_seccion; //solo al where 2
 				}
 				if($id_fuente_fondo!=NULL){
 
-					$fuenteF=" AND r.id_fuente_fondo = ".$id_fuente_fondo;
+					$fuenteF=" AND id_fuente_fondo = ".$id_fuente_fondo;
 				}
 
-				//$where= $fechaF.$seccionF.$fuenteF;
-				$where1 ="";
-				$where2= "";	
+				$where1= $fechaF1;
+				$where2= $fechaF2.$seccionF.$fuenteF;
+
 
 			$query=$this->db->query(" SET @row_number:=0;");
 			$q="SELECT *, 
@@ -1105,9 +1106,8 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 										INNER JOIN tcm_vehiculo_datos d ON d.id_vehiculo = cv.id_vehiculo
 										LEFT  JOIN (
 													SELECT id_vehiculo, SUM(km_final-km_inicial ) as recor FROM tcm_vehiculo_kilometraje 
-													WHERE DATE_FORMAT(hora_entrada,'%Y-%m-%d') <= DATE_FORMAT(CURDATE(),'%Y-%m-%d')
+													".$where1."			
 													GROUP BY id_vehiculo ) AS K  ON k.id_vehiculo = d.id_vehiculo
-															".$where1."			
 										INNER JOIN tcm_consumo_vehiculo_valores vg ON cv.id_consumo_vehiculo = vg.id_consumo_vehiculo 
 									".$where2."
 								GROUP BY id_vehiculo
