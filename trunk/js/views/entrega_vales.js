@@ -115,7 +115,7 @@ $.ajax({
 			    $('#cantidad_solicitada').validacion({    
 						req: true,
 						numMin: 0,
-						numMax: data.asignado
+						numMax: data.asignado +1
 						});
 		    	$('#justificacion').val("");
 

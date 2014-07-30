@@ -982,7 +982,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 
 			$id_seccion=$this->input->post('id_seccion');
 			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
-			
+			$agrupar = $this->input->post('agrupar');
 			if($_POST['start']!="" && $_POST['end']!=""){
 					$fecha_inicio=$this->input->post('start');
 					$fecha_fin=$this->input->post('end');
@@ -999,7 +999,8 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 				$id_fuente_fondo= NULL;
 			}
 
-			$data=$this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+
+			$data=$this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin, $agrupar);
 			echo json_encode($data);
 		}else {
 			echo 'No tiene permisos para acceder';
@@ -1025,6 +1026,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 				///Preparacion de datos
 			$id_seccion=$this->input->post('id_seccion');
 			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			$agrupar = $this->input->post('agrupar');
 			$data['color1']=$this->input->post('color1');
 			$data['color2']=$this->input->post('color2');
 		
@@ -1059,7 +1061,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 			}
 			$data['f']=$f;
 
-			$aux= $this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+			$aux= $this->vales_model->consumo_seccion_fuente($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin, $agrupar);
 			$data['j']=json_encode($aux);
 			
 
@@ -1550,6 +1552,35 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		$this->mpdf->Output(); /*Salida del pdf*/	
 	
 	}
+function asignacion_vehiculo()
+{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		//$data['id_permiso']=$permiso;
+		if($data['id_permiso']!=NULL) {
+		
+			$data['datos']=$this->vales_model->asignaciones();
+			$data['estado_transaccion']=$estado_transaccion;
+			//print_r($data);
+			pantalla("vales/asignaciones_vehiculo",$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}	
+}
+	function dialogo_asignacion_vehiculo($id_vehiculo)
+	{
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
+		if($data['id_permiso']!=NULL) {
+		
+			$data['d']=$this->vales_model->asignaciones();
+			$this->load->view("vales/dialogo_asignacion_vehiculo",$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}		
+	}
+
 }
 
 ?>

@@ -48,10 +48,15 @@
                     </select>               
             </p>
             <p>
-                <label for="color1" style="width: 300px">Color Consumido</label>
+                <label for="color1" style="width: 150px">Colores: </label>
                  <input id="color1" style="width: 200px" name="color1"/>
-                <label for="color2" style="width: 200px">Color Asignado</label>
                  <input id="color2" style="width: 200px" name="color2"/>
+                 <label for="grupo" style="width: 250px">Ver por</label>
+                <select class="select" style="width:200px;" tabindex="5" id="agrupar" name="agrupar" >
+                     <option value="2" >Mes</option>
+                     <option value="3" >Año</option>                    
+                </select>   
+
 
             </p>
 
