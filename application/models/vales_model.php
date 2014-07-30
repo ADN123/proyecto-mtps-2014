@@ -776,7 +776,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				$this->db->query($q);
 	
 	}	
-	function consumo_seccion_fuente($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL)
+	function consumo_seccion_fuente($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL, $agrupar=NULL)
 	{
 	/*		$q="SELECT
 					s.nombre_seccion as seccion,
@@ -805,13 +805,20 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					$fuenteF=" AND r.id_fuente_fondo = ".$id_fuente_fondo;
 				}
 
+				if($agrupar==NULL || $agrupar==2){ //por mes
+
+				
+				}else{ // por año
+
+				}
+
 				$where= $fechaF.$seccionF.$fuenteF;
 			$query=$this->db->query(" SET @row_number:=0;");
 			$q="SELECT
 					@row_number:=@row_number+1 AS row_number, 
 					r.id_seccion, 
 					CONCAT( s.nombre_seccion, ' <br>',' (', f.nombre_fuente_fondo, ' )') as seccion,
-					r.asignado asignado,
+					x.asignado asignado,
 					SUM( cv.cantidad_vales) consumido, 
 					SUM(cv.cantidad_vales) * v.valor_nominal as  dinero, 
 					fecha_factura
@@ -824,9 +831,17 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				INNER JOIN org_seccion s ON s.id_seccion= r.id_seccion
 				INNER JOIN tcm_vale v ON v.id_vale  = rv.id_vale
 				INNER JOIN tcm_fuente_fondo f ON f.id_fuente_fondo = r.id_fuente_fondo 
+				LEFT  JOIN (	SELECT
+						SUM(asignado) asignado,
+						id_seccion, 
+						mes
+					FROM
+						tcm_requisicion
+					GROUP BY
+						id_seccion,
+						mes ) as x ON r.id_seccion = x.id_seccion AND r.mes = x.mes
 				WHERE ".$where."	
-				 GROUP BY r.id_seccion
-				ORDER BY c.fecha_factura";
+				 GROUP BY r.id_seccion, r.mes";
 
 			$query=$this->db->query($q);
 
