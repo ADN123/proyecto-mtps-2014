@@ -956,10 +956,16 @@ function solicitudes_por_asignar_depto(){
 		$select='';
 		
 		/*///////////////declaración de los where, por defecto vacios//////////*/
+		$where_placa='';
 		$where_marca='';
 		$where_modelo='';
 		$where_clase='';
 		$where_condicion='';
+		$where_anio='';
+		$where_fuente_fondo='';
+		$where_estado='';
+		$where_tipo_combustible='';
+		$where_seccion='';
 		
 		
 		/*/////////////////////verificación de los select y los where para generar la consulta///////////*/
@@ -971,6 +977,24 @@ function solicitudes_por_asignar_depto(){
 		
 		if($clase!='') $where_clase = " vc.id_vehiculo_clase = '".$clase."' ";
 		else $select = $select.', vc.nombre_clase as clase';
+		
+		if($condicion!='') $where_condicion = " vcon.id_vehiculo_condicion = '".$condicion."' ";
+		else $select = $select.', vcon.condicion';
+		
+		if($condicion!='') $where_condicion = " vcon.id_vehiculo_condicion = '".$condicion."' ";
+		else $select = $select.', vcon.condicion';
+		
+		if($condicion!='') $where_condicion = " vcon.id_vehiculo_condicion = '".$condicion."' ";
+		else $select = $select.', vcon.condicion';
+		
+		if($condicion!='') $where_condicion = " vcon.id_vehiculo_condicion = '".$condicion."' ";
+		else $select = $select.', vcon.condicion';
+		
+		if($condicion!='') $where_condicion = " vcon.id_vehiculo_condicion = '".$condicion."' ";
+		else $select = $select.', vcon.condicion';
+		
+		if($condicion!='') $where_condicion = " vcon.id_vehiculo_condicion = '".$condicion."' ";
+		else $select = $select.', vcon.condicion';
 		
 		if($condicion!='') $where_condicion = " vcon.id_vehiculo_condicion = '".$condicion."' ";
 		else $select = $select.', vcon.condicion';

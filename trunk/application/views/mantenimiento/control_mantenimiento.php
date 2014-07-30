@@ -35,7 +35,7 @@
         <div id="step-1">	
            <h2 class="StepTitle">Datos Generales del Vehículo</h2>
              <p>
-                <label>Fecha</label>
+                <label>Fecha de Recepción</label>
                 <strong><?php echo date('d/m/Y')?></strong>
             </p>
 			<p>
