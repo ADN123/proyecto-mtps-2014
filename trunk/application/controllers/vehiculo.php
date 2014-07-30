@@ -42,7 +42,7 @@ class Vehiculo extends CI_Controller
 	*	Última Modificación: 30/07/2014
 	*	Observaciones: Ninguna
 	*/
-	function nuevo_vehiculo($id_vehiculo=NULL)
+	function nuevo_vehiculo($id_vehiculo=NULL,$estado_transaccion=NULL)
 	{
 		if($id_vehiculo==NULL)
 		{
@@ -67,6 +67,7 @@ class Vehiculo extends CI_Controller
 			$data['bandera']='true';
 			$data['vehiculo_info']=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo);
 		}
+		if($estado_transaccion==NULL)
 		pantalla("mantenimiento/nuevo_vehiculo",$data);
 	}
 	
@@ -194,6 +195,87 @@ class Vehiculo extends CI_Controller
 		else
 		{
 			ir_a("index.php/vehiculo/nuevo_vehiculo/0");
+		}
+	}
+	
+	/*
+	*	Nombre: modificar_vehiculo
+	*	Objetivo: modifica los datos de un vehículo en la Base de Datos
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 30/07/2014
+	*	Observaciones: Ninguna
+	*/
+	function modificar_vehiculo($id)
+	{
+		$this->db->trans_start();
+		$placa=$this->input->post('placa');
+		$id_marca=$this->input->post('marca');
+		$id_modelo=$this->input->post('modelo');
+		$id_clase=$this->input->post('clase');
+		$anio=$this->input->post('anio');
+		$id_condicion=$this->input->post('condicion');
+		$id_seccion=$this->input->post('seccion');
+		$id_empleado=$this->input->post('motorista');
+		$id_fuente_fondo=$this->input->post('fuente');
+		$tipo_combustible=$this->input->post('tipo_combustible');
+		$estado=$this->input->post('estado');
+		
+		if($img_df=="si") $imagen="vehiculo.jpg";
+		else
+		{
+			$config['upload_path'] = './fotografias_vehiculos/';
+			$config['allowed_types'] = 'gif|jpg|jpeg|png';
+			$config['file_name']=$placa;
+					
+			$this->load->library('upload', $config);
+			if (!$this->upload->do_upload())
+			{
+				echo "<script language='javascript'>
+				alert('Seleccione Un Archivo valido de formato: .gif | .jpg | .png | .jpeg');
+				</script>";
+				pantalla('mantenimiento/nuevo_vehiculo');
+			}	
+			else
+			{
+				echo "<script language='javascript'>
+				alert('Fotografia subida correctamente');
+				</script>";
+				$file_data = $this->upload->data();
+				$imagen=$file_data['file_name'];
+			}
+		}		
+		$nmarca=$this->input->post('nmarca');
+		$nmodelo=$this->input->post('nmodelo');
+		$nclase=$this->input->post('nclase');
+		$nfuente=$this->input->post('nfuente');
+		
+		if($id_marca==0 && $nmarca!="")
+		{
+			$id_marca=$this->transporte_model->nueva_marca($nmarca);
+		}
+		if($id_modelo==0 && $nmodelo!="")
+		{
+			$id_modelo=$this->transporte_model->nuevo_modelo($nmodelo);
+		}
+		if($id_clase==0 && $nclase!="")
+		{
+			$id_clase=$this->transporte_model->nueva_clase($nclase);
+		}
+		if($id_fuente_fondo==0 && $nfuente!="")
+		{
+			$id_fuente_fondo=$this->transporte_model->nueva_fuente($nfuente);
+		}
+		if($id_marca!=0 && $id_modelo!=0 && $id_clase!=0 && $id_fuente_fondo!=0)
+		{
+			$this->transporte_model->modificar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$tipo_combustible,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen,$id,$estado);
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a("index.php/vehiculo/vehiculos/".$tr);
+		}
+		else
+		{
+			ir_a("index.php/vehiculo/vehiculos/0");
 		}
 	}
 	
