@@ -87,7 +87,6 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
                 {
 					if($bandera=='true')
 					{
-						print_r($mar->id_vehiculo_marca);
 						if($mar->id_vehiculo_marca==$id_marca) $s='selected="selected"';
 						else $s='';
 						echo "<option ".$s." value='".$mar->id_vehiculo_marca."'>".ucwords($mar->nombre)."</option>";
@@ -150,7 +149,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
                 <?php if($bandera=='true') {?>
                 	<label>Mantener imagen</label>
                     <input type="checkbox" name="img_df" id="img_df" value="si" checked="checked" />
-                    <input type="text" name="imagen" value='<?php echo $imagen ?>' disabled="disabled" ?/>
+                    <input type="text" name="imagen" value='<?php echo $imagen ?>' readonly="readonly" />
                 <?php }else{ ?>
                 <label>Imagen por defecto</label>
                 <input type="checkbox" name="img_df" id="img_df" value="si" checked="checked"  />
@@ -171,7 +170,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
 							else $s='';
 							echo "<option ".$s." value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
 						}
-						echo "<option value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
+						else echo "<option value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
 					}
                 ?>
                 <option value="0">Otra</option>
@@ -190,7 +189,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
 						else $s='';
 						echo "<option ".$s." value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
 					}
-					echo "<option value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
+					else echo "<option value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
                 }
                 ?>
                 </select>
@@ -235,7 +234,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
 						else $s='';
 						echo "<option ".$s." value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
 					}
-					echo "<option value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
+					else echo "<option value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
                     
                 }
                 ?>
@@ -254,7 +253,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
 						else $s='';
 						echo "<option ".$s." value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
 					}
-					echo "<option value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
+					else echo "<option value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
                 }
                 ?>
                 <option value="0">Sin asignación</option>
