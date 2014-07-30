@@ -33,6 +33,7 @@ if($bandera=='true')
 		$id_seccion=$v->id_seccion;
 		$imagen=$v->imagen;
 		$estado=$v->estado;	
+		$tipo_combustible=$v->tipo_combustible;
 	}
 }
 ?>
@@ -91,7 +92,6 @@ if($bandera=='true')
                 }
 				
                 ?>
-                
                 <option value="0">Otra</option>
                 </select>
                 <input type="text" name="nmarca" id="nmarca" disabled="disabled"/>
@@ -103,7 +103,15 @@ if($bandera=='true')
                 
                 foreach($modelo as $model)
                 {
-                    echo "<option value='".$model->id_vehiculo_modelo."'>".ucwords($model->modelo)."</option>";
+					if($bandera=='true')
+					{
+						if($model->id_vehiculo_modelo==$id_modelo)
+						{
+							echo "<option value='".$model->id_vehiculo_modelo."' selected='selected'>".ucwords($model->modelo)."</option>";
+						}
+						else echo "<option value='".$model->id_vehiculo_modelo."'>".ucwords($model->modelo)."</option>";
+					}
+					else echo "<option value='".$model->id_vehiculo_modelo."'>".ucwords($model->modelo)."</option>";                    
                 }
                 ?>
                 <option value="0">Otro</option>
@@ -117,7 +125,15 @@ if($bandera=='true')
                 
                 foreach($clase as $cla)
                 {
-                    echo "<option value='".$cla->id_vehiculo_clase."'>".ucwords($cla->nombre_clase)."</option>";
+					if($bandera=='true')
+					{
+						if($cla->id_vehiculo_clase==$id_clase)
+						{
+							echo "<option value='".$cla->id_vehiculo_clase."' selected='selected'>".ucwords($cla->nombre_clase)."</option>";
+						}
+						else echo "<option value='".$cla->id_vehiculo_clase."'>".ucwords($cla->nombre_clase)."</option>";
+					}
+					else echo "<option value='".$cla->id_vehiculo_clase."'>".ucwords($cla->nombre_clase)."</option>";
                 }
                 ?>
                 <option value="0">Otra</option>
@@ -126,13 +142,19 @@ if($bandera=='true')
             </p>
             <p>
             	<label>A&ntilde;o: </label>
-                <input type="text" name="anio" size="10" />
+                <input type="text" name="anio" size="10" <?php if($bandera=='true') echo "value='".$anio."'"; ?> />
             </p>
             <p>
                 <label>Fotografía: </label>
                 <input type="file" name="userfile" id="userfile" disabled="disabled" />
+                <?php if($bandera=='true') {?>
+                	<label>Mantener imagen</label>
+                    <input type="checkbox" name="img_df" id="img_df" value="si" checked="checked" />
+                    <input type="text" name="imagen" value='<?php echo $imagen ?>' disabled="disabled" ?/>
+                <?php }else{ ?>
                 <label>Imagen por defecto</label>
                 <input type="checkbox" name="img_df" id="img_df" value="si" checked="checked"  />
+                <?php }?>
             </p>
         </div>
         <div id="step-2">	
@@ -143,6 +165,14 @@ if($bandera=='true')
                 <?php                
 					foreach($fuente_fondo as $fue)
 					{
+						if($bandera=='true')
+						{
+							if($fue->id_fuente_fondo==$id_fuente_fondo)
+							{
+								echo "<option value='".$fue->id_fuente_fondo."' selected='selected'>".ucwords($fue->fuente)."</option>";
+							}
+							else echo "<option value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
+						}
 						echo "<option value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
 					}
                 ?>
@@ -156,7 +186,15 @@ if($bandera=='true')
                 <?php
                 foreach($condicion as $con)
                 {
-                    echo "<option value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
+					if($bandera=='true')
+					{
+						if($con->id_vehiculo_condicion==$id_condicion)
+						{
+							echo "<option value='".$con->id_vehiculo_condicion."' selected='selected'>".ucwords($con->condicion)."</option>";
+						}
+						else echo "<option value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
+					}
+					echo "<option value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
                 }
                 ?>
                 </select>
@@ -164,8 +202,8 @@ if($bandera=='true')
             <p>
             	<label>Tipo de Combustible</label>
                 <select name="tipo_combustible" class="select" style="width:150px">
-                	<option value="Diesel">Diesel</option>
-                    <option value="Gasolina">Gasolina</option>
+                	<option value="Diesel" <?php if($bandera=='true'){ if(strcmp($tipo_combustible,'Diesel')==0) echo "selected='selected'";} ?>>Diesel</option>
+                    <option value="Gasolina" <?php if($bandera=='true'){ if(strcmp($tipo_combustible,'Gasolina')==0) echo "selected='selected'";} ?>>Gasolina</option>
                 </select>
             </p>
         </div>
@@ -178,7 +216,16 @@ if($bandera=='true')
                 
                 foreach($seccion as $sec)
                 {
-                    echo "<option value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
+					if($bandera=='true')
+					{
+						if($sec->id_seccion==$id_seccion)
+						{
+							echo "<option value='".$sec->id_seccion."' selected='selected'>".ucwords($sec->seccion)."</option>";
+						}
+						else echo "<option value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
+					}
+					echo "<option value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
+                    
                 }
                 ?>
                 </select>
@@ -190,6 +237,11 @@ if($bandera=='true')
                 
                 foreach($motoristas as $mot)
                 {
+					if($mot->id_empleado==$id_empleado)
+							{
+								echo "<option value='".$mot->id_empleado."' selected='selected'>".ucwords($mot->nombre)."</option>";
+							}
+							else echo "<option value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
                     echo "<option value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
                 }
                 ?>
