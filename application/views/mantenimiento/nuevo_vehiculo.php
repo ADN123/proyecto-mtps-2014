@@ -7,7 +7,35 @@
     <h2>Nuevo Vehículo</h2>
 </section>
 <form name="form_vehiculo" method="post" action="<?php echo base_url()?>index.php/vehiculo/guardar_vehiculo" enctype="multipart/form-data" accept-charset="utf-8">
+<?php
 
+if($bandera=='true')
+{
+	foreach($vehiculo_info as $v)
+	{
+		$id_vehiculo=$v->id_vehiculo;
+		$placa=$v->placa;
+		$marca2=$v->marca;
+		$id_marca=$v->id_marca;
+		$modelo2=$v->modelo;
+		$id_modelo=$v->modelo;
+		$condicion2=$v->condicion;
+		$id_condicion=$v->id_condicion;
+		$clase2=$v->clase;
+		$id_clase=$v->id_clase;
+		$kilometraje=$v->kilometraje;
+		$motorista=ucwords($v->motorista);
+		$id_motorista=$v->id_empleado;
+		$anio=$v->anio;
+		$fuente_fondo2=$v->fuente_fondo;
+		$id_fuente_fondo=$v->id_fuente_fondo;
+		$seccion2=ucwords($v->seccion);
+		$id_seccion=$v->id_seccion;
+		$imagen=$v->imagen;
+		$estado=$v->estado;	
+	}
+}
+?>
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -42,18 +70,28 @@
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n del vehículo</h2>
 			<p>
                 <label>Número de Placa: </label>
-                <input type="text" name="placa" size="10" />
+                <input type="text" name="placa" size="10" <?php if($bandera=='true') echo "value='".$placa."'" ?> />
+               
             </p>
             <p>
                 <label>Marca: </label>
                  <select name="marca" id="marca" class="select" style="width:150px">
                 <?php
-                
                 foreach($marca as $mar)
                 {
-                    echo "<option value='".$mar->id_vehiculo_marca."'>".ucwords($mar->nombre)."</option>";
+					if($bandera=='true')
+					{
+						if($mar->id_vehiculo_marca==$id_marca)
+						{
+							echo "<option value='".$mar->id_vehiculo_marca."' selected='selected'>".ucwords($mar->nombre)."</option>";
+						}
+						else echo "<option value='".$mar->id_vehiculo_marca."'>".ucwords($mar->nombre)."</option>";
+					}
+					else echo "<option value='".$mar->id_vehiculo_marca."'>".ucwords($mar->nombre)."</option>";
                 }
+				
                 ?>
+                
                 <option value="0">Otra</option>
                 </select>
                 <input type="text" name="nmarca" id="nmarca" disabled="disabled"/>
@@ -179,6 +217,9 @@ $(document).ready(function(){
 			}
 		}
 	);
+	$('#marca').kendoComboBox({
+		index:34
+	});
 	$('#modelo').change(
 		function()
 		{

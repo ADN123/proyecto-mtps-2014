@@ -20,7 +20,10 @@
             <td><?php echo ucwords($fila->marca)?></td>
             <td><?php echo ucwords($fila->modelo)?></td>
             <td><?php echo ucwords($fila->clase)?></td>
-            <td><a rel="leanModal" title="Ver solicitud" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a></td>
+            <td>
+            	<a rel="leanModal" title="Ver información del Vehículo" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
+                <a rel="leanModal" title="Ver información del Vehículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_vehiculo/".$fila->id ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
+            </td>
         </tr>
     <?php } ?>
     </tbody>
@@ -41,7 +44,7 @@
 		$('#contenido-ventana').load(base_url()+'index.php/vehiculo/dialogo_vehiculo_info/'+id);
 		return false;
 	}
-
+	
 	function motoristaf(id,id2)
 	{
 		$('#motorista').destruirValidacion();
