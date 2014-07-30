@@ -13,7 +13,7 @@
 </section>
 
 
-<form name="filtro" method="post" id="filtro" action="<? echo base_url()?>index.php/vales/consumo_pdf" target="_blank">
+<form name="filtro" method="post" id="filtro" action="<? echo base_url()?>index.php/vales/reporte_vehiculo_pdf" target="_blank">
 
             <p> 
                 <label for="start" >Fecha Inicio:</label><input id="start" name="start" style="width: 200px" tabindex="1"/>
@@ -66,11 +66,11 @@
                 <th>
                     Vales aplicados
                 </th>
-                <th>
-                    Recorrido (Km)
-                </th>
                  <th>
                     Combustible Aplicado (gal)
+                </th>
+               <th>
+                    Recorrido (Km)
                 </th>  
                  <th>
                     Rendimiento (gal/Km)
@@ -113,7 +113,7 @@
         
     }
 
-setTimeout ("reporte();", 2000);
+setTimeout ("reporte();", 300);
 ///llamada al finalizar la contrucion del archivo
 </script>
 
