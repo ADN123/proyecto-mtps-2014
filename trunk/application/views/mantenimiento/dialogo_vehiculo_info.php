@@ -60,7 +60,6 @@
 		?>
     </fieldset>
     <p style='text-align: center;'>
-        <button type="submit"  id="aprobar" class="button tam-1 boton_validador" name="Modificar" onclick="Enviar(2)">Modificar Información</button>
         <button  type="submit" id="denegar" class="button tam-1 boton_validador" name="Aceptar">Aceptar</button>
     </p>
 </form>

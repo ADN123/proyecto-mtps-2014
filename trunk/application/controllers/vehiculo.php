@@ -39,18 +39,34 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga la vista para el Registro de un nuevo Vehículo a la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 13/05/2014
+	*	Última Modificación: 30/07/2014
 	*	Observaciones: Ninguna
 	*/
-	function nuevo_vehiculo()
+	function nuevo_vehiculo($id_vehiculo=NULL)
 	{
-		$data['motoristas']=$this->transporte_model->consultar_motoristas2();
-		$data['marca']=$this->transporte_model->consultar_marcas();
-		$data['modelo']=$this->transporte_model->consultar_modelos();
-		$data['clase']=$this->transporte_model->consultar_clases();
-		$data['condicion']=$this->transporte_model->consultar_condiciones();
-		$data['seccion']=$this->transporte_model->consultar_secciones();
-		$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
+		if($id_vehiculo==NULL)
+		{
+			$data['motoristas']=$this->transporte_model->consultar_motoristas2();
+			$data['marca']=$this->transporte_model->consultar_marcas();
+			$data['modelo']=$this->transporte_model->consultar_modelos();
+			$data['clase']=$this->transporte_model->consultar_clases();
+			$data['condicion']=$this->transporte_model->consultar_condiciones();
+			$data['seccion']=$this->transporte_model->consultar_secciones();
+			$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
+			$data['bandera']='false';
+		}
+		else
+		{
+			$data['motoristas']=$this->transporte_model->consultar_motoristas2();
+			$data['marca']=$this->transporte_model->consultar_marcas();
+			$data['modelo']=$this->transporte_model->consultar_modelos();
+			$data['clase']=$this->transporte_model->consultar_clases();
+			$data['condicion']=$this->transporte_model->consultar_condiciones();
+			$data['seccion']=$this->transporte_model->consultar_secciones();
+			$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
+			$data['bandera']='true';
+			$data['vehiculo_info']=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo);
+		}
 		pantalla("mantenimiento/nuevo_vehiculo",$data);
 	}
 	
