@@ -115,17 +115,18 @@
             <p>
                 <label>Estado: </label>
                 <select name="estado" id="estado" class="select" style="width:150px">
-               		<option value="0">De Baja</option>
-                    <option value="1">Activo</option>
-                    <option value="2">En Taller Interno</option>
-                    <option value="3">En Taller Externo</option>
-                    <option value="4">Robado</option>
+               		<option value="De Baja">De Baja</option>
+                    <option value="Activo">Activo</option>
+                    <option value="En Taller Interno">En Taller Interno</option>
+                    <option value="En Taller Externo">En Taller Externo</option>
+                    <option value="Robado">Robado</option>
                 </select>
             </p>
         </td>
     </tr>
     <tr>
-        <td align="center" colspan="2"><button type="button" name="btnFiltrar" class="button tam-1" onclick="validar_filtro()">Filtrar</button></td>
+    	<?php /*<td align="center" colspan="2"><a title="Crear .pdf de solicitud" target="_blank" href="<?php echo base_url()?>index.php/vehiculo/vehiculos_pdf/"><img  src="<?php echo base_url()?>img/ico_pdf.png"/></a></td> */?>
+       <td align="center" colspan="2"><button type="button" name="btnFiltrar" class="button tam-1" onclick="validar_filtro()">Filtrar</button></td>
     </tr>
 </table>
 </form>

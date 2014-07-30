@@ -10,7 +10,7 @@
                 <img src="img/mtps_logo.jpg" />
             </td>
             <td align="right">
-                <h3>VEHÍCULOS</h3>
+                <h3>REPORTE DE VEHÍCULOS</h3>
                 <h6></h6>
             </td>
         </tr>
@@ -20,11 +20,25 @@
             </td>
         </tr>
   	</table>
-    <table align="center" class="tabla" cellspacing="0">    
+    <table align="center" border="1" class="tabla" cellspacing="0">    
         <tr>
-        	<td colspan="2" align="center">
-            </td>
+        	<th>Placa</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Clase</th>
+            <th>Condición</th>
         </tr>
+        <?php
+			foreach($datos as $d)
+			{
+				echo "<tr>";
+				echo "<td>".$d->placa."</td>";
+				echo "<td>".$d->modelo."</td>";
+				echo "<td>".$d->clase."</td>";
+				echo "<td>".$d->condicion."</td>";
+				echo "</tr>";
+			}
+		?>
     </table>
 </body>
 </html>

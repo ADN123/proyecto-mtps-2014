@@ -266,12 +266,11 @@ class Vehiculo extends CI_Controller
 	function vehiculos_pdf()
 	{
 		$data['datos']=$this->transporte_model->filtro_vehiculo($_POST);
-		
-		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9, 'L'); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 		$stylesheet = file_get_contents('css/pdf/solicitud.css'); /*Selecionamos la hoja de estilo del pdf*/
 		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
 		//$data['nombre'] = "Renatto NL";
-		$html = $this->load->view('mantenimiento/vehiculos_pdf.php', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+		$html = $this->load->view('mantenimiento/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
 		//if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
 		//	$this->mpdf->AddPage();

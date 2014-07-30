@@ -952,16 +952,16 @@ function solicitudes_por_asignar_depto(){
 		
 		
 		/*/////////////////////verificación de los select y los where para generar la consulta///////////*/
-		if($marca!='') $where_marca = " vm.marca like '".$marca."%' ";
-		else $select = $select.', vm.marca as marca';
+		if($marca!='') $where_marca = " vm.id_vehiculo_marca = '".$marca."' ";
+		else $select = $select.', vm.nombre as marca';
 		
-		if($modelo!='') $where_modelo = " vmo.modelo like '".$modelo."%' ";
-		else $select = $select.', vm.modelo';
+		if($modelo!='') $where_modelo = " vmo.id_vehiculo_modelo = '".$modelo."' ";
+		else $select = $select.', vmo.modelo';
 		
-		if($clase!='') $where_clase = " vc.nombre_clase like '".$clase."%' ";
-		else $select = $select.', vc.nombre_clase clase';
+		if($clase!='') $where_clase = " vc.id_vehiculo_clase = '".$clase."' ";
+		else $select = $select.', vc.nombre_clase as clase';
 		
-		if($condicion!='') $where_condicion = " vcon.condicion like '".$condicion."%' ";
+		if($condicion!='') $where_condicion = " vcon.id_vehiculo_condicion = '".$condicion."' ";
 		else $select = $select.', vcon.condicion';
 		
 		/*/////////////concatenación de los where/////////////*/
@@ -1007,12 +1007,16 @@ function solicitudes_por_asignar_depto(){
 			$where=$where.' )';
 		}
 		
-		$consulta="select v.placa, ".$select
-			."from tcm_vehiculo as v
+		/*////////////////////concatenación de la consulta////////////////*/
+		$consulta="select v.placa ".$select
+			." from tcm_vehiculo as v
 			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
 			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
-			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)".$where;
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion) ".$where.";";
+
+		$query=$this->db->query($consulta);
+		return $query->result();
 	}
 
 	///////////////////////////FUNCIÓN PARA VALIDAR LA FECHA Y LA HORA DE UNA SOLICITUD//////////
