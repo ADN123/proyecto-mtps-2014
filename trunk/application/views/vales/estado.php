@@ -1,6 +1,9 @@
 <?php if($g) { ?>
-
-        <h2>Vales No Entregados</h2>
+<br>
+<section>
+        <h2 >Vales No Entregados</h2>
+</section>
+        <br>
 
         <table cellspacing="0" align="center" class="table_design">
                     <thead>
@@ -40,9 +43,10 @@
                 </table>
 <?php } // fin if ?> 
 
-        
+<section>
         <h2>Vales Entregados</h2>
-
+</section>     
+<br>
         <table cellspacing="0" align="center" class="table_design">
                     <thead>
                         <th>

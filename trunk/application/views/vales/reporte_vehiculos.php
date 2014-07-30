@@ -9,7 +9,7 @@
 </script>
 
 <section>
-    <h2>Consumo de vales y asignación </h2>
+    <h2>Consumo por vehiculo</h2>
 </section>
 
 
@@ -47,14 +47,6 @@
                            
                     </select>               
             </p>
-            <p>
-                <label for="color1" style="width: 300px">Color Consumido</label>
-                 <input id="color1" style="width: 200px" name="color1"/>
-                <label for="color2" style="width: 200px">Color Asignado</label>
-                 <input id="color2" style="width: 200px" name="color2"/>
-
-            </p>
-
             <p align="center">
                     <button type="button" id="Filtrar" class="button tam-1" >Filtrar</button>                    
                     <button   id="imp1" class="button tam-1" >Imprimir</button
@@ -63,26 +55,25 @@
 </form>
 <br><br>
 
-    <!------------------------------------------Plantilla de carga de grafico y tabla----------------------------------------------------------------------- -->
-<div style="height:400px; background:#FFFFFF;" id="chartdiv">
-</div>
-<br>
 <table cellspacing='0' align='center' class='table_design' id="datos" >
             <thead>
                <th>
-                   N°
+                    Placa
                 </th>
                 <th>
-                   Seccion
+                    Marca
                 </th>
                 <th>
-                    Asignado
+                    Vales aplicados
                 </th>
                 <th>
-                    Consumido
-                </th> 
+                    Recorrido (Km)
+                </th>
                  <th>
-                    Consumido ($)
+                    Combustible Aplicado (gal)
+                </th>  
+                 <th>
+                    Rendimiento (gal/Km)
                 </th>             
 
             </thead>
@@ -106,22 +97,17 @@
     function reporte(formu){  
                 $.ajax({
             async:  true, 
-            url:    base_url()+"index.php/vales/consumo_json",
+            url:    base_url()+"index.php/vales/reporte_vehiculo_json",
             dataType:"json",
              type: "POST",
             data: formu,
             success: function(data){
-              console.log(data);
-                grafico(data,"seccion");//contructor del grafico
-                tabla(data) 
+                tabla2(data) 
 
                 },
             error:function(data){
+                    alertify.alert('Error al cargar datos');
 
-                
-
-         //        alertify.alert('Error al cargar datos');
-          console.log(data);
                 }
         });          
         

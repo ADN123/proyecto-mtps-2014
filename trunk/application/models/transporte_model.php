@@ -1349,14 +1349,16 @@ function salida_vehiculo($id, $km_inicial,$hora_salida,$acces,$gas){
 		$q="INSERT INTO tcm_vehiculo_kilometraje (
 					id_solicitud_transporte, 
 					id_vehiculo, 
-					km_inicial, 
+					km_inicial,
+					km_final, 
 					hora_salida, 
 					fecha_modificacion,
 					combustibleIni)
 				VALUES(
 					'".$id."', 
 					(SELECT id_vehiculo FROM tcm_asignacion_sol_veh_mot WHERE id_solicitud_transporte = ".$id."),
-					 '".$km_inicial."',    
+					 '".$km_inicial."',
+					 '".$km_inicial."',        
 					CONCAT_WS(' ',CURDATE(),'".$hora_salida."'), 
 					CONCAT_WS(' ',CURDATE(),CURTIME()),
 					'".$gas."'

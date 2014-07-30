@@ -84,7 +84,7 @@ function grafico (chartData, label) {
                 valueAxis.dashLength = 3;
                 valueAxis.axisAlpha = 0.2;
                 valueAxis.position = "top";
-                valueAxis.title = "Cosumo de Vales vs Asignación";
+                valueAxis.title = "vales";
                 valueAxis.minorGridEnabled = true;
                 valueAxis.minorGridAlpha = 0.08;
                 valueAxis.gridAlpha = 0.15;
@@ -155,6 +155,24 @@ function tabla1 (json) {
               "<td align='center'>" + json[i].fecha + "</td>" +
               "<td align='center'>" + json[i].consumido + "</td>" +
               "<td align='center'>$" + n.toFixed(2) + "</td>" +
+            "</tr>";    
+                $('#datos').append(fila)    
+                }  
+}
+function tabla2 (json) {
+                var fila;
+
+            $('#datos tbody').remove();        
+            for (i=0;i<json.length;i++) {   
+            var n = new Number(json[i].rendimiento);
+            var ap = new Number(json[i].vales*json[i].glxv);
+             fila= "<tr>" +
+              "<td align='center'>" + json[i].placa + "</td>" +
+              "<td align='center'>" + json[i].marca + "</td>" +
+              "<td align='center'>" + json[i].vales + "</td>" +
+              "<td align='center'>" + ap + "</td>" +
+              "<td align='center'>" + json[i].recorrido + "</td>" +
+              "<td align='center'>" + n.toFixed(2) + "</td>" +
             "</tr>";    
                 $('#datos').append(fila)    
                 }  
