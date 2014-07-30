@@ -98,7 +98,7 @@
             </p>
         </div>
         <div id="step-2">	
-            <h2 class="StepTitle">Ingreso de la informaci&oacute;n de fuente de fondo del vehículo</h2>
+            <h2 class="StepTitle">Ingreso de la informaci&oacute;n de adquisición del vehículo</h2>
             <p>
                 <label>Fuente de Fondo: </label>
                 <select name="fuente" id="fuente" class="select" style="width:250px"onChange="asignacion(this.value)">
@@ -123,6 +123,13 @@
                 ?>
                 </select>
             </p>
+            <p>
+            	<label>Tipo de Combustible</label>
+                <select name="tipo_combustible" class="select" style="width:150px">
+                	<option value="Diesel">Diesel</option>
+                    <option value="Gasolina">Gasolina</option>
+                </select>
+            </p>
         </div>
         <div id="step-3">	
             <h2 class="StepTitle">Informaci&oacute;n de asignación de motorista, oficina y sección del vehículo</h2>
@@ -139,27 +146,16 @@
                 </select>
             </p>
             <p>
-                <label>Sección de Asignación de vales: </label>
-                <select name="seccion_vales" id="seccion_vales"  class="select" style="width:350px">
-                <?php
-                
-                foreach($seccion as $sec)
-                {
-                    echo "<option value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
-                }
-                ?>
-                </select>
-            </p>
-            <p>
                 <label>Motorista: </label>
                 <select name="motorista" class="select" style="width:300px">
-                <?php
+				<?php
                 
                 foreach($motoristas as $mot)
                 {
                     echo "<option value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
                 }
                 ?>
+                <option value="0">Sin asignación</option>
                 </select>
             </p>
         </div>

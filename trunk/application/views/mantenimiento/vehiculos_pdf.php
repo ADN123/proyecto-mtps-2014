@@ -7,7 +7,7 @@
     <table align="center" border="0" cellspacing="0" style="width:100%;">
         <tr>
             <td align="left" id="imagen">
-                <img src="img/mtps_logo.jpg" />
+                <img src="<?php echo base_url(); ?>img/mtps.jpg" />
             </td>
             <td align="right">
                 <h3>REPORTE DE VEHÍCULOS</h3>
@@ -16,7 +16,7 @@
         </tr>
         <tr>
         	<td colspan="2" align="center">
-            	<strong id="titulo">DATOS DEL SOLICITANTE</strong>
+            	<strong id="titulo"></strong>
             </td>
         </tr>
   	</table>
@@ -32,10 +32,10 @@
 			foreach($datos as $d)
 			{
 				echo "<tr>";
-				echo "<td>".$d->placa."</td>";
-				echo "<td>".$d->modelo."</td>";
-				echo "<td>".$d->clase."</td>";
-				echo "<td>".$d->condicion."</td>";
+				echo "<td>".$d['placa']."</td>";
+				echo "<td>".$d['modelo']."</td>";
+				echo "<td>".$d['clase']."</td>";
+				echo "<td>".$d['condicion']."</td>";
 				echo "</tr>";
 			}
 		?>

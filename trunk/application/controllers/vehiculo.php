@@ -106,7 +106,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Registra los datos de un nuevo vehículo en la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 23/07/2014
+	*	Última Modificación: 30/07/2014
 	*	Observaciones: Ninguna
 	*/
 	function guardar_vehiculo()
@@ -118,16 +118,17 @@ class Vehiculo extends CI_Controller
 		$id_clase=$this->input->post('clase');
 		$anio=$this->input->post('anio');
 		$id_condicion=$this->input->post('condicion');
-		$id_seccion_vales=$this->input->post('seccion_vales');
 		$id_seccion=$this->input->post('seccion');
 		$id_empleado=$this->input->post('motorista');
 		$id_fuente_fondo=$this->input->post('fuente');
-		$img_df=$this->input->post('img_df');
+		$tipo_combustible=$this->input->post('tipo_combustible');
+		
 		if($img_df=="si") $imagen="vehiculo.jpg";
 		else
 		{
 			$config['upload_path'] = './fotografias_vehiculos/';
 			$config['allowed_types'] = 'gif|jpg|jpeg|png';
+			$config['file_name']=$placa;
 					
 			$this->load->library('upload', $config);
 			if (!$this->upload->do_upload())
@@ -169,7 +170,7 @@ class Vehiculo extends CI_Controller
 		}
 		if($id_marca!=0 && $id_modelo!=0 && $id_clase!=0 && $id_fuente_fondo!=0)
 		{
-			$this->transporte_model->registrar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$id_seccion_vales,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen);
+			$this->transporte_model->registrar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$tipo_combustible,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a("index.php/vehiculo/nuevo_vehiculo/".$tr);
@@ -192,7 +193,7 @@ class Vehiculo extends CI_Controller
 	function dialogo_vehiculo_info($id_vehiculo)
 	{
 		$data['datos']=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo);
-		$this->load->view('mantenimiento/dialogo_vehiculo_info',$data);
+		$this->load->view('mantenimiento/dialogo_vehiculo_info.php',$data);
 	}
 	
 	/*
@@ -266,10 +267,9 @@ class Vehiculo extends CI_Controller
 	function vehiculos_pdf()
 	{
 		$data['datos']=$this->transporte_model->filtro_vehiculo($_POST);
-		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		$this->mpdf->mPDF('utf-8','A4-L'); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 		$stylesheet = file_get_contents('css/pdf/solicitud.css'); /*Selecionamos la hoja de estilo del pdf*/
 		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
-		//$data['nombre'] = "Renatto NL";
 		$html = $this->load->view('mantenimiento/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
 		//if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
