@@ -8,6 +8,7 @@ class Vehiculo extends CI_Controller
 		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('transporte_model');
 //		$this->load->model('vehiculo_model');
+		$this->load->library("mpdf");
     	if(!$this->session->userdata('id_usuario')){
 		 redirect('index.php/sessiones');
 		}
@@ -258,13 +259,26 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: llama a la vista de vehiculo_pdf para odservar los reportes
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 28/07/2014
+	*	Última Modificación: 29/07/2014
 	*	Observaciones: Ninguna
 	*/
 	
 	function vehiculos_pdf()
 	{
-		pantalla('mantenimiento/vehiculos_pdf');	
+		$data['datos']=$this->transporte_model->filtro_vehiculo($_POST);
+		
+		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9, 'L'); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		$stylesheet = file_get_contents('css/pdf/solicitud.css'); /*Selecionamos la hoja de estilo del pdf*/
+		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
+		//$data['nombre'] = "Renatto NL";
+		$html = $this->load->view('mantenimiento/vehiculos_pdf.php', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
+		//if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
+		//	$this->mpdf->AddPage();
+		//	$html = $this->load->view('transporte/reverso_solicitud_pdf.php', $data, true);
+		//	$this->mpdf->WriteHTML($html,2);
+		//}
+		$this->mpdf->Output(); /*Salida del pdf*/	
 	}
 }
 ?>

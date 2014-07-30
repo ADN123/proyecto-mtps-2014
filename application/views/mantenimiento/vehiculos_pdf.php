@@ -11,7 +11,7 @@
             </td>
             <td align="right">
                 <h3>VEHÍCULOS</h3>
-                <h6>ID solicitud: <strong><?php echo $info_solicitud['id_solicitud_transporte']; ?></strong> </h6>
+                <h6></h6>
             </td>
         </tr>
         <tr>
