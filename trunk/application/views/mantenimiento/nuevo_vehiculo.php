@@ -81,7 +81,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             </p>
             <p>
                 <label>Marca: </label>
-                 <select name="marca" id="marca" class="select" tabindex="1" placeholder="[Seleccione...]" style="width:150px">
+                 <select name="marca" id="marca" tabindex="1" style="width:150px">
                 <?php
                 foreach($marca as $mar)
                 {
@@ -200,12 +200,13 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
 				?>
 				<p>
                     <label>Estado: </label>
-                    <select name="estado" id="estado" class="select" placeholder="[Seleccione...]" style="width:150px">
+                    <select name="estado" id="estado" class="select" style="width:150px">
                         <option value="0" <?php if($estado==0) echo "selected='selected'"; ?>>De Baja</option>
                         <option value="1" <?php if($estado==1) echo "selected='selected'"; ?>>Activo</option>
                         <option value="2" <?php if($estado==2) echo "selected='selected'"; ?>>En Taller Interno</option>
                         <option value="3" <?php if($estado==3) echo "selected='selected'"; ?>>En Taller Externo</option>
                         <option value="4" <?php if($estado==4) echo "selected='selected'"; ?>>Robado</option>
+                        <option value="5">Extraviado</option>
                     </select>
             	</p>
 				<?php
@@ -343,6 +344,7 @@ $(document).ready(function(){
             $('#seccion_vales').empty();
 
     }
+	/*$('#estado').kendoDropDownList().select(<?php //echo $estado; ?>);*/
 });
 
 
