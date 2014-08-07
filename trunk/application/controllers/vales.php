@@ -11,7 +11,7 @@
 	define("CONSUMO_H",114);	//consumo historico
 	define("CONSUMO_V",115);
 	define("REQUISICION_PDF",115); ///no esta 
-	define("HERRAMIENTA",112); ///son herramientas y otros posibles consumidores de combustibles
+	define("HERRAMIENTA",115); ///son herramientas y otros posibles consumidores de combustibles
 
 class Vales extends CI_Controller
 {
