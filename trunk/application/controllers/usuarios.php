@@ -490,8 +490,7 @@ class Usuarios extends CI_Controller
 		if($data['id_permiso']==3) {
 			$this->db->trans_start();
 			$id_usuario=$this->input->post('id_usuario');
-			$password=md5($this->input->post('password'));
-			
+						
 			if($password!="") {			
 				$formuInfo = array(
 					'password'=>$password,

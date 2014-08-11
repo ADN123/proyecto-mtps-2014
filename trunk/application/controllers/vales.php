@@ -1247,6 +1247,12 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}		
 	}
 
+	function seccion_vale($id_fuente_fondo)
+	{
+		echo json_encode($data['oficinas']=$this->vales_model->consultar_oficinas_fuente($id_fuente_fondo));
+
+	}
+
 	/*
 	*	Nombre: eliminar_herramienta
 	*	Objetivo: 	eliminar la asiganacion en la base de datos
@@ -1574,8 +1580,7 @@ function asignacion_vehiculo()
 		if($data['id_permiso']!=NULL) {
 		
 			$data['d']=$this->vales_model->consultar_datos_vehiculos($id_vehiculo);
-			$data['oficinas']=$this->vales_model->consultar_oficinas(NULL, $data['d'][0]['id_fuente_fondo']);
-		
+			$data['oficinas']=$this->vales_model->consultar_oficinas_fuente( $data['d'][0]['id_fuente_fondo']);
 		$this->load->view("vales/dialogo_asignacion_vehiculo",$data);	
 		}
 		else {

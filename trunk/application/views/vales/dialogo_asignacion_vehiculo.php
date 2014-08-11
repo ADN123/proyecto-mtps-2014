@@ -14,6 +14,7 @@
                     $marca=$datos['marca'];
                     $id_fuente_fondo= $datos['id_fuente_fondo']; 
                     $id_vehiculo= $datos['id_vehiculo']; 
+                    $id_seccion_vale= $datos['id_seccion_vale']; 
 
                 }
             
@@ -35,7 +36,7 @@
         <?php
             foreach($oficinas as $val) {
         ?>
-                <option value="<?php echo $val['id_seccion'] ?>"><?php echo $val['nombre_seccion'] ?></option>
+                <option value="<?php echo $val['id_seccion'] ?>"  <?php if($id_seccion_vale==$val['id_seccion']){echo "selected";} ?>> <?php echo $val['nombre_seccion'] ?></option>
         <?php   
             }
         ?>
@@ -52,4 +53,8 @@
 <script>
 	
 		$("#id_seccion").validacion();
+        $("#id_seccion").kendoDropDownList();
+
+
+
 </script>

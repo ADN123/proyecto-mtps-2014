@@ -16,7 +16,7 @@
             </p>        
             <p>
                 <label for="id_seccion" id="lservicio_de">Sección</label>
-                <select class="select" style="width:300px;" tabindex="1" id="id_seccion" name="id_seccion">
+                <select class="select" style="width:400px;" tabindex="1" id="id_seccion" name="id_seccion">
                         <?php
                             foreach($oficinas as $val) {
                         ?>
@@ -48,4 +48,5 @@
 			ent: true,
 			numMin: 0
 		});
+    $("#id_seccion").kendoDropDownList();
 </script>
