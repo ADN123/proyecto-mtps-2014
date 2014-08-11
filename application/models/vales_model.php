@@ -41,18 +41,18 @@ class Vales_model extends CI_Model {
 		return (array)$query->result_array();
 
 	}
-		function consultar_oficinas_fuente( $id_fuente_fondo =NULL)
+		function consultar_oficinas_fuente($id_fuente_fondo =NULL)
 	{
 
 		if($id_fuente_fondo!=NULL){
-			$where.= "	WHERE sa.id_fuente_fondo =".$id_seccion;
+			$where.= "	WHERE sa.id_fuente_fondo =".$id_fuente_fondo;
 		}						
 		$sentencia="SELECT 	s.id_seccion,s.nombre_seccion
 					FROM 	org_seccion s
 				INNER JOIN tcm_seccion_asignacion sa ON sa.id_seccion= s.id_seccion
 				".$where."
 				 GROUP BY s.id_seccion";
-
+//print($query);
 		$query=$this->db->query($sentencia);	
 		return (array)$query->result_array();
 
@@ -997,7 +997,12 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 	function consultar_herramientas($id_herramienta=NULL)
 	{
 
-		$sentencia ="SELECT * FROM tcm_herramienta WHERE  id_herramienta = ".$id_herramienta;
+		$sentencia ="SELECT
+							h.*, s.nombre_seccion AS seccion
+						FROM
+							tcm_herramienta h
+						INNER JOIN org_seccion s ON h.id_seccion_vale = s.id_seccion
+						WHERE  id_herramienta = ".$id_herramienta;
 		$query=$this->db->query($sentencia);
 		return (array)$query->result();		
 	}
@@ -1162,10 +1167,12 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 				v.placa,
 				COALESCE(s.nombre_seccion, '----NO TIENE ASIGNACION----')  AS seccion_vale,
 				m.nombre as marca, 
-				v.id_fuente_fondo
+				v.id_fuente_fondo, 
+				f.nombre_fuente_fondo as fuente_fondo
 			FROM
 				tcm_vehiculo v
 			LEFT  JOIN org_seccion s ON s.id_seccion = v.id_seccion_vale
+			LEFT JOIN tcm_fuente_fondo f ON  f.id_fuente_fondo= v.id_fuente_fondo
 			INNER JOIN tcm_vehiculo_marca m ON m.id_vehiculo_marca = v.id_marca ORDER BY s.nombre_seccion";
 
 			$query=$this->db->query($q);

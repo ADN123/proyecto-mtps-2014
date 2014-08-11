@@ -7,6 +7,7 @@
                     $id_fuente_fondo=$datos->id_fuente_fondo;
                     $descripcion=$datos->descripcion;
                     $id=$datos->id_herramienta;
+                    $seccion=$datos->seccion;
                 }
 
 
@@ -15,11 +16,12 @@
 
 <form id='form' action="<?php echo base_url()?>index.php/vales/modificar_herramienta" method='post'>
             <input  id='id' tabindex='3' name='id' value="<?php echo $id;?>" type="hidden" />
+
     <fieldset>      
-        <legend align='left'>Información general</legend>    
+        <legend align='left'>Información de asginación</legend>    
           <p> 
                 <label for="id_fuente_fondo" id="lid_fuente_fondo">Fuente de Fondo </label>
-                <select class="select" style="width:200px;" tabindex="1" id="id_fuente_fondo" name="id_fuente_fondo" >
+                <select class="select" style="width:200px;" tabindex="1" id="id_fuente_fondo" name="id_fuente_fondo" onChange="recargar_seccion(this.value)"  >
                     <?php
                         foreach($fuente as $val) {
                     ?>
@@ -33,17 +35,7 @@
             </p>        
             <p>
                 <label for="id_seccion" id="lservicio_de">Sección</label>
-                <select class="select" style="width:300px;" tabindex="1" id="id_seccion" name="id_seccion">
-                        <?php
-                            foreach($oficinas as $val) {
-                        ?>
-                                <option value="<?php echo $val['id_seccion'] ?>"
-                        <?php if($id_seccion==$val['id_seccion']){  echo " selected";}?>
-                                    ><?php echo $val['nombre_seccion'] ?></option>
-                        <?php   
-                            }
-                        ?>
-                    </select>
+                 <input id="id_seccion" name="id_seccion" class="tam-3" />  
             </p>
 </fieldset>      
 <fieldset>      
@@ -76,4 +68,36 @@
          lonMin: 5,
          req: false
         });
+    $("#id_seccion").kendoDropDownList();
+
+    $("#id_fuente_fondo").kendoDropDownList();
+
+    function recargar_seccion(id_fuente_fondo) {
+var combo;
+        $.ajax({
+            async:  true, 
+            url:    base_url()+"index.php/vales/seccion_vale/"+id_fuente_fondo,
+            dataType:"json",
+            success: function(data){
+              console.log(data);
+                       
+                               // create DropDownList from input HTML element
+          combo= $("#id_seccion").kendoDropDownList({
+                        dataTextField: "nombre_seccion",
+                        dataValueField: "id_seccion",
+                        dataSource: data,
+                        value: <?php echo $id_seccion;?>
+                    });
+
+                },
+            error:function(data){              
+
+               alertify.alert('Error al cargar datos');
+         
+                }
+        });    
+
+    }
+    recargar_seccion(document.getElementById('id_fuente_fondo').value);
+
 </script>

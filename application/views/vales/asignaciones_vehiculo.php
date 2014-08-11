@@ -17,6 +17,7 @@
   <tr>
     <th>Placa</th>
     <th>Marca </th>
+    <th>Fuente de Fondo </th>
     <th>Seccion de consumo</th>
     <th>Opción</th>
   </tr>
@@ -29,8 +30,9 @@ foreach ($datos as $fila) {
 <tr>
     <td><?php echo $fila['placa']?></td>    
     <td><?php echo $fila['marca']?></td>
+    <td><?php echo $fila['fuente_fondo']?></td>    
     <td><?php echo ucwords($fila['seccion_vale'])?></td>
-    <td><a title="Modificar" rel="leanModal" href="#ventana" onclick="Modificar(<?php echo $fila['id_vehiculo']?>)"><img  src="<?php echo base_url()?>img/editar.png"/></a>        
+    <td><a title="Modificar" rel="leanModal" href="#ventana" onclick="Modificar(<?php echo $fila['id_vehiculo']?>,<?php echo $fila['id_fuente_fondo']?>)"><img  src="<?php echo base_url()?>img/editar.png"/></a>        
 	</td>
   </tr>
 
@@ -48,9 +50,9 @@ foreach ($datos as $fila) {
     </div>
 </div>
 <script language="javascript" >
-	function Modificar(id_vehiculo)
+	function Modificar(id_vehiculo,id_fuente_fondo)
 	{  
-		$('#contenido-ventana').load(base_url()+'index.php/vales/dialogo_asignacion_vehiculo/'+id_vehiculo);
+		$('#contenido-ventana').load(base_url()+'index.php/vales/dialogo_asignacion_vehiculo/'+id_vehiculo+'/'+ id_fuente_fondo);
 		return false;
 	}	
     

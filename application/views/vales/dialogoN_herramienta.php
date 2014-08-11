@@ -4,7 +4,7 @@
         <legend align='left'>Información general</legend>    
           <p> 
                 <label for="id_fuente_fondo" id="lid_fuente_fondo">Fuente de Fondo </label>
-                <select class="select" style="width:200px;" tabindex="1" id="id_fuente_fondo" name="id_fuente_fondo"  >
+                <select class="select" style="width:200px;" tabindex="1" id="id_fuente_fondo" name="id_fuente_fondo" onChange="recargar_seccion(this.value)" >
                     <?php
                         foreach($fuente as $val) {
                     ?>
@@ -16,15 +16,7 @@
             </p>        
             <p>
                 <label for="id_seccion" id="lservicio_de">Sección</label>
-                <select class="select" style="width:300px;" tabindex="1" id="id_seccion" name="id_seccion" >
-                        <?php
-                            foreach($oficinas as $val) {
-                        ?>
-                                <option value="<?php echo $val['id_seccion'] ?>"><?php echo $val['nombre_seccion'] ?></option>
-                        <?php   
-                            }
-                        ?>
-                    </select>
+                 <input id="id_seccion" name="id_seccion" class="tam-2" />
             </p>
 </fieldset>      
 <fieldset>      
@@ -49,7 +41,7 @@
     	<button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)" tabindex='3' >Guardar</button>
     </p>
 </form>
-<script>
+<script type="text/javascript">
     $("#nombre").validacion({
         lonMin: 5
     });
@@ -57,4 +49,33 @@
          lonMin: 5,
          req: false
         });
+    
+    $("#id_fuente_fondo").kendoDropDownList();
+
+    function recargar_seccion(id_fuente_fondo) {
+
+        $.ajax({
+            async:  true, 
+            url:    base_url()+"index.php/vales/seccion_vale/"+id_fuente_fondo,
+            dataType:"json",
+            success: function(data){
+              console.log(data);
+                       
+                               // create DropDownList from input HTML element
+                    $("#id_seccion").kendoDropDownList({
+                        dataTextField: "nombre_seccion",
+                        dataValueField: "id_seccion",
+                        dataSource: data,
+                        index: 0,
+                    });
+                },
+            error:function(data){              
+
+               alertify.alert('Error al cargar datos');
+         
+                }
+        });    
+
+    }
+    recargar_seccion(document.getElementById('id_fuente_fondo').value);
 </script>
