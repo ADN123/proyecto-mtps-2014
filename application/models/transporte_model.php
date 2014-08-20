@@ -866,7 +866,7 @@ function solicitudes_por_asignar_depto(){
 			select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
 			o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
 			ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
-			v.tipo_combustible
+			v.tipo_combustible, it.trabajo_solicitado
 			from tcm_vehiculo as v
 			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
@@ -877,6 +877,7 @@ function solicitudes_por_asignar_depto(){
 			left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
 			inner join org_seccion as o on (v.id_seccion=o.id_seccion)
 			inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
+			inner join tcm_ingreso_taller as it on (v.id_vehiculo=it.id_vehiculo)
 			where v.id_vehiculo='$id' and v.estado='$estado'
 			GROUP BY v.placa,motorista,seccion,marca,modelo,clase,condicion
 			");
@@ -942,8 +943,13 @@ function solicitudes_por_asignar_depto(){
 	function guardar_taller($datos)
 	{
 		extract($datos);
-		$consulta="INSERT INTO tcm_mantenimiento_interno (id_vehiculo, aceite, frenos, bateria, electricidad, amortiguadores, llantas, motor, otro_mtto, naceite, presion, agua, rllantas, caja_velocidades, clutch, r_motor, lavado, observaciones, fecha, id_usuario) 
-		VALUES ('$id_vehiculo', '$aceite', '$frenos', '$bateria', '$electricidad', '$amortiguadores', '$llantas', '$motor', '$otro_mtto', '$naceite', '$presion', '$agua', '$rllantas', '$caja_velocidades', '$clutch', '$r_motor', '$lavado', '$observaciones', '$fecha', '$id_usuario');";
+		$consulta="INSERT INTO tcm_mantenimiento_interno (id_vehiculo, aceite, frenos, bateria, electricidad, 
+					amortiguadores, llantas, motor, otro_mtto, naceite, presion, agua, rllantas, caja_velocidades, 
+					clutch, r_motor, lavado, observaciones, fecha, id_usuario) 
+					VALUES ('$placa', '$aceite', '$frenos', '$bateria', '$electricidad',
+					'$amortiguadores', '$llantas', '$motor', '$otro_mtto', '$naceite', '$presion',
+					'$agua', '$rllantas', '$caja_velocidades', '$clutch', '$r_motor', '$lavado', '$observaciones',
+					CURDATE(), '$id_usuario');";
 		$this->db->query($consulta);
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////
@@ -966,7 +972,7 @@ function solicitudes_por_asignar_depto(){
 					'$tapon', '$retrovisor_izq', '$retrovisor_der', '$logos', '$emblemas', '$cricos_escobillas', '$copas',
 					'$ncopas', '$vidrios', '$nvidrios', '$parabrisas_delantero', '$parabrisas_trasero', '$antena',
 					'$placa', '$trabajo_solicitado', '$trabajo_solicitado_carroceria', '$id_empleado',
-					'$id_usuario', '$id_usuario', 'CONCAT_WS(' ',CURDATE(),CURTIME())');";
+					'$id_usuario', '$id_usuario', CONCAT_WS(' ',CURDATE(),CURTIME()));";
 		if($this->db->query($consulta))
 		{
 			$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$placa');";

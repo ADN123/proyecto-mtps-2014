@@ -1,3 +1,8 @@
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='Se ha registrado el mantenimiento realizado al vehículo exitosamente.';
+	estado_incorrecto='Error al registrar el mantenimiento realizado al vehículo: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
+</script>
 <section>
     <h2>Reparación y Mantenimiento en Taller MTPS</h2>
 </section>
@@ -31,24 +36,18 @@
                     </span>
                 </a>
             </li>
-            <li>
-                <a href="#step-4">
-                    <span class="stepNumber">4<small>to</small></span>
-                    <span class="stepDesc">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Descripción</small>
-                    </span>
-                </a>
-            </li>
         </ul>
         <div id="step-1">	
             <h2 class="StepTitle">Datos Generales del Vehículo</h2>
-             <p>
-                <label>Fecha</label>
+              <table>
+            <tr>
+            <td width="300px">
+			<p>
+                <label style="width:150px">Fecha de Revisión: </label>
                 <strong><?php echo date('d/m/Y')?></strong>
             </p>
-			<p>
-                <label>Seleccione un Número de Placa: </label>
+            <p>
+                <label style="width:100px">Seleccione un número de placa: </label>
                 <select class="select" style="width:100px" onchange="cargar(this.value)" name="placa" id="placa">
                 	<?php
 					foreach($vehiculos as $v)
@@ -58,8 +57,21 @@
                     ?>
                 </select>
             </p>
+            </td>
+            <td width="700px">
+            <p>
+            	<label class="label_textarea" style="100px">Trabajo solicitado: </label>
+                <textarea style="width:250px; resize:none;" name="trabajo_solicitado" id="trabajo_solicitado"></textarea>
+            </p>
+            </td>
+            </tr>
+            <tr>
+            <td colspan="2" valign="bottom">
 			<div id="info_vehiculo">
             </div>
+            </td>
+            </tr>
+            </table>
         </div>
         <div id="step-2">	
             <h2 class="StepTitle">Informaci&oacute;n del mantenimiento realizado al vehículo</h2>
@@ -103,7 +115,7 @@
                 </tr>
                 <tr>
                     <td align="right">Otros (Especifíque)</td>
-                    <td><textarea name="otros" class="tam-4" style="resize:none"></textarea></td>
+                    <td><textarea name="otro_mtto" class="tam-4" style="resize:none"></textarea></td>
                 </tr>
                </tbody>
             </table></td></tr></table>
@@ -182,7 +194,7 @@ function cargar(id)
 		success: function(data) {
 			console.log(data);
 			json = data;
-			var cont="<br><br><table align='center' class='table_design'>";
+			var cont="<br><br><table align='center' class='table_design' cellspacing='0' cellpadding='0'>";
 			/*cont=cont+"<thead><tr><td>Datos Generales del Vehículo</td></tr></thead>";*/
 			cont=cont+"<tr><td>Marca: <strong>"+json[0]['marca']+"</strong></td><td>Motorista Asignado: <strong>"+json[0]['motorista'].capitalize()+"</strong></td>";
 			cont=cont+'</tr><tr>'
@@ -190,10 +202,13 @@ function cargar(id)
 			cont=cont+'</tr><tr>'
 			cont=cont+'<td>Clase: <strong>'+json[0]['clase']+'</strong></td><td>Kilometraje Actual: <strong>'+json[0]['kilometraje']+' km</strong></td>';
 			cont=cont+'</tr><tr>'
-			cont=cont+'<td>Año: <strong>'+json[0]['anio']+'</strong></td><td>ID vehículo: <strong>'+json[0]['id_vehiculo']+'</strong></td>';
+			cont=cont+'<td>Año: <strong>'+json[0]['anio']+'</strong></td><td>Tipo de Combustible: <strong>'+json[0]['tipo_combustible']+'</strong></td>';
 			cont=cont+'</tr>'
 			cont=cont+'</table>';
 			$('#info_vehiculo').html(cont);
+			cont2="";
+			cont2=cont2+json[0]['trabajo_solicitado'];
+			$('#trabajo_solicitado').html(cont2);
 		},
 		error:function(data) {
 			 alertify.alert('Error al cargar los datos de los vehiculos');

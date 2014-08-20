@@ -266,7 +266,7 @@ function cargar(id)
 			cont=cont+'</tr><tr>'
 			cont=cont+'<td>Clase: <strong>'+json[0]['clase']+'</strong></td><td>Kilometraje Actual: <strong>'+json[0]['kilometraje']+' km</strong></td>';
 			cont=cont+'</tr><tr>'
-			cont=cont+'<td>Año: <strong>'+json[0]['anio']+'</strong></td><td>ID vehículo: <strong>'+json[0]['id_vehiculo']+'</strong></td>';
+			cont=cont+'<td>Año: <strong>'+json[0]['anio']+'</strong></td><td>Tipo de Combustible: <strong>'+json[0]['tipo_combustible']+'</strong></td>';
 			cont=cont+'</tr>'
 			cont=cont+'</table>';
 			$('#info_vehiculo').html(cont);
