@@ -80,7 +80,7 @@ class Vehiculo extends CI_Controller
 	*	Observaciones: Ninguna
 	*/
 	
-	function controlMtto($estado_transsaccion=NULL)
+	function controlMtto($estado_transaccion=NULL)
 	{
 		$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
 		$data['estado_transaccion']=$estado_transaccion;
@@ -101,9 +101,9 @@ class Vehiculo extends CI_Controller
 		$this->db->trans_start();
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$this->transporte_model->guardar_mtto($_POST);
-			$this->db->trans_complete();
-			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a("index.php/vehiculo/controlMtto/".$tr);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/controlMtto/".$tr);
 	}
 	
 	/*
@@ -115,10 +115,30 @@ class Vehiculo extends CI_Controller
 	*	Observaciones: Ninguna
 	*/
 	
-	function tallerMTPS()
+	function tallerMTPS($estado_transaccion=NULL)
 	{
 		$data['vehiculos']=$this->transporte_model->consultar_vehiculos(2);
+		$data['estado_transaccion']=$estado_transaccion;
 		pantalla('mantenimiento/taller_MTPS',$data);
+	}
+	
+	/*
+	*	Nombre: guardar_taller
+	*	Objetivo: insertar en la Base de Datos un nuevo registro de mtto. del taller del MTPS
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 19/08/2014
+	*	Observaciones: Ninguna
+	*/
+
+	function guardar_taller()
+	{
+		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$this->transporte_model->guardar_taller($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/tallerMTPS/".$tr);
 	}
 	
 	/*
@@ -312,23 +332,6 @@ class Vehiculo extends CI_Controller
 	{
 		$data['datos']=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo);
 		$this->load->view('mantenimiento/dialogo_vehiculo_info.php',$data);
-	}
-	
-	/*
-	*	Nombre: guardar_taller
-	*	Objetivo: insertar en la Base de Datos un nuevo registro de mtto. del taller del MTPS
-	*	Hecha por: Oscar
-	*	Modificada por: Oscar
-	*	Última Modificación: 05/07/2014
-	*	Observaciones: Ninguna
-	*/
-
-	function guardar_taller()
-	{
-		$this->db->trans_start();
-		$_POST['id_usuario']=$this->session->userdata('id_usuario');
-		$this->transporte_model->guardar_taller($_POST);
-
 	}
 
 	/*
