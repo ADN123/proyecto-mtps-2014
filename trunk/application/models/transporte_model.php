@@ -948,6 +948,33 @@ function solicitudes_por_asignar_depto(){
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	
+	function guardar_mtto($datos)
+	{
+		extract($datos);
+		$fecha_recepcion=date('Y-m-d');
+		$fecha_modificacion=('Y-m-d H:i:s');
+		$consulta="INSERT INTO tcm_ingreso_taller (fecha_recepcion,
+					llanta_repo, mica, triangulo, herramientas, extintor, encendedor, t_circulacion, radio,
+					alfombras, nalfombras, retrovisor, respaldo, tapon, retrovisor_izq, retrovisor_der, logos, 
+					emblemas, cricos_escobillas, copas, ncopas, vidrios, nvidrios, parabrisas_delantero, 
+					parabrisas_trasero, antena, id_vehiculo, trabajo_solicitado, trabajo_solicitado_carroceria, 
+					id_empleado, id_usuario_crea, id_usuario_modifica, fecha_modificacion)
+					VALUES ('$fecha_recepcion',	'$llanta_repo', '$mica', '$triangulo', '$herramientas', '$extintor',
+					'$encendedor', '$t_circulacion', '$radio', '$alfombras', '$nalfombras', '$retrovisor', '$respaldo',
+					'$tapon', '$retrovisor_izq', '$retrovisor_der', '$logos', '$emblemas', '$cricos_escobillas', '$copas',
+					'$ncopas', '$vidrios', '$nvidrios', '$parabrisas_delantero', '$parabrisas_trasero', '$antena',
+					'$placa', '$trabajo_solicitado', '$trabajo_solicitado_carroceria', '$id_empleado',
+					'$id_usuario', '$id_usuario', 'CONCAT_WS(' ',CURDATE(),CURTIME())');";
+		if($this->db->query($consulta))
+		{
+			$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$placa');";
+			return $this->db->query($consulta2);
+		}
+	}
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	
 	function filtro_vehiculo($datos)
 	{
 		extract($datos);

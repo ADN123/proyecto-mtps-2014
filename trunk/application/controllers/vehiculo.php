@@ -80,10 +80,30 @@ class Vehiculo extends CI_Controller
 	*	Observaciones: Ninguna
 	*/
 	
-	function controlMtto()
+	function controlMtto($estado_transsaccion=NULL)
 	{
 		$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
+		$data['estado_transaccion']=$estado_transaccion;
 		pantalla('mantenimiento/control_mantenimiento',$data);
+	}
+	
+	/*
+	*	Nombre: guardar_mantenimiento
+	*	Objetivo: insertar en la Base de Datos un nuevo registro de ingreso de un vehiculo al taller del MTPS
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 19/08/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function guardar_mantenimiento()
+	{
+		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$this->transporte_model->guardar_mtto($_POST);
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a("index.php/vehiculo/controlMtto/".$tr);
 	}
 	
 	/*
@@ -302,27 +322,6 @@ class Vehiculo extends CI_Controller
 	*	Última Modificación: 05/07/2014
 	*	Observaciones: Ninguna
 	*/
-	
-	function guardar_mtto_taller()
-	{
-		$this->db->trans_start();
-		
-	}
-	
-	/*
-	*	Nombre: guardar_mantenimiento
-	*	Objetivo: insertar en la Base de Datos un nuevo registro de ingreso de un vehiculo al taller del MTPS
-	*	Hecha por: Oscar
-	*	Modificada por: Oscar
-	*	Última Modificación: 26/07/2014
-	*	Observaciones: Ninguna
-	*/
-	
-	function guardar_mantenimiento()
-	{
-		$this->db->trans_start();
-		
-	}
 
 	function guardar_taller()
 	{

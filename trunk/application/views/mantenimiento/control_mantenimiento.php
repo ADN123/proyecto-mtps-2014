@@ -1,3 +1,8 @@
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='Se ha registrado el ingreso del vehículo al taller interno exitosamente.';
+	estado_incorrecto='Error al registrar el ingreso del vehículo: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
+</script>
 <section>
     <h2>Ingreso de Vehículo al Taller Interno</h2>
 </section>
@@ -34,12 +39,15 @@
         </ul>
         <div id="step-1">	
            <h2 class="StepTitle">Datos Generales del Vehículo</h2>
-             <p>
-                <label>Fecha de Recepción</label>
+            <table>
+            <tr>
+            <td width="300px">
+			<p>
+                <label style="width:150px">Fecha de Recepción: </label>
                 <strong><?php echo date('d/m/Y')?></strong>
             </p>
-			<p>
-                <label>Seleccione un Número de Placa: </label>
+            <p>
+                <label style="width:100px">Seleccione un número de placa: </label>
                 <select class="select" style="width:100px" onchange="cargar(this.value)" name="placa" id="placa">
                 	<?php
 					foreach($vehiculos as $v)
@@ -49,8 +57,21 @@
                     ?>
                 </select>
             </p>
+            </td>
+            <td width="700px">
+            <p>
+            	<label class="label_textarea" style="100px">Trabajo solicitado: </label>
+                <textarea style="width:250px; resize:none;" name="trabajo_solicitado"></textarea>
+            </p>
+            </td>
+            </tr>
+            <tr>
+            <td colspan="2" valign="bottom">
 			<div id="info_vehiculo">
             </div>
+            </td>
+            </tr>
+            </table>
         </div>
         <div id="step-2">	
             <h2 class="StepTitle">Revisión Interna del Vehículo</h2>
@@ -68,43 +89,43 @@
             	<tbody>
                 <tr>
                     <td align="right">Llanta de repuesto</td>
-                    <td><input type="checkbox" name="llanta_repo" value="si"></td>
+                    <td><input type="checkbox" name="llanta_repo" value="1"></td>
 
                     <td align="right">Mica</td>
-                    <td><input type="checkbox" name="mica" value="si"></td>
+                    <td><input type="checkbox" name="mica" value="1"></td>
                 </tr>
                 <tr>
                     <td align="right">Triángulo</td>
-                    <td><input type="checkbox" name="triangulo" value="si"></td>
+                    <td><input type="checkbox" name="triangulo" value="1"></td>
 
                     <td align="right">Herramientas</td>
-                    <td><input type="checkbox" name="herramientas" value="si"></td>
+                    <td><input type="checkbox" name="herramientas" value="1"></td>
                 </tr>
                 <tr>
                     <td align="right">Extintor</td>
-                    <td><input type="checkbox" name="extintor" value="si"></td>
+                    <td><input type="checkbox" name="extintor" value="1"></td>
 
                     <td align="right">Radio o CD player</td>
-                    <td><input type="checkbox" name="radio" value="si"></td>
+                    <td><input type="checkbox" name="radio" value="1"></td>
                 </tr>
                 <tr>
                     <td align="right">Encendedor</td>
-                    <td><input type="checkbox" name="encendedor" value="si"></td>
+                    <td><input type="checkbox" name="encendedor" value="1"></td>
 
                     <td align="right">Tarjeta de circulación</td>
-                    <td><input type="checkbox" name="t_circulacion" value="si"></td>
+                    <td><input type="checkbox" name="t_circulacion" value="1"></td>
                 </tr>
                 <tr>
                     <td align="right">Alfombras</td>
-                    <td><input type="checkbox" name="alfombras" id="alfombras" value="si"></td>
+                    <td><input type="checkbox" name="alfombras" id="alfombras" value="1"></td>
                     <td align="right">Retrovisor interno</td>
-                    <td><input type="checkbox" name="retrovisor" value="si"></td>
+                    <td><input type="checkbox" name="retrovisor" value="1"></td>
                 </tr>
                 <tr>
                 	<td align="right">Cantidad</td>
                     <td><input type="text" name="nalfombras" id="nalfombras" size="2" maxlength="2" disabled="disabled" style="height:10px"></td>
                     <td align="right">Respaldo de asiento</td>
-                    <td><input type="checkbox" name="respaldo" value="si"></td>                    
+                    <td><input type="checkbox" name="respaldo" value="1"></td>                    
                 </tr>
                </tbody>
             </table></td></tr></table>
@@ -113,7 +134,7 @@
             <h2 class="StepTitle">Revisión Externa del vehículo</h2>
             <table width="600px" align="center">
             <tr><td>
-            <table align="center" class="table_design" cellspacing="0">
+            <table align="center" class="table_design" cellspacing="0" cellpadding="0">
             	<thead>
                 	<tr>
                     	<th>Externo</th>
@@ -125,30 +146,30 @@
             	<tbody>
                 <tr>
                     <td align="right">Tapón de gas</td>
-                    <td><input type="checkbox" name="tapon"></td>
+                    <td><input type="checkbox" name="tapon" value="1"></td>
 
                     <td align="right">Retrovisor izquierdo</td>
-                    <td><input type="checkbox" name="retrovisor_izq"></td>
+                    <td><input type="checkbox" name="retrovisor_izq" value="1"></td>
                 </tr>
                 <tr>
                     <td align="right">Retrovisor derecho</td>
-                    <td><input type="checkbox" name="retrovisor_der"></td>
+                    <td><input type="checkbox" name="retrovisor_der" value="1"></td>
 
                     <td align="right">Logos</td>
-                    <td><input type="checkbox" name="logos"></td>
+                    <td><input type="checkbox" name="logos" value="1"></td>
                 </tr>
                 <tr>
                     <td align="right">Emblemas</td>
-                    <td><input type="checkbox" name="emblemas"></td>
+                    <td><input type="checkbox" name="emblemas" value="1"></td>
 
                     <td align="right">Cricos y escobillas</td>
-                    <td><input type="checkbox" name="cricos_escobillas"></td>
+                    <td><input type="checkbox" name="cricos_escobillas" value="1"></td>
                 </tr>
                 <tr>
                     <td align="right">Copas</td>
-                    <td><input type="checkbox" name="copas" id="copas"></td>
+                    <td><input type="checkbox" name="copas" id="copas" value="1"></td>
                     <td align="right">Vidrios de puertas</td>
-                    <td><input type="checkbox" name="vidrios" id="vidrios"></td>
+                    <td><input type="checkbox" name="vidrios" id="vidrios" value="1"></td>
                     
                     
                 </tr>
@@ -161,13 +182,13 @@
                 </tr>
                 <tr>
                     <td align="right">Parabrisas delantero</td>
-                    <td><input type="checkbox" name="parabrisas_delantero"></td>
+                    <td><input type="checkbox" name="parabrisas_delantero" value="1"></td>
                     <td align="right">Antena</td>
-                    <td><input type="checkbox" name="antena"></td>
+                    <td><input type="checkbox" name="antena" value="1"></td>
                 </tr>
                 <tr>
                 	<td align="right">Parabrisas trasero</td>
-                    <td><input type="checkbox" name="parabrisas trasero"></td>
+                    <td><input type="checkbox" name="parabrisas trasero" value="1"></td>
                     
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -237,7 +258,7 @@ function cargar(id)
 		success: function(data) {
 			console.log(data);
 			json = data;
-			var cont="<br><br><table align='center' class='table_design'>";
+			var cont="<br><br><table align='center' cellspacing='0' cellpadding='0' class='table_design'>";
 			/*cont=cont+"<thead><tr><td>Datos Generales del Vehículo</td></tr></thead>";*/
 			cont=cont+"<tr><td>Marca: <strong>"+json[0]['marca']+"</strong></td><td>Motorista Asignado: <strong>"+json[0]['motorista'].capitalize()+"</strong></td>";
 			cont=cont+'</tr><tr>'

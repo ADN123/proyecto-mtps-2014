@@ -31,6 +31,15 @@
                     </span>
                 </a>
             </li>
+            <li>
+                <a href="#step-4">
+                    <span class="stepNumber">4<small>to</small></span>
+                    <span class="stepDesc">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
+                        <small>&nbsp;Descripción</small>
+                    </span>
+                </a>
+            </li>
         </ul>
         <div id="step-1">	
             <h2 class="StepTitle">Datos Generales del Vehículo</h2>
