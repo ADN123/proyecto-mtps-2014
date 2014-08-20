@@ -59,10 +59,10 @@
             </p>
             </td>
             <td width="700px">
-            <p>
+           <?php /*<p>
             	<label class="label_textarea" style="100px">Trabajo solicitado: </label>
                 <textarea style="width:250px; resize:none;" name="trabajo_solicitado" id="trabajo_solicitado"></textarea>
-            </p>
+            </p> */?>
             </td>
             </tr>
             <tr>
@@ -206,9 +206,9 @@ function cargar(id)
 			cont=cont+'</tr>'
 			cont=cont+'</table>';
 			$('#info_vehiculo').html(cont);
-			cont2="";
+		/*	cont2="";
 			cont2=cont2+json[0]['trabajo_solicitado'];
-			$('#trabajo_solicitado').html(cont2);
+			$('#trabajo_solicitado').html(cont2);*/
 		},
 		error:function(data) {
 			 alertify.alert('Error al cargar los datos de los vehiculos');

@@ -72,6 +72,21 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
+	*	Nombre: control_taller
+	*	Objetivo: Carga el catálogo de Vehículos que se encuentran en taller.
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 19/08/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function control_taller()
+	{
+		$data['datos']=$this->transporte_model->consultar_vehiculos(2);
+		pantalla('mantenimiento/control_taller',$data);
+	}
+	
+	/*
 	*	Nombre: controlMtto
 	*	Objetivo: carga la vista de control de mantenimiento del vehículo
 	*	Hecha por: Oscar
@@ -127,7 +142,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: insertar en la Base de Datos un nuevo registro de mtto. del taller del MTPS
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 19/08/2014
+	*	Última Modificación: 20/08/2014
 	*	Observaciones: Ninguna
 	*/
 

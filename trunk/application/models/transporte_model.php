@@ -866,7 +866,7 @@ function solicitudes_por_asignar_depto(){
 			select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
 			o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
 			ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
-			v.tipo_combustible, it.trabajo_solicitado
+			v.tipo_combustible
 			from tcm_vehiculo as v
 			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
@@ -877,7 +877,6 @@ function solicitudes_por_asignar_depto(){
 			left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
 			inner join org_seccion as o on (v.id_seccion=o.id_seccion)
 			inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
-			inner join tcm_ingreso_taller as it on (v.id_vehiculo=it.id_vehiculo)
 			where v.id_vehiculo='$id' and v.estado='$estado'
 			GROUP BY v.placa,motorista,seccion,marca,modelo,clase,condicion
 			");
