@@ -1596,6 +1596,61 @@ function asignacion_vehiculo()
 			ir_a('index.php/vales/asignacion_vehiculo/'.$tr);		
 	}
 
+	function estado2()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ESTADO); /*Verificacion de permisos*/
+		$url='vales/estado2';
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		
+
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+				case 2://seccion
+					$data['e']=$this->vales_model->vales_de_seccion($id_seccion['id_seccion']);					
+					$data['s']=FALSE;
+					$data['g']=FALSE;					
+					break;
+				case 3://administrador
+					$data['ne']=$this->vales_model->vales_sin_entregar();
+			
+					$data['e']=$this->vales_model->vales_de_seccion();
+					$data['s']=TRUE;
+					$data['g']=TRUE;
+
+					break;
+				case 4: //departamental
+					$data['g']=FALSE;
+
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
+						$data['e']=$this->vales_model->vales_de_seccion($id_seccion['id_seccion']);
+						$data['s']=FALSE;
+					}else{// en san salvador
+						$data['e']=$this->vales_model->vales_san_salvador();
+						$data['s']=TRUE;
+					}				
+					break;
+			}
+			pantalla($url,$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+
+	}
+
+	function detalleV($id_vale)
+	{
+		$data['v']=$this->vales_model->detalleV($id_vale);
+		$this->load->view("vales/detalleV",$data);
+	}
+	function detalleVjson($id_vale)
+	{
+		$data['v']=$this->vales_model->detalleV($id_vale);
+		echo json_encode($data['v']);
+	}
+
+
 }
 
 ?>

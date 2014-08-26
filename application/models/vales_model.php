@@ -874,8 +874,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 
 		$query=$this->db->query(" SET lc_time_names = 'es_ES'");		
 
-		$q="
-			
+		$q="SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -15 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -15 DAY),'%Y%m') mes 
+				UNION
 			SELECT DATE_FORMAT(CURDATE(),'%M') mes_nombre, DATE_FORMAT(CURDATE(),'%Y%m') mes
 			UNION
 			SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL 7 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL 7 DAY),'%Y%m') mes 
@@ -894,7 +894,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 	function vales_sin_entregar()
 	{
 		
-				$q="SELECT valor_nominal valor, 
+				$q="SELECT 	v.id_vale,
+							valor_nominal valor, 
 							inicial, 
 							final, 
 							cantidad_restante restante, 
@@ -1197,6 +1198,38 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 
 			$query=$this->db->query($q);
 
+
+	}
+
+	function detalleV($id_vale=NULL)
+	{
+		$q="SELECT
+				rv.numero_inicial AS del,
+				rv.numero_inicial + rv.cantidad_entregado - 1 AS al,
+				s.nombre_seccion AS seccion,
+				id_vale,
+				rv.id_requisicion_vale,
+				rv.cantidad_entregado AS cantidad
+			FROM
+				tcm_requisicion_vale rv
+			INNER JOIN tcm_requisicion r ON rv.id_requisicion = r.id_requisicion
+			INNER JOIN org_seccion s ON s.id_seccion = r.id_seccion
+			WHERE
+				rv.id_vale = $id_vale
+			UNION
+				SELECT
+					v.final - v.cantidad_restante + 1 AS del,
+					v.final AS al,
+					'No entregados',
+					id_vale,
+					0,
+					v.final - (v.final - v.cantidad_restante)
+				FROM
+					tcm_vale v
+				WHERE
+					v.id_vale = $id_vale";
+				$query=$this->db->query($q);
+			return $query->result_array();
 
 	}
 
