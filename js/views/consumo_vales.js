@@ -34,9 +34,10 @@ $(document).ready(function() {
 	$("#id_gasolinera").change(function(){
 		var id_gasolinera = $(this).val();
 		var fecha_factura = $("#fecha_factura").val();
+		var seccion = $("#id_seccion").val();
 		
-		if(id_gasolinera!="" && fecha_factura!="" )
-			$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos_consumo/"+id_gasolinera+"/"+fecha_factura);
+		if(seccion!=""&&id_gasolinera!="" && fecha_factura!="" )
+			$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos_consumo/"+id_gasolinera+"/"+fecha_factura+"/"+seccion);
 		else
 			$('#divVehiculos').html("<br/><br/><br/>Debe seleccionar una <strong>gasolinera</strong> e ingresar la <strong>fecha de la factura</strong>...");	
 	});
@@ -46,7 +47,7 @@ $(document).ready(function() {
 	$("#fecha_factura").blur(function(){
 		$("#id_gasolinera").change();
 	});
-/*	$("#id_seccion").change(function(){
+	$("#id_seccion").change(function(){
 		$("#id_gasolinera").change();
-	});*/
+	});
 });

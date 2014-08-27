@@ -666,7 +666,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 			
 	
-/*			switch ($data['id_permiso']) {
+		switch ($data['id_permiso']) {
 				case 2: //seccion
 					$data['seccion']=$id_seccion['id_seccion'];
 					break;
@@ -683,7 +683,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 					}
 					break;
 			}
-*/
+
 			$data['estado_transaccion']=$estado_transaccion;
 			pantalla("vales/consumo",$data);	
 		}
@@ -701,14 +701,22 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
-	function vehiculos_consumo($id_gasolinera = NULL, $fecha_factura_dia = NULL, $fecha_factura_mes = NULL, $fecha_factura_anio = NULL)
+	function vehiculos_consumo($id_gasolinera = NULL, $fecha_factura_dia = NULL, $fecha_factura_mes = NULL, $fecha_factura_anio = NULL, $seccion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO); 
 		
 		if($data['id_permiso']!=NULL) {
-			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));			
+			//$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));			
+			$id_seccion['id_seccion']=$seccion;
 			$fecha_factura=$fecha_factura_anio."-".$fecha_factura_mes."-".$fecha_factura_dia;
-			switch($data['id_permiso']) {
+			$fecha_factura2=$fecha_factura_anio."".$fecha_factura_mes;
+
+//nueva adaptacion para que funcione consumo por seccion
+			$data['vehiculos']=$this->vales_model->consultar_vehiculos_seccion($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura2);
+			$data['vales']=$this->vales_model->consultar_vales_seccion($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura2);
+
+//antigua forma
+			/*switch($data['id_permiso']) {
 				case 1:
 					break;
 				case 2:
@@ -727,6 +735,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 					}
 					break;
 			}
+			*/
 			$this->load->view("vales/vehiculos_consumo",$data);	
 		}
 		else {
@@ -1081,7 +1090,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	*	Última Modificación: 10/07/2014
 	*	Observaciones: Ninguna
 	*/
-	function estado()
+	function estado2()
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ESTADO); /*Verificacion de permisos*/
 		$url='vales/estado';
@@ -1596,7 +1605,7 @@ function asignacion_vehiculo()
 			ir_a('index.php/vales/asignacion_vehiculo/'.$tr);		
 	}
 
-	function estado2()
+	function estado()
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ESTADO); /*Verificacion de permisos*/
 		$url='vales/estado2';
@@ -1639,17 +1648,21 @@ function asignacion_vehiculo()
 
 	}
 
-	function detalleV($id_vale)
-	{
-		$data['v']=$this->vales_model->detalleV($id_vale);
-		$this->load->view("vales/detalleV",$data);
-	}
-	function detalleVjson($id_vale)
+	function detalleVjson($id_vale=NULL)
 	{
 		$data['v']=$this->vales_model->detalleV($id_vale);
 		echo json_encode($data['v']);
 	}
-
+	function detalleRjson($id_requisicion=NULL)
+	{
+		$data['v']=$this->vales_model->detalleR($id_requisicion);
+		echo json_encode($data['v']);
+	}
+	function detalleFjson($id_requisicion=NULL)
+	{
+		$data['v']=$this->vales_model->detalleF($id_requisicion);
+		echo json_encode($data['v']);
+	}
 
 }
 
