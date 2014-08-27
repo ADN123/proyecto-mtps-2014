@@ -66,7 +66,7 @@
                     $ <input tabindex="6" id="valor_diesel" name="valor_diesel" type="text" size="5"/> US
                 </p>
             </div>
-            <?php /* if (sizeof($seccion)!=1) {  ?>
+            <?php  if (sizeof($seccion)!=1) {  ?>
 
                   <p align="left">
                     <label for="seccion" id="lseccion" style="width:20%;">Sección </label>
@@ -82,7 +82,7 @@
             
                     <input  id="id_seccion" name="id_seccion" type="hidden" value="<?php echo $seccion; ?>"/> US
 
-            <?php } */?>    
+            <?php } ?>    
         </div>
         <div id="step-2" style="text-align: center;">	
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n de la cantidad suministrada a cada veh&iacute;culo</h2>

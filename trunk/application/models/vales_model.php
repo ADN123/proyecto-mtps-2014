@@ -526,8 +526,10 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 		if($id_gasolinera!=NULL)
 			$where.=" AND tcm_vale.id_gasolinera='".$id_gasolinera."'";
 
-		if($fecha_factura!=NULL)
-			$where.=" AND DATE_FORMAT(tcm_requisicion.fecha_visto_bueno,'%Y-%m-%d')<='".$fecha_factura."'";
+		if($fecha_factura!=NULL)// nuevo
+			$where.=" AND tcm_requisicion.mes<='".$fecha_factura."'";
+			//antiguo
+			//$where.=" AND DATE_FORMAT(tcm_requisicion.fecha_visto_bueno,'%Y-%m-%d')<='".$fecha_factura."'";
 /*
 //sentencia original por Leonel
 		$sentencia="SELECT tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_vehiculo.id_fuente_fondo, tcm_fuente_fondo.nombre_fuente_fondo, tcm_vehiculo_marca.nombre as marca, tcm_vehiculo_modelo.modelo, CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR) AS id_requisicion_vale, CAST(GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2, CAST(GROUP_CONCAT(DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
@@ -614,7 +616,10 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			$where.=" AND tcm_vale.id_gasolinera='".$id_gasolinera."'";
 		
 		if($fecha_factura!=NULL)
-			$where.=" AND DATE_FORMAT(tcm_requisicion.fecha_visto_bueno,'%Y-%m-%d')<='".$fecha_factura."'";
+			//antiguo  modificar tambiem funcion consultar_vehiculos_seccion
+			//$where.=" AND DATE_FORMAT(tcm_requisicion.fecha_visto_bueno,'%Y-%m-%d')<='".$fecha_factura."'";
+			//nuevo
+			$where.=" AND tcm_requisicion.mes<='".$fecha_factura."'";
 			
 		$sentencia="SELECT
 					tcm_requisicion.id_fuente_fondo,
@@ -900,11 +905,11 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 							final, 
 							cantidad_restante restante, 
 							f.nombre_fuente_fondo fuente, 
-							g.nombre  gasolinera
+							g.nombre  gasolinera,
+							v.final - v.inicial + 1 as cant							
 					 FROM tcm_vale v
 					INNER JOIN tcm_fuente_fondo f ON f.id_fuente_fondo = v.tipo_vehiculo
-					INNER JOIN tcm_gasolinera g ON g.id_gasolinera = v.id_gasolinera
-					WHERE cantidad_restante>0";
+					INNER JOIN tcm_gasolinera g ON g.id_gasolinera = v.id_gasolinera";
 			$query=$this->db->query($q);		
 			return $query->result_array();
 	}
@@ -1209,7 +1214,8 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 				s.nombre_seccion AS seccion,
 				id_vale,
 				rv.id_requisicion_vale,
-				rv.cantidad_entregado AS cantidad
+				rv.cantidad_entregado AS cantidad,
+				rv.cantidad_restante AS restante
 			FROM
 				tcm_requisicion_vale rv
 			INNER JOIN tcm_requisicion r ON rv.id_requisicion = r.id_requisicion
@@ -1223,14 +1229,75 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 					'No entregados',
 					id_vale,
 					0,
-					v.final - (v.final - v.cantidad_restante)
+					v.final - (v.final - v.cantidad_restante),
+					v.cantidad_restante 
 				FROM
 					tcm_vale v
 				WHERE
+					v.cantidad_restante >0 AND
 					v.id_vale = $id_vale";
 				$query=$this->db->query($q);
 			return $query->result_array();
 
+	}
+
+function detalleR($id_requisicion=NULL)
+	{
+		$q="SELECT
+				c.id_consumo,
+				numero_factura AS factura,
+				fecha_factura AS fecha,
+				cv.inicial AS del,
+				cv.inicial + SUM(cv.cantidad_vales) - 1 AS al,
+				SUM(cv.cantidad_vales) as cantidad
+			FROM
+				tcm_consumo c
+			INNER JOIN tcm_consumo_vehiculo cv ON cv.id_consumo = c.id_consumo
+			INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
+			WHERE
+				rvcv.id_requisicion_vale = $id_requisicion
+			GROUP BY
+				c.id_consumo
+			UNION 
+			SELECT 
+			0, 
+			'--', 
+			'-/-/-', 
+			rv.numero_inicial + rv.cantidad_entregado - rv.cantidad_restante,
+			rv.numero_inicial + rv.cantidad_entregado - 1,
+			rv.cantidad_restante
+			FROM
+			 tcm_requisicion_vale rv
+			WHERE
+			rv.cantidad_restante >0 AND
+			id_requisicion_vale = $id_requisicion";
+
+			$query=$this->db->query($q);
+			return $query->result_array();
+	}
+function detalleF($id_consumo=NULL)
+	{
+		$q="SELECT
+				id_consumo,
+				actividad,
+				inicial del,
+				inicial + cv.cantidad_vales - 1 AS al,
+				cv.cantidad_vales AS cantidad, 
+								CASE 1
+								WHEN cv.id_vehiculo IS NULL THEN
+									h.nombre 
+								WHEN cv.id_herramienta IS NULL THEN
+									v.placa 
+								END		as en
+			FROM
+				tcm_consumo_vehiculo cv
+			LEFT JOIN tcm_herramienta h ON cv.id_herramienta = h.id_herramienta
+			LEFT JOIN tcm_vehiculo v ON v.id_vehiculo = cv.id_vehiculo
+			WHERE
+				id_consumo = $id_consumo";
+
+			$query=$this->db->query($q);
+			return $query->result_array();
 	}
 
 }	
