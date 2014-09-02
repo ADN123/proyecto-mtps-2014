@@ -92,7 +92,9 @@ class Transporte extends CI_Controller
 				
 				$id_empleado=$id_empl[0][id_empleado];
 				$ministro=$this->transporte_model->consultar_cargo($id_empleado);
-				
+				print_r($id_empl);
+				echo "<br>";
+				print_r($ministro);
 				if($ministro[0][funcional]=='MINISTRO') $M=1;
 				else $M=0;
 				
