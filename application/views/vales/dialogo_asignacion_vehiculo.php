@@ -10,7 +10,7 @@
                     $seccion=ucwords($datos['seccion']);
                     $placa=$datos['placa'];
                     $modelo=$datos['modelo'];
-                    $fuente=$datos['fuente'];
+                    $fuente=$datos['fuente_fondo'];
                     $marca=$datos['marca'];
                     $id_fuente_fondo= $datos['id_fuente_fondo']; 
                     $id_vehiculo= $datos['id_vehiculo']; 
@@ -25,8 +25,9 @@
                     Marca: <strong>".$marca."</strong> <br>
                 </fieldset>
     <br />";
+
 	?>
-    <input type='hidden' name='id_seccion' value="<?php echo $id_seccion?>" />
+    <!--  <input type='hidden' name='id_seccion' value="<?php echo $id_seccion_vale?>" /> -->
     <input type='hidden' name='id_fuente_fondo' value="<?php echo $id_fuente_fondo?>" />    	
     <input type='hidden' name='id_vehiculo' value="<?php echo $id_vehiculo?>" />        
 <fieldset>      
@@ -47,12 +48,12 @@
     
 
     <p style='text-align: center;'>
-    	<button type="submit"  id="aprobar" class="button tam-1 boton_validador"  onclick="Enviar(2)">Guardar</button>
+    	<button type="submit"  id="aprobar" class="button tam-1 boton_validador" >Guardar</button>
     </p>
 </form>
 <script>
 	
-		$("#id_seccion").validacion();
+		//$("#id_seccion").validacion();
         $("#id_seccion").kendoDropDownList();
 
 

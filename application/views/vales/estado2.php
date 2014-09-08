@@ -41,6 +41,9 @@
             
             var html='<table cellspacing="0" align="right" class="table_design" id="reportv'+id+'">'+
                     '<thead>          '+
+                    '    <th>         '+
+                    '        Cantidad '+ 
+                    '    </th>        '+
                     '   <th>          '+
                     '        Inicial  '+
                     '   </th>         '+
@@ -53,22 +56,19 @@
                     '    <th>         '+
                     '       Restantes '+
                     '    </th>        '+
-                    '    <th>         '+
-                    '        Cantidad '+
-                    '    </th>        '+
                     ' </thead>        '+
                     '<tbody id="content_table">';
                  for (var i = 0; i < data.length; i++) {
                   
                         html+= '<tr onClick="detalles2('+data[i].id_requisicion_vale+')"> '+
+                    '        <td>'+data[i].cantidad+'</td>'+
                     '        <td>'+data[i].del+'</td>           '+
                     '        <td>'+data[i].al+'</td>'+
                     '        <td>'+data[i].seccion+'</td>'+
                     '        <td>'+data[i].restante+'</td>'+
-                    '        <td>'+data[i].cantidad+'</td>'+
                     '    </tr>'+
                     '    <tr>'+
-                    '       <td colspan="6" class="oculto">'+
+                    '       <td colspan="5" class="oculto">'+
                     '             <div id="detallev'+data[i].id_requisicion_vale+'">'+
                     '            </div>'+
                     '        </td>'+
@@ -114,6 +114,9 @@
             
             var html='<table cellspacing="0" align="right" class="table_design" id="reportr'+id+'">'+
                     '<thead>          '+
+                    '    <th>         '+
+                    '        Cantidad '+
+                    '    </th>        '+
                     '   <th>          '+
                     '        Inicial  '+
                     '   </th>         '+
@@ -126,22 +129,19 @@
                     '  <th>           '+
                     '      N° Factura    '+
                     '    </th>        '+
-                    '    <th>         '+
-                    '        Cantidad '+
-                    '    </th>        '+
                     ' </thead>        '+
                     '<tbody id="content_table">';
                  for (var i = 0; i < data.length; i++) {
                   
                         html+= '<tr onClick="detalles3('+data[i].id_consumo+')"> '+
+                    '        <td>'+data[i].cantidad+'</td>'+
                     '        <td>'+data[i].del+'</td>           '+
                     '        <td>'+data[i].al+'</td>'+
                     '        <td>'+data[i].fecha+'</td>'+
                     '        <td>'+data[i].factura+'</td>'+
-                    '        <td>'+data[i].cantidad+'</td>'+
                     '    </tr>'+
                     '    <tr>'+
-                    '       <td colspan="6" class="oculto">'+
+                    '       <td colspan="5" class="oculto">'+
                     '             <div id="detaller'+data[i].id_consumo+'">'+
                     '            </div>'+
                     '        </td>'+
@@ -188,6 +188,9 @@
             
             var html='<table cellspacing="0" align="right" class="table_design" id="reportf'+id+'">'+
                     '<thead>          '+
+                    '    <th>         '+
+                    '        Cantidad '+
+                    '    </th>        '+
                     '   <th>          '+
                     '        Inicial  '+
                     '   </th>         '+
@@ -197,18 +200,15 @@
                     '  <th>           '+
                     '    Aplicado en  '+
                     '    </th>        '+
-                    '    <th>         '+
-                    '        Cantidad '+
-                    '    </th>        '+
                     ' </thead>        '+
                     '<tbody id="content_table">';
                  for (var i = 0; i < data.length; i++) {
                   
                         html+= 
+                    '        <td>'+data[i].cantidad+'</td>'+
                     '        <td>'+data[i].del+'</td>           '+
                     '        <td>'+data[i].al+'</td>'+
                     '        <td>'+data[i].en+'</td>'+
-                    '        <td>'+data[i].cantidad+'</td>'+
                     '    </tr>'+
                     '    <tr>'+
                     '       <td colspan="6" class="oculto">'+
@@ -237,6 +237,9 @@
         <table cellspacing="0" align="center" class="table_design " id="report">
                     <thead>
                         <th>
+                            Cantidad
+                        </th> 
+                        <th>
                             Inicial
                         </th>
                         <th>
@@ -254,22 +257,20 @@
                         <th>
                             Restantes
                         </th>                  
-                          <th>
-                            Cantidad
-                        </th>              
                     </thead>
                     <tbody id="content_table">
                  <?php
                     
                     foreach($ne as $val) { ?>
                         <tr onClick="detalles(<?php echo $val['id_vale'] ?>)"> 
+                            <td><?php echo $val['cant'] ?></td>
                             <td><?php echo $val['inicial'] ?></td>
                             <td><?php echo $val['final'] ?></td>
                             <td>$<?php echo $val['valor'] ?></td>
                             <td><?php echo $val['fuente'] ?></td>
                             <td><?php echo $val['gasolinera'] ?></td>
                             <td><?php echo $val['restante'] ?></td>
-                            <td><?php echo $val['cant'] ?></td>
+        
                         </tr>
                         <tr>
                             <td colspan="7" class="oculto">
@@ -282,3 +283,9 @@
 
                     </tbody>
                 </table>
+
+<script type="text/javascript">
+function reporte(id, nivel) {
+       
+}
+</script>

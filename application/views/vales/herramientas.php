@@ -19,7 +19,8 @@
   <tr>
     <th>Seccion</th>
     <th>Nombre</th>
-    <th>Fuente de Fondo</th>
+    <th>Fuente de Financiamiento</th>
+    <th>Combustible/th>
     <th>Opción</th>
   </tr>
  </thead>
@@ -32,6 +33,7 @@ foreach ($datos as $fila) {
     <td><?php echo ucwords($fila['seccion'])?></td>
     <td><?php echo $fila['nombre']?></td>    
     <td><?php echo $fila['fuente']?></td>    
+    <td><?php echo $fila['combustible']?></td>    
     <td><a title="Modificar" rel="leanModal" href="#ventana" onclick="Modificar(<?php echo $fila['id_herramienta']?>)"><img  src="<?php echo base_url()?>img/editar.png"/></a>
         <a title="Eliminar"  onclick='Eliminar(<?php echo $fila['id_herramienta']?>,"<?php echo ucwords($fila['nombre'])?>")'><img  src="<?php echo base_url()?>img/ico_basura.png"/></a>
         
