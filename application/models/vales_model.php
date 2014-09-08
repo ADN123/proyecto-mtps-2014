@@ -1359,6 +1359,98 @@ function verificarRepetidos($inicial=0, $final=0)
 			return $query->result_array();
 
 }
+function prueba()
+{
+	$query=$this->db->query("SET @row_number:=0;");
+	$query=$this->db->query("SET lc_time_names = 'es_ES';");
+	$q="SELECT		@row_number:=@row_number+1 AS row_number, 
+									r.id_seccion, 
+									CONCAT( s.nombre_seccion, ' (', f.nombre_fuente_fondo, ' )') as seccion,
+									SUM( cv.cantidad_vales) consumido, 
+									SUM( cv.cantidad_vales) * v.valor_nominal as  dinero,
+									DATE_FORMAT(c.fecha_factura,'%M') fecha,
+									GROUP_CONCAT( DISTINCT rv.inicial) as inicial,
+									GROUP_CONCAT( DISTINCT rv.final) as final,
+									GROUP_CONCAT( DISTINCT rv.consumido) as consumidov
+									rv.cant									
+								FROM
+									tcm_consumo_vehiculo cv
+								INNER JOIN tcm_consumo c ON c.id_consumo = cv.id_consumo
+								INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
+								INNER JOIN tcm_requisicion_vale2 rv ON rv.id_requisicion_vale = rvcv.id_requisicion_vale
+								INNER JOIN tcm_requisicion r ON r.id_requisicion = rv.id_requisicion
+								INNER JOIN org_seccion s ON s.id_seccion= r.id_seccion
+								INNER JOIN tcm_vale v ON v.id_vale  = rv.id_vale
+								INNER JOIN tcm_fuente_fondo f ON f.id_fuente_fondo = r.id_fuente_fondo 
+														
+						GROUP BY DATE_FORMAT(c.fecha_factura,'%Y%m')
+						ORDER BY c.fecha_factura";
+			$query=$this->db->query($q);
+			return $query->result_array();
+}
 
+function asignacion_reporte($id_seccion='', $id_fuente_fondo="", $fecha_inicio=NULL, $fecha_fin=NULL, $agrupar=NULL)
+	{
+		$fechaF=" rv.mes = DATE_FORMAT(CURDATE(),'%Y%m')	";
+				$fuenteF="";
+				$seccionF="";
+				if($fecha_inicio !=NULL && $fecha_fin!=NULL){
+
+					$fechaF="  rv.mes  BETWEEN DATE_FORMAT(DATE('".$fecha_inicio."'),'%Y%m') AND DATE_FORMAT(DATE('".$fecha_fin."'),'%Y%m')";
+				}
+				if($id_seccion!=NULL){
+
+					$seccionF=" AND r.id_seccion = ".$id_seccion;
+				}
+				if($id_fuente_fondo!=NULL){
+
+					$fuenteF=" AND r.id_fuente_fondo = ".$id_fuente_fondo;
+				}
+
+				if($agrupar==NULL || $agrupar==2){ //por mes
+	
+					$selecM="	CONCAT( s.nombre_seccion, ' <br>', f.nombre_fuente_fondo, ' - ',DATE_FORMAT(DATE( CONCAT_WS('-',LEFT(x.mes,4),RIGHT(x.mes,2),'01')),'%M %Y'))  as seccion,";
+					$mes ="r.mes";
+
+				}else{ // por año
+					$selecM="	CONCAT( s.nombre_seccion, ' <br>', f.nombre_fuente_fondo, '-', x.mes) as seccion,";
+					$mes="LEFT(r.mes,4)";
+
+				}
+
+			$where= $fechaF.$seccionF.$fuenteF;
+			$query=$this->db->query(" SET lc_time_names = 'es_ES'");		
+			$query=$this->db->query(" SET @row_number:=0;");
+			$q="SELECT
+					@row_number:=@row_number+1 AS row_number, 
+					r.id_seccion, 
+							".$selecM."
+					x.asignado asignado,
+					x.entregado,
+					GROUP_CONCAT(rv.inicial) as inicial ,
+					GROUP_CONCAT(rv.final) as final
+				FROM tcm_requisicion r 
+				INNER JOIN tcm_requisicion_vale2 rv ON r.id_requisicion = rv.id_requisicion
+				INNER JOIN org_seccion s ON s.id_seccion= r.id_seccion
+				INNER JOIN tcm_vale v ON v.id_vale  = rv.id_vale
+				INNER JOIN tcm_fuente_fondo f ON f.id_fuente_fondo = r.id_fuente_fondo 
+				LEFT  JOIN (	SELECT
+						SUM(asignado) asignado,
+						SUM(cantidad_entregado) entregado,
+						id_seccion, 
+						".$mes." as mes
+					FROM
+						tcm_requisicion r
+					GROUP BY
+						id_seccion,
+						".$mes." ) as x ON r.id_seccion = x.id_seccion AND ".$mes." = x.mes
+				WHERE ".$where."	
+				 GROUP BY r.id_seccion, ".$mes;
+
+			$query=$this->db->query($q);
+
+			return $query->result();
+
+	}
 }	
 ?>

@@ -1133,6 +1133,14 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}
 
 	}
+
+	
+	public function consumo_xls()
+	{
+		$this->load->view('vales/consumo_xls');
+	}
+
+
 	/*
 	*	Nombre: estado
 	*	Objetivo: Mostrar un informe de los vales disponibles 
@@ -1490,6 +1498,14 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}
 
 	}
+		/*
+	*	Nombre: repotyr_vehiculos
+	*	Objetivo: reporte de vehiculos con su consumo, las dos funciones que le siguen hacen lo mismo pero en formatos de informacion diferente
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 20/08/2014
+	*	Observaciones: Ninguna
+	*/
 
 	function reporte_vehiculo()
 	{
@@ -1617,6 +1633,19 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		$this->mpdf->Output(); /*Salida del pdf*/	
 	
 	}
+
+
+		/*
+	*	Nombre: asingacion de vehiculos
+	*	Objetivo: esta funcion junto con las que le siguen son para darle mantenimiento a la asignacion de vehiculos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 20/08/2014
+	*	Observaciones: Ninguna
+	*/
+
+
+
 function asignacion_vehiculo()
 {
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
@@ -1658,6 +1687,17 @@ function asignacion_vehiculo()
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/asignacion_vehiculo/'.$tr);		
 	}
+
+
+	/*
+	*	Nombre: estado
+	*	Objetivo: permite ver detalle a detalle, el destino de cada vale
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 20/08/2014
+	*	Observaciones: Ninguna
+	*/
+
 
 	function estado()
 	{
@@ -1718,6 +1758,160 @@ function asignacion_vehiculo()
 		echo json_encode($data['v']);
 	}
 
+		/*
+	*	Nombre: reporte_asignacion
+	*	Objetivo: Mostrar un reporte personalizado al usuario
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 8/09/2014
+	*	Observaciones: Ninguna
+	*/
+
+	function reporte_asignacion()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		$url='vales/reporte_asignacion';
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		//$data['id_permiso']=$permiso;
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+				case 2://seccion
+					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
+					
+					break;
+				case 3://administrador
+					$data['oficinas']=$this->vales_model->consultar_oficinas();
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo();
+
+					break;
+				case 4: //departamental
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
+						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
+					
+					}
+				
+					break;
+			}
+			$data['estado_transaccion']=$estado_transaccion;
+			/*echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
+			print_r($data['oficinas']);  */
+			pantalla($url,$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+		
+	}
+		/*
+	*	Nombre: consumo_json
+	*	Objetivo: Proporiciona los datos segun los parametros recibidos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 10/07/2014
+	*	Observaciones: Ninguna
+	*/
+
+	function asignacion_json()
+	{		
+
+			$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+
+			$id_seccion=$this->input->post('id_seccion');
+			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			$agrupar = $this->input->post('agrupar');
+			if($_POST['start']!="" && $_POST['end']!=""){
+					$fecha_inicio=$this->input->post('start');
+					$fecha_fin=$this->input->post('end');
+					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+			}else{
+					$fecha_inicio=NULL;
+					$fecha_fin=NULL;
+			}
+			if($id_seccion==0){
+				$id_seccion=NULL;
+			}
+			if($id_fuente_fondo==0){
+				$id_fuente_fondo=NULL;
+			}
+
+
+			$data=$this->vales_model->asignacion_reporte($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin, $agrupar);
+			echo json_encode($data);
+		}else {
+			echo 'No tiene permisos para acceder';
+		}
+			
+	}
+
+		/*
+	*	Nombre: consumo_pdf
+	*	Objetivo: imprimir reporte segun parametros recibidos
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 20/07/2014
+	*	Observaciones: Ninguna
+	*/
+
+	function asignacion_pdf()
+	{		
+
+
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+				///Preparacion de datos
+			$id_seccion=$this->input->post('id_seccion');
+			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			$agrupar = $this->input->post('agrupar');
+			$data['color1']=$this->input->post('color1');
+			$data['color2']=$this->input->post('color2');
+		
+			
+		//para formar mensaje
+			$f="Consumo de vales de combustible ";
+
+
+			if($_POST['start']!="" && $_POST['end']!=""){
+					$fecha_inicio=$this->input->post('start');
+					$fecha_fin=$this->input->post('end');
+					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
+					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
+
+
+					$f.="del ".$fecha_inicio." al ".$fecha_fin;
+			}else{
+					$f.="del ".date('01-m-Y')." al ".date('d-m-Y'); 
+					$fecha_inicio=NULL;
+					$fecha_fin=NULL;
+			}
+			if($id_seccion==0){
+				$id_seccion=NULL;
+			}else{
+
+				$f.=" en ".$_POST['id_seccion_input'];
+			}
+			if($id_fuente_fondo==0){
+				$id_fuente_fondo= NULL;
+			}else{
+				$f.=" con fuente de fondo ".$_POST['id_fuente_fondo_input'];	
+			}
+			$data['f']=$f;
+
+			$aux= $this->vales_model->asignacion_reporte($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin, $agrupar);
+			$data['j']=json_encode($aux);
+			
+
+			$this->load->view('vales/asignacion_pdf',$data);
+
+		}else {
+			echo 'No tiene permisos para acceder';
+		}
+
+	}
 }
 
 ?>
