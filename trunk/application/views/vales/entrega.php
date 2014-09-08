@@ -51,7 +51,13 @@
 	
 	function Enviar(v)
 	{
-		document.getElementById('resp').value=v;
+        alertify.confirm("¿Está seguro de procesar la entrega de vales ? Este cambio no lo podrá revertir.", function (e) {
+                if (e) {
+                    window.location.href = base_url()+'index.php/vales/guardar_entrega';
+                } else {
+                    return false;
+                }
+            });
         
 	}
 </script>

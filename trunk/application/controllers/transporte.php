@@ -97,7 +97,7 @@ class Transporte extends CI_Controller
 				print_r($ministro);
 				if($ministro[0][funcional]=='MINISTRO') $M=1;
 				else $M=0;
-				
+				print_r($data);
 				switch ($data['id_permiso']) {
 					case 2:
 						/*echo "<script type='text/javascript'> alert('M=".$M." Permiso=".$data['id_permiso']." id_empleado=".$id_empleado."');</script>";*/

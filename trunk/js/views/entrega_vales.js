@@ -97,11 +97,14 @@ $.ajax({
         url:    base_url()+"/index.php/vales/consultar_consumo/"+id1+"/"+id2,
         dataType:"json",
         success: function(data){
+        	console.log(data);
 
 	        	if(data.asignado!=null){
 	        		$('#lbl2').html(data.asignado);
+	        		$('#lbl3').html(data.peticion);
 	        	}else{
 	        		$('#lbl2').html("(No tiene ninguna asignación)");
+	        		$('#lbl3').html("(No tiene ninguna asignación)");
 	        	}
 			    
 			    

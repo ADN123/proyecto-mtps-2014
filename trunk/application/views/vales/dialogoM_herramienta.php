@@ -8,6 +8,7 @@
                     $descripcion=$datos->descripcion;
                     $id=$datos->id_herramienta;
                     $seccion=$datos->seccion;
+                    $combustible=$datos->combustible;
                 }
 
 
@@ -45,6 +46,14 @@
             <label for="nombre" id="lnombre" class="tam-1" >Nombre</label>
             <input class="tam-2" id='nombre' tabindex='3' name='nombre' type="text"  value="<?php echo $nombre;?>"/>
         </p>
+         <p>
+
+            <label for="combustible" id="lcombustible" class="tam-1">Combustible</label>
+            <select class="tam-1" name="combustible" id="combustible">
+                <option value="Gasolina" <?php if($combustible=="Gasolina"){  echo " selected";}?> >Gasolina</option>             
+                <option value="Diesel"   <?php if($combustible=="Diesel"){  echo " selected";}?> >Diesel</option>
+            </select>  
+        </p>
         <p>
 
             <label for="descripcion" id="ldescripcion" class="label_textarea">Descripción</label>
@@ -71,7 +80,7 @@
     $("#id_seccion").kendoDropDownList();
 
     $("#id_fuente_fondo").kendoDropDownList();
-
+    $("#combustible").kendoDropDownList();
     function recargar_seccion(id_fuente_fondo) {
 var combo;
         $.ajax({

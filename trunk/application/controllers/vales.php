@@ -12,6 +12,7 @@
 	define("CONSUMO_V",115);
 	define("REQUISICION_PDF",115); ///no esta 
 	define("HERRAMIENTA",115); ///son herramientas y otros posibles consumidores de combustibles
+	define("ONLY_SOURCE",1); ///son herramientas y otros posibles consumidores de combustibles
 
 class Vales extends CI_Controller
 {
@@ -46,7 +47,7 @@ class Vales extends CI_Controller
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
-	function ingreso_vales($estado_transaccion=NULL) 
+	function ingreso_vales($estado_transaccion=NULL, $insertado=NULL) 
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),INGRESO); 
 		
@@ -89,9 +90,10 @@ class Vales extends CI_Controller
 			$valor_nominal=$this->input->post('valor_nominal');
 			$id_gasolinera=$this->input->post('id_gasolinera');
 			$final=$this->input->post('inicial')+$this->input->post('cantidad')-1;
-			$id_usuario_crea=$this->session->userdata('id_usuario');
+			$id_usuario_crea=$this->session->userdata('id_usuario'.'/'.$insertado);
 			$fecha_creacion=date('Y-m-d H:i:s');
-			
+		
+
 			$formuInfo = array(
 				'inicial'=>$inicial,
 				'final'=>$final,
@@ -103,12 +105,18 @@ class Vales extends CI_Controller
 				'fecha_recibido'=>$fecha_recibido,
 				'cantidad_restante'=>$cantidad_restante
 			);
-			
-			$this->vales_model->guardar_vales($formuInfo);
+		
+		$insertado=0;
+			if(sizeof($this->vales_model->verificarRepetidos($inicial,$final))==0){
+					$this->vales_model->guardar_vales($formuInfo);
+					$insertado=1;
+
+			}					
+					
 			
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a('index.php/vales/ingreso_vales/'.$tr);
+			ir_a('index.php/vales/ingreso_vales/'.$tr.'/'.$insertado);
 		}
 		else {
 			echo "No tiene permisos para acceder";
@@ -757,7 +765,8 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 		
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
-			$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			//$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			$id_seccion=$this->input->post('id_seccion');
 			$id_gasolinera=$this->input->post('id_gasolinera');
 			$fec=str_replace("/","-",$this->input->post('fecha_factura'));
 			$fecha_factura=date("Y-m-d", strtotime($fec));
@@ -770,6 +779,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 			$actividad_consumo=$this->input->post('actividad_consumo');
 			$tip_gas_bruto=$this->input->post('tip_gas');
 			$cantidad_consumo=$this->input->post('cantidad_consumo');
+			
 			
 			if(count($tip_gas_bruto)>count($id_vehiculo)) {
 				for($x=1;$x<count($tip_gas_bruto);$x++) {
@@ -792,10 +802,10 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 				'valor_diesel'=>$valor_diesel,
 				'id_usuario_crea'=>$this->session->userdata('id_usuario')
 			);
-			$id_consumo=$this->vales_model->guardar_factura($formuInfo);
+		 $id_consumo=$this->vales_model->guardar_factura($formuInfo); //descomentar
 			
 			/*$bandera=$this->vales_model->mezclar_tipo_vehiculo();*/
-			$bandera=1;
+			$bandera=ONLY_SOURCE;
 			
 			for($i=0;$i<count($id_vehiculo);$i++){
 				$val=explode("**",$id_vehiculo[$i]);
@@ -816,21 +826,62 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 						'recibido'=>1,
 						'tipo_vehiculo'=>$tipo_vehiculo,
 						'bandera'=>$bandera,
-						'id_seccion'=>$id_seccion['id_seccion'],
+						'id_seccion'=>$id_seccion,
 						'id_herramienta'=>$id_herramienta[$i]
 					);
-					$this->vales_model->buscar_requisicion_vale($formuInfo);
+					$this->vales_model->buscar_requisicion_vale($formuInfo); // descomentar esto
 				}
 			}
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/ingreso_consumo/'.$tr);	
+
+			/*echo "<pre>";
+			print_r($_POST);
+			echo "</pre>";*/
 		}
 		else {
 			echo 'No tiene permisos para acceder';
 		}	
 	}
-	/*
+
+	/*	
+	*	Nombre: vales a consumir
+	*	Objetivo: Mostrar la informacion de los vales que se consumiran
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 03/09/2014
+	*	Observaciones: Ninguna.
+	*/
+	function vales_a_consumir()
+	{
+
+
+
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO); 
+		
+		if($data['id_permiso']!=NULL) {
+
+			$this->db->trans_start();
+
+			$id_seccion=$this->input->post('id_seccion');
+			$id_gasolinera=$this->input->post('id_gasolinera');
+			$bandera=ONLY_SOURCE;
+	
+			$formuInfo = array(
+						'id_gasolinera'=>$id_gasolinera,
+						'bandera'=>$bandera,
+						'id_seccion'=>$id_seccion
+						);
+				echo json_encode($this->vales_model->simular_buscar_requisicion_vale($formuInfo)); 
+	
+			$this->db->trans_complete();
+		}else {
+			//error de permisos
+		}	
+	
+	}
+	/*	
 	*	Nombre: entrega de vales
 	*	Objetivo: Mostrar la informacion necesaria para entregar los vales
 	*	Hecha por: Jhonatan
@@ -1244,7 +1295,6 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		if($data['id_permiso']!=NULL) {
 		
 			$this->db->trans_start();
-			print_r($_POST);
 			$this->vales_model->insertar_herramientas($_POST);		
 
 			$this->db->trans_complete();
@@ -1585,10 +1635,14 @@ function asignacion_vehiculo()
 }
 	function dialogo_asignacion_vehiculo($id_vehiculo = NULL)
 	{
+			error_reporting(E_ALL);
+			ini_set('display_errors', '1');
+
 	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
 			$data['d']=$this->vales_model->consultar_datos_vehiculos($id_vehiculo);
+		
 			$data['oficinas']=$this->vales_model->consultar_oficinas_fuente( $data['d'][0]['id_fuente_fondo']);
 		$this->load->view("vales/dialogo_asignacion_vehiculo",$data);	
 		}

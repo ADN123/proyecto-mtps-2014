@@ -43,7 +43,7 @@ class Vales_model extends CI_Model {
 	}
 		function consultar_oficinas_fuente($id_fuente_fondo =NULL)
 	{
-
+		$where ="";
 		if($id_fuente_fondo!=NULL){
 			$where.= "	WHERE sa.id_fuente_fondo =".$id_fuente_fondo;
 		}						
@@ -558,7 +558,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 							'' as  descripcion,
 							CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR) AS id_requisicion_vale, 
 							CAST(GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2,
-							CAST(GROUP_CONCAT(DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
+							CAST(GROUP_CONCAT(DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal,
+							tcm_vehiculo.tipo_combustible as combustible
 						FROM tcm_vehiculo
 						INNER JOIN tcm_req_veh ON tcm_req_veh.id_vehiculo = tcm_vehiculo.id_vehiculo
 						INNER JOIN tcm_requisicion ON tcm_req_veh.id_requisicion = tcm_requisicion.id_requisicion
@@ -583,7 +584,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 							h.descripcion, 
 							CAST(GROUP_CONCAT(tcm_requisicion_vale.id_requisicion_vale) AS CHAR	) AS id_requisicion_vale,
 							CAST(	GROUP_CONCAT(tcm_vale.valor_nominal) AS CHAR) AS valor_nominal2,
-							CAST(		GROUP_CONCAT(	DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal
+							CAST(		GROUP_CONCAT(	DISTINCT tcm_vale.valor_nominal) AS CHAR) AS valor_nominal,
+							h.combustible
 						FROM
 							tcm_herramienta h
 						INNER JOIN tcm_req_veh ON tcm_req_veh.id_herramienta = h.id_herramienta
@@ -701,12 +703,17 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 	{
 		extract($formuInfo);
 		
-		$where='';
-		if(!$this->es_san_salvador($id_seccion))
+		$where="AND id_seccion=".$id_seccion;  // antes solo se inicializaba en vacio
+		
+		/*
+		//Note by Jhonatan: Leo habia hecho esto, supongo que era por lo de niveles, pero eso ocasiono problemas de revueltijo de vales, por lo tanto la logica de niveles se manejara de forma diferente
+		 if(!$this->es_san_salvador($id_seccion))
 			$where="AND id_seccion=".$id_seccion; 
 		else
-			$where="AND id_seccion<>52 AND id_seccion<>53 AND id_seccion<>54 AND id_seccion<>55 AND id_seccion<>56 AND id_seccion<>57 AND id_seccion<>58 AND id_seccion<>59 AND id_seccion<>60 AND id_seccion<>61 AND id_seccion<>64 AND id_seccion<>65 AND id_seccion<>66";
-		
+			$where="AND id_seccion<>52 AND id_seccion<>53 AND id_seccion<>54 AND id_seccion<>55 AND id_seccion<>56 AND id_seccion<>57 AND id_seccion<>58 AND id_seccion<>59 AND id_seccion<>60 AND id_seccion<>61 AND id_seccion<>64 AND id_seccion<>65 AND id_seccion<>66"; 
+		*/
+
+
 		if($bandera==1)
 			$where.=" AND tcm_vale.tipo_vehiculo=".$tipo_vehiculo;
 			
@@ -715,6 +722,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
 					INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
 					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera." ".$where;
+					echo $sentencia;
+
 		$query=$this->db->query($sentencia);
 		$res=(array)$query->result_array();
 		foreach($res as $r) {
@@ -729,7 +738,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 					$cantidad_entregado=$r[cantidad_restante];
 					$cantidad=$cantidad-$r[cantidad_restante];
 				}	
-				$query=$this->db->query($sentencia);
+				$query=$this->db->query($sentencia); 
 				
 				if ($id_vehiculo==0) {	$id_vehiculo="NULL";	}
 				if ($id_herramienta==0) {	$id_herramienta="NULL";	}
@@ -738,7 +747,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				
 				$id_consumo_vehiculo=$this->db->insert_id();
 				$sentencia="INSERT INTO tcm_requisicion_vale_consumo_vehiculo (id_requisicion_vale, id_consumo_vehiculo) VALUES (".$r[id_requisicion_vale].", ".$id_consumo_vehiculo.")";
-				$query=$this->db->query($sentencia);
+				$query=$this->db->query($sentencia); 
 			}
 		}
 		/*if($cantidad>0)
@@ -747,6 +756,34 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			echo "Se entregaron todos los vales solicitados";*/
 		
 		/*return (array)$query->row();*/
+	}
+
+	function simular_buscar_requisicion_vale($formuInfo)
+	{
+		extract($formuInfo);
+			
+		$sentencia="SELECT tcm_requisicion_vale.id_requisicion_vale,
+					 (
+						tcm_requisicion_vale.cantidad_entregado - tcm_requisicion_vale.cantidad_restante + tcm_requisicion_vale.numero_inicial
+					) AS inicial,
+					 tcm_requisicion_vale.cantidad_restante,
+					tcm_vale.tipo_vehiculo as fuente, 
+					$bandera as bandera, 
+					f.nombre_fuente_fondo as nfuente
+					FROM
+							tcm_requisicion
+						INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
+						INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
+						INNER JOIN tcm_fuente_fondo f ON f.id_fuente_fondo= tcm_vale.tipo_vehiculo 
+						WHERE
+							tcm_requisicion_vale.cantidad_restante > 0
+						AND tcm_vale.id_gasolinera = $id_gasolinera
+						AND id_seccion = $id_seccion  
+					ORDER BY tcm_vale.fecha_recibido ASC";					
+
+		$query=$this->db->query($sentencia);
+		return $query->result_array();
+
 	}
 	
 	function guardar_consumo($formuInfo)
@@ -895,7 +932,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			$query=$this->db->query($q);		
 			return $query->result();
 	}
-
+	
 	function vales_sin_entregar()
 	{
 		
@@ -913,6 +950,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			$query=$this->db->query($q);		
 			return $query->result_array();
 	}
+	
 	function vales_de_seccion($id_seccion=NULL, $san_salvador=0)
 	{
 
@@ -968,7 +1006,8 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 							h.id_herramienta,
 							h.nombre, 
 							f.nombre_fuente_fondo fuente,
-							s.nombre_seccion seccion
+							s.nombre_seccion seccion,
+							h.combustible
 						FROM
 							tcm_herramienta h
 						INNER JOIN tcm_fuente_fondo f ON h.id_fuente_fondo = f.id_fuente_fondo
@@ -984,13 +1023,14 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				id_fuente_fondo = ".$id_fuente_fondo.",
 				descripcion = '".$descripcion."',
 				nombre = '".$nombre."'
+				combustible = '".$combustible."'
 		WHERE id_herramienta = ".$id;
 		$this->db->query($q);
 	}
 	function insertar_herramientas($post)
 	{extract($post);
-		$q='INSERT INTO tcm_herramienta (id_seccion_vale, id_fuente_fondo, descripcion, nombre ) 
-			VALUES('.$id_seccion.','.$id_fuente_fondo.',"'.$descripcion.'", "'.$nombre.'");';
+		$q='INSERT INTO tcm_herramienta (id_seccion_vale, id_fuente_fondo, descripcion, nombre, combustible ) 
+			VALUES('.$id_seccion.','.$id_fuente_fondo.',"'.$descripcion.'", "'.$nombre.'", "'.$combustible.'");';
 		$this->db->query($q);
 	}
 	function eliminar_herramientas($id_seccion, $id_fuente_fondo)
@@ -1246,7 +1286,7 @@ function detalleR($id_requisicion=NULL)
 		$q="SELECT
 				c.id_consumo,
 				numero_factura AS factura,
-				fecha_factura AS fecha,
+				DATE_FORMAT(fecha_factura,'%d-%m-%Y') AS fecha,
 				cv.inicial AS del,
 				cv.inicial + SUM(cv.cantidad_vales) - 1 AS al,
 				SUM(cv.cantidad_vales) as cantidad
@@ -1299,6 +1339,26 @@ function detalleF($id_consumo=NULL)
 			$query=$this->db->query($q);
 			return $query->result_array();
 	}
+
+function verificarRepetidos($inicial=0, $final=0)
+{
+	$query=$this->db->query("SET @x1 := ".$inicial.";");
+	$query=$this->db->query("SET @x2 := ".$final.";");
+	$q="SELECT
+			*
+		FROM
+			tcm_vale
+		WHERE
+			(
+				(@x1 >= inicial AND @x1 <= final)
+				OR (@x2 >= inicial AND @x2 <= final)
+			) AND DATE_ADD( fecha_creacion, INTERVAL 1 YEAR)  > CURDATE()";
+
+
+			$query=$this->db->query($q);
+			return $query->result_array();
+
+}
 
 }	
 ?>

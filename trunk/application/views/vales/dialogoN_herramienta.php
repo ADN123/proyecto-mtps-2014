@@ -16,7 +16,7 @@
             </p>        
             <p>
                 <label for="id_seccion" id="lservicio_de">Sección</label>
-                 <input id="id_seccion" name="id_seccion" class="tam-2" />
+                 <input id="id_seccion" name="id_seccion" class="tam-3" />
             </p>
 </fieldset>      
 <fieldset>      
@@ -28,11 +28,18 @@
         </p>
         <p>
 
+            <label for="combustible" id="lcombustible" class="tam-1">Combustible</label>
+            <select class="tam-1" name="combustible" id="combustible">
+                <option value="Gasolina">Gasolina</option>             
+                <option value="Diesel">Diesel</option>
+            </select>  
+        </p>
+        <p>
+
             <label for="descripcion" id="ldescripcion" class="label_textarea">Descripción</label>
             <textarea class="tam-3" id='descripcion' tabindex='4' name='descripcion' ></textarea>
         </p>
-    
-
+            
  </fieldset>
     <br />
     
@@ -51,6 +58,7 @@
         });
     
     $("#id_fuente_fondo").kendoDropDownList();
+    $("#combustible").kendoDropDownList();
 
     function recargar_seccion(id_fuente_fondo) {
 
