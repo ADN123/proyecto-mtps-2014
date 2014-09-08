@@ -127,6 +127,76 @@ function grafico (chartData, label) {
 
 }
 
+function grafico2 (chartData, label) {//para el  reporte de asignacion
+
+            var color1 = "#ADD981";
+            var color2 ="#27c5ff";
+            var chart;
+             color1 = $("#color1").val();
+             color2 = $("#color2").val();
+
+
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+                chart.dataProvider = chartData;
+                chart.categoryField = label;
+                chart.startDuration = 1;
+                chart.rotate = true;
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.gridPosition = "start";
+                categoryAxis.axisColor = "#DADADA";
+                categoryAxis.dashLength = 3;
+
+                // value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.dashLength = 3;
+                valueAxis.axisAlpha = 0.2;
+                valueAxis.position = "top";
+                valueAxis.title = "vales";
+                valueAxis.minorGridEnabled = true;
+                valueAxis.minorGridAlpha = 0.08;
+                valueAxis.gridAlpha = 0.15;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPHS
+                // column graph
+                var graph1 = new AmCharts.AmGraph();
+                graph1.type = "column";
+                graph1.title = "Entregado";
+                graph1.valueField = "entregado";
+                graph1.lineAlpha = 0;
+                graph1.fillColors = color1;
+                graph1.fillAlphas = 0.8;
+                graph1.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
+                chart.addGraph(graph1);
+
+                
+                // column graph
+                var graph2 = new AmCharts.AmGraph();
+                graph2.type = "column";
+                graph2.title = "Asignado";
+                graph2.valueField = "asignado";
+                graph2.lineAlpha=0;
+                graph2.fillColors = color2
+                graph2.fillAlphas = 0.8;
+                graph2.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
+                chart.addGraph(graph2);
+
+
+                // LEGEND
+                var legend = new AmCharts.AmLegend();
+                legend.useGraphSettings = true;
+                chart.addLegend(legend);
+
+                chart.creditsPosition = "top-right";
+
+                // WRITE
+                chart.write("chartdiv");
+
+}
 function tabla (json) {
                 var fila;
 
@@ -173,6 +243,32 @@ function tabla2 (json) {
               "<td align='center'>" + ap + "</td>" +
               "<td align='center'>" + json[i].recorrido + "</td>" +
               "<td align='center'>" + n.toFixed(2) + "</td>" +
+            "</tr>";    
+                $('#datos').append(fila)    
+                }  
+}
+
+function tabla3 (json) {
+                var fila;
+
+            $('#datos tbody').remove();        
+            for (i=0;i<json.length;i++) {   
+            
+             fila= "<tr>" +
+              "<td align='center'>" + json[i].row_number + "</td>" +
+              "<td align='center'>" + json[i].seccion + "</td>" +
+              "<td align='center'>" + json[i].asignado + "</td>" +
+              "<td align='center'>" + json[i].entregado + "</td>" +
+              "<td align='center'>"; 
+                var series1=json[i].inicial.split(",");
+                var series2=json[i].final.split(",");
+                    
+                    for (var j= 0; j < series1.length; j++) {
+                        fila+=series1[j]+" - "+ series2[j];
+                        if(j!=series1.length-1){ fila+="<br>"}
+                    }
+
+             fila+= "</td>" +
             "</tr>";    
                 $('#datos').append(fila)    
                 }  

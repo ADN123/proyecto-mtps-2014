@@ -27,7 +27,7 @@
             Actividad
         </th>
         <th width="100">
-            Tipo Gasolina
+            Combustible
         </th>  
         <th width="85">
             Cantidad de Vales

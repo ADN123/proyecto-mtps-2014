@@ -85,3 +85,28 @@ function tabla (json) {
                 }  
 }
 
+function tabla3 (json) {
+                var fila;
+
+            $('#datos tbody').remove();        
+            for (i=0;i<json.length;i++) {   
+            
+             fila= "<tr>" +
+              "<td align='center'>" + json[i].row_number + "</td>" +
+              "<td align='center'>" + json[i].seccion + "</td>" +
+              "<td align='center'>" + json[i].asignado + "</td>" +
+              "<td align='center'>" + json[i].entregado + "</td>" +
+              "<td align='center'>"; 
+                var series1=json[i].inicial.split(",");
+                var series2=json[i].final.split(",");
+                    
+                    for (var j= 0; j < series1.length; j++) {
+                        fila+=series1[j]+" - "+ series2[j];
+                        if(j!=series1.length-1){ fila+="<br>"}
+                    }
+
+             fila+= "</td>" +
+            "</tr>";    
+                $('#datos').append(fila)    
+                }  
+}
