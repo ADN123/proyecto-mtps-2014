@@ -53,15 +53,22 @@
 	}
 
 	function ir_a($url){
-		echo'<script language="JavaScript" type="text/javascript">
+
+		/*
+	echo'<script language="JavaScript" type="text/javascript">
 				var pagina="'.base_url().$url.'"
 				function redireccionar() 
 				{
 				location.href=pagina
 				} 
-				setTimeout ("redireccionar()", 600);
+				setTimeout ("redireccionar()", 600);	
 				
-				</script>';
+				</script>'; */
+
+	echo'<script language="JavaScript" type="text/javascript">
+				var pagina="'.base_url().$url.'"
+				window.location.href=pagina
+				</script>'; 
 		
 		}	
 

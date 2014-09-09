@@ -124,7 +124,7 @@ $.ajax({
 
 			    }else{
 
-			    $("#cantidad_solicitada").prop('readonly', true);
+//			    $("#cantidad_solicitada").prop('readonly', true); //temporalmente habilitado
 				$("#cantidad_solicitada").val(data.peticion);
 			    var txt = $("#id_seccion option:selected").text();
 
