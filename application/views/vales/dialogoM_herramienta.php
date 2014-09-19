@@ -54,6 +54,7 @@
                 <option value="Diesel"   <?php if($combustible=="Diesel"){  echo " selected";}?> >Diesel</option>
             </select>  
         </p>
+        
         <p>
 
             <label for="descripcion" id="ldescripcion" class="label_textarea">Descripción</label>

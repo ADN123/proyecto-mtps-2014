@@ -1,6 +1,6 @@
 <script>
 	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='La solicitud se ha eliminado exitosamente.';
+	estado_correcto='La solicitud se ha eliminado.';
 	estado_incorrecto='Error al intentar eliminar la solicitud: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 </script>
 <section>
@@ -46,6 +46,9 @@
 					break;
 				case 5:
 					$estado="Finalizada";
+					break;
+				default:
+					$estado="Eliminada";
 			}									
 	?>
   		<tr>
@@ -55,14 +58,21 @@
             <td><?php echo  ucwords($val['seccion'])?></td>
             <td><?php echo $estado ?></td>
             <td>
-            	<?php if($val['estado']==1) {?>
+            	<?php if($val['estado']>=0 && $val['estado']<=2) {?>
             		<a title="Editar solicitud" href="<?php echo base_url()?>index.php/transporte/solicitud/m/<?php echo $val['id']?>"><img  src="<?php echo base_url()?>img/editar.png"/></a>
                 <?php
             		} 
                 	 
                 	 if($val['estado']<=3 && $val['estado']>=1){
                 ?>
-                <a class="eliminar" title="Eliminar solicitud" href="<?php echo base_url()?>index.php/transporte/eliminar_solicitud/<?php echo $val['id']?>"><img src="<?php echo base_url()?>img/ico_basura.png"/></a>
+                <a title="Eliminar solicitud"  onClick="eliminar(<?php echo $val['id']?>)" href="#"><img src="<?php echo base_url()?>img/ico_basura.png"/></a>
+                	
+                <?php 
+            		}
+                	 
+                	 if($val['estado']>=3 && $val['estado']<=5){
+                ?>
+                 	<a title="Crear .pdf de solicitud" target="_blank" href="<?php echo base_url()?>index.php/transporte/solicitud_pdf/<?php echo $val['id']?>"><img  src="<?php echo base_url()?>img/ico_pdf.png"/></a>
                 	
                 <?php }?>
             </td>
@@ -73,10 +83,15 @@
 	</tbody>
 </table>
 <script language="javascript" >
-	$(document).ready(function(){
-		$('.eliminar').click(function(){
-			if(!(confirm("Realmente desea eliminar esta solicitud? Se perderán todos los datos relacionados a la misma. Este proceso no se puede revertir.")))
-				return false;
-		});
-	});
+
+function eliminar (id_solicitud) {
+    alertify.confirm("¿Realmente desea eliminar esta solicitud? Se perderán todos los datos relacionados a la misma. Este proceso no se puede revertir..", function (e) {
+                if (e) {
+                    window.location.href = base_url()+'index.php/transporte/eliminar_solicitud/'+id_solicitud;
+                } else {
+                    return false;
+                }
+            });
+}
+	
 </script>

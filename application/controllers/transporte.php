@@ -59,12 +59,13 @@ class Transporte extends CI_Controller
 					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
-			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud,1);
+			$data['solicitud']=$this->transporte_model->consultar_solicitud($id_solicitud,"1,2,0");
+
 			if($band)	
 				$data['info']=$this->transporte_model->info_adicional($data['solicitud']['id_empleado_solicitante']);
 			$data['solicitud_destinos']=$this->transporte_model->consultar_destinos($data['solicitud']['id_solicitud_transporte']);
 			$data['solicitud_acompanantes']=$this->transporte_model->acompanantes_internos($data['solicitud']['id_solicitud_transporte']);
-			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'));
+			$data['acompanantes']=$this->transporte_model->consultar_empleados($this->session->userdata('nr'), $id_solicitud);
 			$data['municipios']=$this->transporte_model->consultar_municipios();
 			pantalla('transporte/solicitud',$data);	
 		}
@@ -92,12 +93,10 @@ class Transporte extends CI_Controller
 				
 				$id_empleado=$id_empl[0][id_empleado];
 				$ministro=$this->transporte_model->consultar_cargo($id_empleado);
-				print_r($id_empl);
-				echo "<br>";
-				print_r($ministro);
+
 				if($ministro[0][funcional]=='MINISTRO') $M=1;
 				else $M=0;
-				print_r($data);
+
 				switch ($data['id_permiso']) {
 					case 2:
 						/*echo "<script type='text/javascript'> alert('M=".$M." Permiso=".$data['id_permiso']." id_empleado=".$id_empleado."');</script>";*/
@@ -641,6 +640,13 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
+
+
+	function prueba($value='')
+	{
+
+		print_r(($value));
+	}
 	function guardar_solicitud()
 	{	
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),65); /*Verificacion de permiso para crear solicitudes*/
@@ -649,9 +655,20 @@ class Transporte extends CI_Controller
 			$this->db->trans_start();
 			
 			$id_solicitud_old=$this->input->post('id_solicitud_old');
-			
-			if($id_solicitud_old!="") {
-				$this->transporte_model->eliminar_solicitud($id_solicitud_old);
+			$estado=1;
+			if($id_solicitud_old!="") {				
+
+					$estado= $this->transporte_model->consultar_estado($id_solicitud_old);
+					$estado=$estado[0]['estado'];
+
+					if($estado==0){
+						$this->transporte_model->eliminar_solicitud($id_solicitud_old,FALSE);
+						$id_solicitud_old="DEFAULT";
+					}else{
+						$this->transporte_model->eliminar_solicitud($id_solicitud_old,TRUE);
+					}
+			}else{
+					$id_solicitud_old="DEFAULT";
 			}
 			
 			$fec=str_replace("/","-",$this->input->post('fecha_mision'));
@@ -660,53 +677,56 @@ class Transporte extends CI_Controller
 			$fecha_mision=date("Y-m-d", strtotime($fec));
 			$hora_salida=date("H:i:s", strtotime($this->input->post('hora_salida')));
 			$hora_entrada=date("H:i:s", strtotime($this->input->post('hora_regreso')));
-			if($this->input->post('requiere_motorista')!="")
-				$requiere_motorista=$this->input->post('requiere_motorista');
-			else
-				$requiere_motorista=0;
-			$observaciones=$this->input->post('observaciones');
-			$acompanante=$this->input->post('acompanantes2');
-			$id_usuario_crea=$this->session->userdata('id_usuario');
-			$fecha_creacion=date('Y-m-d H:i:s');
-			$estado_solicitud_transporte=1;
-			
-			$formuInfo = array(
-				'fecha_solicitud_transporte'=>$fecha_solicitud_transporte,
-				'id_empleado_solicitante'=>$id_empleado_solicitante,
-				'fecha_mision'=>$fecha_mision,
-				'hora_salida'=>$hora_salida,
-				'hora_entrada'=>$hora_entrada,
-				'requiere_motorista'=>$requiere_motorista,
-				'acompanante'=>$acompanante,
-				'id_usuario_crea'=>$id_usuario_crea,
-				'fecha_creacion'=>$fecha_creacion,
-				'estado_solicitud_transporte'=>$estado_solicitud_transporte
-			);
-			
-			$id_solicitud_transporte=$this->transporte_model->guardar_solicitud($formuInfo); /*Guardando la solicitud*/
-			$acompanantes=$this->input->post('acompanantes');
-			for($i=0;$i<count($acompanantes);$i++) {
+				if($this->input->post('requiere_motorista')!="")
+					$requiere_motorista=$this->input->post('requiere_motorista');
+				else
+					$requiere_motorista=0;
+				$observaciones=$this->input->post('observaciones');
+				$acompanante=$this->input->post('acompanantes2');
+				$id_usuario_crea=$this->session->userdata('id_usuario');
+				$fecha_creacion=date('Y-m-d H:i:s');
+				
+				
+				
 				$formuInfo = array(
-					'id_solicitud_transporte'=>$id_solicitud_transporte,
-					'id_empleado'=>$acompanantes[$i]
+					'id_solicitud_transporte'=> $id_solicitud_old,
+					'fecha_solicitud_transporte'=>$fecha_solicitud_transporte,
+					'id_empleado_solicitante'=>$id_empleado_solicitante,
+					'fecha_mision'=>$fecha_mision,
+					'hora_salida'=>$hora_salida,
+					'hora_entrada'=>$hora_entrada,
+					'requiere_motorista'=>$requiere_motorista,
+					'acompanante'=>$acompanante,
+					'id_usuario_crea'=>$id_usuario_crea,
+					'fecha_creacion'=>$fecha_creacion,
+					'estado_solicitud_transporte'=>$estado
 				);
-				$this->transporte_model->guardar_acompanantes($formuInfo); /*Guardando acompañantes*/
-			}
-			$destinos=$this->input->post('values');
-			for($i=0;$i<count($destinos);$i++) {
-				$campos=explode("**",$destinos[$i]);
-				if(isset($campos[1])) {
+					
+				$id_solicitud_transporte=$this->transporte_model->guardar_solicitud($formuInfo); /*Guardando la solicitud*/
+				$acompanantes=$this->input->post('acompanantes');
+				for($i=0;$i<count($acompanantes);$i++) {
 					$formuInfo = array(
 						'id_solicitud_transporte'=>$id_solicitud_transporte,
-						'id_municipio'=>$campos[0],
-						'lugar_destino'=>$campos[1],
-						'direccion_destino'=>$campos[2],
-						'mision_encomendada'=>$campos[3]
-
+						'id_empleado'=>$acompanantes[$i]
 					);
-					$this->transporte_model->guardar_destinos($formuInfo); /*Guardando destinos*/
+					$this->transporte_model->guardar_acompanantes($formuInfo); /*Guardando acompañantes*/
 				}
-			}
+				$destinos=$this->input->post('values');
+				for($i=0;$i<count($destinos);$i++) {
+					$campos=explode("**",$destinos[$i]);
+					if(isset($campos[1])) {
+						$formuInfo = array(
+							'id_solicitud_transporte'=>$id_solicitud_transporte,
+							'id_municipio'=>$campos[0],
+							'lugar_destino'=>$campos[1],
+							'direccion_destino'=>$campos[2],
+							'mision_encomendada'=>$campos[3]
+
+						);
+				
+						$this->transporte_model->guardar_destinos($formuInfo); /*Guardando destinos*/
+					}
+				}
 			
 			if($observaciones!="")
 				$this->transporte_model->insertar_descripcion($id_solicitud_transporte,$observaciones, 1); /*Guardando observaciones*/
@@ -797,8 +817,6 @@ class Transporte extends CI_Controller
 		
 
 			$this->load->view("transporte/accesorios",$data);
-		
-
 	}
 
 	/*
@@ -929,19 +947,19 @@ class Transporte extends CI_Controller
 			switch($data['id_permiso']) {
 				case 1:
 					$empleado=$this->transporte_model->consultar_empleado($_SESSION['nr']);
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR'], 0);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes($empleado[0]['NR'], 1);
 					break;
 				case 2:
 					$seccion=$this->transporte_model->consultar_seccion_usuario($_SESSION['nr']);
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 0, $seccion['id_seccion']);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 1, $seccion['id_seccion']);
 					break;
 				case 3:
-					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,0);
+					$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL,1);
 					break;
 				case 4:
 					$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 					if($id_seccion['id_seccion']==52 || $id_seccion['id_seccion']==53 || $id_seccion['id_seccion']==54 || $id_seccion['id_seccion']==55 || $id_seccion['id_seccion']==56 || $id_seccion['id_seccion']==57 || $id_seccion['id_seccion']==58 || $id_seccion['id_seccion']==59 || $id_seccion['id_seccion']==60 || $id_seccion['id_seccion']==61 || $id_seccion['id_seccion']==64 || $id_seccion['id_seccion']==65 || $id_seccion['id_seccion']==66) {
-						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 0, $id_seccion['id_seccion']);
+						$data['solicitudes']=$this->transporte_model->buscar_solicitudes(NULL, 1, $id_seccion['id_seccion']);
 					}
 					else {
 						$data['solicitudes']=$this->transporte_model->buscar_solicitudes_depto(0);	
@@ -965,7 +983,7 @@ class Transporte extends CI_Controller
 	*	Última Modificación: 03/07/2014
 	*	Observaciones: Ninguna
 	*/
-	function eliminar_solicitud($id_solicitud)
+	function eliminar_solicitud($id_solicitud=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),67);
 		

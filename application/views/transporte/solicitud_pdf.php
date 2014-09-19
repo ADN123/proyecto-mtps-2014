@@ -8,6 +8,7 @@
         <tr>
             <td align="left" id="imagen">
                 <img src="img/mtps.jpg" />
+
             </td>
             <td align="right">
                 <h3>SOLICITUD DE USO DE VEHICULO</h3>
@@ -397,7 +398,7 @@
                     }
                 ?>
             </td>
-        	<td align="center" style="width:40%; height:300px; vertical-align:bottom;">
+        	<td align="center" style="width:40%; height:200px; vertical-align:bottom;">
             	<img src="img/firma_gerencia.png" /><br />
                 f. _______________________________________<br />
                 Directora Administrativa

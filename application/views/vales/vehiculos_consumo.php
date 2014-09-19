@@ -1,15 +1,12 @@
-
-<div>
 <?php
 	$band=true;
-
 	echo '<span style="margin-left: 15px; float: left;">Cantidad de vales disponibles:</span><br><ul>';
 	foreach($vales as $val) { 
 		$band=false;
-		echo '<li style="text-align: left;">Fondo '.$val[nombre_fuente_fondo].': <strong>'.$val[total].'</strong> vale(s) disponible(s) <span></span> 
-				<input type="hidden" class="cantidad_vales" name="total_vales'.$val[id_fuente_fondo].'" id="total_vales'.$val[id_fuente_fondo].'"  value="'.$val[total].'" data-value="'.$val[total].'">
-				<div id="display'.$val[id_fuente_fondo].'" style="float:right;  padding-right: 235px; padding-bottom: 10px;"></div>	
-		</li>';
+		echo '<li style="text-align: left;">Fondo '.$val[nombre_fuente_fondo].': <strong>'.$val[total].'</strong> vale(s) disponible(s) <span></span> <input type="hidden" class="cantidad_vales" name="total_vales'.$val[id_fuente_fondo].'" id="total_vales'.$val[id_fuente_fondo].'"  value="'.$val[total].'" data-value="'.$val[total].'"></li>
+
+				<div id="display'.$val[id_fuente_fondo].'" style="float:right;  padding-right: 235px; padding-bottom: 10px;"></div>
+			</li>';
 	}
 	if($band)
 		echo '<li style="text-align: left;"><strong>(No hay vales disponibles)</strong></li>';
@@ -73,24 +70,23 @@
                     <td><input class="actividad" type="text" name="actividad_consumo[]" id="actividad_consumo<?php echo $i ?>" style="width:90%"/></td>
                     <td>
                     	<select name="tip_gas[]" id="tip_gas<?php echo $i?>" class="tipo_gas">
+                       	<?php
+	                    		if ($val['combustible']=="Gasolina") {
+	                    				echo
+	                    				'<option value="1">Regular</option>
+	                    				<option value="2">Super</option>';
+	                    			} else {
+	                    				if($val['combustible']=="Diesel"){
+	                    					echo '<option value="3">Diesel</option>';
+	                    				}else{
 
-                    		<?php 
-                    		if ($val['combustible']=="Gasolina") {
-                    				echo 
-                    				'<option value="1">Regular</option>
-                    				<option value="2">Super</option>';
-                    			} else {
-                    				if($val['combustible']=="todas"){
-                    					echo '<option value="1">Regular</option>
-                    						 <option value="2">Super</option>
-                    						 <option value="3">Diesel</option>';
-                    				}else{
-                    					echo '<option value="3">Diesel</option>';	
-                       				}
-
-                    			}
-                    		?>
-
+											echo '<option value="1">Regular</option>
+	                    						 <option value="2">Super</option>
+	                    						 <option value="3">Diesel</option>';
+	                       				}
+	
+	                    			}
+	                    		?>
                         </select>
                     </td>
                     <td>
@@ -98,7 +94,7 @@
                     	<script>
 							$("#cantidad_consumo<?php echo $i?>").validacion({
 								numMin:0,
-								numMax:15,
+								numMax:500,
 								ent: true,
 								req: false
 							});
@@ -158,7 +154,6 @@
 		if(cant=="" || cant==null || Number(cant)<0)
 			cant=0;
 		$strong.html(cant);
-		
 	});
 	/*$(".actividad").validacion({
 		lonMin: 5,

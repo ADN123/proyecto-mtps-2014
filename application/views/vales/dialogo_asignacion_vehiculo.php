@@ -8,6 +8,7 @@
                 {
 
                     $seccion=ucwords($datos['seccion']);
+                    $combustible=$datos['combustible'];
                     $placa=$datos['placa'];
                     $modelo=$datos['modelo'];
                     $fuente=$datos['fuente_fondo'];
@@ -25,7 +26,6 @@
                     Marca: <strong>".$marca."</strong> <br>
                 </fieldset>
     <br />";
-
 	?>
     <!--  <input type='hidden' name='id_seccion' value="<?php echo $id_seccion_vale?>" /> -->
     <input type='hidden' name='id_fuente_fondo' value="<?php echo $id_fuente_fondo?>" />    	
@@ -42,7 +42,14 @@
             }
         ?>
  </select> 
+<p>
 
+            <label for="combustible" id="lcombustible" class="tam-1">Combustible</label>
+            <select class="tam-1" name="combustible" id="combustible">
+                <option value="Gasolina" <?php if($combustible=="Gasolina"){  echo " selected";}?> >Gasolina</option>             
+                <option value="Diesel"   <?php if($combustible=="Diesel"){  echo " selected";}?> >Diesel</option>
+            </select>  
+        </p>
  </fieldset>
     <br />
     
@@ -52,10 +59,6 @@
     </p>
 </form>
 <script>
-	
-		//$("#id_seccion").validacion();
-        $("#id_seccion").kendoDropDownList();
-
-
-
+	    $("#id_seccion").kendoDropDownList();
+        $("#combustible").kendoDropDownList();
 </script>

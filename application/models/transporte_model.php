@@ -41,13 +41,20 @@ class Transporte_model extends CI_Model {
 		}
 	}
 	
-	function consultar_empleados($nr=0) 
+	function consultar_empleados($nr=0, $id_solicitud=NULL) 
 	{
+		$where=" ";
+		if($id_solicitud!=NULL){
+			$where=" AND sir_empleado.id_empleado NOT IN (
+			SELECT a.id_empleado FROM tcm_acompanante a WHERE a.id_solicitud_transporte = ".$id_solicitud.")";
+
+		}
+
 		$sentencia="SELECT
 					sir_empleado.id_empleado AS NR,
 					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre
 					FROM sir_empleado
-					WHERE sir_empleado.NR<>'".$nr."'";
+					WHERE sir_empleado.NR<>'".$nr."'".$where;
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
 			return (array)$query->result_array();
@@ -1165,7 +1172,7 @@ order by e.primer_nombre ASC);");
 	
 	function acompanantes_internos($id)
 	{
-		$query=$this->db->query("SELECT t.id_empleado AS id_empleado, LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) as nombre FROM sir_empleado e inner join tcm_acompanante t on (e.id_empleado=t.id_empleado)
+		$query=$this->db->query("SELECT t.id_empleado AS id_empleado, e.nr, LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) as nombre FROM sir_empleado e inner join tcm_acompanante t on (e.id_empleado=t.id_empleado)
 where t.id_solicitud_transporte='$id';");
 		
 		return $query->result();
@@ -1266,9 +1273,9 @@ where s.id_solicitud_transporte='$id'");
 	{
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_solicitud_transporte
-					(fecha_solicitud_transporte, id_empleado_solicitante, fecha_mision, hora_salida, hora_entrada, requiere_motorista, acompanante, id_usuario_crea, fecha_creacion, estado_solicitud_transporte) 
+					(id_solicitud_transporte, fecha_solicitud_transporte, id_empleado_solicitante, fecha_mision, hora_salida, hora_entrada, requiere_motorista, acompanante, id_usuario_crea, fecha_creacion, estado_solicitud_transporte) 
 					VALUES 
-					('$fecha_solicitud_transporte', '$id_empleado_solicitante', '$fecha_mision', '$hora_salida', '$hora_entrada', '$requiere_motorista', '$acompanante', '$id_usuario_crea', '$fecha_creacion', '$estado_solicitud_transporte')";
+					($id_solicitud_transporte, '$fecha_solicitud_transporte', '$id_empleado_solicitante', '$fecha_mision', '$hora_salida', '$hora_entrada', '$requiere_motorista', '$acompanante', '$id_usuario_crea', '$fecha_creacion', '$estado_solicitud_transporte')";
 		$this->db->query($sentencia);
 		return $this->db->insert_id();
 	}
@@ -1516,13 +1523,15 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	function buscar_solicitudes($id_empleado=NULL,$estado=NULL, $id_seccion=NULL)
 	{
+
+	
 		$whereExtra="";
 
 		if($id_empleado!=NULL) {
 			$whereExtra.=" AND id_empleado_solicitante='".$id_empleado."'  ";
 	
 		}
-		if($estado!=NULL){
+		if($estado!=""||$estado!=NULL){
 				$whereExtra.=" AND estado_solicitud_transporte>='".$estado."' "  ;
 		}
 		if($id_seccion!=NULL){
@@ -1619,17 +1628,30 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		return (array)$query->result_array();
 	}
 	
-	function eliminar_solicitud($id_solicitud)
+	function eliminar_solicitud($id_solicitud, $real=false)
 	{
-		$sentencia="UPDATE tcm_solicitud_transporte SET estado_solicitud_transporte='-1' WHERE id_solicitud_transporte='$id_solicitud'";
-		/*$sentencia="DELETE FROM tcm_solicitud_transporte where id_solicitud_transporte='$id_solicitud'";*/
+		if ($real) {
+			$sentencia="DELETE FROM tcm_solicitud_transporte where id_solicitud_transporte='$id_solicitud'";
+		} else {
+			$sentencia="UPDATE tcm_solicitud_transporte SET estado_solicitud_transporte='-1' 
+								WHERE id_solicitud_transporte='$id_solicitud'";
+		}
+		
 		$query=$this->db->query($sentencia);
-		return true;
+
+	}
+
+	function consultar_estado($id_solicitud=NULL)
+	{
+		$sentencia="SELECT estado_solicitud_transporte  as estado FROM tcm_solicitud_transporte  WHERE id_solicitud_transporte='$id_solicitud'";
+		$query=$this->db->query($sentencia);
+		return $query->result_array();
+
 	}
 	function consultar_solicitud($id_solicitud=NULL,$estado=NULL)
 	{
 		if($estado!=NULL)
-			$where_estado=" AND tcm_solicitud_transporte.estado_solicitud_transporte=".$estado;
+			$where_estado=" AND tcm_solicitud_transporte.estado_solicitud_transporte IN(".$estado.")";
 		$sentencia="SELECT
 					tcm_solicitud_transporte.id_solicitud_transporte,
 					tcm_solicitud_transporte.id_empleado_solicitante,
