@@ -55,7 +55,7 @@ var ban= $(k).prop('checked');
                     </span>
                 </a>
             </li>
-     -       
+            
         </ul>                 
 
         <div id="step-1">	
@@ -95,7 +95,7 @@ var ban= $(k).prop('checked');
 
                
                 </p>
-                           
+                            <br>
                  <p>
 
                 <label for="mes" id="lmes">Para el mes de </label>
@@ -136,8 +136,6 @@ var ban= $(k).prop('checked');
                 <strong id="lbl"></strong> 
                 <label for="lbl2" id="lrefuezo" >Cuota Asignada: </label>
                 <strong id="lbl2"></strong> 
-                <label for="lbl3" id="lcomplemento" >Complemento: </label>
-                <strong id="lbl3"></strong> 
 
             </p>
       	</div>

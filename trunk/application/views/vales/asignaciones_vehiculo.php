@@ -43,7 +43,7 @@ foreach ($datos as $fila) {
 
 <div id="ventana" style="height:600px">
     <div id='signup-header'>
-        <h2>Asignacione de Seccion de Consumo a Vehiculos</h2>
+        <h2>Asignación de Seccion de Consumo a Vehiculos</h2>
         <a class="modal_close"></a>
     </div>
     <div id='contenido-ventana'>

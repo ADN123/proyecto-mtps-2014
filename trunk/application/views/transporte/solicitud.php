@@ -201,17 +201,23 @@
             <h2 class="StepTitle">Selecci&oacute;n de las personas que ir&aacute;n en el veh&iacute;culo</h2>
             <p>
                 <label for="acompanantes" id="lacompanantes" style="vertical-align: text-bottom;">Acompa&ntilde;antes</label>
-                <select name="acompanantes[]" id="acompanantes" class="multi" multiple="multiple" tabindex="9" placeholder="[Seleccione...]" style="width:350px;">
+                   
+                <select name="acompanantes[]" id="acompanantes"  multiple="multiple" tabindex="9" placeholder="[Seleccione...]" style="width:350px;">
                 <?php
+                     foreach ($solicitud_acompanantes as $val) {
+                            
+                    echo '<option value="'.$val->id_empleado.'" selected>'.ucwords($val->nombre).'</option>';
+                        
+                    }
+
+
                      foreach($acompanantes as $val) {
 						 /*if(in_array($rs->fields['NR'], $solicitud_acompanantes))*/
-						 if(true)
-                         	echo '<option value="'.$val['NR'].'" selected="selected">'.ucwords($val['nombre']).'</option>';
-						else
-                         	echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';
+                         	echo '<option value="'.$val['NR'].'">'.ucwords($val['nombre']).'</option>';   //aqui el nr es un nombre,  porque en realidad se esta trabajando con el id
                      }
                 ?>
                 </select>
+
             </p> 
             <p>
                 <label for="acompanantes2" id="lacompanantes2" class="label_textarea">Personal Externo</label>
@@ -257,3 +263,9 @@
   	</form>
 </div>
 <script src="<?php echo base_url()?>js/views/solicitud.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+$('#acompanantes').kendoMultiSelect({
+        filter: "contains"  
+    });
+</script>
