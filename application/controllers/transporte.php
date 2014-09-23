@@ -1085,5 +1085,21 @@ class Transporte extends CI_Controller
 			echo "No tiene permisos para acceder";
 		}
 	}
+	
+	/*
+	*	Nombre: informes_solicitudes
+	*	Objetivo: Genera la vista de informes de solicitudes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Ultima Modificacion: 23/09/2014
+	*	Observaciones: Ninguna
+	*/
+	function informes_solicitudes() 
+	{
+		$data['empleado']=$this->transporte_model->consultar_empleados();
+		$data['motorista']=$this->transporte_model->consultar_motoristas2();
+		$data['seccion']=$this->transporte_model->consultar_secciones();
+		pantalla('transporte/informes_solicitudes',$data);
+	}
 }
 ?>
