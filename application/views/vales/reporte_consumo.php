@@ -117,7 +117,7 @@
             data: formu,
             success: function(data){
               console.log(data);
-                grafico(data,"seccion");//contructor del grafico
+               grafico(data,"seccion");//contructor del grafico
                 tabla(data) 
 
                 },

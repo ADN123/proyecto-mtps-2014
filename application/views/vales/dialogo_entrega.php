@@ -114,6 +114,7 @@ echo "
     </fieldset>
 
     </form>
+    <?=llaveform()?>
      <p style='text-align: center;'>
             <input  id='asignar' tabindex='2' name='correlativo'  type="hidden" value="<?php echo $correlativo;?>"/>
             <input  id='asignar' tabindex='2' name='asignar'  type="hidden" value="<?php echo $cantidad;?>"/>

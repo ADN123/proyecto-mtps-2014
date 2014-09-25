@@ -207,8 +207,50 @@
 		</script>';
 		
 		}	
+ function deleteform($item)
+  {
+  	$array=$_SESSION['form'];
+  	$item=$item['keyform'];
 
+  	foreach ($array as $key => $value) {
+  		if($value==$item){
+  			unset($_SESSION['form'][$key]);
+  		}
 
+  	}
+  }
+
+ function verificarform($item)
+  {
+  	$array=$_SESSION['form'];
+  	$item=$item['keyform'];
+  	$ban=false;
+  	foreach ($array as $key => $value) {
+  		if($value==$item){
+  			$ban=true;
+  		}
+
+  	}
+  	return $ban;
+  }
+
+function randomkey($length=16)
+      {
+        $pattern = "1234567890abcdefghijklmnopqrstuvwxyz";
+
+        for($i=0;$i<$length;$i++)
+            $key .= $pattern{rand(0,35)};
+
+       $tem=$_SESSION['form'];
+       $tem[]=$key;
+       $_SESSION['form']=$tem;
+
+       return $key;
+      }  
+
+function llaveform(){
+echo '<input value="'.randomkey().'" type="hidden" name="keyform"/>';
+}
 
 /* End of file tools_helper.php */
 /* Location: ./system/helpers/form_helper.php */

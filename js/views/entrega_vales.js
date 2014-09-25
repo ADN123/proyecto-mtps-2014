@@ -98,7 +98,7 @@ $.ajax({
         dataType:"json",
         success: function(data){
         	console.log(data);
-
+        		$('#restante').val(data.restante);
 	        	if(data.asignado!=null){
 	        		$('#lbl2').html(data.asignado);
 	        		$('#lbl3').html(data.peticion);
