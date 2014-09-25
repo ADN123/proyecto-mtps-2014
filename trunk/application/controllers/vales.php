@@ -29,7 +29,7 @@ class Vales extends CI_Controller
     	if(!$this->session->userdata('id_usuario')){
 			redirect('index.php/sessiones');
 		}
-
+	
 		
     }
 	
@@ -216,29 +216,39 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 		
 			if($_POST['refuerzo']==1){
 				$_POST['asignado']=0;
+				$_POST['restante']=0;
 			}else{			
 				$temp= $this->vales_model->asignaciones($_POST['id_seccion'],$_POST['id_fuente_fondo']);			
 				$_POST['asignado']=$temp[0][cantidad];
 			}
 			$this->db->trans_start();
-				$id_usuario=$this->session->userdata('id_usuario');
-				$id_empleado_solicitante=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
-				$id_requisicion=$this->vales_model->guardar_requisicion($_POST, $id_usuario, $id_empleado_solicitante);
-				$vehiculos=$this->input->post('values');
 
-				if (isset($_POST['values'])) {			
-						
-						for($i=0;$i<count($vehiculos);$i++) {		
-								$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
-					}
-				}
-				
-				$vehiculos=$this->input->post('values2');
+			if(verificarform($_POST)){
 
-				if (isset($_POST['values2'])) {			
-					for($i=0;$i<count($vehiculos);$i++) {
-						$this->vales_model->guardar_req_veh(NULL,$vehiculos[$i], $id_requisicion);
+					$id_usuario=$this->session->userdata('id_usuario');
+					$id_empleado_solicitante=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
+					$id_requisicion=$this->vales_model->guardar_requisicion($_POST, $id_usuario, $id_empleado_solicitante);
+					$vehiculos=$this->input->post('values');
+
+					if (isset($_POST['values'])) {			
+							
+							for($i=0;$i<count($vehiculos);$i++) {		
+									$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
+						}
 					}
+					
+					$vehiculos=$this->input->post('values2');
+
+					if (isset($_POST['values2'])) {			
+						for($i=0;$i<count($vehiculos);$i++) {
+							$this->vales_model->guardar_req_veh(NULL,$vehiculos[$i], $id_requisicion);
+						}
+					}
+
+					deleteform($_POST);
+				}else{
+
+					echo "Ya fue procesado";
 				}
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
@@ -764,81 +774,87 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO); 
 		
 		if($data['id_permiso']!=NULL) {
-			$this->db->trans_start();
-			//$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
-			$id_seccion=$this->input->post('id_seccion');
-			$id_gasolinera=$this->input->post('id_gasolinera');
-			$fec=str_replace("/","-",$this->input->post('fecha_factura'));
-			$fecha_factura=date("Y-m-d", strtotime($fec));
-			$numero_factura=$this->input->post('numero_factura');
-			$valor_super=$this->input->post('valor_super');
-			$valor_regular=$this->input->post('valor_regular');
-			$valor_diesel=$this->input->post('valor_diesel');
-			$id_herramienta= $this->input->post('id_herramienta');
-			$id_vehiculo=$this->input->post('id_vehiculo');
-			$actividad_consumo=$this->input->post('actividad_consumo');
-			$tip_gas_bruto=$this->input->post('tip_gas');
-			$cantidad_consumo=$this->input->post('cantidad_consumo');
-			
-			
-			if(count($tip_gas_bruto)>count($id_vehiculo)) {
-				for($x=1;$x<count($tip_gas_bruto);$x++) {
-					if($x%2!=0)
-						$tip_gas[]=$tip_gas_bruto[$x];
-				}
-			}
-			else
-				$tip_gas=$tip_gas_bruto;
-			
-			/*echo "<br><pre>";
-			print_r($tip_gas);
-			echo "</pre>";*/
-			
-			$formuInfo = array(
-				'fecha_factura'=>$fecha_factura,
-				'numero_factura'=>$numero_factura,
-				'valor_super'=>$valor_super,
-				'valor_regular'=>$valor_regular,
-				'valor_diesel'=>$valor_diesel,
-				'id_usuario_crea'=>$this->session->userdata('id_usuario')
-			);
-		 $id_consumo=$this->vales_model->guardar_factura($formuInfo); //descomentar
-			
-			/*$bandera=$this->vales_model->mezclar_tipo_vehiculo();*/
-			$bandera=ONLY_SOURCE;
-			
-			for($i=0;$i<count($id_vehiculo);$i++){
-				$val=explode("**",$id_vehiculo[$i]);
-				$id_veh=$val[0];
-				$id_requisicion_vale=$val[1];
-				$valor_vale=$val[2];
-				$tipo_vehiculo=$val[3];
 
-				if($tip_gas[$i]!="" && $cantidad_consumo[$i]!="") {
+			$this->db->trans_start();
+
+				if(verificarform($_POST)){
+					//$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+					$id_seccion=$this->input->post('id_seccion');
+					$id_gasolinera=$this->input->post('id_gasolinera');
+					$fec=str_replace("/","-",$this->input->post('fecha_factura'));
+					$fecha_factura=date("Y-m-d", strtotime($fec));
+					$numero_factura=$this->input->post('numero_factura');
+					$valor_super=$this->input->post('valor_super');
+					$valor_regular=$this->input->post('valor_regular');
+					$valor_diesel=$this->input->post('valor_diesel');
+					$id_herramienta= $this->input->post('id_herramienta');
+					$id_vehiculo=$this->input->post('id_vehiculo');
+					$actividad_consumo=$this->input->post('actividad_consumo');
+					$tip_gas_bruto=$this->input->post('tip_gas');
+					$cantidad_consumo=$this->input->post('cantidad_consumo');
+					
+					
+					if(count($tip_gas_bruto)>count($id_vehiculo)) {
+						for($x=1;$x<count($tip_gas_bruto);$x++) {
+							if($x%2!=0)
+								$tip_gas[]=$tip_gas_bruto[$x];
+						}
+					}
+					else
+						$tip_gas=$tip_gas_bruto;
+					
+					/*echo "<br><pre>";
+					print_r($tip_gas);
+					echo "</pre>";*/
+					
 					$formuInfo = array(
-						'id_consumo'=>$id_consumo,
-						'id_vehiculo'=>$id_veh,
-						'actividad_consumo'=>$actividad_consumo[$i],
-						'tip_gas'=>$tip_gas[$i],
-						'id_requisicion_vale'=>$id_requisicion_vale,
-						'cantidad'=>$cantidad_consumo[$i],
-						'id_gasolinera'=>$id_gasolinera,
-						'recibido'=>1,
-						'tipo_vehiculo'=>$tipo_vehiculo,
-						'bandera'=>$bandera,
-						'id_seccion'=>$id_seccion,
-						'id_herramienta'=>$id_herramienta[$i]
+						'fecha_factura'=>$fecha_factura,
+						'numero_factura'=>$numero_factura,
+						'valor_super'=>$valor_super,
+						'valor_regular'=>$valor_regular,
+						'valor_diesel'=>$valor_diesel,
+						'id_usuario_crea'=>$this->session->userdata('id_usuario')
 					);
-					$this->vales_model->buscar_requisicion_vale($formuInfo); // descomentar esto
+				 $id_consumo=$this->vales_model->guardar_factura($formuInfo); //descomentar
+					
+					/*$bandera=$this->vales_model->mezclar_tipo_vehiculo();*/
+					$bandera=ONLY_SOURCE;
+					
+					for($i=0;$i<count($id_vehiculo);$i++){
+						$val=explode("**",$id_vehiculo[$i]);
+						$id_veh=$val[0];
+						$id_requisicion_vale=$val[1];
+						$valor_vale=$val[2];
+						$tipo_vehiculo=$val[3];
+
+						if($tip_gas[$i]!="" && $cantidad_consumo[$i]!="") {
+							$formuInfo = array(
+								'id_consumo'=>$id_consumo,
+								'id_vehiculo'=>$id_veh,
+								'actividad_consumo'=>$actividad_consumo[$i],
+								'tip_gas'=>$tip_gas[$i],
+								'id_requisicion_vale'=>$id_requisicion_vale,
+								'cantidad'=>$cantidad_consumo[$i],
+								'id_gasolinera'=>$id_gasolinera,
+								'recibido'=>1,
+								'tipo_vehiculo'=>$tipo_vehiculo,
+								'bandera'=>$bandera,
+								'id_seccion'=>$id_seccion,
+								'id_herramienta'=>$id_herramienta[$i]
+							);
+						$this->vales_model->buscar_requisicion_vale($formuInfo); // descomentar esto
+						}
+					}
+					deleteform($_POST);
+				}else{
+
+					echo "Ya fue procesado";
 				}
-			}
+
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a('index.php/vales/ingreso_consumo/'.$tr);	
+			ir_a('index.php/vales/ingreso_consumo/'.$tr);
 
-			/*echo "<pre>";
-			print_r($_POST);
-			echo "</pre>";*/
 		}
 		else {
 			echo 'No tiene permisos para acceder';
@@ -953,13 +969,19 @@ function entrega($estado_transaccion=NULL)
 		if($data['id_permiso']!=NULL) {
 			$this->db->trans_start();
 			
-			$this->vales_model->guardar_entrega($_POST);
+			if(verificarform($_POST)){
 
 
-				$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
-				$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);							
+					$this->vales_model->guardar_entrega($_POST);
+					$req=(array)$this->vales_model->info_requisicion($_POST['ids']);
+					$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);							
+					$this->db->trans_complete();
+					deleteform($_POST);
+				}else{
 
-			$this->db->trans_complete();
+					echo "Ya fue procesado";
+				}
+
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/entrega/'.$tr);		
 		}
@@ -1912,6 +1934,24 @@ function asignacion_vehiculo()
 		}
 
 	}
+
+
+function form()
+{
+
+$key=randomkey();
+print_r($_SESSION['form']);	
+
+}
+
+function proces($key='')
+{	$aux['keyform']=$key;
+	deleteform($aux);	
+	print_r($_SESSION['form']);	
+}
+
+
+
 }
 
 ?>

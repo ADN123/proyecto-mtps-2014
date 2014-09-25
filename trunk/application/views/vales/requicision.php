@@ -26,6 +26,7 @@ var ban= $(k).prop('checked');
 }
 </style>
 <form name="form_mision" method="post" id="form_mision" action="<?php echo base_url()?>index.php/vales/guardar_requisicion">
+    <?=llaveform()?>
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -131,6 +132,7 @@ var ban= $(k).prop('checked');
 
             <br>
             <p>
+                <input type="hidden" name="restante" id="restante">
                 <label for="lbl" id="lrefuezo" >Refuerzo: </label>
                 <input  id="refuerzo"  name="refuerzo" type="hidden" />
                 <strong id="lbl"></strong> 

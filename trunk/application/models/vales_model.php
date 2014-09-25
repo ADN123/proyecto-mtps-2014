@@ -227,8 +227,8 @@ class Vales_model extends CI_Model {
 	{ 
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_requisicion 
-		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion, refuerzo, mes, asignado) 
-VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()), $refuerzo, $mes, $asignado)";
+		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion, refuerzo, mes, asignado, restante_anterior) 
+VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()), $refuerzo, $mes, $asignado,$restante)";
 		
 
 		$this->db->query($sentencia);
@@ -948,7 +948,7 @@ por lo tanto la logica de niveles se manejara de forma diferente
 
 		$query=$this->db->query(" SET lc_time_names = 'es_ES'");		
 
-		$q="SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -31 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -15 DAY),'%Y%m') mes 
+		$q="SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -20 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -20 DAY),'%Y%m') mes 
 				UNION
 			SELECT DATE_FORMAT(CURDATE(),'%M') mes_nombre, DATE_FORMAT(CURDATE(),'%Y%m') mes
 			UNION
@@ -1171,6 +1171,7 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 						GROUP BY ".$grup."
 						ORDER BY c.fecha_factura";
 
+
 			$query=$this->db->query($q);
 
 			return $query->result();
@@ -1311,13 +1312,13 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 
 function detalleR($id_requisicion=NULL)
 	{
-		$q="SELECT
+		$q="SELECT 
 				c.id_consumo,
 				numero_factura AS factura,
-				DATE_FORMAT(fecha_factura,'%d-%m-%Y') AS fecha
+				DATE_FORMAT(fecha_factura,'%d-%m-%Y') AS fecha,
 				cv.inicial AS del,
 				cv.inicial + SUM(cv.cantidad_vales) - 1 AS al,
-				SUM(cv.cantidad_vales) as cantidad
+				SUM(cv.cantidad_vales) as cantidad 
 			FROM
 				tcm_consumo c
 			INNER JOIN tcm_consumo_vehiculo cv ON cv.id_consumo = c.id_consumo
