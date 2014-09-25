@@ -948,7 +948,7 @@ por lo tanto la logica de niveles se manejara de forma diferente
 
 		$query=$this->db->query(" SET lc_time_names = 'es_ES'");		
 
-		$q="SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -20 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -20 DAY),'%Y%m') mes 
+		$q="SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -40 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -20 DAY),'%Y%m') mes 
 				UNION
 			SELECT DATE_FORMAT(CURDATE(),'%M') mes_nombre, DATE_FORMAT(CURDATE(),'%Y%m') mes
 			UNION
