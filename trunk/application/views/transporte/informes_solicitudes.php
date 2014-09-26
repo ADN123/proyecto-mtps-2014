@@ -1,14 +1,15 @@
-<form name="form_informes" method="post" action="<?php echo base_url()?>index.php/transporte/filtrar">
+<section>
+    <h2>Generar Informes de Solicitudes de Transporte</h2>
+</section>
+
+<form name="form_informes" id="form_informes" method="post" action="<?php echo base_url()?>index.php/transporte/informes_solicitudes_pdf">
 <table align="center" width="1080px">
-	<tr>
-    	<td colspan="2"><h2>Generar Informes de Solicitudes de Transporte</h2></td>
-    </tr>
     <tr>
-    	<td>
+    	<td width="350px">
             <p>
-                <label>Empleado: </label>
-                <select class="select" name="id_empleado" style="width:350px">
-                <option value="0">*</option>
+                <label style="width:120px">Solicitante: </label>
+                <select class="select" name="id_empleado" style="width:280px">
+                <option value="0">[Todo]</option>
                 <?php
                 foreach($empleado as $emp)
 				{
@@ -18,9 +19,21 @@
                 </select>
             </p>
             <p>
-                <label>Sección o Departamento: </label>
+                <label style="width:120px">Usuario Autorizador: </label>
+                <select class="select" name="id_usuario" style="width:280px">
+                <option value="0">[Todo]</option>
+                <?php
+                foreach($usuario as $user)
+				{
+					echo "<option value='".$user->id_usuario."'>".ucwords($user->usuario)."</option>";
+				}
+				?>
+                </select>
+            </p>
+            <p>
+                <label style="width:120px">Oficina o Sección: </label>
                 <select class="select" name="id_seccion" style="width:350px">
-                <option value="-1">*</option>
+                <option value="-1">[Todo]</option>
                 <option value="0">Oficina Central (San Salvador)</option>
 				<?php
                 foreach($seccion as $sec)
@@ -31,26 +44,9 @@
                 </select>
             </p>
             <p>
-                <label>Fecha Misión (incial): </label>
-                <input type="text" name="fecha_inicial" id="fecha_inicial">
-            </p>
-            <p>
-            	<label>Fecha Misión (final): </label>
-                <input type="text" name="fecha_final" id="fecha_final">
-            </p>
-        </td>
-        <td>
-        	<p>
-            	<label>Hora Salida: </label>
-                <input type="text" name="hora_inicial" id="hora_inicial">
-            </p>
-            <p>
-            	<label>Hora Entrada: </label>
-                <input type="text" name="hora_final" id="hora_final">
-            </p>
-            <p>
-            	<label>Estado Solicitud: </label>
-                <select class="select" name="estado_solicitud" style="width:250px">
+            	<label style="width:120px">Estado de Solicitud: </label>
+                <select class="select" name="estado_solicitud" style="width:230px">
+                <option value="-1">[Todo]</option>
                 <option value="0">Denegada</option>
                 <option value="1">Creada</option>
                 <option value="2">Aprobada</option>
@@ -60,9 +56,10 @@
                 </select>
             </p>
             <p>
-            	<label>Motorista: </label>
-                <select class="select" name="motorista" style="width:350px">
-                <option value="0">*</option>
+            	<label style="width:120px">Motorista: </label>
+                <select class="select" name="motorista" style="width:280px">
+                <option value="0">[Todo]</option>
+                <option value="-1">[Sin Motorista]</option>
                 <?php
                  foreach($empleado as $emp) //////////////todos porque en misión cualquiera puede ser motorista
 				{
@@ -76,11 +73,100 @@
 				?>
                 </select>
             </p>
+            <p>
+            	<label style="width:120px">Placa de Vehículo: </label>
+                <select class="select" name="id_vehiculo" style="width:120px">
+                <option value="0">[Todo]</option>
+                <?php
+                 foreach($vehiculo as $v)
+				{
+					echo "<option value='".$v->id."'>".$v->placa."</option>";
+				}
+				?>
+                </select>
+            </p>
+        </td>
+        <td width="285px">
+        	<p>
+                <label style="width:85px">Fecha Inicial: </label>
+                <input type="text" name="fecha_inicial" id="fecha_inicial">
+            </p>
+            <p>
+            	<label style="width:85px">Fecha Final: </label>
+                <input type="text" name="fecha_final" id="fecha_final">
+            </p>
+        	<p>
+            	<label style="width:85px">Hora Inicial: </label>
+                <input type="text" name="hora_inicial" id="hora_inicial">
+            </p>
+            <p>
+            	<label style="width:85px">Hora Final: </label>
+                <input type="text" name="hora_final" id="hora_final">
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <p align="center">
+                <button type="button" id="filtrar" class="button tam-1" >Filtrar</button>                    
+                <button id="imp" class="button tam-1" >Imprimir</button>
+            </p>
         </td>
     </tr>
 </table>
 </form>
+<br>
+<table cellspacing='0' align='center' class='table_design' id="datos" >
+</table>
+
 <script language="javascript">
+
+$('#filtrar').click(function(){             
+	var form = $('#form_informes').serializeArray();
+	//console.log(form); 
+	reporte(form);
+});
+
+function reporte(form)
+{  
+	$.ajax({
+		async:  true, 
+		url:    base_url()+"index.php/transporte/informes_json",
+		dataType:"json",
+		type: "POST",
+		data: formu,
+		success: function(data)
+		{
+			console.log(data);
+			tabla(data) 
+		},
+		error:function(data)
+		{
+			//alertify.alert('Error al cargar datos');
+			console.log(data);
+		}
+	});          
+}
+
+setTimeout ("reporte();", 2000);
+
+function tabla (json)
+{
+	$('#datos').html("");
+	var fila;
+	for (i=0;i<json.length;i++)
+	{
+		fila= "<tr>" +
+		"<td align='center'>" + json[i].row_number + "</td>" +
+		"<td align='center'>" + json[i].seccion + "</td>" +
+		"<td align='center'>" + json[i].asignado + "</td>" +
+		"<td align='center'>" + json[i].consumido + "</td>" +
+		"<td align='center'>$" + n.toFixed(2) + "</td>" +
+		"</tr>";    
+		$('#datos').append(fila)    
+	}  
+}
+
 $(document).ready(function(){
 	
 	function startChange()
@@ -142,21 +228,16 @@ $(document).ready(function(){
 	start.max(end.value());
 	end.min(start.value());
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	var tiempo = new Date();
+	newfec=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours(), tiempo.getMinutes());
+	
 	function startChange2() {
-		var startTime = start.value();
+		var startTime = start2.value();
 		
 		var hor_rea = new Date(startTime);
-		fec_min=new Date(tiempo.getFullYear(), tiempo.getMonth(), tiempo.getDate(), tiempo.getHours()+24, tiempo.getMinutes());
-		var fec = fec_soli.value();
-		fec = new Date(fec);
-		fec_rea=new Date(fec.getFullYear(), fec.getMonth(), fec.getDate(), hor_rea.getHours(), hor_rea.getMinutes());
 		
-		if(newfec>=fec_rea) {
-				start.min(newfec);
-		}
-		else {
-			start.min("5:00 AM");
-		}
 		startTime = start2.value();
 		if (startTime!="" &&  this.options.interval) {
 			startTime = new Date(startTime);
@@ -165,14 +246,14 @@ $(document).ready(function(){
 			end2.value(startTime);
 		}
 	}
-	var start2 = $("hora_inicial").kendoTimePicker({
+	var start2 = $("#hora_inicial").kendoTimePicker({
 		change: startChange2
 	}).data("kendoTimePicker");
-	
-	var end2 = $("hora_final").kendoTimePicker().data("kendoTimePicker");
-	start2.min(newfec);
+	var end2 = $("#hora_final").kendoTimePicker().data("kendoTimePicker");
+	//start2.min(newfec);
 	start2.max("5:30 PM");
 	end2.min("5:30 AM");
 	end2.max("6:00 PM");
+	
 });
 </script>

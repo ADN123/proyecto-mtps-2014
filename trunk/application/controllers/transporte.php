@@ -1091,7 +1091,7 @@ class Transporte extends CI_Controller
 	*	Objetivo: Genera la vista de informes de solicitudes
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Ultima Modificacion: 23/09/2014
+	*	Ultima Modificacion: 25/09/2014
 	*	Observaciones: Ninguna
 	*/
 	function informes_solicitudes() 
@@ -1099,7 +1099,79 @@ class Transporte extends CI_Controller
 		$data['empleado']=$this->transporte_model->consultar_empleados();
 		$data['motorista']=$this->transporte_model->consultar_motoristas2();
 		$data['seccion']=$this->transporte_model->consultar_secciones();
+		$data['vehiculo']=$this->transporte_model->consultar_vehiculos();
+		$data['usuario']=$this->transporte_model->usuario_sitcom();
 		pantalla('transporte/informes_solicitudes',$data);
 	}
+	
+	/*
+	*	Nombre: informes_json
+	*	Objetivo: filtra los datos de informes de solicitudes para generar la tabla
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Ultima Modificacion: 26/09/2014
+	*	Observaciones: Ninguna
+	*/
+	function informes_json() 
+	{
+		$bnd=true;
+		$id_empleado_solicitante=$this->input->post('id_empleado');
+		$id_usuario=$this->input->post('id_usuario');
+		$id_seccion=$this->input->post('id_seccion');
+		$estado_solicitud=$this->input->post('estado_solicitud');
+		$motorista=$this->input->post('motorista');
+		$id_vehiculo=$this->input->post('id_vehiculo');
+		
+		if($_POST['fecha_final']!="" && $_POST['fecha_inicial']!="")
+		{
+			$fecha_inicial=date("Y-m-d", strtotime($this->input->post('fecha_inicial')));
+			$fecha_final=date("Y-m-d", strtotime($this->input->post('fecha_final')));
+		}
+		else
+		{
+			$fecha_final=NULL;
+			$fecha_inicial=NULL;
+		}
+		
+		if($_POST['hora_final']!="" && $_POST['hora_inicial']!="")
+		{
+			$hora_inicial=date("H:i:s", strtotime($this->input->post('hora_inicial')));
+			$hora_final=date("H:i:s", strtotime($this->input->post('hora_final')));			
+		}
+		else
+		{
+			$hora_final=NULL;
+			$hora_inicial=NULL;
+		}
+		
+		/*if(($estado_solicitud==1 || $estado_solicitud==2 || $estado_solicitud==3) && ($fecha_inicial!=NULL && $fecha_final!=NULL) && ($hora_inicial!=NULL && $hora_final!=NULL))
+		{
+			$fecha1=date("Y-m-d H:i:s", strtotime($fecha_incial." ".$hora_inicial));
+			$fecha2=date("Y-m-d H:i:s", strtotime($fecha_final." ".$hora_final));
+		}
+		elseif($fecha_inicial!=NULL && $fecha_final!=NULL && $hora_inicial!=NULL && $hora_final!=NULL)
+		{
+			$fecha1=$fecha_incial;
+			$fecha2=date("Y-m-d H:i:s", strtotime($fecha_final." ".$hora_final));
+		}*/
+		$data=$this->transporte_model->filtro_informes($id_empleado_solicitante,$id_usuario,$id_seccion,$estado_solicitud,$motorista,$id_vehiculo,$fecha_inicial,$fecha_final,$hora_inicial,$hora_final);
+		pantalla('transporte/informes_solicitudes_pdf',$data);
+	}
+	
+	/*
+	*	Nombre: filtrar
+	*	Objetivo: filtra los datos de informes de solicitudes para generar el pdf
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Ultima Modificacion: 25/09/2014
+	*	Observaciones: Ninguna
+	*/
+	function filtrar($_POST) 
+	{
+		$data['datos']=$this->transporte_model->filtro_informes($_POST);
+		pantalla('transporte/informes_solicitudes_pdf',$data);
+	}
+	
+	
 }
 ?>
