@@ -41,6 +41,24 @@ class Transporte_model extends CI_Model {
 		}
 	}
 	
+	////////////////////////////////FUNCION QUE CARGA lOS USUARIOS DE SITCOM//////////////////////
+	
+	function usuario_sitcom()
+	{
+		$query=$this->db->query("
+			SELECT u.id_usuario, LOWER(u.nombre_completo) AS usuario
+			FROM org_usuario u
+			INNER JOIN org_usuario_rol AS ur ON (ur.id_usuario=u.id_usuario)
+			INNER JOIN org_rol_modulo_permiso AS rmp ON (rmp.id_rol=ur.id_rol)
+			INNER JOIN org_modulo AS m ON (m.id_modulo=rmp.id_modulo)
+			WHERE m.id_sistema=5
+			GROUP BY u.nombre_completo;
+		");
+		return $query->result();		
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////	
+	
 	function consultar_empleados($nr=0, $id_solicitud=NULL) 
 	{
 		$where=" ";
@@ -1098,6 +1116,23 @@ function solicitudes_por_asignar_depto(){
 			return 0;
 		}*/
 	}
+	
+	///////////////////////////////FUNCIÓN QUE FIlTRA lOS INFORMES DE SOlICITUDES/////////////////////
+	
+	function filtro_informes($id_solicitante,$id_user,$seccion,$estado,$id_mot,$placa,$f1,$f2,$h1,$h2)
+	{
+		$select="";
+		$where="";
+		
+		$query="
+		select id_solicitud_transporte ".$select."
+		from tcm_solicitud_transporte as sol
+		inner join tcm_asignacion_sol_veh_mot as asv on (sol.id_solicitud_transporte=asv.id_solicitud_transporte)
+		inner join org_usuario
+		";
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	///////////////////////////FUNCIÓN PARA VALIDAR LA FECHA Y LA HORA DE UNA SOLICITUD//////////
 	
