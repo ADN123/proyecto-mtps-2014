@@ -1124,10 +1124,16 @@ function solicitudes_por_asignar_depto(){
 		$select="";
 		$where="";
 		
+		if($id_solicitante==0)
+		{
+			$select=$select.", e.";
+		}
+		
 		$query="
-		select id_solicitud_transporte ".$select."
+		select sol.id_solicitud_transporte ".$select."
 		from tcm_solicitud_transporte as sol
 		inner join tcm_asignacion_sol_veh_mot as asv on (sol.id_solicitud_transporte=asv.id_solicitud_transporte)
+		inner join tcm_empleado as e on (e.id_empleado=sol.id_empleado_solicitante)
 		inner join org_usuario
 		";
 	}
