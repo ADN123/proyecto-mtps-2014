@@ -101,7 +101,8 @@ $.ajax({
         		$('#restante').val(data.restante);
 	        	if(data.asignado!=null){
 	        		$('#lbl2').html(data.asignado);
-	        		$('#lbl3').html(data.peticion);
+	        		$('#lbl3').html(data.restante);
+
 	        	}else{
 	        		$('#lbl2').html("(No tiene ninguna asignación)");
 	        		$('#lbl3').html("(No tiene ninguna asignación)");

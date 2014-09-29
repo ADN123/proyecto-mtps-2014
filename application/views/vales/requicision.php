@@ -1,8 +1,14 @@
 <script>
+
+
 	var permiso=<?php echo $id_permiso;?>;
 	estado_transaccion='<?php echo $estado_transaccion;?>';
 	estado_correcto='La requisición se ha guardado correctamente';
 	estado_incorrecto='Error al intentar guardar la requisición: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
+
+<?php if($accion==0) {  ?>
+    estado_correcto='La requisición ya fue procesada';
+<?php } ?>
 
 function chekear(k, clase){
 var obj = $('.'+clase);
@@ -92,7 +98,7 @@ var ban= $(k).prop('checked');
                     }
                 ?>
                 <label for="cantidad_solicitada" id="lcantidad_solicitada">Cantidad Solicitada </label>
-                <input style="width:100px;" type="text" tabindex="1" id="cantidad_solicitada" name="cantidad_solicitada" readonly/>
+                <input style="width:100px;" type="text" tabindex="1" id="cantidad_solicitada" name="cantidad_solicitada"/>
 
                
                 </p>
@@ -138,6 +144,8 @@ var ban= $(k).prop('checked');
                 <strong id="lbl"></strong> 
                 <label for="lbl2" id="lrefuezo" >Cuota Asignada: </label>
                 <strong id="lbl2"></strong> 
+                <label for="lbl3" id="lrestante" >Restantes: </label>
+                <strong id="lbl3"></strong> 
 
             </p>
       	</div>

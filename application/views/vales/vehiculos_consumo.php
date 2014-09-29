@@ -53,11 +53,12 @@
 				$tooltip= $val['marca']." ".$val['modelo'].$val['descripcion']."(".$val['nombre_fuente_fondo'].")";
 
 				$nombre=($val['id_vehiculo']!=0)?$val['placa']:$herramienta;
+
 		?>
 
                 <tr> 
                     <td class="veh" align="left" title=" <?php echo $tooltip   ?>">
-						<?php echo $nombre ?>
+						<?php echo $nombre.'  '.$val['combustible'];?>
                         <?php 
 							if(count($cont_valor_nominal)==1)
 								echo '

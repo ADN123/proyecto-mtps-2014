@@ -1,5 +1,5 @@
     <form id='form' action="<?php echo base_url()?>index.php/vales/guardar_entrega" method='post'>
-    <input type='hidden' id='resp' name='resp' />
+        <?=llaveform()?>
     <input type='hidden' name='ids' value="<?php echo $id?>" />
 
     <fieldset>      
@@ -112,16 +112,17 @@ echo "
         </table>
     </div>
     </fieldset>
+    <input type='hidden' name='asignar' value="<?php echo $cantidad_entregado; ?>" />
+     <input type='hidden' name='correlativo' value="<?php echo $correlativo; ?>" />
 
     </form>
-    <?=llaveform()?>
      <p style='text-align: center;'>
-            <input  id='asignar' tabindex='2' name='correlativo'  type="hidden" value="<?php echo $correlativo;?>"/>
-            <input  id='asignar' tabindex='2' name='asignar'  type="hidden" value="<?php echo $cantidad;?>"/>
+<!--            <input  id='asignar' tabindex='2' name='correlativo'  type="hidden" value="<?php echo $correlativo;?>"/>
+            <input  id='asignar' tabindex='2' name='asignar'  type="hidden" value="<?php echo $cantidad;?>"/> -->
                 <button class="button tam-1 boton_validador"  onclick="Enviar(2)">Entregar</button>       
     </p>
-    <input type='hidden' name='asignar' value="<?php echo $cantidad_entregado; ?>" />
-        <input type='hidden' name='correlativo' value="<?php echo $correlativo; ?>" />
+
+
 
 <script type="text/javascript">
 $( "#boton1" ).click(function() {
