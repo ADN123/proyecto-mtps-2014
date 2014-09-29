@@ -60,6 +60,7 @@ class Vales extends CI_Controller
 			}
 			$data['gasolineras']=$this->vales_model->consultar_gasolineras();
 			$data['estado_transaccion']=$estado_transaccion;
+			$data['accion']=$insertado;
 			$data['fuente_fondo']=$this->transporte_model->consultar_fuente_fondo();
 			pantalla("vales/ingreso",$data);	
 		}
@@ -93,7 +94,6 @@ class Vales extends CI_Controller
 			$id_usuario_crea=$this->session->userdata('id_usuario'.'/'.$insertado);
 			$fecha_creacion=date('Y-m-d H:i:s');
 		
-
 			$formuInfo = array(
 				'inicial'=>$inicial,
 				'final'=>$final,
@@ -111,9 +111,7 @@ class Vales extends CI_Controller
 					$this->vales_model->guardar_vales($formuInfo);
 					$insertado=1;
 
-			}					
-					
-			
+			}			
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/ingreso_vales/'.$tr.'/'.$insertado);
@@ -131,7 +129,7 @@ class Vales extends CI_Controller
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Ninguna.
 	*/
-	function ingreso_requisicion($estado_transaccion=NULL)
+	function ingreso_requisicion($estado_transaccion=NULL, $accion=NULL)
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
 		$url='vales/requicision';
@@ -170,6 +168,7 @@ class Vales extends CI_Controller
 					break;
 			}
 			$data['estado_transaccion']=$estado_transaccion;
+			$data['accion']=$accion;
 		//	echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
 			//print_r($data['oficinas']);  
 			pantalla($url,$data);	
@@ -244,15 +243,17 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 							$this->vales_model->guardar_req_veh(NULL,$vehiculos[$i], $id_requisicion);
 						}
 					}
+					$proce=1;
 
 					deleteform($_POST);
 				}else{
 
-					echo "Ya fue procesado";
+					$proce=0;
+
 				}
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a('index.php/vales/ingreso_requisicion/'.$tr);		
+			ir_a('index.php/vales/ingreso_requisicion/'.$tr.'/'.$proce);		
 		}else{
 			echo 'No tiene permisos para acceder ';	
 		}
@@ -753,8 +754,12 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 					}
 					break;
 			}
+			echo "<pre>";
+			print_r($data);
+			echo "</pre>";
 			*/
 			$this->load->view("vales/vehiculos_consumo",$data);	
+
 		}
 		else {
 			echo 'No tiene permisos para acceder';
@@ -907,7 +912,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*/
 
 
-function entrega($estado_transaccion=NULL)
+function entrega($estado_transaccion=NULL, $accion=NULL)
 {
 	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ENTREGAR); 
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
@@ -916,6 +921,7 @@ function entrega($estado_transaccion=NULL)
 		
 		$data['datos']=$this->vales_model->consultar_requisiciones(NULL,2);											
 		$data['estado_transaccion']=$estado_transaccion;
+		$data['accion']=$accion;
 			pantalla("vales/entrega",$data);	
 		}
 		else {
@@ -977,13 +983,14 @@ function entrega($estado_transaccion=NULL)
 					$val=$this->vales_model->buscar_vales($_POST['ids'],$req[0]->id_fuente_fondo,$_POST['asignar']);							
 					$this->db->trans_complete();
 					deleteform($_POST);
+					$proce=1;
 				}else{
-
-					echo "Ya fue procesado";
+					$proce=0;
+					
 				}
 
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a('index.php/vales/entrega/'.$tr);		
+			ir_a('index.php/vales/entrega/'.$tr.'/'.$proce);		
 		}
 		else{
 			echo 'No tiene permisos para acceder';
@@ -1935,11 +1942,22 @@ function asignacion_vehiculo()
 
 	}
 
-
+//////////////////////////Funciones de testeo
 function form()
 {
 
 $key=randomkey();
+print_r($_SESSION['form']);	
+}
+
+function reset_form()
+{
+print_r($_SESSION['form']);	
+unset($_SESSION['form']);
+}
+
+function mostrar_form()
+{
 print_r($_SESSION['form']);	
 
 }

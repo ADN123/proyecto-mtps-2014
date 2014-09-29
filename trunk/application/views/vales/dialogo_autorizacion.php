@@ -74,7 +74,7 @@
 
                     if($refuerzo==1){?>
                             
-                                <input class="tam-1" id='asignar' tabindex='2' name='asignar' type="text"/>
+                                <input class="tam-1" id='asignar' tabindex='2' name='asignar' type="text" value="<?php echo $cantidad; ?>"/>
                                 
                             <?php } else {?>
                                 <input  id='asignar' tabindex='2' name='asignar'  type="hidden" value="<?php echo $cantidad;?>"/>
@@ -88,9 +88,15 @@
                 echo "<strong>En estos momentos no hay vales disponibles</strong>";
             }
         ?>
+
+    
+
+    <p>
         <label for="observacion" id="lobservacion" class="label_textarea">Observaciones</label>
         <textarea class='tam-4' id='observacion' tabindex='2' name='observacion'></textarea>
 
+    </p>
+    
     </fieldset>
     <p style='text-align: center;'>
         <?php 

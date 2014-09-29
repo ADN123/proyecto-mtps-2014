@@ -1,9 +1,13 @@
 <script>
 	estado_transaccion='<?php echo $estado_transaccion?>';
 	<?php if($accion!="") {?>
-	estado_correcto='La solicitud se ha <?php echo $accion?>do exitosamente.';
+	estado_correcto='La transación se ha realizado exitosamente.';
 	estado_incorrecto='Error al intentar <?php echo $accion?>r la solicitud: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
 	<?php }?>
+
+    <?php if($accion==0) {  ?>
+    estado_correcto='La entrega de vales para la Requisicion ya fue procesada';
+    <?php } ?>
 </script>
 <section>
     <h2>Entrega de Vales de Combustible</h2>
@@ -53,7 +57,11 @@
 	{
         alertify.confirm("¿Está seguro de procesar la entrega de vales ? Este cambio no lo podrá revertir.", function (e) {
                 if (e) {
-                    window.location.href = base_url()+'index.php/vales/guardar_entrega';
+
+                    $('form').submit();
+                        //return false;
+                    //window.location.href = base_url()+'index.php/vales/guardar_entrega';
+
                 } else {
                     return false;
                 }
