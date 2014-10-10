@@ -115,12 +115,6 @@ $.ajax({
 
 				///Lo maximo que se puede pedir es la misma cantidad asignada
 
-				$("#cantidad_solicitada").destruirValidacion();					
-			    $('#cantidad_solicitada').validacion({    
-						req: true,
-						numMin: 0,
-						numMax: data.asignado +1
-						});
 		    	$('#justificacion').val("");
 
 			    }else{
@@ -134,6 +128,12 @@ $.ajax({
 			   
 
 			    }
+			   	$("#cantidad_solicitada").destruirValidacion();					
+			    $('#cantidad_solicitada').validacion({    
+						req: true,
+						numMin: 0,
+						numMax: Number(data.asignado) +1
+						});
 
 
             },

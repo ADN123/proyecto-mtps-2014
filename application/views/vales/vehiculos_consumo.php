@@ -71,7 +71,7 @@
                     <td><input class="actividad" type="text" name="actividad_consumo[]" id="actividad_consumo<?php echo $i ?>" style="width:90%"/></td>
                     <td>
                     	<select name="tip_gas[]" id="tip_gas<?php echo $i?>" class="tipo_gas">
-                       	<?php
+                       	<?php /* //desactivador temporalmente hasta que actualicen la base de datos
 	                    		if ($val['combustible']=="Gasolina") {
 	                    				echo
 	                    				'<option value="1">Regular</option>
@@ -86,7 +86,10 @@
 	                    						 <option value="3">Diesel</option>';
 	                       				}
 	
-	                    			}
+	                    			}*/
+	                    					echo '<option value="1">Regular</option>
+	                    						 <option value="2">Super</option>
+	                    						 <option value="3">Diesel</option>';
 	                    		?>
                         </select>
                     </td>
