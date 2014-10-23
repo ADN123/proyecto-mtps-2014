@@ -642,11 +642,6 @@ class Transporte extends CI_Controller
 	*/
 
 
-	function prueba($value='')
-	{
-
-		print_r(($value));
-	}
 	function guardar_solicitud()
 	{	
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),65); /*Verificacion de permiso para crear solicitudes*/
@@ -1172,6 +1167,7 @@ class Transporte extends CI_Controller
 		pantalla('transporte/informes_solicitudes_pdf',$data);
 	}
 	
+		
 	
 }
 ?>
