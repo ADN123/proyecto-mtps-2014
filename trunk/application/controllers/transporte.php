@@ -1167,7 +1167,27 @@ class Transporte extends CI_Controller
 		pantalla('transporte/informes_solicitudes_pdf',$data);
 	}
 	
-		
+function prueba($id) 
+	{
+
+
+			$data['destinos']=$this->transporte_model->destinos($id);
+			
+			$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+			$stylesheet = file_get_contents('css/pdf/solicitud.css'); /*Selecionamos la hoja de estilo del pdf*/
+			$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
+			$data['nombre'] = "Renatto NL";
+			$html = $this->load->view('prueba.php', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+			$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
+			if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
+				$this->mpdf->AddPage();
+				$html = $this->load->view('prueba.php', $data, true);
+				$this->mpdf->WriteHTML($html,2);
+			}
+			$this->mpdf->Output(); /*Salida del pdf*/
+
+	}
+			
 	
 }
 ?>

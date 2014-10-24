@@ -1,85 +1,86 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Documento sin título</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
-				<?php
-                    foreach($menus as $menu) {
-						if($menu['nombre_padre']=="")
-							$nombre_menu="Menú Principal";
-						else
-							$nombre_menu=$menu['nombre_padre'];
-						if($menu['id_padre']=="")
-							$id_padre="1";
-						else
-							$id_padre=$menu['id_padre'];
-							
-						$id=explode(",",$menu['id_modulo']);
-						$modulo=explode(",",$menu['nombre_modulo']);
-						$url=explode(",",$menu['url_modulo']);
-						$img=explode(",",$menu['img_modulo']);
-				?>
-                		<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s<?php echo $id_padre?>">
-                        <h3><br/><?php echo $nombre_menu?></h3>
-              	<?php
-						for($x=0;$x<count($modulo);$x++) {
-							if($url[$x]=="NULL")
-								$tipo='href="#" class="padre" id="verMenu'.$id[$x].'"';
-							else
-								$tipo='href="'.base_url().'index.php/'.$url[$x].'"';
-							if(isset($img[$x]) && $img[$x]!="")
-								$ima='<img src="'.base_url().'img/'.$img[$x].'">';
-							else
-								$ima='';
-				?>
-                			<a <?php echo $tipo?> ><?php echo $ima." ".$modulo[$x]?></a>
-				<?php		
-						}
-                ?>        
-                        </nav>
-                <?php	
-                    }
-                ?>
-         	<script>
-				<?php
-					$var="";
-					$fun="";
-					$call="";
-                    foreach($menus as $menu) {
-						if($menu['id_padre']=="")
-							$id_padre="1";
-						else
-							$id_padre=$menu['id_padre'];
-							
-						$id=explode(",",$menu['id_modulo']);
-						$url=explode(",",$menu['url_modulo']);
-						
-						$var.="var menu".$id_padre." = document.getElementById( 'cbp-spmenu-s".$id_padre."' ); ";
-						$call.="classie.remove( menu11, 'cbp-spmenu-open' );";
-						for($x=0;$x<count($id);$x++) {
-							if($url[$x]=="NULL") {
-								$fun.="$('#verMenu".$id[$x]."').click (function() {
-									classie.toggle( this, 'active' );
-									classie.toggle( main, 'cbp-spmenu-toright' );
-									classie.toggle( menu11, 'cbp-spmenu-open' );
-								});";
-							}
-						}
-	
-                    }
-                ?>
-				<?php echo $var?>
-				<?php echo $fun?>
-				function cerrar() {
-					classie.remove( menu1, 'active' );
-					classie.remove( main, 'cbp-spmenu-push-toright' );
-					classie.remove( document.body, 'oscuro' );
-					classie.remove( menu1, 'cbp-spmenu-open' );
-					<?php echo $call?>
-					$( window  ).scroll();
-				}
-			</script>
+    <table align="center" border="0" cellspacing="0" style="width:100%;">
+        <tr>
+            <td align="left" id="imagen">
+                <img src="img/mtps.jpg" />
+
+            </td>
+            <td align="right">
+                <h3>SOLICITUD DE USO DE VEHICULO</h3>
+                <h6>ID solicitud: <strong><?php echo $info_solicitud['id_solicitud_transporte']; ?></strong> </h6>
+            </td>
+        </tr>
+        <tr>
+        	<td colspan="2" align="center">
+            	<strong id="titulo">DATOS DEL SOLICITANTE</strong>
+            </td>
+        </tr>
+  	</table>
+
+    
+        <table align="center" border="0" cellspacing="0" style="width:100%;">
+        <tr>
+            <td colspan="4" align="center">
+                <strong id="titulo">MINISTERIO DE TRABAJO Y PREVISION SOCIAL</strong>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" align="center">
+                <strong style="font-size: 10px;">DETALLE DE MISIONES  A EFECTUAR EN ESTA FECHA : <?php echo $info_solicitud['fecha_mision'] ?> </strong>
+            </td>
+        </tr>
+    </table>
+    <table align="center" border="1" cellspacing="0" style="width:100%;">
+        <tr>
+            <td style="font-size: 12px;" align="center"><strong>DIRECCION</strong></td>
+            <td style="font-size: 12px;" align="center"><strong>DEPARTAMENTO</strong></td>
+            <td style="font-size: 12px;" align="center"><strong>EMPRESA</strong></td>
+            <td style="font-size: 12px;" align="center"><strong>MISION ENCOMENDADA</strong></td>            
+        </tr>
+        <?php 
+            if(count($destinos)>1) {
+                foreach($destinos as $val) {
+        ?>
+                    <tr>
+                        <td style="font-size: 12px;"><?php echo $val->direccion ?></td>
+                        <td style="font-size: 12px;"><?php echo ucwords($val->municipio) ?></td>
+                        <td style="font-size: 12px;"><?php echo $val->destino ?></td>
+                        <td style="font-size: 12px;"><?php echo $val->mision ?></td>            
+                    </tr>   
+        <?php
+                }
+            }
+        ?>
+    </table>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
