@@ -607,7 +607,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
 		
-			$data['oficinas']=$this->vales_model->consultar_oficinas();
+			$data['oficinas']=$this->vales_model->consultar_todas_oficinas();
 			$data['fuente']=$this->vales_model->consultar_fuente_fondo();		
 			$this->load->view("vales/dialogoN_asignacion",$data);	
 		}

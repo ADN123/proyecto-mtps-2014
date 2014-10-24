@@ -48,5 +48,6 @@
 			ent: true,
 			numMin: 0
 		});
-    $("#id_seccion").kendoDropDownList();
+    $("#id_fuente_fondo").kendoDropDownList();
+    $("#id_seccion").kendoComboBox();
 </script>

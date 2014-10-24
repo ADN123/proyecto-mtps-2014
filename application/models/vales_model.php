@@ -130,6 +130,16 @@ class Vales_model extends CI_Model {
 		return (array)$query->result_array();
 
 	}
+		function consultar_todas_oficinas()
+	{
+
+		$sentencia="SELECT 	s.id_seccion,s.nombre_seccion
+									FROM 	org_seccion s ";
+
+		$query=$this->db->query($sentencia);	
+		return (array)$query->result_array();
+
+	}
 
 	function vehiculos($id_seccion=NULL, $id_fuente_fondo= NULL)	
 	{	
@@ -661,8 +671,6 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 							h.id_fuente_fondo,
 							f.nombre_fuente_fondo
 					";
-
-
 
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();	
