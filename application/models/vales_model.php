@@ -366,10 +366,7 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 				LOWER(CONCAT_WS(' ',e2.primer_nombre, e2.segundo_nombre, e2.tercer_nombre, e2.primer_apellido,e2.segundo_apellido,e2.apellido_casada)) AS visto_bueno,
 				DATE_FORMAT(fecha_entregado,'%d/%m/%Y %h:%i %p') as fecha_entregado,			
 				LOWER(CONCAT_WS(' ',e3.primer_nombre, e3.segundo_nombre, e3.tercer_nombre, e3.primer_apellido,e3.segundo_apellido,e3.apellido_casada)) AS entrego,
-				
 				estado, refuerzo, correlativo
-
-
 				FROM
 					tcm_requisicion r
 				INNER JOIN org_seccion sr ON r.id_seccion = sr.id_seccion
@@ -399,7 +396,17 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 			return $query->result();
 	}
 
-	
+	function consultar_requisicion($id_requisicion)
+	{
+			$query=$this->db->query("SELECT 
+							s.nombre_seccion,
+						r.*
+					FROM
+						tcm_requisicion r
+					INNER JOIN org_seccion s ON r.id_seccion = s.id_seccion
+					WHERE id_requisicion = ".$id_requisicion);
+			return $query->result_array();	
+	}
 	function guardar_visto_bueno($post)
 	{
 	extract($post);
@@ -956,7 +963,9 @@ por lo tanto la logica de niveles se manejara de forma diferente
 
 		$query=$this->db->query(" SET lc_time_names = 'es_ES'");		
 
-		$q="SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -40 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -20 DAY),'%Y%m') mes 
+		$q="SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -65 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -65 DAY),'%Y%m') mes 
+				UNION
+			SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -35 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -35 DAY),'%Y%m') mes 
 				UNION
 			SELECT DATE_FORMAT(CURDATE(),'%M') mes_nombre, DATE_FORMAT(CURDATE(),'%Y%m') mes
 			UNION

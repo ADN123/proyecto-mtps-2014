@@ -177,6 +177,69 @@ class Vales extends CI_Controller
 			echo 'No tiene permisos para acceder ';
 		}
 	}
+
+
+
+	/*
+	*	Nombre: requisicion_modificar
+	*	Objetivo: cargar la vista para modificar una requisicion
+	*	Hecha por: Leonel
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 07/10/2014
+	*	Observaciones: Ninguna.
+	*/
+	function requisicion_modificar($id_requisicion=NULL, $estado_transaccion=NULL, $accion=NULL)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
+		$url='vales/requicision_modificar';
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		$data['m']=$this->vales_model->meses_requisicion();
+
+		$data['requisicion']=$this->vales_model->consultar_requisicion($id_requisicion);
+		$data['requisicion']=$data['requisicion'][0];
+		$data['req_veh']=$this->vales_model->info_requisicion_vehiculos($id_requisicion);
+
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+				case 2://seccion
+					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
+					$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
+					if(sizeof($data['vehiculos'])==0) {
+						$url.='Error';	
+					}
+					break;
+				case 3://administrador
+					$data['oficinas']=$this->vales_model->consultar_oficinas();
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo();
+
+					break;
+				case 4: //departamental
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
+						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
+						$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
+						if(sizeof($data['vehiculos'])==0){
+							$url.='error';	
+						}
+					}
+					else {//san salvador
+						$data['oficinas']=$this->vales_model->consultar_oficinas_san_salvador();
+						$data['fuente']=$this->vales_model->consultar_fuente_fondo_san_salvador();
+					}
+					break;
+			}
+			$data['estado_transaccion']=$estado_transaccion;
+			$data['accion']=$accion;
+		//	echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
+			//print_r($data['oficinas']);  
+			pantalla($url,$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder ';
+		}
+	}	
 	
 	/*
 	*	Nombre: consultar_refuerzo
