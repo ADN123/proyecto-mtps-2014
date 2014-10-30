@@ -39,7 +39,10 @@ function cargar_vehiculo(){
 		verificarRF(seccion,fuente_fondo,mes)
 
 	}else{
-
+		console.log('aun hay campos vacios');
+		console.log('fuente '+fuente_fondo);
+		console.log('seccion '+seccion);
+		console.log('mes '+mes);
 	$('#divVehiculos').html("<br/><br/><br/>Debe seleccionar <strong>Fuente de Fondo, Sección </strong> y <strong>Mes </strong>...");
 	$('#divHerramientas').html("<br/><br/><br/>Debe seleccionar <strong>Fuente de Fondo, Sección </strong> y <strong>Mes </strong>...");		
 	}
