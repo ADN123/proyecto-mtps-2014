@@ -22,7 +22,7 @@
             <td><?php echo ucwords($fila->clase)?></td>
             <td>
             	<a rel="leanModal" title="Ver información del Vehículo" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
-                <a rel="leanModal" title="Ver información del Vehículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_vehiculo/".$fila->id ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
+                <a rel="leanModal" title="Modificar información del Vehículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_vehiculo/".$fila->id ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
             </td>
         </tr>
     <?php } ?>
@@ -33,7 +33,7 @@
 <div id="ventana" style="height:600px; width:650px">
     <div id='signup-header'>
         <h2>Información del Vehículo</h2>
-        <a class="modal_close"></a>
+        <a id="cerrar" class="modal_close"></a>
     </div>
     <div id='contenido-ventana'>
     </div>
@@ -44,7 +44,10 @@
 		$('#contenido-ventana').load(base_url()+'index.php/vehiculo/dialogo_vehiculo_info/'+id);
 		return false;
 	}
-	
+	function cerrar_vent()
+	{
+		$('#cerrar').click();
+	}
 	function motoristaf(id,id2)
 	{
 		$('#motorista').destruirValidacion();

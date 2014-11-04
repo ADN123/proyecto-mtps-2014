@@ -1,4 +1,4 @@
-<form id='form' action="<?php echo base_url()?>index.php/vehiculo/modificar_datos_vehiculo" method='post'>
+<form id='form' method='post'>
     <input type='hidden' id='resp' name='resp' />
 
     <fieldset>      
@@ -60,12 +60,6 @@
 		?>
     </fieldset>
     <p style='text-align: center;'>
-        <button  type="submit" id="denegar" class="button tam-1 boton_validador" name="Aceptar">Aceptar</button>
+        <button type="button" id="aceptar" onclick="cerrar_vent()" name="Aceptar">Aceptar</button>
     </p>
 </form>
-<script>
-	$("#observacion").validacion({
-		req: false,
-		lonMin: 10
-	});
-</script>
