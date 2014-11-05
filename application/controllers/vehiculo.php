@@ -372,7 +372,7 @@ class Vehiculo extends CI_Controller
 
 	/*
 	*	Nombre: vehiculos_pdf
-	*	Objetivo: llama a la vista de vehiculo_pdf para odservar los reportes
+	*	Objetivo: llama a la vista de vehiculo_pdf para observar los reportes
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
 	*	Última Modificación: 29/07/2014
@@ -393,6 +393,21 @@ class Vehiculo extends CI_Controller
 		//	$this->mpdf->WriteHTML($html,2);
 		//}
 		$this->mpdf->Output(); /*Salida del pdf*/	
+	}
+	
+	/*
+	*	Nombre: bodega
+	*	Objetivo: llama a la vista de bodega para observar el inventario en bodega
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 04/11/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function bodega($estado_transaccion=NULL)
+	{
+		$data['inventario']=$this->transporte_model->inventario();
+		pantalla('mantenimiento/bodega',$data);
 	}
 }
 ?>
