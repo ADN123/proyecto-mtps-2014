@@ -1,16 +1,10 @@
-<script>
-	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='Se ha registrado un nuevo vehículo exitosamente.';
-	estado_incorrecto='Error al registrar un nuevo vehículo: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
-</script>
-<section>
-    <h2>Nuevo Vehículo</h2>
-</section>
 <?php
 
 if($bandera=='true')
 {
-	
+	//print_r($vehiculo_info);
+	//echo "<br>";
+	//print_r($modelo);
 	foreach($vehiculo_info as $v)
 	{
 		$id_vehiculo=$v->id_vehiculo;
@@ -18,7 +12,7 @@ if($bandera=='true')
 		$marca2=$v->marca;
 		$id_marca=$v->id_marca;
 		$modelo2=$v->modelo;
-		$id_modelo=$v->modelo;
+		$id_modelo=$v->id_modelo;
 		$condicion2=$v->condicion;
 		$id_condicion=$v->id_condicion;
 		$clase2=$v->clase;
@@ -40,6 +34,31 @@ if($bandera=='true')
 }
 else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
 ?>
+<?php
+if($bandera=='true')
+{
+?>
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='Se ha modificado la información del vehículo exitosamente.';
+	estado_incorrecto='Error al modificar los datos del vehículo: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
+</script>
+<?php
+}
+else
+{
+?>
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='Se ha registrado un nuevo vehículo exitosamente.';
+	estado_incorrecto='Error al registrar un nuevo vehículo: No se pudo conectar al servidor. Porfavor vuelva a intentarlo.';
+</script>
+<?php
+}
+?>
+<section>
+    <h2><?php if($bandera=='true')echo "Modificar Vehículo"; else {?>Nuevo Vehículo <?php } ?></h2>
+</section>
 <form name="form_vehiculo" method="post" action="<?php echo $action; ?>" enctype="multipart/form-data" accept-charset="utf-8">
 
 	<div id="wizard" class="swMain">
@@ -81,15 +100,18 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             </p>
             <p>
                 <label>Marca: </label>
-                 <select name="marca" id="marca" tabindex="1" style="width:150px">
+                 <select class="select" placeholder="[Seleccione...]" name="marca" id="marca" style="width:150px" multiple="multiple">
                 <?php
                 foreach($marca as $mar)
                 {
 					if($bandera=='true')
 					{
-						if($mar->id_vehiculo_marca==$id_marca) $s='selected="selected"';
-						else $s='';
-						echo "<option ".$s." value='".$mar->id_vehiculo_marca."'>".ucwords($mar->nombre)."</option>";
+						if($mar->id_vehiculo_marca==$id_marca)
+						{
+							echo "<option selected='selected' value='".$mar->id_vehiculo_marca."'>".ucwords($mar->nombre)."</option>";
+						}
+						else echo "<option value='".$mar->id_vehiculo_marca."'>".ucwords($mar->nombre)."</option>";
+						
 					}
 					else echo "<option value='".$mar->id_vehiculo_marca."'>".ucwords($mar->nombre)."</option>";
                 }
@@ -101,18 +123,20 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             </p>
             <p>
                 <label>Modelo: </label>
-                 <select name="modelo" id="modelo" class="select" placeholder="[Seleccione...]" style="width:200px">
+                 <select name="modelo" placeholder="[Seleccione...]" id="modelo" class="select" style="width:200px" multiple="multiple">
                 <?php
                 
-                foreach($modelo as $model)
+                foreach($modelo as $modl)
                 {
 					if($bandera=='true')
 					{
-						if($model->id_vehiculo_modelo==$id_modelo) $s='selected="selected"';
-						else $s='';
-						echo "<option ".$s." value='".$model->id_vehiculo_modelo."'>".ucwords($model->modelo)."</option>";
+						if($modl->id_vehiculo_modelo==$id_modelo)
+						{
+							echo "<option selected='selected' value='".$modl->id_vehiculo_modelo."'>".ucwords($modl->modelo)."</option>";
+						}
+						else echo "<option value='".$modl->id_vehiculo_modelo."'>".ucwords($modl->modelo)."</option>";
 					}
-					else echo "<option value='".$model->id_vehiculo_modelo."'>".ucwords($model->modelo)."</option>";                    
+					else echo "<option value='".$modl->id_vehiculo_modelo."'>".ucwords($modl->modelo)."</option>";                    
                 }
                 ?>
                 <option value="0">Otro</option>
@@ -121,16 +145,15 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             </p>
             <p>
                 <label>Clase: </label>
-                 <select name="clase" id="clase" class="select" placeholder="[Seleccione...]" style="width:150px">
+                 <select name="clase" id="clase" placeholder="[Seleccione...]" class="select"  style="width:150px" multiple="multiple">
                 <?php
                 
                 foreach($clase as $cla)
                 {
 					if($bandera=='true')
 					{
-						if($cla->id_vehiculo_clase==$id_clase) $s='selected="selected"';
-						else $s='';
-						echo "<option ".$s." value='".$cla->id_vehiculo_clase."'>".ucwords($cla->nombre_clase)."</option>";
+						if($cla->id_vehiculo_clase==$id_clase) echo "<option selected='selected' value='".$cla->id_vehiculo_clase."'>".ucwords($cla->nombre_clase)."</option>";
+						else echo "<option value='".$cla->id_vehiculo_clase."'>".ucwords($cla->nombre_clase)."</option>";
 					}
 					else echo "<option value='".$cla->id_vehiculo_clase."'>".ucwords($cla->nombre_clase)."</option>";
                 }
@@ -160,15 +183,15 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n de adquisición del vehículo</h2>
             <p>
                 <label>Fuente de Fondo: </label>
-                <select name="fuente" id="fuente" class="select" placeholder="[Seleccione...]" style="width:250px">
+                <select name="fuente" id="fuente" class="select" placeholder="[Seleccione...]" multiple="multiple" style="width:250px">
                 <?php                
 					foreach($fuente_fondo as $fue)
 					{
 						if($bandera=='true')
 						{
-							if($fue->id_fuente_fondo==$id_fuente_fondo) $s='selected="selected"';
-							else $s='';
-							echo "<option ".$s." value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
+							if($fue->id_fuente_fondo==$id_fuente_fondo) echo "<option selected='selected' value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
+							else echo "<option value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
+							
 						}
 						else echo "<option value='".$fue->id_fuente_fondo."'>".ucwords($fue->fuente)."</option>";
 					}
@@ -179,15 +202,14 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             </p>
             <p>
                 <label>Condición: </label>
-                 <select name="condicion" id="condicion" class="select" placeholder="[Seleccione...]" style="width:175px">
+                 <select name="condicion" id="condicion" class="select" placeholder="[Seleccione...]" style="width:175px" multiple="multiple">
                 <?php
                 foreach($condicion as $con)
                 {
 					if($bandera=='true')
 					{
-						if($con->id_vehiculo_condicion==$id_condicion) $s='selected="selected"';
-						else $s='';
-						echo "<option ".$s." value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
+						if($con->id_vehiculo_condicion==$id_condicion) echo "<option selected='selected' value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
+						else echo "<option value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
 					}
 					else echo "<option value='".$con->id_vehiculo_condicion."'>".ucwords($con->condicion)."</option>";
                 }
@@ -200,7 +222,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
 				?>
 				<p>
                     <label>Estado: </label>
-                    <select name="estado" id="estado" class="select" style="width:150px">
+                    <select name="estado" id="estado" placeholder="[Seleccione...]" class="select" style="width:150px" multiple="multiple">
                         <option value="0" <?php if($estado==0) echo "selected='selected'"; ?>>De Baja</option>
                         <option value="1" <?php if($estado==1) echo "selected='selected'"; ?>>Activo</option>
                         <option value="2" <?php if($estado==2) echo "selected='selected'"; ?>>En Taller Interno</option>
@@ -214,7 +236,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             ?>
             <p>
             	<label>Tipo de Combustible</label>
-                <select name="tipo_combustible" class="select" placeholder="[Seleccione...]" style="width:150px">
+                <select name="tipo_combustible" class="select" placeholder="[Seleccione...]" style="width:150px" multiple="multiple">
                 	<option value="Diesel" <?php if($bandera=='true'){ if(strcmp($tipo_combustible,'Diesel')==0) echo "selected='selected'";} ?>>Diesel</option>
                     <option value="Gasolina" <?php if($bandera=='true'){ if(strcmp($tipo_combustible,'Gasolina')==0) echo "selected='selected'";} ?>>Gasolina</option>
                 </select>
@@ -224,16 +246,15 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             <h2 class="StepTitle">Informaci&oacute;n de asignación de motorista, oficina y sección del vehículo</h2>
             <p>
                 <label>Sección: </label>
-                <select name="seccion" class="select" placeholder="[Seleccione...]" style="width:350px">
+                <select name="seccion" class="select" placeholder="[Seleccione...]" style="width:350px" multiple="multiple">
                 <?php
                 
                 foreach($seccion as $sec)
                 {
 					if($bandera=='true')
 					{
-						if($sec->id_seccion==$id_seccion) $s='selected="selected"';
-						else $s='';
-						echo "<option ".$s." value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
+						if($sec->id_seccion==$id_seccion) echo "<option selected='selected' value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
+						else echo "<option value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
 					}
 					else echo "<option value='".$sec->id_seccion."'>".ucwords($sec->seccion)."</option>";
                     
@@ -243,16 +264,15 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             </p>
             <p>
                 <label>Motorista: </label>
-                <select name="motorista" class="select" placeholder="[Seleccione...]" style="width:300px">
+                <select name="motorista" class="select" placeholder="[Seleccione...]" style="width:300px" multiple="multiple">
 				<?php
                 
                 foreach($motoristas as $mot)
                 {
 					if($bandera=='true')
 					{
-						if($mot->id_empleado==$id_motorista) $s='selected="selected"';
-						else $s='';
-						echo "<option ".$s." value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
+						if($mot->id_empleado==$id_motorista) echo "<option selected='selected' value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
+						else echo "<option value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
 					}
 					else echo "<option value='".$mot->id_empleado."'>".ucwords($mot->nombre)."</option>";
                 }
@@ -281,9 +301,6 @@ $(document).ready(function(){
 			}
 		}
 	);
-	$('#marca').kendoComboBox({
-		index:34
-	});
 	$('#modelo').change(
 		function()
 		{

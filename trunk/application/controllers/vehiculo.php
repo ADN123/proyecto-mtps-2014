@@ -39,12 +39,13 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga la vista para el Registro de un nuevo Vehículo a la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 30/07/2014
+	*	Última Modificación: 06/11/2014
 	*	Observaciones: Ninguna
 	*/
-	function nuevo_vehiculo($id_vehiculo=NULL,$estado_transaccion=NULL)
+	function nuevo_vehiculo($id_vehiculo=0,$estado_transaccion=NULL)
 	{
-		if($id_vehiculo==NULL)
+		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
+		if($id_vehiculo==0)
 		{
 			$data['motoristas']=$this->transporte_model->consultar_motoristas2();
 			$data['marca']=$this->transporte_model->consultar_marcas();
@@ -245,11 +246,11 @@ class Vehiculo extends CI_Controller
 			$this->transporte_model->registrar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$tipo_combustible,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a("index.php/vehiculo/nuevo_vehiculo/".$tr);
+			ir_a("index.php/vehiculo/nuevo_vehiculo/0/".$tr);
 		}
 		else
 		{
-			ir_a("index.php/vehiculo/nuevo_vehiculo/0");
+			ir_a("index.php/vehiculo/nuevo_vehiculo/0/0");
 		}
 	}
 	
@@ -393,6 +394,40 @@ class Vehiculo extends CI_Controller
 		//	$this->mpdf->WriteHTML($html,2);
 		//}
 		$this->mpdf->Output(); /*Salida del pdf*/	
+	}
+	
+	/*
+	*	Nombre: presupuestos
+	*	Objetivo: llama a la vista de presupuestos para el control de los presupuestos
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 06/11/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function presupuestos($estado_transaccion=NULL)
+	{
+		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
+		
+		$data['presupuesto']=$this->transporte_model->presupuesto();
+		pantalla('mantenimiento/presupuestos',$data);
+	}
+	
+	/*
+	*	Nombre: nuevo_articulo
+	*	Objetivo: llama a la vista de nuevo artículo para registrarlo en la base de datos
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 06/11/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function nuevo_articulo($estado_transaccion=NULL)
+	{
+		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
+		
+		$data['presupuesto']=$this->transporte_model->presupuesto();
+		pantalla('mantenimiento/nuevo_articulo',$data);
 	}
 	
 	/*
