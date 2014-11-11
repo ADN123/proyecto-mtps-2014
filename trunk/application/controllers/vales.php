@@ -321,7 +321,61 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 			echo 'No tiene permisos para acceder ';	
 		}
 	}
-	
+		/*
+	*	Nombre: guardar_requisicion
+	*	Objetivo: Guardar la requisicion de una seccion
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 25/05/2014
+	*	Observaciones: Ninguna.
+	*/
+	function actualizar_requisicion()
+	{
+
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
+		if($data['id_permiso']!=NULL) {
+		
+			$this->db->trans_start();
+
+			if(verificarform($_POST)){
+
+					
+					$id_usuario=$this->session->userdata('id_usuario');
+					$id_empleado_solicitante=$this->vales_model->get_id_empleado($this->session->userdata('nr')); 
+					$id_requisicion=$this->vales_model->actualizar_requisicion($_POST, $id_usuario, $id_empleado_solicitante);
+					
+					$vehiculos=$this->input->post('values');
+
+					if (isset($_POST['values'])) {			
+							
+							for($i=0;$i<count($vehiculos);$i++) {		
+									$this->vales_model->guardar_req_veh($vehiculos[$i],NULL, $id_requisicion);
+						}
+					}
+					
+					$vehiculos=$this->input->post('values2');
+
+					if (isset($_POST['values2'])) {			
+						for($i=0;$i<count($vehiculos);$i++) {
+							$this->vales_model->guardar_req_veh(NULL,$vehiculos[$i], $id_requisicion);
+						}
+					}
+					$proce=1;
+
+					deleteform($_POST);
+				}else{
+
+					$proce=0;
+
+				}
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/requisicion_modificar/'.$_POST['id_requisicion'].'/'.$tr.'/'.$proce);		
+		}else{
+			echo 'No tiene permisos para acceder ';	
+		}
+	}
+
 	/*
 	*	Nombre: vehiculos
 	*	Objetivo: Cargar por ajax los vehiculos de una seccion y fuente de fonodo segun selccione el usuario 
@@ -331,13 +385,18 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Última Modificación: 21/05/2014
 	*	Observaciones: Ninguna.
 	*/
-	function vehiculos($id_seccion=NULL, $id_fuente_fondo = NULL)
+	function vehiculos($id_seccion=NULL, $id_fuente_fondo = NULL,$id_requisicion=NULL)
 	{
 
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
 		if($data['id_permiso']!=NULL) {
 		
-			$data['vehiculos']=$this->vales_model->vehiculos($id_seccion, $id_fuente_fondo);
+			if ($id_requisicion==NULL) {
+				$data['vehiculos']=$this->vales_model->vehiculos($id_seccion, $id_fuente_fondo);
+			}else{
+				$data['vehiculos']=$this->vales_model->vehiculos_req($id_seccion, $id_fuente_fondo,$id_requisicion);
+			}		
+
 			$this->load->view("vales/vehiculos",$data);		
 		}else{
 			echo 'No tiene permisos para acceder ';		
@@ -352,11 +411,16 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Última Modificación: 21/05/2014
 	*	Observaciones: Ninguna.
 	*/
-	function CargarOtros($id_seccion=NULL, $id_fuente_fondo = NULL)
+	function CargarOtros($id_seccion=NULL, $id_fuente_fondo = NULL,$id_requisicion=NULL)
 	{
 	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),REQUISICION); /*Verificacion de permiso para crear requisiciones*/
 		if($data['id_permiso']!=NULL) {		
-			$data['otros']=$this->vales_model->otros($id_seccion, $id_fuente_fondo);
+			if ($id_requisicion==NULL) {
+					$data['otros']=$this->vales_model->otros($id_seccion, $id_fuente_fondo);		
+			}else{
+					$data['otros']=$this->vales_model->otros_req($id_seccion, $id_fuente_fondo,$id_requisicion);				
+			}		
+
 			$this->load->view("vales/otros",$data);		
 		}else{
 			echo 'No tiene permisos para acceder ';		

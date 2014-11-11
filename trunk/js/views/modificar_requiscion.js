@@ -1,11 +1,10 @@
 // JavaScript Document
 $(document).ready(function(){
 	$('#wizard').smartWizard();
-	
-	$("#cantidad_solicitada").validacion({
-		numMin: 0,
-		ent: true
-	});
+	$("#verificando").validacion({       
+        men: "Porfavor Selccione un vehiculo"
+     });
+
 	$("#justificacion").validacion({
 		lonMin: 10
 	});
@@ -13,15 +12,13 @@ $(document).ready(function(){
 		men: "Debe seleccionar un item"
 	});
 	
-	 $("#mes").validacion({
+	/* $("#mes").validacion({
         men: "Debe seleccionar un item"
-    });
-	$("#verificando").validacion({       
-        men: "Porfavor Selccione un vehiculo"
-     });
+    }); 
+	
 	$("#id_seccion").validacion({
 		men: "Debe seleccionar un item"
-	});
+	});*/
 });
 
 function cargar_vehiculo(){
@@ -29,14 +26,15 @@ function cargar_vehiculo(){
 	var fuente_fondo = document.getElementById('id_fuente_fondo').value;
 	var seccion = document.getElementById('id_seccion').value;
 	var mes = document.getElementById('mes').value;
-
+	var id_requisicion = document.getElementById('id_requisicion').value;
 
 	if(fuente_fondo!="" && seccion!=""&& mes!=""){
-		$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos/"+seccion+"/"+fuente_fondo);	
-		$('#divHerramientas').load(base_url()+"index.php/vales/CargarOtros/"+seccion+"/"+fuente_fondo);				
+		$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos/"+seccion+"/"+fuente_fondo+'/'+id_requisicion);	
+		$('#divHerramientas').load(base_url()+"index.php/vales/CargarOtros/"+seccion+"/"+fuente_fondo+'/'+id_requisicion);				
 
 		document.getElementById('verificando').value="";
 		verificarRF(seccion,fuente_fondo,mes)
+		setTimeout ("marcados()", 2000);
 
 	}else{
 		console.log('aun hay campos vacios');
@@ -101,43 +99,27 @@ $.ajax({
         url:    base_url()+"/index.php/vales/consultar_consumo/"+id1+"/"+id2,
         dataType:"json",
         success: function(data){
-        	console.log(data);
-        		$('#restante').val(data.restante);
-	        	if(data.asignado!=null){
-	        		$('#lbl2').html(data.asignado);
-	        		$('#lbl3').html(data.restante);
 
-	        	}else{
-	        		$('#lbl2').html("(No tiene ninguna asignación)");
-	        		$('#lbl3').html("(No tiene ninguna asignación)");
-	        	}
-			    
-			    
-			    if(document.getElementById('refuerzo').value!=0) {  
-
-			    $("#cantidad_solicitada").prop('readonly', false);
-
-				///Lo maximo que se puede pedir es la misma cantidad asignada
-
-		    	$('#justificacion').val("");
-
+			  if (estado_requisicion==1) {
+				   	$("#cantidad_solicitada").destruirValidacion();					
+				    $('#cantidad_solicitada').validacion({    
+							req: true,
+							numMin: 0,
+							numMax: Number(data.asignado) +1
+							});
 			    }else{
 
-//			    $("#cantidad_solicitada").prop('readonly', true); //temporalmente habilitado
-				$("#cantidad_solicitada").val(data.peticion);
-			    var txt = $("#id_seccion option:selected").text();
+			    	if (estado_requisicion==2) {
+					   	$("#cantidad_entregado").destruirValidacion();					
+					    $('#cantidad_entregado').validacion({    
+								req: true,
+								numMin: 0,
+								numMax: Number(data.asignado) +1
+								});
 
-			    if(txt=="") {txt=document.getElementById('nombre').value;}
-			    $('#justificacion').val("CUOTA MENSUAL ASIGNADA A "+ txt);
-			   
-
+			    	}
 			    }
-			   	$("#cantidad_solicitada").destruirValidacion();					
-			    $('#cantidad_solicitada').validacion({    
-						req: true,
-						numMin: 0,
-						numMax: Number(data.asignado) +1
-						});
+
 
 
             },

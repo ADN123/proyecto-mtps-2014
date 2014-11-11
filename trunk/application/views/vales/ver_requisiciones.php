@@ -8,7 +8,7 @@
 	<?php }?>
 </script>
 <section>
-    <h2 >Estado de Requisiciones de Combustible</h2>
+    <h2 >Requisiciones de Combustible</h2>
 </section>
 <table  class="grid">
 <thead>
@@ -55,6 +55,9 @@
  ?>
     <td><?php echo $str?></td>
     <td><a title="Ver solicitud" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila['id_requisicion']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
+        <?php if($fila['estado']<=3){  ?>
+            <a title="Modificar Requisicion" href="<?php echo base_url().'index.php/vales/requisicion_modificar/'.$fila[id_requisicion];?>"><img  src="<?php echo base_url()?>img/editar.png"/></a>
+        <?php }?>
 	</td>
   </tr>
 <?php } ?>

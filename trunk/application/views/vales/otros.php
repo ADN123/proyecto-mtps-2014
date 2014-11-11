@@ -16,7 +16,8 @@
                         <tr> 
                             <td><?php echo $val['nombre'] ?></td>
                             <td><?php echo $val['descripcion'] ?></td>
-                            <td><input type="checkbox"  name="values2[]"  value="<?php echo $val['id_herramienta'] ?>"  onChange="marcados()" class="cheke2"/> </td>
+                            <td><input type="checkbox"  name="values2[]"  value="<?php echo $val['id_herramienta'] ?>"  onChange="marcados()" class="cheke2"
+                                  <?php if($val['marcado']==1) echo 'checked="checked"'; ?>/> </td>
                         </tr>
                 <?php } ?> 
 

@@ -141,11 +141,58 @@ class Vales_model extends CI_Model {
 
 	}
 
-	function vehiculos($id_seccion=NULL, $id_fuente_fondo= NULL)	
+	function vehiculos_req($id_seccion=NULL, $id_fuente_fondo= NULL, $id_requisicion=NULL)	
+	{	
+		
+		$query=$this->db->query("SET @id_requisicion= $id_requisicion;");
+		$query=$this->db->query("SET @id_fuente_fondo= $id_fuente_fondo;");
+		$query=$this->db->query("SET @id_seccion= $id_seccion;");
+		$sentencia="SELECT
+						v.id_vehiculo,
+						v.placa,
+						vm.nombre AS marca,
+						vmo.modelo,
+						v.id_seccion,
+						0 AS marcado
+					FROM
+						tcm_vehiculo v
+					INNER JOIN tcm_vehiculo_marca vm ON v.id_marca = vm.id_vehiculo_marca
+					INNER JOIN tcm_vehiculo_modelo vmo ON vmo.id_vehiculo_modelo = v.id_modelo
+					WHERE
+						v.id_fuente_fondo = @id_fuente_fondo
+					AND v.id_seccion_vale = @id_seccion
+					AND v.id_vehiculo NOT IN (
+						SELECT
+							id_vehiculo
+						FROM
+							tcm_req_veh
+						WHERE
+							id_requisicion = @id_requisicion
+					)
+					UNION
+					SELECT
+						v.id_vehiculo,
+						v.placa,
+						vm.nombre AS marca,
+						vmo.modelo,
+						v.id_seccion,
+						1 AS marcado
+					FROM
+						tcm_vehiculo v
+					INNER JOIN tcm_vehiculo_marca vm ON v.id_marca = vm.id_vehiculo_marca
+					INNER JOIN tcm_vehiculo_modelo vmo ON vmo.id_vehiculo_modelo = v.id_modelo
+					INNER JOIN tcm_req_veh rv ON rv.id_vehiculo=  v.id_vehiculo
+					WHERE id_requisicion = @id_requisicion";
+		$query=$this->db->query($sentencia);
+		
+		return (array)$query->result_array();
+	
+	}
+	function vehiculos($id_seccion=NULL,$id_fuente_fondo= NULL)	
 	{	
 		$whereb=FALSE;
 
-		$sentencia="SELECT  v.id_vehiculo, v.placa,  vm.nombre as marca, vmo.modelo, v.id_seccion
+		$sentencia="SELECT  v.id_vehiculo, v.placa,  vm.nombre as marca, vmo.modelo, v.id_seccion,0 AS marcado
 						FROM tcm_vehiculo v
 							INNER JOIN tcm_vehiculo_marca vm ON v.id_marca = vm.id_vehiculo_marca 
 							INNER JOIN  tcm_vehiculo_modelo vmo ON vmo.id_vehiculo_modelo = v.id_modelo";
@@ -170,12 +217,11 @@ class Vales_model extends CI_Model {
 		return (array)$query->result_array();
 	
 	}
-
 	function otros($id_seccion=NULL, $id_fuente_fondo= NULL)	
 	{	
 		$whereb=FALSE;
 
-		$sentencia="SELECT  id_herramienta, nombre, descripcion, id_seccion_vale FROM tcm_herramienta v ";
+		$sentencia="SELECT  id_herramienta, nombre, descripcion, id_seccion_vale, 0 as marcado  FROM tcm_herramienta v ";
 
 			if($id_seccion!=NULL){
 				$sentencia.= "	WHERE v.id_seccion_vale = '".$id_seccion."'";
@@ -195,6 +241,20 @@ class Vales_model extends CI_Model {
 		$query=$this->db->query($sentencia);
 		
 		return (array)$query->result_array();
+	
+	}
+	function otros_req($id_seccion=NULL, $id_fuente_fondo= NULL,$id_requisicion= NULL)	
+	{	
+		
+		$sentencia="SELECT  id_herramienta, nombre, descripcion, id_seccion_vale, 0 as marcado FROM tcm_herramienta v 
+						WHERE v.id_fuente_fondo = $id_fuente_fondo AND v.id_seccion_vale = $id_seccion AND id_herramienta NOT IN(
+						SELECT id_herramienta FROM tcm_req_veh rv WHERE rv.id_requisicion = $id_requisicion AND id_herramienta IS NOT NULL )
+					UNION 
+						SELECT  v.id_herramienta, nombre, descripcion, id_seccion_vale, 1 as marcado FROM tcm_herramienta v
+						INNER JOIN tcm_req_veh rv ON rv.id_herramienta = v.id_herramienta WHERE rv.id_requisicion = $id_requisicion";
+		$query=$this->db->query($sentencia);
+		
+		return $query->result_array();
 	
 	}
 
@@ -233,12 +293,25 @@ class Vales_model extends CI_Model {
 
 	}
 	
-	function guardar_requisicion($formuInfo,$id_usuario, $id_empleado_solicitante) 
+	function actualizar_requisicion($formuInfo,$id_usuario, $id_empleado_solicitante) 
+	{ 
+		extract($formuInfo);
+		$sentencia="UPDATE tcm_requisicion r SET 
+		r.cantidad_entregado = $cantidad_entregado, r.cantidad_solicitada = $cantidad_solicitada, r.mes = '$mes', r.id_fuente_fondo= $id_fuente_fondo, 
+		r.fecha_modificacion = CONCAT_WS(' ', CURDATE(),CURTIME()), r.id_usuario_modifica = $id_usuario, r.justificacion= '$justificacion'
+		WHERE id_requisicion = $id_requisicion;";
+		$this->db->query("DELETE  FROM tcm_req_veh WHERE id_requisicion =$id_requisicion");		
+
+		$this->db->query($sentencia);
+		return $id_requisicion;
+
+	}
+		function guardar_requisicion($formuInfo,$id_usuario, $id_empleado_solicitante) 
 	{ 
 		extract($formuInfo);
 		$sentencia="INSERT INTO tcm_requisicion 
 		( fecha , id_seccion, cantidad_solicitada,id_empleado_solicitante,id_fuente_fondo,justificacion , id_usuario_crea, fecha_creacion, refuerzo, mes, asignado, restante_anterior) 
-VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()), $refuerzo, $mes, $asignado,$restante)";
+		VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitada','$id_empleado_solicitante', $id_fuente_fondo, '$justificacion', $id_usuario,  CONCAT_WS(' ', CURDATE(),CURTIME()), $refuerzo, $mes, $asignado,$restante)";
 		
 
 		$this->db->query($sentencia);
@@ -398,13 +471,19 @@ VALUES ( CONCAT_WS(' ', CURDATE(),CURTIME()), '$id_seccion','$cantidad_solicitad
 
 	function consultar_requisicion($id_requisicion)
 	{
-			$query=$this->db->query("SELECT 
-							s.nombre_seccion,
-						r.*
-					FROM
-						tcm_requisicion r
-					INNER JOIN org_seccion s ON r.id_seccion = s.id_seccion
-					WHERE id_requisicion = ".$id_requisicion);
+			$query=$this->db->query(
+	"SELECT 
+			s.nombre_seccion,
+			ff.nombre_fuente_fondo as fuente,
+			SUM(rv.cantidad_entregado - rv.cantidad_restante) as  consumo,
+			r.*
+		FROM
+			tcm_requisicion r
+		INNER JOIN org_seccion s ON r.id_seccion = s.id_seccion
+		INNER JOIN tcm_requisicion_vale rv ON rv.id_requisicion= r.id_requisicion
+		INNER JOIN tcm_fuente_fondo ff ON ff.id_fuente_fondo= r.id_fuente_fondo
+		WHERE r.id_requisicion = $id_requisicion
+GROUP BY r.id_requisicion");
 			return $query->result_array();	
 	}
 	function guardar_visto_bueno($post)
