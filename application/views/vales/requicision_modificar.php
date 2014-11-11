@@ -8,7 +8,10 @@
 
 <?php if($accion==0) {  ?>
     estado_correcto='La requisición ya fue procesada';
-<?php } ?>
+<?php } 
+
+ extract($requisicion) 
+?>
 
 function chekear(k, clase){
 var obj = $('.'+clase);
@@ -24,15 +27,14 @@ var ban= $(k).prop('checked');
 </script>
 <script src="<?php echo base_url()?>js/views/modificar_requiscion.js" type="text/javascript"></script>
 <section>
-    <h2>Ingreso de Requisición de Combustible</h2>
+    <h2>Modificación de Requisición de Combustible</h2>
 </section>
 <style>
 .k-multiselect {
 	display: inline-block;
 }
 </style>
-<?php print_r($requisicion); extract($requisicion)?> 
-<form name="form_mision" method="post" id="form_mision" action="<?php echo base_url()?>index.php/vales/guardar_requisicion">
+<form name="form_mision" method="post" id="form_mision" action="<?php echo base_url()?>index.php/vales/actualizar_requisicion">
     <?=llaveform()?>
 	<div id="wizard" class="swMain">
         <ul>
@@ -71,13 +73,13 @@ var ban= $(k).prop('checked');
            
 
                 <p>
-                <label for="id_seccion" id="lservicio_de">Al servicio de </label>
-                <input type="hidden" id="id_requisicion" name="id_requision" value="<?php echo $id_requision; ?>" />
+                <label for="id_seccion" id="lservicio_de">Al servicio de: </label>
+                <input type="hidden" id="id_requisicion" name="id_requisicion" value="<?php echo $id_requisicion; ?>" />
                 <input type="hidden" id="id_seccion" name="id_seccion" value="<?php echo $id_seccion; ?>" />
                 <input type="hidden" id="nombre" name="nombre" value="<?php echo $nombre_seccion; ?>" />
                 <strong style="width:300px;" ><?php echo $nombre_seccion;?></strong>
 
-                <label for="cantidad_solicitada" id="lcantidad_solicitada">Cantidad Solicitada </label>
+                <label for="cantidad_solicitada" id="lcantidad_solicitada">Cantidad Solicitada: </label>
                 <?php
                 if ($estado==1) { ?>
                 
@@ -96,7 +98,7 @@ var ban= $(k).prop('checked');
                 
                  <p>
 
-                <label for="mes" id="lmes">Para el mes de </label>
+                <label for="mes" id="lmes">Para el mes de: </label>
                 <select  style="width:200px;" tabindex="5" id="mes" name="mes" onChange="cargar_vehiculo()">
                     <?php
                         foreach($m as $val) {
@@ -108,27 +110,36 @@ var ban= $(k).prop('checked');
                     ?>
                 </select>
             
-                <label for="id_fuente_fondo" id="lid_fuente_fondo">Fuente de Financiamento </label>
-                <select style="width:200px;" tabindex="2" id="id_fuente_fondo" name="id_fuente_fondo" onChange="cargar_vehiculo()">
+                <label for="id_fuente_fondo" id="lid_fuente_fondo">Fuente de Financiamento: </label>
+                <?php
+                if ($estado>2) { ?>
+                
+                    <input style="width:100px;" type="hidden" tabindex="1" id="id_fuente_fondo" name="id_fuente_fondo"
+                    value="<?php echo $id_fuente_fondo;?>"                />
+                    <strong><?php echo $fuente;?></strong>
+                
+                <?php }else{ ?>
+                        <select style="width:200px;" tabindex="2" id="id_fuente_fondo" name="id_fuente_fondo" onChange="cargar_vehiculo()">
 
-                    <?php
-                        foreach($fuente as $val) {
-                    ?>
-                       <option value="<?php echo $val['id_fuente_fondo'] ?>"><?php echo $val['nombre_fuente'] ?></option>
-                    <?php   
-                        }
+                        <?php
+                            foreach($fuente as $val) {
+                        ?>
+                           <option value="<?php echo $val['id_fuente_fondo'] ?>"><?php echo $val['nombre_fuente'] ?></option>
+                        <?php   
+                            }
+                    }
                     ?>
                 </select>
 
             </p>
-                        <br>
+             <br>
             <p>
             	<label for="justificacion" id="ljustificacion" class="label_textarea">Justificación </label>
               	<textarea class="tam-4" id="justificacion" tabindex="3" name="justificacion"/><?php echo $justificacion;?></textarea>
             </p>
                         <br>
             <p>
-                 <label for="cantidad_entregado" id="lcantidad_entregada">Cantidad Autorizada </label>
+                 <label for="cantidad_entregado" id="lcantidad_entregada">Cantidad Autorizada: </label>
                 <?php
                 if ($estado>2) { ?>
                     <input style="width:100px;" type="hidden" tabindex="1" id="cantidad_entregado" name="cantidad_entregado"
@@ -154,14 +165,14 @@ var ban= $(k).prop('checked');
             <p>
                 <div style="display:none">
 
-                <label for="lbl" id="lrefuezo" >Refuerzo: </label>
-                <input  id="refuerzo"  name="refuerzo" type="hidden" />
-                <input type="hidden" name="restante" id="restante">
-                <strong id="lbl"></strong> 
-                <label for="lbl2" id="lrefuezo" >Cuota Asignada: </label>
-                <strong id="lbl2"></strong> 
-                <label for="lbl3" id="lrestante" >Restantes: </label>
-                <strong id="lbl3"></strong> 
+                    <label for="lbl" id="lrefuezo" >Refuerzo: </label>
+                    <input  id="refuerzo"  name="refuerzo" type="hidden" />
+                    <input type="hidden" name="restante" id="restante" value="0">
+                    <strong id="lbl"></strong> 
+                    <label for="lbl2" id="lrefuezo" >Cuota Asignada: </label>
+                    <strong id="lbl2"></strong> 
+                    <label for="lbl3" id="lrestante" >Restantes: </label>
+                    <strong id="lbl3"></strong> 
                  </div>
 
 
@@ -210,9 +221,17 @@ function iniciar () {
     $("#mes").kendoDropDownList({
         value:<?php echo $mes;?>
     });
-    $("#id_fuente_fondo").kendoDropDownList({
-        value:<?php echo $id_fuente_fondo;?>
-    });
+    
+    if(estado_requisicion<3){
+        $("#id_fuente_fondo").kendoDropDownList({
+            value:<?php echo $id_fuente_fondo;?>
+        });
+        $("#id_fuente_fondo").kendoDropDownList({
+            value:<?php echo $id_fuente_fondo;?>
+        });
+    }
+    
+    
     //destrucores de validaciones
     $('#mes').destruirValidacion();
     $('#id_fuente_fondo').destruirValidacion();
