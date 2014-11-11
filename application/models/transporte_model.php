@@ -1966,5 +1966,34 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		
 		$query=$this->db->query($q);
 	}
+	///////////////////////FUNCIONES DEL PRESUPUESTO////////////////////////////////////////////////////
+	
+	/**********************FUNCIÓN PRESUPUESTO ASIGNADO PARA EL ÁREA DE MANTENIMIENTO VEHICULAR***********************/
+	function presupuesto($id_presupuesto=NULL)
+	{
+		$where="";
+		if($id_presupuesto!=NULL) $where=" where id_presupuesto='$id_presupuesto'";
+		
+		$query="SELECT tpm.id_presupuesto, tpm.presupuesto, DATE_FORMAT(tpm.fecha_inicial,'%d-%m-%Y') AS fecha_inicial,
+				DATE_FORMAT(tpm.fecha_final,'%d-%m-%Y') AS fecha_final, tpm.cant_actual
+				FROM tcm_presupuesto_mantenimiento AS tpm ".$where;
+				
+		$query=$this->db->query($query);
+		return (array)$query->result_array();
+	}
+	/*****************************************************************************************************************/
+	
+	/******************FUNCIÓN QUE OBTIENE LOS GASTOS REALIZADOS DE UN PRESUPUESTO EN ESPECÍFICO**********************/
+	function gastos($id_presupuesto)
+	{
+		$query="SELECT tcp.id_presupuesto, tcp.id_gasto, DATE_FORMAT(tcp.fecha,'%d-%m-%Y') AS fecha, tcp.gasto, tcp.descripcion
+				FROM tcm_gasto_presupuesto AS tcp
+				INNER JOIN tcm_presupuesto_mantenimiento AS tpm ON (tcp.id_presupuesto=tpm.id_presupuesto)
+				WHERE tpm.id_presupuesto='$id_presupuesto'";
+				
+		$query=$this->db->query($query);
+		return (array)$query->result_array();
+	}
+	/*****************************************************************************************************************/
 }
 ?>

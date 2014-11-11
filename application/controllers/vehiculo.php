@@ -414,6 +414,23 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
+	*	Nombre: ventana_presupuesto_gastos
+	*	Objetivo: carga la ventana en donde se miran detalladamente los gastos realizados de un presupuesto específico
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 10/11/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function ventana_presupuesto_gastos($id_presupuesto)
+	{
+		$data['presupuesto_info']=$this->transporte_model->presupuesto($id_presupuesto);
+		$data['presupuesto_info']=$data['presupuesto_info'][0];
+		$data['gastos']=$this->transporte_model->gastos($id_presupuesto);
+		$this->load->view('mantenimiento/ventana_gastos',$data);
+	}
+	
+	/*
 	*	Nombre: nuevo_articulo
 	*	Objetivo: llama a la vista de nuevo artículo para registrarlo en la base de datos
 	*	Hecha por: Oscar
