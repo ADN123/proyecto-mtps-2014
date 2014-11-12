@@ -68,8 +68,8 @@ class Vales_model extends CI_Model {
                                                         tcm_requisicion_vale.cantidad_restante > 0
                                                 AND tcm_vale.id_gasolinera = $id_gasolinera
                                                 AND id_seccion = $id_seccion  
-                                        ORDER BY tcm_vale.fecha_recibido ASC";                                  
-
+                                        ORDER BY 	tcm_requisicion.fecha_entregado ASC";                                  
+                                        
                 $query=$this->db->query($sentencia);
                 return $query->result_array();
 
@@ -474,13 +474,13 @@ class Vales_model extends CI_Model {
 			$query=$this->db->query(
 	"SELECT 
 			s.nombre_seccion,
-			ff.nombre_fuente_fondo as fuente,
-			SUM(rv.cantidad_entregado - rv.cantidad_restante) as  consumo,
+			ff.nombre_fuente_fondo as fuenteN,
+			COALESCE(0,SUM(rv.cantidad_entregado - rv.cantidad_restante)) as  consumo,
 			r.*
 		FROM
 			tcm_requisicion r
 		INNER JOIN org_seccion s ON r.id_seccion = s.id_seccion
-		INNER JOIN tcm_requisicion_vale rv ON rv.id_requisicion= r.id_requisicion
+		LEFT JOIN tcm_requisicion_vale rv ON rv.id_requisicion= r.id_requisicion
 		INNER JOIN tcm_fuente_fondo ff ON ff.id_fuente_fondo= r.id_fuente_fondo
 		WHERE r.id_requisicion = $id_requisicion
 GROUP BY r.id_requisicion");
@@ -877,7 +877,7 @@ por lo tanto la logica de niveles se manejara de forma diferente
 					FROM tcm_requisicion
 					INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
 					INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
-					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera." ".$where. " ORDER BY tcm_vale.fecha_recibido ASC";
+					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera." ".$where;
 		$query=$this->db->query($sentencia);
 		$res=(array)$query->result_array();
 		foreach($res as $r) {

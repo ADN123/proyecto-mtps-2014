@@ -90,7 +90,9 @@ var ban= $(k).prop('checked');
                     <input style="width:100px;" type="hidden" tabindex="1" id="cantidad_solicitada" name="cantidad_solicitada"
                     value="<?php echo $cantidad_solicitada;?>"                />               
                     <strong style="width:300px;" ><?php echo $cantidad_solicitada;?></strong>
-                <? } ?>
+                <? } 
+
+                ?>
 
 
                
@@ -116,7 +118,7 @@ var ban= $(k).prop('checked');
                 
                     <input style="width:100px;" type="hidden" tabindex="1" id="id_fuente_fondo" name="id_fuente_fondo"
                     value="<?php echo $id_fuente_fondo;?>"                />
-                    <strong><?php echo $fuente;?></strong>
+                    <strong><?php echo $fuenteN;?></strong>
                 
                 <?php }else{ ?>
                         <select style="width:200px;" tabindex="2" id="id_fuente_fondo" name="id_fuente_fondo" onChange="cargar_vehiculo()">
@@ -139,16 +141,17 @@ var ban= $(k).prop('checked');
             </p>
                         <br>
             <p>
-                 <label for="cantidad_entregado" id="lcantidad_entregada">Cantidad Autorizada: </label>
+                 
                 <?php
                 if ($estado>2) { ?>
+                    <label for="cantidad_entregado" id="lcantidad_entregada">Cantidad Autorizada: </label>
                     <input style="width:100px;" type="hidden" tabindex="1" id="cantidad_entregado" name="cantidad_entregado"
                     value="<?php echo $cantidad_entregado;?>"                />               
                     <strong style="width:300px;" ><?php echo $cantidad_entregado;?></strong>
                 
                 <?php }else{
                     if ($estado==2) { ?>
-    
+                        <label for="cantidad_entregado" id="lcantidad_entregada">Cantidad Autorizada: </label>
                         <input style="width:100px;" type="text" tabindex="1" id="cantidad_entregado" name="cantidad_entregado"
                         value="<?php echo $cantidad_entregado;?>"                />
                     <?php }else{ ?>
@@ -226,9 +229,7 @@ function iniciar () {
         $("#id_fuente_fondo").kendoDropDownList({
             value:<?php echo $id_fuente_fondo;?>
         });
-        $("#id_fuente_fondo").kendoDropDownList({
-            value:<?php echo $id_fuente_fondo;?>
-        });
+
     }
     
     

@@ -233,7 +233,7 @@ class Vales extends CI_Controller
 			$data['estado_transaccion']=$estado_transaccion;
 			$data['accion']=$accion;
 		//	echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
-			//print_r($data['oficinas']);  
+			//echo"<pre>"; print_r($data);  echo "</pre>";
 			pantalla($url,$data);	
 		}
 		else {
