@@ -1,6 +1,7 @@
 <section>
     <h2>Catálogo de Vehículos</h2>
 </section>
+<button style="width:200px" type="button" onclick="window.open('<?php echo base_url()."index.php/vehiculo/nuevo_vehiculo" ?>','_parent')" name="btnNuevo">Nuevo Vehículo</button>
 <table  class="grid">
     <thead>
       <tr>

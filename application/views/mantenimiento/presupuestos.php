@@ -1,13 +1,12 @@
 <section>
     <h2>Presupuestos</h2>
 </section>
+<button style="width:200px" type="button" onclick="window.open('<?php echo base_url()."index.php/vehiculo/nuevo_presupuesto" ?>','_parent')" name="btnNuevo">Nuevo Presupuesto</button>
 <table  class="grid">
     <thead>
       <tr>
         <th>ID</th>
         <th>Presupuesto($)</th>
-        <th>Cantidad Actual($)</th>
-        <th>Cantidad Gastada($)</th>
         <th>Fecha Inicial</th>
         <th>Fecha Final</th>
         <th>Opción</th>
@@ -15,18 +14,16 @@
      </thead>
      <tbody>
     <?php    
-        foreach ($datos as $fila) {
+        foreach ($presupuesto as $fila) {
     ?>
         <tr>
             <td><?php echo $fila['id_presupuesto']?></td>
             <td><?php echo ucwords($fila['presupuesto'])?></td>
-            <td><?php echo ucwords($fila['cant_actual'])?></td>
-            <td><?php echo ucwords(($fila['presupuesto'])-($fila['cant_actual']))?></td>
             <td><?php echo ucwords($fila['fecha_inicial'])?></td>
             <td><?php echo ucwords($fila['fecha_final'])?></td>
             <td>
             	<a rel="leanModal" title="Ver información detallada del presupuesto" href="#ventana" onclick="dialogo(<?php echo $fila['id_presupuesto']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
-                <a rel="leanModal" title="Modificar información del Vehículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_vehiculo/".$fila['id_presupuesto'] ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
+                <a rel="leanModal" title="Modificar información del Vehículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_presupuesto/".$fila['id_presupuesto'] ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
             </td>
         </tr>
     <?php } ?>
@@ -36,7 +33,7 @@
 
 <div id="ventana" style="height:600px; width:650px">
     <div id='signup-header'>
-        <h2>Información del Vehículo</h2>
+        <h2>Información del Presupuesto</h2>
         <a id="cerrar" class="modal_close"></a>
     </div>
     <div id='contenido-ventana'>

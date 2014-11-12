@@ -401,16 +401,36 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: llama a la vista de presupuestos para el control de los presupuestos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 06/11/2014
+	*	Última Modificación: 11/11/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function presupuestos($estado_transaccion=NULL)
+	function presupuestos()
 	{
-		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
-		
 		$data['presupuesto']=$this->transporte_model->presupuesto();
 		pantalla('mantenimiento/presupuestos',$data);
+	}
+	
+	/*
+	*	Nombre: nuevo_presupuesto
+	*	Objetivo: función que sirve para ingresar un nuevo presupuestos o modificarlo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 11/11/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function nuevo_presupuesto($id_presupuesto=0,$estado_transaccion=NULL)
+	{
+		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
+		if($id_presupuesto!=0)
+		{
+			$data['presupuesto']=$this->transporte_model->presupuesto($id_presupuesto);
+			$data['presupuesto']=$data['presupuesto'][0];
+			$data['bandera']=true;
+		}
+		else $data['bandera']=false;
+		pantalla('mantenimiento/nuevo_presupuesto',$data);
 	}
 	
 	/*
@@ -428,6 +448,42 @@ class Vehiculo extends CI_Controller
 		$data['presupuesto_info']=$data['presupuesto_info'][0];
 		$data['gastos']=$this->transporte_model->gastos($id_presupuesto);
 		$this->load->view('mantenimiento/ventana_gastos',$data);
+	}
+	
+	/*
+	*	Nombre: guardar_presupuesto
+	*	Objetivo: guarda un nuevo registro de presupuesto
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 11/11/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function guardar_presupuesto()
+	{
+		$this->db->trans_start();
+		$this->transporte_model->guardar_presupuesto($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/nuevo_presupuesto/0/".$tr);
+	}
+	
+	/*
+	*	Nombre: modificar_presupuesto
+	*	Objetivo: guarda un nuevo registro de presupuesto
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 12/11/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function modificar_presupuesto()
+	{
+		$this->db->trans_start();
+		$this->transporte_model->modificar_presupuesto($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/nuevo_presupuesto/".$_POST['id_presupuesto']."/".$tr);
 	}
 	
 	/*
