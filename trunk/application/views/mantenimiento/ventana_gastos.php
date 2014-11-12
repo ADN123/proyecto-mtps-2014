@@ -5,9 +5,8 @@ extract($presupuesto_info)
 
 <fieldset>
 	<legend>Información del Presupuesto</legend>
-    Presupuesto ($): <strong><?php echo $presupuesto; ?></strong>
-    Período: <strong><?php echo "DESDE: ".$fecha_inicial." HASTA: ".$fecha_final; ?></strong>
-    Cantidad Actual ($): <strong><?php echo $cant_actual; ?></strong>
+    Presupuesto ($): <strong><?php echo $presupuesto; ?></strong><br />
+    Período: <strong><?php echo "DESDE: ".$fecha_inicial." HASTA: ".$fecha_final; ?></strong><br />
 </fieldset>
 <fieldset>
 	<legend>Información de los gastos</legend>

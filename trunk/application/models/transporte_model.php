@@ -1975,7 +1975,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		if($id_presupuesto!=NULL) $where=" where id_presupuesto='$id_presupuesto'";
 		
 		$query="SELECT tpm.id_presupuesto, tpm.presupuesto, DATE_FORMAT(tpm.fecha_inicial,'%d-%m-%Y') AS fecha_inicial,
-				DATE_FORMAT(tpm.fecha_final,'%d-%m-%Y') AS fecha_final, tpm.cant_actual
+				DATE_FORMAT(tpm.fecha_final,'%d-%m-%Y') AS fecha_final
 				FROM tcm_presupuesto_mantenimiento AS tpm ".$where;
 				
 		$query=$this->db->query($query);
@@ -1993,6 +1993,28 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				
 		$query=$this->db->query($query);
 		return (array)$query->result_array();
+	}
+	/*****************************************************************************************************************/
+	
+	/*******************************FUNCIÓN PARA GUARDAR UN REGISTRO PRESUPUESTO**************************************/
+	function guardar_presupuesto($datos)
+	{
+		extract($datos);
+		$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
+		$fecha_final2=date('Y-m-d',strtotime($fecha_final));
+		$query="INSERT INTO tcm_presupuesto_mantenimiento(presupuesto,fecha_inicial,fecha_final) values('$presupuesto','$fecha_inicial2','$fecha_final2')";
+		return $this->db->query($query);
+	}
+	/*****************************************************************************************************************/
+	
+	/*******************************FUNCIÓN PARA MODIFICAR UN REGISTRO PRESUPUESTO**************************************/
+	function modificar_presupuesto($datos)
+	{
+		extract($datos);
+		$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
+		$fecha_final2=date('Y-m-d',strtotime($fecha_final));
+		$query="UPDATE tcm_presupuesto_mantenimiento SET presupuesto='$presupuesto', fecha_inicial='$fecha_inicial2', fecha_final='$fecha_final2' WHERE id_presupuesto='".$_POST['id_presupuesto']."';";
+		return $this->db->query($query);
 	}
 	/*****************************************************************************************************************/
 }
