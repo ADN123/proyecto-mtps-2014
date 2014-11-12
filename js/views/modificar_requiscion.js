@@ -8,9 +8,7 @@ $(document).ready(function(){
 	$("#justificacion").validacion({
 		lonMin: 10
 	});
-	$("#id_fuente_fondo").validacion({
-		men: "Debe seleccionar un item"
-	});
+	
 	
 	/* $("#mes").validacion({
         men: "Debe seleccionar un item"

@@ -8,6 +8,7 @@
 </section>
 <form name="formu" id="formu" action="<?=base_url()?>index.php/vales/guardar_consumo" method="post" autocomplete="off">
 	<?=llaveform()?>
+
     <div id="wizard" class="swMain">
         <ul>
             <li>
@@ -87,6 +88,7 @@
         </div>
         <div id="step-2" style="text-align: center;">	
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n de la cantidad suministrada a cada veh&iacute;culo</h2>
+            
             <p >
             	<div id="divVehiculos"><br/><br/><br/>Debe seleccionar una <strong>gasolinera</strong> e ingresar la <strong>fecha de la factura</strong>...</div>
       		</p>

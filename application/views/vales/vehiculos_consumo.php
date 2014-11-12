@@ -3,9 +3,11 @@
 	echo '<span style="margin-left: 15px; float: left;">Cantidad de vales disponibles:</span><br><ul>';
 	foreach($vales as $val) { 
 		$band=false;
-		echo '<li style="text-align: left;">Fondo '.$val[nombre_fuente_fondo].': <strong>'.$val[total].'</strong> vale(s) disponible(s) <span></span> <input type="hidden" class="cantidad_vales" name="total_vales'.$val[id_fuente_fondo].'" id="total_vales'.$val[id_fuente_fondo].'"  value="'.$val[total].'" data-value="'.$val[total].'"></li>
+		echo '<li style="text-align: left;">Fondo '.$val[nombre_fuente_fondo].': <strong>'.$val[total].'</strong> vale(s) disponible(s) <span></span> 
+				<input type="hidden" class="cantidad_vales" name="total_vales'.$val[id_fuente_fondo].'" id="total_vales'.$val[id_fuente_fondo].'"  value="'.$val[total].'" data-value="'.$val[total].'">
+				<input type="hidden"  id="consumo_vales'.$val[id_fuente_fondo].'"  value="0"></li>
 
-				<div id="display'.$val[id_fuente_fondo].'" style="float:right;  padding-right: 235px; padding-bottom: 10px;"></div>
+				<div id="display'.$val[id_fuente_fondo].'" ></div>
 			</li>';
 	}
 	if($band)
@@ -220,6 +222,7 @@
 		
 		var su=0;
 		var todos=0;
+		$('#display'+id_fondo).html("");
 		$(".cantidad").each(function (index) {
 			su=su+Number($(this).val());
 				
@@ -233,6 +236,7 @@
 			if(id_fondo2==id_fondo)
 				todos=todos+Number($(this).val());
 		});
+		$("#consumo_vales"+id_fondo).val(todos);
 		todos=Number($("#total_vales"+id_fondo).data("value"))-todos;
 		$("#total_vales"+id_fondo).val(todos);
 		$("#total_vales"+id_fondo).keyup();
