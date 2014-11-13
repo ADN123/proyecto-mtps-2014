@@ -1972,11 +1972,20 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	function presupuesto($id_presupuesto=NULL)
 	{
 		$where="";
-		if($id_presupuesto!=NULL) $where=" where id_presupuesto='$id_presupuesto'";
+		if($id_presupuesto!=NULL) $where=" where tpm.id_presupuesto='$id_presupuesto'";
 		
-		$query="SELECT tpm.id_presupuesto, tpm.presupuesto, DATE_FORMAT(tpm.fecha_inicial,'%d-%m-%Y') AS fecha_inicial,
+		$query="SELECT tpm.id_presupuesto, tpm.presupuesto, COALESCE((tpm.presupuesto-g.gasto), tpm.presupuesto) as cantidad_actual, COALESCE(g.gasto,0) as gasto,
+				DATE_FORMAT(tpm.fecha_inicial,'%d-%m-%Y') AS fecha_inicial,
 				DATE_FORMAT(tpm.fecha_final,'%d-%m-%Y') AS fecha_final
-				FROM tcm_presupuesto_mantenimiento AS tpm ".$where;
+				FROM tcm_presupuesto_mantenimiento AS tpm
+				LEFT JOIN 
+				(
+					SELECT tpm.id_presupuesto, SUM(gp.gasto) AS gasto
+					FROM tcm_gasto_presupuesto AS gp
+					INNER JOIN tcm_presupuesto_mantenimiento AS tpm ON (gp.id_presupuesto=tpm.id_presupuesto)
+					GROUP BY tpm.id_presupuesto
+				) as g
+				ON (tpm.id_presupuesto=g.id_presupuesto)".$where;
 				
 		$query=$this->db->query($query);
 		return (array)$query->result_array();

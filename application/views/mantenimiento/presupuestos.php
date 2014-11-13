@@ -1,3 +1,8 @@
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='<?php echo $mensaje; ?>';
+	estado_incorrecto='Error de conexión al servidor. Por favor vuelva a intentarlo.';
+</script>
 <section>
     <h2>Presupuestos</h2>
 </section>
@@ -7,6 +12,8 @@
       <tr>
         <th>ID</th>
         <th>Presupuesto($)</th>
+        <th>Cantidad Actual($)</th>
+        <th>Cantidad Usada($)</th>
         <th>Fecha Inicial</th>
         <th>Fecha Final</th>
         <th>Opción</th>
@@ -16,14 +23,16 @@
     <?php    
         foreach ($presupuesto as $fila) {
     ?>
-        <tr>
+        <tr align="center">
             <td><?php echo $fila['id_presupuesto']?></td>
-            <td><?php echo ucwords($fila['presupuesto'])?></td>
-            <td><?php echo ucwords($fila['fecha_inicial'])?></td>
-            <td><?php echo ucwords($fila['fecha_final'])?></td>
+            <td><?php echo $fila['presupuesto']?></td>
+            <td><?php echo $fila['cantidad_actual']?></td>
+            <td><?php echo $fila['gasto']?></td>
+            <td><?php echo $fila['fecha_inicial']?></td>
+            <td><?php echo $fila['fecha_final']?></td>
             <td>
             	<a rel="leanModal" title="Ver información detallada del presupuesto" href="#ventana" onclick="dialogo(<?php echo $fila['id_presupuesto']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
-                <a rel="leanModal" title="Modificar información del Vehículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_presupuesto/".$fila['id_presupuesto'] ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
+                <a rel="leanModal" title="Modificar información del presupuesto" href="<?php echo base_url()."index.php/vehiculo/nuevo_presupuesto/".$fila['id_presupuesto'] ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
             </td>
         </tr>
     <?php } ?>

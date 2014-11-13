@@ -6,6 +6,8 @@ extract($presupuesto_info)
 <fieldset>
 	<legend>Información del Presupuesto</legend>
     Presupuesto ($): <strong><?php echo $presupuesto; ?></strong><br />
+    Cantidad Actual ($): <strong><?php echo $cantidad_actual; ?></strong><br />
+    Cantidad Usada ($): <strong><?php echo $gasto; ?></strong><br />
     Período: <strong><?php echo "DESDE: ".$fecha_inicial." HASTA: ".$fecha_final; ?></strong><br />
 </fieldset>
 <fieldset>
@@ -34,7 +36,7 @@ extract($presupuesto_info)
     </tbody>
     <tfoot>
     	<tr>
-        	<td colspan="2" align="right">Gasto Total: </td>
+        	<td colspan="2" align="right">Gasto Total ($): </td>
             <td align="right"><strong><?php echo $suma; ?></strong></td>
         </tr>
     </tfoot>
