@@ -25,11 +25,26 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga el catálogo de Vehículos y permite la modificación de los datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 28/04/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
-	function vehiculos()
+	function vehiculos($estado_transaccion=NULL,$tipo=NULL)
 	{
+		if($estado_transaccion!=NULL)
+		{
+			$data['estado_transaccion']=$estado_transaccion;
+			
+			if($tipo!=NULL)
+			{
+				switch($tipo)
+				{
+					case 1: $data['mensaje']="Se ha ingresado la información de un nuevo vehículo éxitosamente";
+							break;
+					case 2: $data['mensaje']="Se ha modificado la información del vehículo éxitosamente";
+							break;
+				}
+			}
+		}
 		$data['datos']=$this->transporte_model->consultar_vehiculos();
 		pantalla('mantenimiento/vehiculos',$data);
 	}
@@ -39,12 +54,11 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga la vista para el Registro de un nuevo Vehículo a la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 06/11/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
-	function nuevo_vehiculo($id_vehiculo=0,$estado_transaccion=NULL)
+	function nuevo_vehiculo($id_vehiculo=0)
 	{
-		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
 		if($id_vehiculo==0)
 		{
 			$data['motoristas']=$this->transporte_model->consultar_motoristas2();
@@ -68,7 +82,6 @@ class Vehiculo extends CI_Controller
 			$data['bandera']='true';
 			$data['vehiculo_info']=$this->transporte_model->consultar_vehiculo_taller($id_vehiculo);
 		}
-		//if($estado_transaccion==NULL)
 		pantalla("mantenimiento/nuevo_vehiculo",$data);
 	}
 	
@@ -179,7 +192,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Registra los datos de un nuevo vehículo en la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 30/07/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
 	function guardar_vehiculo()
@@ -246,11 +259,11 @@ class Vehiculo extends CI_Controller
 			$this->transporte_model->registrar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$tipo_combustible,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a("index.php/vehiculo/nuevo_vehiculo/0/".$tr);
+			ir_a("index.php/vehiculo/vehiculos/".$tr."/1");
 		}
 		else
 		{
-			ir_a("index.php/vehiculo/nuevo_vehiculo/0/0");
+			ir_a("index.php/vehiculo/vehiculos/0");
 		}
 	}
 	
@@ -259,7 +272,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: modifica los datos de un vehículo en la Base de Datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 30/07/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
 	function modificar_vehiculo($id)
@@ -327,11 +340,11 @@ class Vehiculo extends CI_Controller
 			$this->transporte_model->modificar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$tipo_combustible,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen,$id,$estado);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a("index.php/vehiculo/vehiculos/".$id."/".$tr);
+			ir_a("index.php/vehiculo/vehiculos/".$tr."/2");
 		}
 		else
 		{
-			ir_a("index.php/vehiculo/vehiculos/".$id."/0");
+			ir_a("index.php/vehiculo/vehiculos/0");
 		}
 	}
 	
@@ -504,14 +517,12 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: llama a la vista de nuevo artículo para registrarlo en la base de datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 06/11/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function nuevo_articulo($estado_transaccion=NULL)
+	function nuevo_articulo()
 	{
-		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
-		
 		$data['presupuesto']=$this->transporte_model->presupuesto();
 		pantalla('mantenimiento/nuevo_articulo',$data);
 	}
@@ -521,12 +532,26 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: llama a la vista de bodega para observar el inventario en bodega
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 04/11/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function bodega($estado_transaccion=NULL)
+	function bodega($estado_transaccion=NULL,$tipo=NULL)
 	{
+		if($estado_transaccion!=NULL)
+		{
+			$data['estado_transaccion']=$estado_transaccion;
+			if($tipo!=NULL && $estado_transaccion==1)
+			{
+				switch($tipo)
+				{
+					case 1: $data['mensaje']='Se ha registrado un nuevo artículo a bodega éxitosamente';
+							break;
+					case 2: $data['mensaje']='Se ha modificado la información del artículo éxitosamente';
+							break;
+				}
+			}
+		}
 		$data['inventario']=$this->transporte_model->inventario();
 		pantalla('mantenimiento/bodega',$data);
 	}
