@@ -6,28 +6,6 @@ if($bandera=='true')
 }
 else $action=base_url()."index.php/vehiculo/guardar_presupuesto";
 ?>
-<?php
-if($bandera=='true')
-{
-?>
-<script>
-	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='Se ha modificado el presupuesto exitosamente.';
-	estado_incorrecto='Error al modificar los datos del presupuesto: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
-</script>
-<?php
-}
-else
-{
-?>
-<script>
-	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='Se ha registrado un nuevo presupuesto exitosamente.';
-	estado_incorrecto='Error al registrar un nuevo presupuesto: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
-</script>
-<?php
-}
-?>
 <section>
     <h2><?php if($bandera=='true')echo "Modificar Presupuesto"; else {?>Nuevo Presupuesto <?php } ?></h2>
 </section>

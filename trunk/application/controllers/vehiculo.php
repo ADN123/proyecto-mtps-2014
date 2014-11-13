@@ -294,9 +294,9 @@ class Vehiculo extends CI_Controller
 			}	
 			else
 			{
-				echo "<script language='javascript'>
+				/*echo "<script language='javascript'>
 				alert('Fotografia subida correctamente');
-				</script>";
+				</script>";*/
 				$file_data = $this->upload->data();
 				$imagen=$file_data['file_name'];
 			}
@@ -327,11 +327,11 @@ class Vehiculo extends CI_Controller
 			$this->transporte_model->modificar_vehiculo($placa,$id_marca,$id_modelo,$id_clase,$anio,$id_condicion,$tipo_combustible,$id_seccion,$id_empleado,$id_fuente_fondo,$imagen,$id,$estado);
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a("index.php/vehiculo/vehiculos/".$tr);
+			ir_a("index.php/vehiculo/vehiculos/".$id."/".$tr);
 		}
 		else
 		{
-			ir_a("index.php/vehiculo/vehiculos/0");
+			ir_a("index.php/vehiculo/vehiculos/".$id."/0");
 		}
 	}
 	
@@ -401,12 +401,26 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: llama a la vista de presupuestos para el control de los presupuestos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 11/11/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function presupuestos()
+	function presupuestos($estado_transaccion=NULL,$tipo=NULL)
 	{
+		if($estado_transaccion!=NULL)
+		{
+			$data['estado_transaccion']=$estado_transaccion;
+			if($tipo!=NULL && $estado_transaccion==1)
+			{
+				switch($tipo)
+				{
+					case 1: $data['mensaje']='Se ha registrado un nuevo presupuesto éxitosamente';
+							break;
+					case 2: $data['mensaje']='Se ha modificado la información del presupuesto éxitosamente';
+							break;
+				}
+			}
+		}
 		$data['presupuesto']=$this->transporte_model->presupuesto();
 		pantalla('mantenimiento/presupuestos',$data);
 	}
@@ -416,13 +430,12 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: función que sirve para ingresar un nuevo presupuestos o modificarlo
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 11/11/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function nuevo_presupuesto($id_presupuesto=0,$estado_transaccion=NULL)
+	function nuevo_presupuesto($id_presupuesto=0)
 	{
-		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
 		if($id_presupuesto!=0)
 		{
 			$data['presupuesto']=$this->transporte_model->presupuesto($id_presupuesto);
@@ -455,7 +468,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: guarda un nuevo registro de presupuesto
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 11/11/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
 	
@@ -465,7 +478,7 @@ class Vehiculo extends CI_Controller
 		$this->transporte_model->guardar_presupuesto($_POST);
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
-		ir_a("index.php/vehiculo/nuevo_presupuesto/0/".$tr);
+		ir_a("index.php/vehiculo/presupuestos/".$tr."/1");
 	}
 	
 	/*
@@ -473,7 +486,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: guarda un nuevo registro de presupuesto
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 12/11/2014
+	*	Última Modificación: 13/11/2014
 	*	Observaciones: Ninguna
 	*/
 	
@@ -483,7 +496,7 @@ class Vehiculo extends CI_Controller
 		$this->transporte_model->modificar_presupuesto($_POST);
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
-		ir_a("index.php/vehiculo/nuevo_presupuesto/".$_POST['id_presupuesto']."/".$tr);
+		ir_a("index.php/vehiculo/presupuestos/".$tr."/2");
 	}
 	
 	/*
