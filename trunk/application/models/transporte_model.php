@@ -936,7 +936,7 @@ function solicitudes_por_asignar_depto(){
 	function registrar_vehiculo($nplaca,$marca,$modelo,$clase,$year,$condicion,$tcombustible,$seccion,$motorista,$fuente_fondo,$foto)
 	{
 		$query="INSERT INTO tcm_vehiculo(placa,id_seccion,id_marca,id_modelo,id_clase,id_condicion,anio,imagen,id_fuente_fondo,estado,cantidad_combustible,id_seccion_vale,tipo_combustible)
-				values('$nplaca','$seccion','$marca','$modelo','$clase','$condicion','$year','$foto','$fuente_fondo',1,50,21,'$tcombustible')";
+				values('$nplaca','$seccion','$marca','$modelo','$clase','$condicion','$year','$foto','$fuente_fondo',1,50,'$seccion','$tcombustible')";
 		$this->db->query($query);
 		
 		$q=$this->db->query("select max(id_vehiculo) as id from tcm_vehiculo");

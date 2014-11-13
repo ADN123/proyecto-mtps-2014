@@ -877,7 +877,8 @@ por lo tanto la logica de niveles se manejara de forma diferente
 					FROM tcm_requisicion
 					INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
 					INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
-					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera." ".$where;
+					WHERE tcm_requisicion_vale.cantidad_restante>0 AND tcm_vale.id_gasolinera=".$id_gasolinera." ".$where." ORDER BY fecha_entregado ASC ";
+
 		$query=$this->db->query($sentencia);
 		$res=(array)$query->result_array();
 		foreach($res as $r) {
@@ -1149,7 +1150,7 @@ por lo tanto la logica de niveles se manejara de forma diferente
 		$q="UPDATE tcm_herramienta SET id_seccion_vale = ".$id_seccion.",
 				id_fuente_fondo = ".$id_fuente_fondo.",
 				descripcion = '".$descripcion."',
-				combustible = '".$combustible."'
+				combustible = '".$combustible."',
 				nombre = '".$nombre."'
 		WHERE id_herramienta = ".$id;
 		$this->db->query($q);

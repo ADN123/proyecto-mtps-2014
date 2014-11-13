@@ -985,7 +985,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a('index.php/vales/ingreso_consumo/'.$tr);
+			//ir_a('index.php/vales/ingreso_consumo/'.$tr);
 
 		}
 		else {
