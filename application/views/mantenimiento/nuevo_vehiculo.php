@@ -2,9 +2,6 @@
 
 if($bandera=='true')
 {
-	//print_r($vehiculo_info);
-	//echo "<br>";
-	//print_r($modelo);
 	foreach($vehiculo_info as $v)
 	{
 		$id_vehiculo=$v->id_vehiculo;
@@ -33,28 +30,6 @@ if($bandera=='true')
 	$action=base_url()."index.php/vehiculo/modificar_vehiculo/".$id_vehiculo;
 }
 else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
-?>
-<?php
-if($bandera=='true')
-{
-?>
-<script>
-	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='Se ha modificado la información del vehículo exitosamente.';
-	estado_incorrecto='Error al modificar los datos del vehículo: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
-</script>
-<?php
-}
-else
-{
-?>
-<script>
-	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='Se ha registrado un nuevo vehículo exitosamente.';
-	estado_incorrecto='Error al registrar un nuevo vehículo: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
-</script>
-<?php
-}
 ?>
 <section>
     <h2><?php if($bandera=='true')echo "Modificar Vehículo"; else {?>Nuevo Vehículo <?php } ?></h2>

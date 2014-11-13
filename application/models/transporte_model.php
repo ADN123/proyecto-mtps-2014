@@ -2026,5 +2026,30 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		return $this->db->query($query);
 	}
 	/*****************************************************************************************************************/
+	
+	//////////////////////////////////////////////FUNCIONES DE LOS ARTÍCUlOS////////////////////////////////////////////
+	
+	/************************************FUNCIÓN QUE MUESTRA LOS ARTÍCULOS DISPONIBLES*********************************/
+	function inventario($id_articulo=NULL)
+	{
+		$where="";
+		if($id_articulo!=NULL)
+		{
+			$where=" where art.id_articulo='$id_articulo'";
+		}
+		
+		$query="SELECT art.id_articulo, art.nombre, art.descripcion, art.cantidad FROM tcm_articulo_bodega as art";
+		$query=$this->db->query($query);
+		return (array)$query->result_array();
+	}
+	/******************************************************************************************************************/
+	
+	/*************************************FUNCIÓN PARA INGRESAR UN NUEVO ARTÍCULO**************************************/
+	function nuevo_articulo($datos)
+	{
+		extract($datos);
+		$query="INSERT INTO tcm_articulo_bodega(nombre, decripcion, cantidad) VALUES('$nombre','$descripcion','$cantidad')";
+		return $this->db->query($query);
+	}
 }
 ?>
