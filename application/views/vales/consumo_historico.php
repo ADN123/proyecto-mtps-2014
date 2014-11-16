@@ -116,12 +116,13 @@
               console.log(data);
 
               var label;
-                      if(data.length<=12){
-                           label="fecha";
+                      if(data.length<=30){
+                           label="fec";
                       }else{
                             label="row_number";
                             
                         }
+                        label="fec";
                         grafico1(data,label);//contructor del grafico
                         tabla1(data) 
 

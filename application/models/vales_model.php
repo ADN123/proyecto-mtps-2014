@@ -1226,19 +1226,22 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 
 				switch ($agrupar){
 					case 1:
-						
+						$sel ="DATE_FORMAT(c.fecha_factura,'%d/%m')	as fec,";
 						$fecha=" DATE_FORMAT(c.fecha_factura,'%d-%m-%Y')	as fecha";
 						$grup= " c.fecha_factura";
 						break;
 					case 2:
+						$sel = "DATE_FORMAT(c.fecha_factura,'%M') fec,";
 						$fecha=" DATE_FORMAT(c.fecha_factura,'%M') fecha ";
 						$grup= " DATE_FORMAT(c.fecha_factura,'%Y%m')";
 						break;
 					case 3:
+						$sel ="DATE_FORMAT(c.fecha_factura,'%M') fec,";
 						$fecha=" DATE_FORMAT(c.fecha_factura,'%Y') fecha ";
 						$grup= " DATE_FORMAT(c.fecha_factura,'%Y')";
 						break;
 					default:
+						$sel ="DATE_FORMAT(c.fecha_factura,'%d/%m')	as fec,";
 						$fecha=" DATE_FORMAT(c.fecha_factura,'%d-%m-%Y')	as fecha";
 						$grup= " c.fecha_factura";
 						break;
@@ -1254,7 +1257,7 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 									CONCAT( s.nombre_seccion, ' (', f.nombre_fuente_fondo, ' )') as seccion,
 									SUM( cv.cantidad_vales) consumido, 
 									SUM(cv.cantidad_vales) * v.valor_nominal as  dinero,
-									".$fecha."				
+									$sel ".$fecha."				
 								FROM
 									tcm_consumo_vehiculo cv
 								INNER JOIN tcm_consumo c ON c.id_consumo = cv.id_consumo
@@ -1302,9 +1305,10 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 				$where2= $fechaF2.$seccionF.$fuenteF;
 
 
-			$query=$this->db->query(" SET @row_number:=0;");
-			$q="SELECT *, 
-						ROUND( COALESCE(glxv * vales / recorrido ,0), 2 )  as rendimiento 
+			
+			$q="SELECT 	ROUND( COALESCE(recorrido/glxv ,0), 2 )  as rendimiento,
+						ROUND( glxv, 2 )  as gal,
+						x.*
 						FROM (
 										SELECT
 											d.id_vehiculo, 
@@ -1315,7 +1319,7 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 											COALESCE(k.recor ,0) as recorrido, 
 											vg.valor_gasolina, 
 											vg.valor_nominal, 
-											(vg.valor_nominal/valor_gasolina)as glxv			
+											SUM(vg.galones)as glxv			
 										FROM
 											tcm_consumo c
 										INNER JOIN tcm_consumo_vehiculo cv ON cv.id_consumo = c.id_consumo
@@ -1327,7 +1331,10 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 										INNER JOIN tcm_consumo_vehiculo_valores vg ON cv.id_consumo_vehiculo = vg.id_consumo_vehiculo 
 									".$where2."
 								GROUP BY id_vehiculo
-								) AS X";
+								) AS X
+
+								ORDER BY vales DESC ";
+				
 
 			$query=$this->db->query($q);
 
