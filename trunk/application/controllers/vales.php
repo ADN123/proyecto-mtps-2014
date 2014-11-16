@@ -985,7 +985,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			//ir_a('index.php/vales/ingreso_consumo/'.$tr);
+			ir_a('index.php/vales/ingreso_consumo/'.$tr);
 
 		}
 		else {
@@ -1622,7 +1622,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
 
 
-					$f.="del ".$fecha_inicio." al ".$fecha_fin;
+					$f.="del ".$this->input->post('start')." al ".$this->input->post('end');
 			}else{
 						$f.="del ".date('01-m-Y')." al ".date('d-m-Y'); 
 					$fecha_inicio=NULL;
@@ -1754,7 +1754,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
 
 
-					$f.="del ".$fecha_inicio." al ".$fecha_fin;
+					$f.="del ".$_POST['start']." al ".$_POST['end'];
 			}else{
 						$f.=" hasta  el ".date('d-m-Y'); 
 					$fecha_inicio=NULL;

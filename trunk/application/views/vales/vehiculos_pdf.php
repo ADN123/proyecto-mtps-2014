@@ -29,7 +29,7 @@
             <th>Vales aplicados</th>
             <th>Combustible Aplicado (gal)</th>
             <th>Recorrido (Km)</th>  
-            <th>Rendimiento (gal/Km)</th>             
+            <th>Rendimiento (Km/gal)</th>             
         </tr>
         </thead>
         <tbody>
@@ -40,7 +40,7 @@
 				echo "<td>".$d->placa."</td>";
 				echo "<td>".$d->marca."</td>";
                 echo "<td>".$d->vales."</td>";
-                echo "<td>".$d->glxv."</td>";
+                echo "<td>".$d->gal."</td>";
 				echo "<td>".$d->recorrido."</td>";
                 echo "<td>".$d->rendimiento."</td>";
 				echo "</tr>";

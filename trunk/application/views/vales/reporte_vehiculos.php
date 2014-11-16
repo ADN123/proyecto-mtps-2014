@@ -73,7 +73,7 @@
                     Recorrido (Km)
                 </th>  
                  <th>
-                    Rendimiento (gal/Km)
+                    Rendimiento (Km/gal)
                 </th>             
 
             </thead>

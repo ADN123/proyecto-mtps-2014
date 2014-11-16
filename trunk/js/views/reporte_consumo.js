@@ -234,13 +234,12 @@ function tabla2 (json) {
 
             $('#datos tbody').remove();        
             for (i=0;i<json.length;i++) {   
-            var n = new Number(json[i].rendimiento);
-            var ap = new Number(json[i].vales*json[i].glxv);
+            var n = new Number(json[i].rendimiento);;
              fila= "<tr>" +
               "<td align='center'>" + json[i].placa + "</td>" +
               "<td align='center'>" + json[i].marca + "</td>" +
               "<td align='center'>" + json[i].vales + "</td>" +
-              "<td align='center'>" + ap + "</td>" +
+              "<td align='center'>" + json[i].gal + "</td>" +
               "<td align='center'>" + json[i].recorrido + "</td>" +
               "<td align='center'>" + n.toFixed(2) + "</td>" +
             "</tr>";    
