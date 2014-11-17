@@ -23,6 +23,24 @@ class Seguridad_model extends CI_Model {
 			);
 		}
 	}
+	
+	function consultar_usuario2($login,$clave)
+	{
+		$sentencia="SELECT id_usuario, usuario, nombre_completo, NR , id_seccion, sexo
+					FROM org_usuario
+					WHERE usuario='$login' AND estado=1";
+		$query=$this->db->query($sentencia);
+	
+		if($query->num_rows>0) {
+			return (array)$query->row();
+		}
+		else {
+			return array(
+				'id_usuario' => 0
+			);
+		}
+	}
+	
 	public function sexoUsuario($id_usuario='')
 	{
 			$sentencia="SELECT
