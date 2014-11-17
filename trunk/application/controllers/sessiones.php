@@ -7,6 +7,7 @@ class Sessiones extends CI_Controller {
 		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('seguridad_model');
 		$this->load->helper('cookie');
+		error_reporting(0);
     }
 
 	/*
