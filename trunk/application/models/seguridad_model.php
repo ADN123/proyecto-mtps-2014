@@ -24,7 +24,7 @@ class Seguridad_model extends CI_Model {
 		}
 	}
 	
-	function consultar_usuario2($login,$clave)
+	function consultar_usuario2($login)
 	{
 		$sentencia="SELECT id_usuario, usuario, nombre_completo, NR , id_seccion, sexo
 					FROM org_usuario
