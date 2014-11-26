@@ -481,13 +481,14 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: guarda un nuevo registro de presupuesto
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 13/11/2014
+	*	Última Modificación: 25/11/2014
 	*	Observaciones: Ninguna
 	*/
 	
 	function guardar_presupuesto()
 	{
 		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$this->transporte_model->guardar_presupuesto($_POST);
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;

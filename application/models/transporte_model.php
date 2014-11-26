@@ -5,7 +5,6 @@ class Transporte_model extends CI_Model {
     function __construct() {
         //LLamar al constructor del Modelo
         parent::__construct();
-	
     }
 	function consultar_seccion_usuario($nr=0)
 	{
@@ -2011,7 +2010,9 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		extract($datos);
 		$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
 		$fecha_final2=date('Y-m-d',strtotime($fecha_final));
-		$query="INSERT INTO tcm_presupuesto_mantenimiento(presupuesto,fecha_inicial,fecha_final) values('$presupuesto','$fecha_inicial2','$fecha_final2')";
+		$fecha_crea=date('Y-m-d H:i:s');
+		$query="INSERT INTO tcm_presupuesto_mantenimiento(presupuesto,fecha_inicial,fecha_final,id_usuario_crea,fecha_crea)
+				values('$presupuesto','$fecha_inicial2','$fecha_final2','$id_usuario','$fecha_crea')";
 		return $this->db->query($query);
 	}
 	/*****************************************************************************************************************/

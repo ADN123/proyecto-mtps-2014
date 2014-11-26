@@ -25,9 +25,9 @@
     ?>
         <tr align="center">
             <td><?php echo $fila['id_presupuesto']?></td>
-            <td><?php echo $fila['presupuesto']?></td>
-            <td><?php echo $fila['cantidad_actual']?></td>
-            <td><?php echo $fila['gasto']?></td>
+            <td><?php echo number_format($fila['presupuesto'],2)?></td>
+            <td><?php echo number_format($fila['cantidad_actual'],2)?></td>
+            <td><?php echo number_format($fila['gasto'],2)?></td>
             <td><?php echo $fila['fecha_inicial']?></td>
             <td><?php echo $fila['fecha_final']?></td>
             <td>

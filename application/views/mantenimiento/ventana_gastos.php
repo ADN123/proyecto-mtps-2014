@@ -5,9 +5,9 @@ extract($presupuesto_info)
 
 <fieldset>
 	<legend>Información del Presupuesto</legend>
-    Presupuesto ($): <strong><?php echo $presupuesto; ?></strong><br />
-    Cantidad Actual ($): <strong><?php echo $cantidad_actual; ?></strong><br />
-    Cantidad Usada ($): <strong><?php echo $gasto; ?></strong><br />
+    Presupuesto ($): <strong><?php echo number_format($presupuesto,2); ?></strong><br />
+    Cantidad Actual ($): <strong><?php echo number_format($cantidad_actual,2); ?></strong><br />
+    Cantidad Usada ($): <strong><?php echo number_format($gasto,2); ?></strong><br />
     Período: <strong><?php echo "DESDE: ".$fecha_inicial." HASTA: ".$fecha_final; ?></strong><br />
 </fieldset>
 <fieldset>
@@ -28,7 +28,7 @@ extract($presupuesto_info)
 			echo "<tr>";
 			echo "<td>".$g['descripcion']."</td>";
 			echo "<td>".$g['fecha']."</td>";
-			echo "<td align='right'>".$g['gasto']."</td>";
+			echo "<td align='right'>".number_format($g['gasto'],2)."</td>";
 			echo "</tr>";
 			$suma=$suma+$g['gasto'];
 		}
@@ -37,7 +37,7 @@ extract($presupuesto_info)
     <tfoot>
     	<tr>
         	<td colspan="2" align="right">Gasto Total ($): </td>
-            <td align="right"><strong><?php echo $suma; ?></strong></td>
+            <td align="right"><strong><?php echo number_format($suma,2); ?></strong></td>
         </tr>
     </tfoot>
     </table>
