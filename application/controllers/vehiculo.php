@@ -140,14 +140,13 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: carga la vista de Reparación y mantenimiento en taller del MTPS
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 24/06/2014
+	*	Última Modificación: 27/11/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function tallerMTPS($estado_transaccion=NULL)
+	function tallerMTPS($id_v)
 	{
-		$data['vehiculos']=$this->transporte_model->consultar_vehiculos(2);
-		$data['estado_transaccion']=$estado_transaccion;
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculo_taller($id_v,2);
 		pantalla('mantenimiento/taller_MTPS',$data);
 	}
 	
