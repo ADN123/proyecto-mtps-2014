@@ -1,8 +1,3 @@
-<script>
-	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='Se ha registrado el mantenimiento realizado al vehículo exitosamente.';
-	estado_incorrecto='Error al registrar el mantenimiento realizado al vehículo: No se pudo conectar al servidor. Por favor vuelva a intentarlo.';
-</script>
 <section>
     <h2>Reparación y Mantenimiento en Taller MTPS</h2>
 </section>
@@ -39,7 +34,7 @@
         </ul>
         <div id="step-1">	
             <h2 class="StepTitle">Datos Generales del Vehículo</h2>
-              <table>
+            <table>
             <tr>
             <td width="300px">
 			<p>
@@ -47,15 +42,38 @@
                 <strong><?php echo date('d/m/Y')?></strong>
             </p>
             <p>
-                <label style="width:100px">Seleccione un número de placa: </label>
-                <select class="select" style="width:100px" onchange="cargar(this.value)" name="placa" id="placa">
-                	<?php
-					foreach($vehiculos as $v)
-					{
-						echo "<option value='".$v->id."'>".$v->placa."</option>";
-					}
-                    ?>
-                </select>
+            <?php
+            foreach($vehiculos as $v)
+			{
+			?>
+            <table align='center' class='table_design' cellspacing='0' cellpadding='0'>
+            <thead>
+            	<tr>
+                	<td>Datos Generales del Vehículo</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                	<td>Marca: <strong><?php echo $v->marca ?></strong></td>
+                    <td>Motorista Asignado: <strong><?php echo $v->motorista ?></strong></td>
+                </tr>
+                <tr>
+                    <td>Modelo: <strong><?php echo $v->modelo ?></strong></td>
+                    <td>Oficina Asiganada: <strong><?php echo $v->seccion ?></strong></td>
+                </tr>
+                <tr>
+                    <td>Clase: <strong><?php echo $v->clase ?></strong></td>
+                    <td>Kilometraje Actual: <strong><?php echo $v->kilometraje ?>km</strong></td>
+                </tr>
+                <tr>
+                    <td>Año: <strong><?php echo $v->anio ?></strong></td>
+                    <td>Tipo de Combustible: <strong><?php echo $v->tipo_combustible?></strong></td>
+                </tr>
+            </tbody>
+            </table>
+             <?php
+			 }
+			 ?>     
             </p>
             </td>
             <td width="700px">

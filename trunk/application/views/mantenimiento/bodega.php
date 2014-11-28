@@ -23,6 +23,7 @@
         <tr align="center">
             <td><?php echo $fila['id_articulo']?></td>
             <td><?php echo $fila['nombre']?></td>
+            <td><?php echo $fila['cantidad']?></td>
             <td><?php echo $fila['descripción']?></td>
             <td>
             	<a rel="leanModal" title="Modificar información del presupuesto" href="#ventana" onClick="dialogo(<?php echo $fila['id_articulo'] ?>)" ><img src="<?php echo base_url()?>img/editar.png"/></a>
