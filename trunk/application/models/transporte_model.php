@@ -1973,7 +1973,9 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$where="";
 		if($id_presupuesto!=NULL) $where=" where tpm.id_presupuesto='$id_presupuesto'";
 		
-		$query="SELECT tpm.id_presupuesto, tpm.presupuesto, COALESCE((tpm.presupuesto-g.gasto), tpm.presupuesto) as cantidad_actual, COALESCE(g.gasto,0) as gasto,
+		$query="SELECT tpm.id_presupuesto, COALESCE((tpm.presupuesto+r.refuerzo), tpm.presupuesto) as presupuesto, 
+				COALESCE((tpm.presupuesto+COALESCE(r.refuerzo,0))-g.gasto, (tpm.presupuesto+COALESCE(r.refuerzo,0))) as cantidad_actual,
+				COALESCE(g.gasto,0) as gasto,
 				DATE_FORMAT(tpm.fecha_inicial,'%d-%m-%Y') AS fecha_inicial,
 				DATE_FORMAT(tpm.fecha_final,'%d-%m-%Y') AS fecha_final
 				FROM tcm_presupuesto_mantenimiento AS tpm
@@ -1984,7 +1986,15 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 					INNER JOIN tcm_presupuesto_mantenimiento AS tpm ON (gp.id_presupuesto=tpm.id_presupuesto)
 					GROUP BY tpm.id_presupuesto
 				) as g
-				ON (tpm.id_presupuesto=g.id_presupuesto)".$where;
+				ON (tpm.id_presupuesto=g.id_presupuesto)
+				LEFT JOIN 
+				(
+					SELECT tpm.id_presupuesto, SUM(rp.refuerzo) AS refuerzo
+					FROM tcm_refuerzo_presupuesto AS rp
+					INNER JOIN tcm_presupuesto_mantenimiento AS tpm ON (rp.id_presupuesto=tpm.id_presupuesto)
+					GROUP BY tpm.id_presupuesto
+				) as r
+				ON (tpm.id_presupuesto=r.id_presupuesto)".$where;
 				
 		$query=$this->db->query($query);
 		return (array)$query->result_array();
@@ -2011,7 +2021,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
 		$fecha_final2=date('Y-m-d',strtotime($fecha_final));
 		$fecha_crea=date('Y-m-d H:i:s');
-		$query="INSERT INTO tcm_presupuesto_mantenimiento(presupuesto,fecha_inicial,fecha_final,id_usuario_crea,fecha_crea)
+		$query="INSERT INTO tcm_presupuesto_mantenimiento(presupuesto,fecha_inicial,fecha_final,id_usuario_crea,fecha_creacion)
 				values('$presupuesto','$fecha_inicial2','$fecha_final2','$id_usuario','$fecha_crea')";
 		return $this->db->query($query);
 	}
@@ -2024,6 +2034,17 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
 		$fecha_final2=date('Y-m-d',strtotime($fecha_final));
 		$query="UPDATE tcm_presupuesto_mantenimiento SET presupuesto='$presupuesto', fecha_inicial='$fecha_inicial2', fecha_final='$fecha_final2' WHERE id_presupuesto='".$_POST['id_presupuesto']."';";
+		return $this->db->query($query);
+	}
+	/*****************************************************************************************************************/
+	
+	/*******************************FUNCIÓN PARA GUARDAR UN REFUERZO A UN PRESUPUESTO**************************************/
+	function guardar_refuerzo($datos)
+	{
+		extract($datos);
+		$fecha_crea=date('Y-m-d H:i:s');
+		$query="INSERT INTO tcm_refuerzo_presupuesto(refuerzo,id_presupuesto,justificacion,id_usuario_crea,fecha_creacion)
+				values('$refuerzo','$id_presupuesto','$justificacion','$id_usuario','$fecha_crea')";
 		return $this->db->query($query);
 	}
 	/*****************************************************************************************************************/

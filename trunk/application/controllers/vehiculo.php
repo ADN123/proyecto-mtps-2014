@@ -413,7 +413,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: llama a la vista de presupuestos para el control de los presupuestos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 13/11/2014
+	*	Última Modificación: 15/12/2014
 	*	Observaciones: Ninguna
 	*/
 	
@@ -429,6 +429,8 @@ class Vehiculo extends CI_Controller
 					case 1: $data['mensaje']='Se ha registrado un nuevo presupuesto éxitosamente';
 							break;
 					case 2: $data['mensaje']='Se ha modificado la información del presupuesto éxitosamente';
+							break;
+					case 3: $data['mensaje']='Se ha reforzado el presupuesto éxitosamente';
 							break;
 				}
 			}
@@ -510,6 +512,40 @@ class Vehiculo extends CI_Controller
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
 		ir_a("index.php/vehiculo/presupuestos/".$tr."/2");
+	}
+	
+	/*
+	*	Nombre: nuevo_refuerzo
+	*	Objetivo: llama a la vista de nuevo refuerzo para registrarlo en la base de datos
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 15/12/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function nuevo_refuerzo($id_presupuesto)
+	{
+		$data['id_presupuesto']=$id_presupuesto;
+		pantalla('mantenimiento/nuevo_refuerzo',$data);
+	}
+	
+	/*
+	*	Nombre: guardar_refuerzo
+	*	Objetivo: guarda un nuevo refuerzo en la base de datos
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 15/12/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function guardar_refuerzo()
+	{
+		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$this->transporte_model->guardar_refuerzo($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/presupuestos/".$tr."/3");
 	}
 	
 	/*
