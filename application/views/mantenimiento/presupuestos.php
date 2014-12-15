@@ -33,6 +33,7 @@
             <td>
             	<a rel="leanModal" title="Ver información detallada del presupuesto" href="#ventana" onclick="dialogo(<?php echo $fila['id_presupuesto']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
                 <a rel="leanModal" title="Modificar información del presupuesto" href="<?php echo base_url()."index.php/vehiculo/nuevo_presupuesto/".$fila['id_presupuesto'] ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
+                <a rel="leanModal" title="Reforzar presupuesto" href="<?php echo base_url()."index.php/vehiculo/nuevo_refuerzo/".$fila['id_presupuesto'] ?>" ><img src="<?php echo base_url()?>img/dinero.png" width="25px"/></a>
             </td>
         </tr>
     <?php } ?>
