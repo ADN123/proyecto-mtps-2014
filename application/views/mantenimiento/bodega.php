@@ -6,7 +6,7 @@
 <section>
     <h2>Bodega</h2>
 </section>
-<button style="width:200px" type="button" onclick="window.open('<?php echo base_url()."index.php/vehiculo/nuevo_presupuesto" ?>','_parent')" name="btnNuevo">Nuevo Artículo</button>
+<button style="width:200px" type="button" onclick="window.open('<?php echo base_url()."index.php/vehiculo/nuevo_articulo" ?>','_parent')" name="btnNuevo">Nuevo Artículo</button>
 <table  class="grid">
     <thead>
       <tr>
