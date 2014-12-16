@@ -20,7 +20,7 @@
             </p>
             <p>
             	<label style="width:150px">Cantidad a Reforzar($): </label>
-                <input name="refuerzo" size="10">
+                <input type="text" name="refuerzo" size="10">
             </p>
             <p>
             	<label style="width:150px" class="label_textarea">Justificación: </label>

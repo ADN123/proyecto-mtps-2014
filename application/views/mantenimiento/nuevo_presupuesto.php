@@ -27,7 +27,7 @@ else $action=base_url()."index.php/vehiculo/guardar_presupuesto";
         	<h2 class="StepTitle">Ingreso de la informaci&oacute;n del presupuesto</h2>
             <p>
             	<label>Presupuesto($): </label>
-                <input name="presupuesto" <?php if($bandera=='true') echo "value='".$presupuesto."'"; ?> size="10">
+                <input type="text" name="presupuesto" <?php if($bandera=='true') echo "value='".$presupuesto."'"; ?> size="10">
             </p>
             <p>
             	<label>Desde: </label>
