@@ -2073,40 +2073,143 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			$where=" where art.id_articulo='$id_articulo'";
 		}
 		
-		$query="SELECT art.id_articulo, art.nombre, art.descripcion, art.cantidad FROM tcm_articulo_bodega as art";
+		$query="SELECT art.id_articulo, art.nombre, art.descripcion, art.cantidad FROM tcm_articulo_bodega as art".$where;
+		$query=$this->db->query($query);
+		return (array)$query->result_array();
+	}
+	/******************************************************************************************************************/
+	
+	/************************************FUNCIÓN QUE MUESTRA LAS TRANSACCIONES DE LOS ARTÍCULOS*********************************/
+	function transaccion_articulo($id=NULL)
+	{
+		$where="";
+		if($id!=NULL)
+		{
+			$where=" WHERE tta.id_articulo='$id'";
+		}
+		
+		$query="SELECT tta.id_transaccion_articulo, tta.tipo_transaccion, tta.cantidad,  DATE_FORMAT(tta.fecha,'%d-%m-%Y') AS fecha,
+				tta.id_articulo FROM tcm_transaccion_articulo as tta".$where;
 		$query=$this->db->query($query);
 		return (array)$query->result_array();
 	}
 	/******************************************************************************************************************/
 	
 	/*************************************FUNCIÓN PARA INGRESAR UN NUEVO ARTÍCULO**************************************/
-	function nuevo_articulo($datos)
-	{
-		extract($datos);
-		$query="INSERT INTO tcm_articulo_bodega(nombre, decripcion, cantidad) VALUES('$nombre','$descripcion','$cantidad')";
-		return $this->db->query($query);
-	}
-	
-	/***********************************************************************************************************/
-	
+		
 	function guardar_articulo($datos)
 	{
 		extract($datos);
+		$bandera=1;
+		$fecha=date('Y-m-d');
 		
-		if($adquisicion=='comprado')
+		if($adquisicion=='comprado' && $gasto>0.00)
 		{
-			$presupuesto=$this->transporte_model->presupuesto_activo();
+			$presupuesto=$this->presupuesto_activo();
 			foreach($presupuesto as $p)
 			{
 				$id_presupuesto=$p['id_presupuesto'];
 				$pre=$p['presupuesto'];
 			}
-			$fecha=date('Y-m-d');
-			$query_gasto="INSERT INTO tcm_gasto_presupuesto (gasto, descripcion, fecha, id_presupuesto) VALUES ('$gasto', 'se realizo una compra', '$fecha', '$id_presupuesto');";
-			$this->db->query($query_gasto);
+			
+			
+			$gastos_a=$this->gastos($id_presupuesto);
+			$gasto_s=0;
+			foreach($gastos_a as $gastos_b)
+			{
+				$gasto_s=$gasto_s+$gastos_b['gasto'];
+			}
+			
+			$cantidad_actual=$pre-$gasto_s;
+			if($gasto<$cantidad_actual)/*se valida que no se gaste más de lo que se dispone*/
+			{
+				$descripcion2="Se compraron ".$cantidad." ".$nombre;
+				$query_gasto="INSERT INTO tcm_gasto_presupuesto (gasto, descripcion, fecha, id_presupuesto) VALUES ('$gasto', '$descripcion2', '$fecha', '$id_presupuesto');";
+				if($this->db->query($query_gasto)) $bandera=$bandera*1;
+				else $bandera=$bandera*0;
+			}
 		}
-		$query="INSERT INTO tcm_articulo_bodega (nombre, descripcion, cantidad) VALUES ($nombre, $descripcion, $cantidad);";
+		
+		if($bandera==1)
+		{
+			$query="INSERT INTO tcm_articulo_bodega (nombre, descripcion, cantidad) VALUES ('$nombre', '$descripcion', '$cantidad');";
+			if($this->db->query($query))
+			{
+				$id_articulo=$this->ultimo_id_articulo();
+				$query2="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo) VALUES ('ENTRADA', '$cantidad', '$fecha', '$id_articulo');";
+				return $this->db->query($query2);
+			}
+		}
+	}
+	/********************************************************************************************************************************************/
+	
+	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_ARTÍCULO********************************************/
+	function ultimo_id_articulo()
+	{
+		$query="select max(id_articulo) as id_articulo from tcm_articulo_bodega;";
+		$query=$this->db->query($query);
+		$id=$query->result_array();
+		foreach($id as $i)
+		{
+			return $i['id_articulo'];
+		}
+	}
+	/*******************************************************************************************************************************************/
+	
+	/*******************************************FUNCIÓN PARA MODIFICAR LA INFORMACIÓN DEL ARTÍCULO********************************************/
+	function modificar_articulo($datos)
+	{
+		extract($datos);
+		$query="UPDATE tcm_articulo_bodega SET nombre='$nombre', descripcion='$descripcion' WHERE (id_articulo='$id_articulo');";
 		return $this->db->query($query);
 	}
+	/*******************************************************************************************************************************************/
+	
+	/*******************************************FUNCIÓN PARA CARGAR ARTÍCULO********************************************/
+	function surtir_articulo($datos)
+	{
+		extract($datos);
+		$bandera=1;
+		$fecha=date('Y-m-d');
+				
+		if($adquisicion=='comprado' && $gasto>0.00)
+		{
+			$presupuesto=$this->presupuesto_activo();
+			foreach($presupuesto as $p)
+			{
+				$id_presupuesto=$p['id_presupuesto'];
+				$pre=$p['presupuesto'];
+			}
+			
+			
+			$gastos_a=$this->gastos($id_presupuesto);
+			$gasto_s=0;
+			foreach($gastos_a as $gastos_b)
+			{
+				$gasto_s=$gasto_s+$gastos_b['gasto'];
+			}
+			
+			$cantidad_actual=$pre-$gasto_s;
+			if($gasto<$cantidad_actual)/*se valida que no se gaste más de lo que se dispone*/
+			{
+				$descripcion2="Se compraron ".$cantidad." ".$nombre;
+				$query_gasto="INSERT INTO tcm_gasto_presupuesto (gasto, descripcion, fecha, id_presupuesto) VALUES ('$gasto', '$descripcion2', '$fecha', '$id_presupuesto');";
+				if($this->db->query($query_gasto)) $bandera=$bandera*1;
+				else $bandera=$bandera*0;
+			}
+		}
+		
+		if($bandera==1)
+		{
+			$cantidad_total=$cantidad2+$cantidad;
+			$query="UPDATE tcm_articulo_bodega SET cantidad='$cantidad_total' WHERE (id_articulo='$id_articulo');";
+			if($this->db->query($query))
+			{
+				$query2="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo) VALUES ('ENTRADA', '$cantidad', '$fecha', '$id_articulo');";
+				return $this->db->query($query2);
+			}
+		}		
+	}
+	/*******************************************************************************************************************************************/
 }
 ?>

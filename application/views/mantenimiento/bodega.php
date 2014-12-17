@@ -7,26 +7,29 @@
     <h2>Bodega</h2>
 </section>
 <button style="width:200px" type="button" onclick="window.open('<?php echo base_url()."index.php/vehiculo/nuevo_articulo" ?>','_parent')" name="btnNuevo">Nuevo Artículo</button>
-<table  class="grid">
+<table class="grid">
     <thead>
       <tr>
         <th>ID</th>
         <th>Nombre</th>
         <th>Existencias</th>
+        <th>Descripción</th>
         <th>Opción</th>
       </tr>
      </thead>
      <tbody>
-    <?php    
-        foreach ($inventario as $fila) {
+    <?php 
+	foreach ($inventario as $fila) {
     ?>
         <tr align="center">
             <td><?php echo $fila['id_articulo']?></td>
             <td><?php echo $fila['nombre']?></td>
             <td><?php echo $fila['cantidad']?></td>
-            <td><?php echo $fila['descripción']?></td>
+            <td><?php echo $fila['descripcion']?></td>
             <td>
-            	<a rel="leanModal" title="Modificar información del presupuesto" href="#ventana" onClick="dialogo(<?php echo $fila['id_articulo'] ?>)" ><img src="<?php echo base_url()?>img/editar.png"/></a>
+            	<a rel="leanModal" title="Ver información detallada del artículo" href="#ventana" onclick="dialogo(<?php echo $fila['id_articulo'] ?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
+            	<a rel="leanModal" title="Modificar información del artículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_articulo/".$fila['id_articulo'] ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
+                <a rel="leanModal" title="Cargar artículo" href="<?php echo base_url()."index.php/vehiculo/cargar_articulo/".$fila['id_articulo'] ?>" ><img src="<?php echo base_url()?>img/compra.png" width="25px"/></a>
             </td>
         </tr>
     <?php } ?>

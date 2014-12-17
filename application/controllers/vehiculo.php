@@ -554,14 +554,37 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: llama a la vista de nuevo artículo para registrarlo en la base de datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 13/11/2014
-	*	Observaciones: Ninguna
+	*	Última Modificación: 17/12/2014
+	*	Observaciones: Si el valor de la variable $id_articulo es diferente de NULL,la función sirve para modificar la información de un artículo
 	*/
 	
-	function nuevo_articulo()
+	function nuevo_articulo($id_articulo=NULL)
 	{
-		$data['presupuesto']=$this->transporte_model->presupuesto();
+		if($id_articulo!=NULL)
+		{
+			$data['articulo']=$this->transporte_model->inventario($id_articulo);
+			$data['articulo']=$data['articulo'][0];
+			$data['bandera']='true';
+		}
+		else $data['bandera']='false';
+		
 		pantalla('mantenimiento/nuevo_articulo',$data);
+	}
+	
+	/*
+	*	Nombre: cargar_articulo
+	*	Objetivo: llama a la vista de cargar_articulo para suplirlo en la bodega
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 17/12/2014
+	*	Observaciones:
+	*/
+	
+	function cargar_articulo($id_articulo)
+	{
+		$data['articulo']=$this->transporte_model->inventario($id_articulo);
+		$data['articulo']=$data['articulo'][0];
+		pantalla('mantenimiento/cargar_articulo',$data);
 	}
 	
 	/*
@@ -577,10 +600,63 @@ class Vehiculo extends CI_Controller
 	{
 		$this->db->trans_start();
 		$_POST['id_usuario']=$this->session->userdata('id_usuario');
-		$this->transporte_model->guardar_refuerzo($_POST);
+		$this->transporte_model->guardar_articulo($_POST);
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
 		ir_a("index.php/vehiculo/bodega/".$tr."/3");
+	}
+	
+	/*
+	*	Nombre: modificar_articulo
+	*	Objetivo: modifica la información del artículo en la bodega.
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 17/12/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function modificar_articulo()
+	{
+		$this->db->trans_start();
+		$this->transporte_model->modificar_articulo($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/bodega/".$tr."/4");
+	}
+	
+	/*
+	*	Nombre: surtir_articulo
+	*	Objetivo: surte en bodega más artículos
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 17/12/2014
+	*	Observaciones:
+	*/
+	
+	function surtir_articulo()
+	{
+		$this->db->trans_start();
+		$this->transporte_model->surtir_articulo($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/bodega/".$tr."/5");
+	}
+	
+	/*
+	*	Nombre: ventana_articulo
+	*	Objetivo: llama a la ventana_rtículo para mostrar información detallada del artículo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 17/12/2014
+	*	Observaciones:
+	*/
+	
+	function ventana_articulo($id_articulo)
+	{
+		$data['tta']=$this->transporte_model->transaccion_articulo($id_articulo);
+		$data['articulo']=$this->transporte_model->inventario($id_articulo);
+		$data['articulo']=$data['articulo'][0];
+		$this->load->view('mantenimiento/ventana_articulo',$data);
 	}
 	
 	/*
@@ -604,6 +680,12 @@ class Vehiculo extends CI_Controller
 					case 1: $data['mensaje']='Se ha registrado un nuevo artículo a bodega éxitosamente';
 							break;
 					case 2: $data['mensaje']='Se ha modificado la información del artículo éxitosamente';
+							break;
+					case 3: $data['mensaje']='Se ha registrado un nuevo material en bodega éxitosamente';
+							break;
+					case 4: $data['mensaje']='Se ha cargado el material en bodega éxitosamente';
+							break;
+					case 5: $data['mensaje']='Se ha cargado el artículo en bodega éxitosamente';
 							break;
 				}
 			}
