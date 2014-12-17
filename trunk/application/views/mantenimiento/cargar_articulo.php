@@ -1,16 +1,11 @@
 <?php
-if($bandera=='true')
-{
-	extract($articulo);
-	$action=base_url()."index.php/vehiculo/modificar_articulo";
-}
-else $action=base_url()."index.php/vehiculo/guardar_articulo";
+extract($articulo);
 ?>
 <section>
-    <h2><?php if($bandera=='true')echo "Modificar Artículo"; else {?>Nuevo Artículo <?php } ?></h2>
+    <h2>Cargar Artículo</h2>
 </section>
-<form name="form_presupuesto" method="post" action="<?php echo $action; ?>" enctype="multipart/form-data" accept-charset="utf-8">
-<?php if($bandera=='true') echo '<input type="hidden" name="id_articulo" value="'.$id_articulo.'" >'; ?>
+<form name="form_presupuesto" method="post" action="<?php echo base_url()."index.php/vehiculo/surtir_articulo"; ?>" enctype="multipart/form-data" accept-charset="utf-8">
+<input type="hidden" name="id_articulo" value="<?php echo $id_articulo ?>" >
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -22,7 +17,6 @@ else $action=base_url()."index.php/vehiculo/guardar_articulo";
                     </span>
                 </a>
             </li>
-            <?php if($bandera!=NULL && $bandera!='true'){ ?>
             <li>
                 <a href="#step-2">
                     <span class="stepNumber">2<small>do</small></span>
@@ -32,26 +26,28 @@ else $action=base_url()."index.php/vehiculo/guardar_articulo";
                     </span>
                 </a>
             </li>
-            <?php } ?>
         </ul>
         <div id="step-1">
         	<h2 class="StepTitle">Ingreso de la informaci&oacute;n del artículo a bodega</h2>
             <p>
             	<label>Nombre: </label>
-                <input type="text" name="nombre" <?php if($bandera=='true') echo "value='".$nombre."'"; ?> size="20">
+                <input type="text" name="nombre" <?php echo "value='".$nombre."'"; ?> readonly size="20">
             </p>
             <p>
-            	<label>Cantidad: </label>
-                <input type="text" name="cantidad" <?php if($bandera=='true') echo "value='".$cantidad."' disabled='disabled'"; ?> size="10">
+            	<label>Cantidad Disponible: </label>
+                <input type="text" name="cantidad2" <?php echo "value='".$cantidad."' readonly "; ?> size="10">
             </p>
             <p>
             	<label class="label_textarea">Descripción: </label>
-                <textarea name="descripcion" style="resize:none; width:200px"><?php if($bandera=='true') echo $descripcion; ?></textarea>
+                <textarea name="descripcion" style="resize:none; width:200px" readonly><?php echo $descripcion; ?></textarea>
             </p>
         </div>
-        <?php if($bandera!=NULL && $bandera!='true'){ ?>
-        <div id="step-2">
+       <div id="step-2">
         	<h2 class="StepTitle">Información de adquisición del artículo a bodega</h2>
+            <p>
+            	<label>Cantidad de Artículos Adquiridos: </label>
+                <input type="text" name="cantidad" size="10">
+            </p>
             <p>
             	<label>Adquisición de el(los) Artículo(s): </label>
                 <select style="width:150px" class="select" name="adquisicion" id="adquisicion" placeholder="Seleccione...">
@@ -61,7 +57,6 @@ else $action=base_url()."index.php/vehiculo/guardar_articulo";
                 <div id="compra"></div>
             </p>
         </div>
-         <?php } ?>
 	</div>
 </form>
 <script>
