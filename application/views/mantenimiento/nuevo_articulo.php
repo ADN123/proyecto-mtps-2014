@@ -51,21 +51,11 @@ else $action=base_url()."index.php/vehiculo/guardar_articulo";
         	<h2 class="StepTitle">Información de adquisición del artículo a bodega</h2>
             <p>
             	<label>Adquisición de el(los) Artículo(s): </label>
-                <select class="select" name="adquisicion" placeholder="Seleccione..." onchange="compra(this.value)">
+                <select style="width:150px" class="select" name="adquisicion" id="adquisicion" placeholder="Seleccione...">
                 	<option value="comprado">Comprado(s)</option>
                     <option value="donado">Donado(s)</option>
                 </select>
-            </p>
-            <p>
-            	<label>Cantidad: </label>
-                <input type="text" name="nombre" <?php if($bandera=='true') echo "value='".$nombre."'"; ?> size="10">
-            </p>
-            <div id="compra">
-               
-            </div>
-            <p>
-            	<label class="label_textarea">Descripción: </label>
-                <textarea name="descripcion"><?php if($bandera=='true') echo $descripcion; ?></textarea>
+                <div id="compra"></div>
             </p>
         </div>
 	</div>
@@ -78,14 +68,14 @@ $(document).ready(function()
 	$('#adquisicion').change(
 		function()
 		{
-			if($("#adquisicion").val('comprado'))
+			if(document.getElementById('adquisicion').value=='comprado')
 			{
-				cont='<p><label>Precio artículos: </label><input type="text" name="cantidad" <?php if($bandera=='true') echo "value='".$cantidad."'"; ?> size="10"></p>';
+				cont='<p><label>Precio artículos:&nbsp;</label><input type="text" name="gasto" size="10"></p>';
 				$("#compra").html(cont); 
 			}
 			else
-			{  
-				cont='';
+			{
+				cont="";
 				$("#compra").html(cont);
 			} 
 		}

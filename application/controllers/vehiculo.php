@@ -508,6 +508,7 @@ class Vehiculo extends CI_Controller
 	function modificar_presupuesto()
 	{
 		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
 		$this->transporte_model->modificar_presupuesto($_POST);
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
@@ -561,6 +562,25 @@ class Vehiculo extends CI_Controller
 	{
 		$data['presupuesto']=$this->transporte_model->presupuesto();
 		pantalla('mantenimiento/nuevo_articulo',$data);
+	}
+	
+	/*
+	*	Nombre: guardar_articulo
+	*	Objetivo: registra un nuevo artículo en la bodega.
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 16/12/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function guardar_articulo()
+	{
+		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$this->transporte_model->guardar_refuerzo($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/bodega/".$tr."/3");
 	}
 	
 	/*
