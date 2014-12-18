@@ -105,14 +105,22 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: carga la vista de control de mantenimiento del vehículo
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 22/07/2014
+	*	Última Modificación: 18/12/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function controlMtto($estado_transaccion=NULL)
+	function controlMtto($id_vehiculo=NULL)
 	{
-		$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
-		$data['estado_transaccion']=$estado_transaccion;
+		if($id_vehiculo!=NULL)
+		{
+			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1,$id_vehiculo);
+			$data['bandera']='true';
+		}
+		else
+		{
+			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
+			$data['bandera']='false';
+		}
 		pantalla('mantenimiento/control_mantenimiento',$data);
 	}
 	

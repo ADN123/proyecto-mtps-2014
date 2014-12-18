@@ -720,11 +720,15 @@ function solicitudes_por_asignar_depto(){
 	}	
 	
 	
-	/////////////////////////////////CONSUlTAR VEHICUlOS//////////////////////////////////////////
-	function consultar_vehiculos($estado=NULL)
+	/////////////////////////////////CONSULTAR VEHICUlOS//////////////////////////////////////////
+	function consultar_vehiculos($estado=NULL, $id=NULL)
 	{
+		$where="";
+		
 		if($estado==NULL)
 		{
+			if($id!=NULL) $where=" where v.id_vehiculo='$id'";
+			
 			$consulta="
 			select v.id_vehiculo id, v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
 			from tcm_vehiculo as v
@@ -732,10 +736,13 @@ function solicitudes_por_asignar_depto(){
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
 			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
 			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
-			";
+			".$where;
 		}
 		else
 		{
+			if($id!=NULL) $where=" where v.estado='$estado' and v.id_vehiculo='$id'";
+			else $where=" where v.estado='$estado'";
+			
 			$consulta="
 			select v.id_vehiculo id, v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
 			from tcm_vehiculo as v
@@ -743,8 +750,7 @@ function solicitudes_por_asignar_depto(){
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
 			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
 			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
-			where v.estado='$estado'
-			";
+			".$where;
 		}
 		$query=$this->db->query($consulta);
 		return $query->result();

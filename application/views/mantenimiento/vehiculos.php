@@ -29,6 +29,7 @@
             <td>
             	<a rel="leanModal" title="Ver información del Vehículo" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
                 <a rel="leanModal" title="Modificar información del Vehículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_vehiculo/".$fila->id ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
+                 <a rel="leanModal" title="Reportar Anomalía del Vehículo" href="<?php echo base_url()."index.php/vehiculo/controlMtto/".$fila->id ?>" ><img src="<?php echo base_url()?>img/mantenimiento.png" height="20px"/></a>
             </td>
         </tr>
     <?php } ?>
