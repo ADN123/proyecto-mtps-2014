@@ -82,8 +82,11 @@
             </p>
             <?php }else{ ?>    
             
-                    <input  id="id_seccion" name="id_seccion" type="hidden" value="<?php echo $seccion; ?>"/> US
-
+                    <input  id="id_seccion" name="id_seccion" type="hidden" value="<?php echo $seccion; ?>"/>
+                <p align="left">
+                    <label for="seccion" id="lseccion" style="width:22%;">Sección </label>
+                   <strong><?php echo $seccionN; ?></strong> 
+                <p>
             <?php } ?>    
         </div>
         <div id="step-2" style="text-align: center;">	

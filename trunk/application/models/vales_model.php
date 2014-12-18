@@ -1537,7 +1537,12 @@ function asignacion_reporte($id_seccion='', $id_fuente_fondo="", $fecha_inicio=N
 
         }
 
-
+function consultar_seccion($id_seccion=NULL)
+{
+        $q=" SELECT  nombre_seccion as nombre FROM org_seccion WHERE id_seccion = $id_seccion";
+        $query=$this->db->query($q);
+        return $query->result_array();
+}
      
 
 }	

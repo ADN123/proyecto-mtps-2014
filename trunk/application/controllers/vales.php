@@ -815,6 +815,8 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 		switch ($data['id_permiso']) {
 				case 2: //seccion
 					$data['seccion']=$id_seccion['id_seccion'];
+					$data['seccionN']=$this->vales_model->consultar_seccion($id_seccion['id_seccion']);
+					$data['seccionN']=$data['seccionN'][0]['nombre'];
 					break;
 				case 3: //administrador nacional
 					$data['seccion']=$this->vales_model->secciones_vales();
@@ -822,7 +824,8 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 				case 4: //administrador departamental
 					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
 						$data['seccion']=$id_seccion['id_seccion'];
-
+						$data['seccionN']=$this->vales_model->consultar_seccion($id_seccion['id_seccion']);
+						$data['seccionN']=$data['seccionN'][0]['nombre'];
 
 					}else{
 						$data['seccion']=$this->vales_model->secciones_vales(TRUE);
@@ -2069,6 +2072,45 @@ function asignacion_vehiculo()
 
 	}
 
+function reporte_liquidacion()
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		$url='vales/reporte_liquidacion';
+		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
+		//$data['id_permiso']=$permiso;
+		if($data['id_permiso']!=NULL) {
+			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
+				case 1:
+				case 2://seccion
+					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
+					
+					break;
+				case 3://administrador
+					$data['oficinas']=$this->vales_model->consultar_oficinas();
+					$data['fuente']=$this->vales_model->consultar_fuente_fondo();
+
+					break;
+				case 4: //departamental
+					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
+						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
+						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
+					
+					}
+				
+					break;
+			}
+			$data['estado_transaccion']=$estado_transaccion;
+			/*echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
+			print_r($data['oficinas']);  */
+			pantalla($url,$data);	
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}
+		
+	}
+
 //////////////////////////Funciones de testeo
 function form()
 {
@@ -2094,8 +2136,6 @@ function proces($key='')
 	deleteform($aux);	
 	print_r($_SESSION['form']);	
 }
-
-
 
 }
 
