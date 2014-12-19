@@ -69,8 +69,10 @@ foreach($vehiculos as $v)
             </td>
             <td width="700px">
             <p>
-            	<label class="label_textarea" style="100px">Trabajo solicitado: </label>
-                <textarea style="width:250px; resize:none;" name="trabajo_solicitado"></textarea>
+            	<label class="label_textarea" style="width:100px">Trabajo solicitado: </label>
+                <textarea style="width:200px; resize:none;" name="trabajo_solicitado"></textarea>
+                <label class="label_textarea" style="width:100px">Trabajo solicitado en carrocería: </label>
+                <textarea style="width:200px; resize:none;" name="trabajo_solicitado_carroceria"></textarea>
             </p>
             </td>
             </tr>
@@ -96,46 +98,54 @@ foreach($vehiculos as $v)
                     </tr>
                 </thead>
             	<tbody>
-                <tr>
-                    <td align="right">Llanta de repuesto</td>
-                    <td><input type="checkbox" name="llanta_repo" value="1"></td>
-
-                    <td align="right">Mica</td>
-                    <td><input type="checkbox" name="mica" value="1"></td>
-                </tr>
-                <tr>
-                    <td align="right">Triángulo</td>
-                    <td><input type="checkbox" name="triangulo" value="1"></td>
-
-                    <td align="right">Herramientas</td>
-                    <td><input type="checkbox" name="herramientas" value="1"></td>
-                </tr>
-                <tr>
-                    <td align="right">Extintor</td>
-                    <td><input type="checkbox" name="extintor" value="1"></td>
-
-                    <td align="right">Radio o CD player</td>
-                    <td><input type="checkbox" name="radio" value="1"></td>
-                </tr>
-                <tr>
-                    <td align="right">Encendedor</td>
-                    <td><input type="checkbox" name="encendedor" value="1"></td>
-
-                    <td align="right">Tarjeta de circulación</td>
-                    <td><input type="checkbox" name="t_circulacion" value="1"></td>
-                </tr>
-                <tr>
-                    <td align="right">Alfombras</td>
-                    <td><input type="checkbox" name="alfombras" id="alfombras" value="1"></td>
-                    <td align="right">Retrovisor interno</td>
-                    <td><input type="checkbox" name="retrovisor" value="1"></td>
-                </tr>
-                <tr>
-                	<td align="right">Cantidad</td>
-                    <td><input type="text" name="nalfombras" id="nalfombras" size="2" maxlength="2" disabled="disabled" style="height:10px"></td>
-                    <td align="right">Respaldo de asiento</td>
-                    <td><input type="checkbox" name="respaldo" value="1"></td>                    
-                </tr>
+                <?php
+					$aux=0;
+					foreach($revision as $rev)
+					{
+						if($rev['tipo']=='interno')
+						{
+							if($aux==0)
+							{
+								if($rev['cantidad']==1)
+								{
+									echo "<tr>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='revision[]' id='".$rev['id_revision']."' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+								}
+								else
+								{
+									echo "<tr>";
+									echo "<td>".$rev['revision'].": </td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'> </td>";
+								}
+								$aux=1;
+							}
+							else
+							{
+								if($rev['cantidad']==1)
+								{
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='revision[]' id='".$rev['id_revision']."' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+									echo "</tr>";
+								}
+								else
+								{
+									echo "<td>".$rev['revision'].": </td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'> </td>";
+									echo "</tr>";
+								}
+								$aux=0;
+							}
+						}
+					}
+					
+					if($aux==1)
+					{
+						echo "<td>&nbsp;</td>";
+						echo "<td>&nbsp;</td>";
+						echo "</tr>";
+					}
+				?>
                </tbody>
             </table></td></tr></table>
         </div>
@@ -153,55 +163,54 @@ foreach($vehiculos as $v)
                     </tr>
                 </thead>
             	<tbody>
-                <tr>
-                    <td align="right">Tapón de gas</td>
-                    <td><input type="checkbox" name="tapon" value="1"></td>
-
-                    <td align="right">Retrovisor izquierdo</td>
-                    <td><input type="checkbox" name="retrovisor_izq" value="1"></td>
-                </tr>
-                <tr>
-                    <td align="right">Retrovisor derecho</td>
-                    <td><input type="checkbox" name="retrovisor_der" value="1"></td>
-
-                    <td align="right">Logos</td>
-                    <td><input type="checkbox" name="logos" value="1"></td>
-                </tr>
-                <tr>
-                    <td align="right">Emblemas</td>
-                    <td><input type="checkbox" name="emblemas" value="1"></td>
-
-                    <td align="right">Cricos y escobillas</td>
-                    <td><input type="checkbox" name="cricos_escobillas" value="1"></td>
-                </tr>
-                <tr>
-                    <td align="right">Copas</td>
-                    <td><input type="checkbox" name="copas" id="copas" value="1"></td>
-                    <td align="right">Vidrios de puertas</td>
-                    <td><input type="checkbox" name="vidrios" id="vidrios" value="1"></td>
-                    
-                    
-                </tr>
-                <tr>
-                    <td align="right">Cantidad</td>
-                    <td><input type="text" name="ncopas" id="ncopas" size="2" maxlength="2" disabled="disabled" style="height:10px"></td>
+                <?php
+					$aux=0;
+					foreach($revision as $rev)
+					{
+						if($rev['tipo']=='externo')
+						{
+							if($aux==0)
+							{
+								if($rev['cantidad']==1)
+								{
+									echo "<tr>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='revision[]' id='".$rev['id_revision']."' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";	
+								}
+								else
+								{
+									echo "<tr>";
+									echo "<td>".$rev['revision'].": </td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+								}
+								$aux=1;
+							}
+							else
+							{
+								if($rev['cantidad']==1)
+								{
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='revision[]' id='".$rev['id_revision']."' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+									echo "</tr>";
+								}
+								else
+								{
+									echo "<td>".$rev['revision'].": </td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+									echo "</tr>";
+								}
+								$aux=0;
+							}
+						}
+					}
 					
-                    <td align="right">Cantidad</td>
-                    <td><input type="text" name="nvidrios" id="nvidrios" size="2" maxlength="2" disabled="disabled" style="height:10px"></td>
-                </tr>
-                <tr>
-                    <td align="right">Parabrisas delantero</td>
-                    <td><input type="checkbox" name="parabrisas_delantero" value="1"></td>
-                    <td align="right">Antena</td>
-                    <td><input type="checkbox" name="antena" value="1"></td>
-                </tr>
-                <tr>
-                	<td align="right">Parabrisas trasero</td>
-                    <td><input type="checkbox" name="parabrisas trasero" value="1"></td>
-                    
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
+					if($aux==1)
+					{
+						echo "<td>&nbsp;</td>";
+						echo "<td>&nbsp;</td>";
+						echo "</tr>";
+					}
+				?>
                </tbody>
             </table></td></tr></table>
         </div>
