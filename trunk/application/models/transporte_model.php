@@ -983,33 +983,6 @@ function solicitudes_por_asignar_depto(){
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	
-	function guardar_mtto($datos)
-	{
-		extract($datos);
-		$fecha_recepcion=date('Y-m-d');
-		$fecha_modificacion=('Y-m-d H:i:s');
-		$consulta="INSERT INTO tcm_ingreso_taller (fecha_recepcion,
-					llanta_repo, mica, triangulo, herramientas, extintor, encendedor, t_circulacion, radio,
-					alfombras, nalfombras, retrovisor, respaldo, tapon, retrovisor_izq, retrovisor_der, logos, 
-					emblemas, cricos_escobillas, copas, ncopas, vidrios, nvidrios, parabrisas_delantero, 
-					parabrisas_trasero, antena, id_vehiculo, trabajo_solicitado, trabajo_solicitado_carroceria, 
-					id_empleado, id_usuario_crea, id_usuario_modifica, fecha_modificacion)
-					VALUES ('$fecha_recepcion',	'$llanta_repo', '$mica', '$triangulo', '$herramientas', '$extintor',
-					'$encendedor', '$t_circulacion', '$radio', '$alfombras', '$nalfombras', '$retrovisor', '$respaldo',
-					'$tapon', '$retrovisor_izq', '$retrovisor_der', '$logos', '$emblemas', '$cricos_escobillas', '$copas',
-					'$ncopas', '$vidrios', '$nvidrios', '$parabrisas_delantero', '$parabrisas_trasero', '$antena',
-					'$placa', '$trabajo_solicitado', '$trabajo_solicitado_carroceria', '$id_empleado',
-					'$id_usuario', '$id_usuario', CONCAT_WS(' ',CURDATE(),CURTIME()));";
-		if($this->db->query($consulta))
-		{
-			$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$placa');";
-			return $this->db->query($consulta2);
-		}
-	}
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	
 	function filtro_vehiculo($datos)
 	{
 		extract($datos);
@@ -2228,5 +2201,51 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		return (array) $query->result_array();
 	}
 	/*********************************************************************************************************************************************/
+	
+	/**********************************FUNCIÓN PARA GUARDAR EL INGRESO DEL VEHICULO A TALLER INTERNO***********************************************/
+	
+	function guardar_mtto($datos)
+	{
+		extract($datos);
+		$fecha_recepcion=date('Y-m-d');
+		$consulta="INSERT INTO tcm_ingreso_taller (fecha_recepcion, id_vehiculo, trabajo_solicitado, trabajo_solicitado_carroceria, id_empleado)
+									VALUES ('$fecha_recepcion', '$id_vehiculo', '$trabajo_solicitado', '$trabajo_solicitado_carroceria', '$id_usuario');";
+		if($this->db->query($consulta))
+		{
+			$bandera=1;
+			if(!empty($revision))
+			{
+				$id_ingreso_taller=$this->ultimo_id_ingreso_taller();
+				$n=count($revision);
+				
+				for($i=0;$i<$n;$i++)
+				{
+					$id_revision=$revision[$i];
+					$query="INSERT INTO tcm_chequeo_revision (id_revision, id_ingreso_taller) VALUES ('$id_revision', '$id_ingreso_taller');";
+					if($this->db->query($query)) $bandera=$bandera*1;
+					else $bandera=$bandera*0;
+				}
+			}
+			if($bandera==1)
+			{
+				$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$id_vehiculo');";
+				return $this->db->query($consulta2);
+			}
+		}
+	}
+	/*********************************************************************************************************************************************/
+	
+	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_INGRESO_TALLER********************************************/
+	function ultimo_id_ingreso_taller()
+	{
+		$query="select max(id_ingreso_taller) as id_ingreso_taller from tcm_ingreso_taller;";
+		$query=$this->db->query($query);
+		$id=$query->result_array();
+		foreach($id as $i)
+		{
+			return $i['id_ingreso_taller'];
+		}
+	}
+	/*******************************************************************************************************************************************/
 }
 ?>
