@@ -121,6 +121,7 @@ class Vehiculo extends CI_Controller
 			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
 			$data['bandera']='false';
 		}
+		$data['revision']=$this->transporte_model->consultar_revisiones();
 		pantalla('mantenimiento/control_mantenimiento',$data);
 	}
 	
