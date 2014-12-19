@@ -5,6 +5,11 @@ foreach($vehiculos as $v)
 	$placa=$v->placa;
 }
 ?>
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='Se ha ingresado el vehículo a taller interno, éxitosamente';
+	estado_incorrecto='Error de conexión al servidor. Por favor vuelva a intentarlo.';
+</script>
 <section>
     <h2>Ingreso de Vehículo al Taller Interno</h2>
 </section>
@@ -51,7 +56,7 @@ foreach($vehiculos as $v)
             <?php if($bandera=='false'){ ?>
             <p>
                 <label style="width:100px">Seleccione un número de placa: </label>
-                <select class="select" style="width:100px" onchange="cargar(this.value)" name="placa" id="placa">
+                <select class="select" style="width:100px" onchange="cargar(this.value)" name="id_vehiculo" id="id_vehiculo">
                 	<?php
 					foreach($vehiculos as $v)
 					{
@@ -62,6 +67,7 @@ foreach($vehiculos as $v)
             </p>
             <?php }else{ ?>
             <p>
+            	<input type="hidden" name="id_vehiculo" value="<?php echo $id_vehiculo; ?>" />
                 <label style="width:150px">Número de placa: </label>
                 <strong><?php echo $placa; ?></strong>
             </p>
@@ -109,14 +115,14 @@ foreach($vehiculos as $v)
 								if($rev['cantidad']==1)
 								{
 									echo "<tr>";
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='revision[]' id='".$rev['id_revision']."' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='".$rev['id_revision']."' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."' onchange='numero()' ></td>";
 								}
 								else
 								{
 									echo "<tr>";
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'> </td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'> </td>";
 								}
 								$aux=1;
 							}
@@ -124,14 +130,14 @@ foreach($vehiculos as $v)
 							{
 								if($rev['cantidad']==1)
 								{
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='revision[]' id='".$rev['id_revision']."' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='".$rev['id_revision']."' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 									echo "</tr>";
 								}
 								else
 								{
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'> </td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'> </td>";
 									echo "</tr>";
 								}
 								$aux=0;
@@ -174,14 +180,14 @@ foreach($vehiculos as $v)
 								if($rev['cantidad']==1)
 								{
 									echo "<tr>";
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='revision[]' id='".$rev['id_revision']."' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";	
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='".$rev['id_revision']."' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";	
 								}
 								else
 								{
 									echo "<tr>";
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 								}
 								$aux=1;
 							}
@@ -189,14 +195,14 @@ foreach($vehiculos as $v)
 							{
 								if($rev['cantidad']==1)
 								{
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='revision[]' id='".$rev['id_revision']."' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='".$rev['id_revision']."' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 									echo "</tr>";
 								}
 								else
 								{
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='1'></td>";
+									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 									echo "</tr>";
 								}
 								$aux=0;
