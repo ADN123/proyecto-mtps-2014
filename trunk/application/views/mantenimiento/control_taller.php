@@ -12,23 +12,25 @@ Ingresar Vehículo
         <th>Marca</th>
         <th>Modelo</th>
         <th>Clase</th>
+        <th>Fecha Ingreso</th>
         <th>Opción</th>
       </tr>
      </thead>
      <tbody>
-    <?php    
-        foreach ($datos as $fila) {
+    <?php   
+	foreach ($ingreso_taller as $fila) {
     ?>
         <tr align="center">
-            <td><?php echo $fila->placa?></td>
-            <td><?php echo ucwords($fila->marca)?></td>
-            <td><?php echo ucwords($fila->modelo)?></td>
-            <td><?php echo ucwords($fila->clase)?></td>
+            <td><?php echo $fila['placa']?></td>
+            <td><?php echo ucwords($fila['marca'])?></td>
+            <td><?php echo ucwords($fila['modelo'])?></td>
+            <td><?php echo ucwords($fila['clase'])?></td>
+            <td><?php echo ucwords($fila['fecha_recepcion'])?></td>
             <td>
-            	<a rel="leanModal" title="Ver información del Vehículo" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>&nbsp;&nbsp;
-                <a rel="leanModal" title="Reparar Vehículo" href="<?php echo base_url()."index.php/vehiculo/tallerMTPS/".$fila->id ?>" ><img src="<?php echo base_url()?>img/reparacion.png" height="23px"/></a>&nbsp;&nbsp;
-                <a rel="leanModal" title="Dar de Alta" href="<?php echo base_url()."index.php/vehiculo/alta_tallerMTPS/".$fila->id ?>" ><img src="<?php echo base_url()?>img/alta.png" height="23px"/></a>&nbsp;&nbsp;
-                <a rel="leanModal" title="Enviar a Taller Externo" href="<?php echo base_url()."index.php/vehiculo/ingresar_taller_externo/".$fila->id ?>" ><img src="<?php echo base_url()?>img/taller.png" height="35px"/></a>
+            	<a rel="leanModal" title="Ver información del Vehículo" href="#ventana" onclick="dialogo(<?php echo $fila['id_vehiculo']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>&nbsp;&nbsp;
+                <a rel="leanModal" title="Reparar Vehículo" href="<?php echo base_url()."index.php/vehiculo/tallerMTPS/".$fila['id_vehiculo'] ?>" ><img src="<?php echo base_url()?>img/reparacion.png" height="23px"/></a>&nbsp;&nbsp;
+                <a rel="leanModal" title="Enviar a Taller Externo" href="<?php echo base_url()."index.php/vehiculo/ingresar_taller_externo/".$fila['id_vehiculo'] ?>" ><img src="<?php echo base_url()?>img/taller.png" height="35px"/></a>&nbsp;&nbsp;
+                <a rel="leanModal" title="Dar de Alta" href="<?php echo base_url()."index.php/vehiculo/alta_tallerMTPS/".$fila['id_vehiculo'] ?>" ><img src="<?php echo base_url()?>img/alta.png" height="23px"/></a>
             </td>
         </tr>
     <?php } ?>
