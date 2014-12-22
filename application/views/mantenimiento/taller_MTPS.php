@@ -34,6 +34,15 @@ extract($vehiculos);
                     </span>
                 </a>
             </li>
+            <li>
+                <a href="#step-4">
+                    <span class="stepNumber">4<small>to</small></span>
+                    <span class="stepDesc">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
+                        <small>&nbsp;Artículos Usados</small>
+                    </span>
+                </a>
+            </li>
         </ul>
         <div id="step-1">	
             <h2 class="StepTitle">Datos Generales del Vehículo</h2>
@@ -151,45 +160,66 @@ extract($vehiculos);
          </tr>
         </table>
         </div>
+         <div id="step-4">	
+            <h2 class="StepTitle">Artículos que se usaron durante el mantenimiento</h2>
+             <p>
+            	<label style="width:350px">Presione click en la imagen para agregar un artículo</label>
+            	<a rel="leanModal" title="Ver Listado de Artículos" href="#ventana">
+                <img src="<?php echo base_url(); ?>img/add.png" width="30px" />
+                </a>
+           	</p>
+            <p>
+                <table align="center" class="table_design" cellpadding="0" cellspacing="0">
+                <thead>
+                	<tr>
+                    	<th>Nombre</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody id="content-table">
+                </tbody>
+                </table>
+            </p>
+         </div>
     </div>
 </form>
+<div id="ventana">
+    <div id='signup-header'>
+        <h2>Listado de Artículos en Bodega</h2>
+        <a class="modal_close" id="cerrar"></a>
+    </div>
 
+    <form method="post" id="form_articulos" name="form_articulos">
+    <p>
+    	<label>Seleccione un artículo</label>
+        <select name="id_articulo" id="id_articulo" onclick='art_info(this.value)' class="select" style="width:150px">
+        <?php
+			foreach($inventario as $inv)
+			{
+				echo "<option value='".$inv['id_articulo']."'>".$inv['nombre']."</option>";
+			}
+		?>
+        </select>
+    </p>
+    <p>
+    	<div id="articulo_info"></div>
+    </p>
+     <p style="text-align: center;">
+        <button type="button" class="boton_validador" onclick="agregar()">Agregar</button>
+    </p>
+</form>
+</div>
 <script>
 $(document).ready(function(){
 	$('#wizard').smartWizard();
 });
 
-function cargar(id)
+function art_info(desc,cant)
 {
-	$('#info_vehiculo').html("");
-	var  dur = "<?php echo base_url()?>index.php/vehiculo/vehiculo_info/"+id+"/2";
-	console.log(dur);
-	$.ajax({
-		async:	true, 
-		url:	dur,
-		dataType:"json",
-		success: function(data) {
-			console.log(data);
-			json = data;
-			var cont="<br><br><table align='center' class='table_design' cellspacing='0' cellpadding='0'>";
-			/*cont=cont+"<thead><tr><td>Datos Generales del Vehículo</td></tr></thead>";*/
-			cont=cont+"<tr><td>Marca: <strong>"+json[0]['marca']+"</strong></td><td>Motorista Asignado: <strong>"+json[0]['motorista'].capitalize()+"</strong></td>";
-			cont=cont+'</tr><tr>'
-			cont=cont+'<td>Modelo: <strong>'+json[0]['modelo']+'</strong></td> <td>Oficina Asiganada: <strong>'+json[0]['seccion']+'</strong></td>';
-			cont=cont+'</tr><tr>'
-			cont=cont+'<td>Clase: <strong>'+json[0]['clase']+'</strong></td><td>Kilometraje Actual: <strong>'+json[0]['kilometraje']+' km</strong></td>';
-			cont=cont+'</tr><tr>'
-			cont=cont+'<td>Año: <strong>'+json[0]['anio']+'</strong></td><td>Tipo de Combustible: <strong>'+json[0]['tipo_combustible']+'</strong></td>';
-			cont=cont+'</tr>'
-			cont=cont+'</table>';
-			$('#info_vehiculo').html(cont);
-		/*	cont2="";
-			cont2=cont2+json[0]['trabajo_solicitado'];
-			$('#trabajo_solicitado').html(cont2);*/
-		},
-		error:function(data) {
-			 alertify.alert('Error al cargar los datos de los vehiculos');
-		}
-	})
+	var cont="";
+	$('#articulo_info').html("");
+	cont=cont+"Descripción: <strong>"+desc+"</strong><br>";
+	cont=cont+"Cantidad disponible: <strong>"+cant+"</strong><br>";
+	$('#articulo_info').html(cont);
 }
 </script>

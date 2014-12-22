@@ -90,12 +90,29 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga el catálogo de Vehículos que se encuentran en taller.
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 19/12/2014
+	*	Última Modificación: 22/12/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function control_taller()
+	function control_taller($estado_transaccion=NULL,$tipo=NULL)
 	{
+		if($estado_transaccion!=NULL)
+		{
+			$data['estado_transaccion']=$estado_transaccion;
+			
+			if($tipo!=NULL)
+			{
+				switch($tipo)
+				{
+					case 1: $data['mensaje']="Se ha registrado el mantenimiento al vehículo éxitosamente";
+							break;
+					case 2: $data['mensaje']="Se ha enviado el vehículo a taller externo éxitosamente";
+							break;
+					case 3: $data['mensaje']="Se ha dado de alta al vehículo éxitosamente";
+							break;
+				}
+			}
+		}
 		$data['ingreso_taller']=$this->transporte_model->vehiculos_taller_interno(0,2);
 		pantalla('mantenimiento/control_taller',$data);
 	}
@@ -150,7 +167,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: carga la vista de Reparación y mantenimiento en taller del MTPS
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 27/11/2014
+	*	Última Modificación: 22/12/2014
 	*	Observaciones: Ninguna
 	*/
 	
@@ -159,6 +176,7 @@ class Vehiculo extends CI_Controller
 		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,2);
 		$data['vehiculos']=$data['vehiculos'][0];
 		$data['reparacion']=$this->transporte_model->consultar_reparacion();
+		$data['inventario']=$this->transporte_model->inventario();
 		pantalla('mantenimiento/taller_MTPS',$data);
 	}
 	
@@ -167,7 +185,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: insertar en la Base de Datos un nuevo registro de mtto. del taller del MTPS
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 20/08/2014
+	*	Última Modificación: 22/12/2014
 	*	Observaciones: Ninguna
 	*/
 
@@ -178,7 +196,7 @@ class Vehiculo extends CI_Controller
 		$this->transporte_model->guardar_taller($_POST);
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
-		ir_a("index.php/vehiculo/tallerMTPS/".$tr);
+		ir_a("index.php/vehiculo/control_taller/".$tr."/1");
 	}
 	
 	/*

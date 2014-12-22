@@ -967,37 +967,7 @@ function solicitudes_por_asignar_depto(){
 		$this->db->query($query2);
 	}
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	
-	function guardar_taller($datos)
-	{
-		extract($datos);
-		$fecha=date('Y-m-d');
-		$consulta="INSERT INTO tcm_mantenimiento_interno (id_vehiculo, otro_mtto, observaciones, fecha, id_usuario) VALUES ('$id_vehiculo', '$otro_mtto', '$observaciones', '$fecha', '$id_usuario');";
-		if($this->db->query($consulta))
-		{
-			$bandera=1;
-			if(!empty($reparacion))
-			{
-				$id_ingreso_taller=$this->ultimo_id_ingreso_taller();
-				$n=count($reparacion);
-				
-				for($i=0;$i<$n;$i++)
-				{
-					$id_reparacion=$reparacion[$i];
-					$query="INSERT INTO tcm_chequeo_reparacion (id_revision, id_ingreso_taller) VALUES ('$id_revision', '$id_ingreso_taller');";
-					if($this->db->query($query)) $bandera=$bandera*1;
-					else $bandera=$bandera*0;
-				}
-			}
-			if($bandera==1)
-			{
-				$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$id_vehiculo');";
-				return $this->db->query($consulta2);
-			}
-		}
-	}
-	/////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function filtro_vehiculo($datos)
 	{
@@ -2302,6 +2272,43 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		return (array) $query->result_array();
 	}
 	/*********************************************************************************************************************************************/
+	
+	/*******************************FUNCIÓN PARA GUARDAR LOS MANTENIMIENTOS DE VEHÍCULOS EN TALLER INTERNO*****************************************/
+	function guardar_taller($datos)
+	{
+		extract($datos);
+		$fecha=date('Y-m-d');
+		$consulta="INSERT INTO tcm_mantenimiento_interno (id_vehiculo, otro_mtto, observaciones, fecha, id_usuario) VALUES ('$id_vehiculo', '$otro_mtto', '$observaciones', '$fecha', '$id_usuario');";
+		if($this->db->query($consulta))
+		{
+			if(!empty($reparacion))
+			{
+				$id_mantenimiento_interno=$this->ultimo_id_mantenimiento_interno();
+				$n=count($reparacion);
+				
+				for($i=0;$i<$n;$i++)
+				{
+					$id_reparacion=$reparacion[$i];
+					$query="INSERT INTO tcm_chequeo_reparacion (id_reparacion, id_mantenimiento_interno) VALUES ('$id_reparacion', '$id_mantenimiento_interno');";
+					return $this->db->query($query);
+				}
+			}
+		}
+	}
+	/*********************************************************************************************************************************************/
+	
+	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_INGRESO_TALLER********************************************/
+	function ultimo_id_mantenimiento_interno()
+	{
+		$query="select max(id_mantenimiento_interno) as id_mantenimiento_interno from tcm_mantenimiento_interno;";
+		$query=$this->db->query($query);
+		$id=$query->result_array();
+		foreach($id as $i)
+		{
+			return $i['id_mantenimiento_interno'];
+		}
+	}
+	/*******************************************************************************************************************************************/
 
 }
 ?>
