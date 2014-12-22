@@ -90,13 +90,13 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga el catálogo de Vehículos que se encuentran en taller.
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 19/08/2014
+	*	Última Modificación: 19/12/2014
 	*	Observaciones: Ninguna
 	*/
 	
 	function control_taller()
 	{
-		$data['datos']=$this->transporte_model->consultar_vehiculos(2);
+		$data['ingreso_taller']=$this->transporte_model->vehiculos_taller_interno(0,2);
 		pantalla('mantenimiento/control_taller',$data);
 	}
 	
@@ -156,7 +156,9 @@ class Vehiculo extends CI_Controller
 	
 	function tallerMTPS($id_v)
 	{
-		$data['vehiculos']=$this->transporte_model->consultar_vehiculo_taller($id_v,2);
+		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,2);
+		$data['vehiculos']=$data['vehiculos'][0];
+		$data['reparacion']=$this->transporte_model->consultar_reparacion();
 		pantalla('mantenimiento/taller_MTPS',$data);
 	}
 	

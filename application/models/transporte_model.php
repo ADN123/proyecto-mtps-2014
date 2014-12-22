@@ -972,14 +972,30 @@ function solicitudes_por_asignar_depto(){
 	function guardar_taller($datos)
 	{
 		extract($datos);
-		$consulta="INSERT INTO tcm_mantenimiento_interno (id_vehiculo, aceite, frenos, bateria, electricidad, 
-					amortiguadores, llantas, motor, otro_mtto, naceite, presion, agua, rllantas, caja_velocidades, 
-					clutch, r_motor, lavado, observaciones, fecha, id_usuario) 
-					VALUES ('$placa', '$aceite', '$frenos', '$bateria', '$electricidad',
-					'$amortiguadores', '$llantas', '$motor', '$otro_mtto', '$naceite', '$presion',
-					'$agua', '$rllantas', '$caja_velocidades', '$clutch', '$r_motor', '$lavado', '$observaciones',
-					CURDATE(), '$id_usuario');";
-		$this->db->query($consulta);
+		$fecha=date('Y-m-d');
+		$consulta="INSERT INTO tcm_mantenimiento_interno (id_vehiculo, otro_mtto, observaciones, fecha, id_usuario) VALUES ('$id_vehiculo', '$otro_mtto', '$observaciones', '$fecha', '$id_usuario');";
+		if($this->db->query($consulta))
+		{
+			$bandera=1;
+			if(!empty($reparacion))
+			{
+				$id_ingreso_taller=$this->ultimo_id_ingreso_taller();
+				$n=count($reparacion);
+				
+				for($i=0;$i<$n;$i++)
+				{
+					$id_reparacion=$reparacion[$i];
+					$query="INSERT INTO tcm_chequeo_reparacion (id_revision, id_ingreso_taller) VALUES ('$id_revision', '$id_ingreso_taller');";
+					if($this->db->query($query)) $bandera=$bandera*1;
+					else $bandera=$bandera*0;
+				}
+			}
+			if($bandera==1)
+			{
+				$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$id_vehiculo');";
+				return $this->db->query($consulta2);
+			}
+		}
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -2202,6 +2218,36 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*********************************************************************************************************************************************/
 	
+	/**********************************FUNCIÓN PARA OBETENER VER LOS VEHÍCULOS EN TALLER INTERNO***************************************************/
+	function vehiculos_taller_interno($id=0, $estado=NULL)
+	{
+		$where="";
+		if($id!=0 && $estado!=NULL) $where=" where (v.id_vehiculo='$id' and v.estado='$estado')";
+		elseif($id!=0)	$where=" where v.id_vehiculo='$id'";
+		elseif($estado!=NULL)	$where=" where v.estado='$estado'";
+		
+		$query="select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
+				o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
+				ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
+				v.tipo_combustible, DATE_FORMAT(it.fecha_recepcion,'%d-%m-%Y') as fecha_recepcion, it.trabajo_solicitado, it.trabajo_solicitado_carroceria
+				from tcm_vehiculo as v
+				inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+				inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+				inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+				inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+				left join tcm_vehiculo_motorista as vmot on (v.id_vehiculo=vmot.id_vehiculo)
+				left join tcm_vehiculo_kilometraje as vk on (vk.id_vehiculo=v.id_vehiculo)
+				left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
+				inner join org_seccion as o on (v.id_seccion=o.id_seccion)
+				inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
+				inner join tcm_ingreso_taller as it on (it.id_vehiculo=v.id_vehiculo)
+				".$where."
+				GROUP BY v.placa,motorista,seccion,marca,modelo,clase,condicion";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+	
 	/**********************************FUNCIÓN PARA GUARDAR EL INGRESO DEL VEHICULO A TALLER INTERNO***********************************************/
 	
 	function guardar_mtto($datos)
@@ -2247,5 +2293,15 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		}
 	}
 	/*******************************************************************************************************************************************/
+	
+	/**********************************FUNCIÓN PARA OBETENER LAS REPARACIONES DE MANTENIMIENTO E INSPECCIÓN/CHEQUEO*********************************/
+	function consultar_reparacion()
+	{
+		$query="SELECT * FROM tcm_reparacion WHERE estado=1";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+
 }
 ?>

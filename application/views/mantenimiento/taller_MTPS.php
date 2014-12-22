@@ -1,3 +1,6 @@
+<?php
+extract($vehiculos);
+?>
 <section>
     <h2>Reparación y Mantenimiento en Taller MTPS</h2>
 </section>
@@ -42,54 +45,46 @@
                 <strong><?php echo date('d/m/Y')?></strong>
             </p>
             <p>
-            <?php
-            foreach($vehiculos as $v)
-			{
-			?>
+                <label style="width:150px">Número de Placa: </label>
+                <strong><?php echo $placa ?></strong>
+            </p>
+            </td>
+            <td width="700px">
+             <p>
+            	<label class="label_textarea" style="width:100px">Trabajo solicitado: </label>
+                <textarea style="width:200px; resize:none;" name="trabajo_solicitado" readonly="readonly"><?php echo $trabajo_solicitado; ?></textarea>
+                <label class="label_textarea" style="width:100px">Trabajo solicitado en carrocería: </label>
+                <textarea style="width:200px; resize:none;" name="trabajo_solicitado_carroceria" readonly="readonly"><?php echo $trabajo_solicitado_carroceria; ?></textarea>
+            </p>
+            </td>
+            </tr></table>
+            <p>
             <table align='center' class='table_design' cellspacing='0' cellpadding='0'>
             <thead>
             	<tr>
-                	<td>Datos Generales del Vehículo</td>
+                	<th colspan="2">Datos Generales del Vehículo</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                	<td>Marca: <strong><?php echo $v->marca ?></strong></td>
-                    <td>Motorista Asignado: <strong><?php echo $v->motorista ?></strong></td>
+                	<td>Marca: <strong><?php echo $marca ?></strong></td>
+                    <td>Motorista Asignado: <strong><?php echo $motorista ?></strong></td>
                 </tr>
                 <tr>
-                    <td>Modelo: <strong><?php echo $v->modelo ?></strong></td>
-                    <td>Oficina Asiganada: <strong><?php echo $v->seccion ?></strong></td>
+                    <td>Modelo: <strong><?php echo $modelo ?></strong></td>
+                    <td>Oficina Asiganada: <strong><?php echo $seccion ?></strong></td>
                 </tr>
                 <tr>
-                    <td>Clase: <strong><?php echo $v->clase ?></strong></td>
-                    <td>Kilometraje Actual: <strong><?php echo $v->kilometraje ?>km</strong></td>
+                    <td>Clase: <strong><?php echo $clase ?></strong></td>
+                    <td>Kilometraje Actual: <strong><?php echo $kilometraje ?>km</strong></td>
                 </tr>
                 <tr>
-                    <td>Año: <strong><?php echo $v->anio ?></strong></td>
-                    <td>Tipo de Combustible: <strong><?php echo $v->tipo_combustible?></strong></td>
+                    <td>Año: <strong><?php echo $anio ?></strong></td>
+                    <td>Tipo de Combustible: <strong><?php echo $tipo_combustible?></strong></td>
                 </tr>
             </tbody>
             </table>
-             <?php
-			 }
-			 ?>     
             </p>
-            </td>
-            <td width="700px">
-           <?php /*<p>
-            	<label class="label_textarea" style="100px">Trabajo solicitado: </label>
-                <textarea style="width:250px; resize:none;" name="trabajo_solicitado" id="trabajo_solicitado"></textarea>
-            </p> */?>
-            </td>
-            </tr>
-            <tr>
-            <td colspan="2" valign="bottom">
-			<div id="info_vehiculo">
-            </div>
-            </td>
-            </tr>
-            </table>
         </div>
         <div id="step-2">	
             <h2 class="StepTitle">Informaci&oacute;n del mantenimiento realizado al vehículo</h2>
@@ -103,37 +98,21 @@
                     </tr>
                 </thead>
             	<tbody>
+                <?php
+					foreach($reparacion as $re)
+					{
+						if($re['tipo']=="mantenimiento")
+						{
+							echo "<tr>";
+							echo "<td>".$re['reparacion']."</td>";
+							echo "<td><input type='checkbox' name='reparacion[]' id='".$rev['id_reparacion']."' value='".$rev['id_reparacion']."'></td>";
+							echo "</tr>";
+						}
+					}
+                ?>
                 <tr>
-                    <td align="right">Cambio de Aceite y Filtro</td>
-                    <td><input type="checkbox" name="aceite"></td>
-                </tr>
-                <tr>
-                    <td align="right">Ajuste/Limpieza de Frenos</td>
-                    <td><input type="checkbox" name="frenos"></td>
-                </tr>
-                <tr>
-                    <td align="right">Limpieza de Bornes de Batería</td>
-                    <td><input type="checkbox" name="bateria"></td>
-                </tr>
-                <tr>
-                    <td align="right">Sistema Eléctrico y Luces</td>
-                    <td><input type="checkbox" name="electricidad"></td>
-                </tr>
-                <tr>
-                    <td align="right">Amortiguadores</td>
-                    <td><input type="checkbox" name="amortiguadores"></td>
-                </tr>
-                <tr>
-                    <td align="right">Llantas</td>
-                    <td><input type="checkbox" name="llantas"></td>
-                </tr>
-                <tr>
-                    <td align="right">Limpieza General de Motor</td>
-                    <td><input type="checkbox" name="motor"></td>
-                </tr>
-                <tr>
-                    <td align="right">Otros (Especifíque)</td>
-                    <td><textarea name="otro_mtto" class="tam-4" style="resize:none"></textarea></td>
+                	<td>Otro mantenimiento: </td>
+                    <td><textarea style="width:200px; resize:none;"  name="otro_mtto"></textarea></td>
                 </tr>
                </tbody>
             </table></td></tr></table>
@@ -150,41 +129,21 @@
                     </tr>
                 </thead>
             	<tbody>
+               <?php
+					foreach($reparacion as $re)
+					{
+						if($re['tipo']=="inspeccion")
+						{
+							echo "<tr>";
+							echo "<td>".$re['reparacion']."</td>";
+							echo "<td><input type='checkbox' name='reparacion[]' id='".$rev['id_reparacion']."' value='".$rev['id_reparacion']."'></td>";
+							echo "</tr>";
+						}
+					}
+                ?>
                 <tr>
-                    <td align="right">Niveles de aceite motor, refrigerante del radiador y fluido de frenos</td>
-                    <td><input type="checkbox" name="naceite"></td>
-                </tr>
-                <tr>
-                    <td align="right">Presión/Calibración de llantas</td>
-                    <td><input type="checkbox" name="presion"></td>
-                </tr>
-                <tr>
-                    <td align="right">Niveles de agua/Refrigerante</td>
-                    <td><input type="checkbox" name="agua"></td>
-                </tr>
-                <tr>
-                    <td align="right">Revisión y calibración de llantas</td>
-                    <td><input type="checkbox" name="rllantas"></td>
-                </tr>				
-                <tr>
-                    <td align="right">Caja de velocidades</td>
-                    <td><input type="checkbox" name="caja_velocidades"></td>
-                </tr>
-                <tr>
-                    <td align="right">Revisión de clutch, mangueras</td>
-                    <td><input type="checkbox" name="clutch"></td>
-                </tr>
-                <tr>
-                    <td align="right">Refrigerante del motor, líquido de frenos y clutch, líquido de timón hidráulico, batería</td>
-                    <td><input type="checkbox" name="r_motor"></td>
-                </tr>
-                <tr>
-                    <td align="right">Limpieza exterior de vehículo (lavado)</td>
-                    <td><input type="checkbox" name="lavado"></td>
-            	</tr>
-                <tr>
-                    <td align="right">Observaciones (Especifíque)</td>
-                	<td><textarea name="observaciones" class="tam-4" style="resize:none"></textarea></td>
+                	<td>Obervaciones: </td>
+                    <td><textarea style="width:200px; resize:none;"  name="observaciones"></textarea></td>
                 </tr>
               </tbody>
             </table>
