@@ -2286,11 +2286,38 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				$id_mantenimiento_interno=$this->ultimo_id_mantenimiento_interno();
 				$n=count($reparacion);
 				
+				$bandera=1;
 				for($i=0;$i<$n;$i++)
 				{
 					$id_reparacion=$reparacion[$i];
 					$query="INSERT INTO tcm_chequeo_reparacion (id_reparacion, id_mantenimiento_interno) VALUES ('$id_reparacion', '$id_mantenimiento_interno');";
-					return $this->db->query($query);
+					if($this->db->query($query)) $bandera=$bandera*1;
+					else $bandera=$bandera*0;
+				}
+				
+				if($bandera==1)
+				{
+					$cant=array();
+					if(!empty($cant_usada))
+					{
+						$x=0;
+						$i=0;
+						foreach($cant_usada as $c)
+						{
+							if($c[$x]!="" && $c[$x]!=NULL)
+							{
+								$cant[$i]=$c[$x];
+								$i++;
+							}
+							$x++;
+						}
+					}
+					
+					$m=count($cant);
+					for($i=0;$i<$m;$i++)
+					{
+						
+					}
 				}
 			}
 		}
