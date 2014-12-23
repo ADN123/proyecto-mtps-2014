@@ -163,20 +163,29 @@ extract($vehiculos);
          <div id="step-4">	
             <h2 class="StepTitle">Artículos que se usaron durante el mantenimiento</h2>
              <p>
-            	<label style="width:350px">Presione click en la imagen para agregar un artículo</label>
-            	<a rel="leanModal" title="Ver Listado de Artículos" href="#ventana">
-                <img src="<?php echo base_url(); ?>img/add.png" width="30px" />
-                </a>
-           	</p>
-            <p>
                 <table align="center" class="table_design" cellpadding="0" cellspacing="0">
                 <thead>
                 	<tr>
                     	<th>Nombre</th>
-                        <th>Cantidad</th>
+                        <th>Descripción</th>
+                        <th>Cantidad Disponible</th>
+                        <th>Utilizado</th>
+                        <th>Cantidad Utilizada</th>
                     </tr>
                 </thead>
-                <tbody id="content-table">
+                <tbody>
+                	<?php
+						foreach($inventario as $inv)
+						{
+							echo "<tr>";
+							echo "<td>".$inv['nombre']."</td>";
+							echo "<td>".$inv['descripcion']."</td>";
+							echo "<td>".$inv['cantidad']."</td>";
+							echo "<td><input type='checkbox' value='".$inv['id_articulo']."' name='id_articulo[]' onclick='habilitar(".$inv['id_articulo'].",this)'></td>";
+							echo "<td><input type='text' name='cant_usada[]' id='".$inv['id_articulo']."'></td>";
+							echo "</tr>";
+						}
+					?>
                 </tbody>
                 </table>
             </p>
@@ -201,10 +210,7 @@ extract($vehiculos);
 		?>
         </select>
     </p>
-    <p>
-    	<div id="articulo_info"></div>
-    </p>
-     <p style="text-align: center;">
+    <p style="text-align: center;">
         <button type="button" class="boton_validador" onclick="agregar()">Agregar</button>
     </p>
 </form>
@@ -214,12 +220,37 @@ $(document).ready(function(){
 	$('#wizard').smartWizard();
 });
 
-function art_info(desc,cant)
+function art_info(id)
 {
-	var cont="";
-	$('#articulo_info').html("");
-	cont=cont+"Descripción: <strong>"+desc+"</strong><br>";
-	cont=cont+"Cantidad disponible: <strong>"+cant+"</strong><br>";
-	$('#articulo_info').html(cont);
+		$('#articulo_info').html("");
+		var  art = "<?php echo base_url()?>index.php/vehiculo/art_info/"+id;
+		console.log(art);
+		$.ajax({
+			async:	true, 
+			url:	art,
+			dataType:"json",
+			success: function(data) {
+				console.log(data);
+				json = data;
+				var cont="Cantidad Disponible: <strong>"+json[0]['cantidad']+"</strong><br>";
+				cont=cont+"Descripción: <strong>"+json[0]['descripcion']+"</strong><br>";
+				$('#articulo_info').html(cont);
+			},
+			error:function(data) {
+				 alertify.alert('Error al cargar la información del artículos');
+			}
+		})
+}
+
+function habilitar(id,chk)
+{
+	if(chk.cheked==true)
+	{
+		$("#"+id).attr("disabled",false);
+	}
+	else
+	{
+		$("#"+id).attr("disabled",true); 
+	}
 }
 </script>
