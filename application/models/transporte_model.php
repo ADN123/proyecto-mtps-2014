@@ -2232,12 +2232,20 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			if(!empty($revision))
 			{
 				$id_ingreso_taller=$this->ultimo_id_ingreso_taller();
+				$revision=array_merge($revision1, $revision2);
 				$n=count($revision);
-				
+				$y=0;				
 				for($i=0;$i<$n;$i++)
 				{
 					$id_revision=$revision[$i];
-					$query="INSERT INTO tcm_chequeo_revision (id_revision, id_ingreso_taller) VALUES ('$id_revision', '$id_ingreso_taller');";
+					if($this->revision_varios($id_revision)==1)/*Evalúa si el accesorio tiene una cantidad*/
+					{
+						$varios=$cantidad[$y];
+						$y++;
+					}
+					else $varios=0;
+					
+					$query="INSERT INTO tcm_chequeo_revision (id_revision, id_ingreso_taller, varios) VALUES ('$id_revision', '$id_ingreso_taller', '$varios');";
 					if($this->db->query($query)) $bandera=$bandera*1;
 					else $bandera=$bandera*0;
 				}
@@ -2260,6 +2268,19 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		foreach($id as $i)
 		{
 			return $i['id_ingreso_taller'];
+		}
+	}
+	/*******************************************************************************************************************************************/
+	
+	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_INGRESO_TALLER********************************************/
+	function revision_varios($id)
+	{
+		$query="select cantidad from tcm_revision where id_revision='$id';";
+		$query=$this->db->query($query);
+		$cant=$query->result_array();
+		foreach($cant as $c)
+		{
+			return $c['cantidad'];
 		}
 	}
 	/*******************************************************************************************************************************************/

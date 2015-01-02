@@ -115,14 +115,14 @@ foreach($vehiculos as $v)
 								if($rev['cantidad']==1)
 								{
 									echo "<tr>";
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='".$rev['id_revision']."' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."' onchange='numero()' ></td>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision1[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."' onchange='numero()' ></td>";
 								}
 								else
 								{
 									echo "<tr>";
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'> </td>";
+									echo "<td><input type='checkbox' name='revision1[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'> </td>";
 								}
 								$aux=1;
 							}
@@ -130,14 +130,14 @@ foreach($vehiculos as $v)
 							{
 								if($rev['cantidad']==1)
 								{
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='".$rev['id_revision']."' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision1[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 									echo "</tr>";
 								}
 								else
 								{
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'> </td>";
+									echo "<td><input type='checkbox' name='revision1[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'> </td>";
 									echo "</tr>";
 								}
 								$aux=0;
@@ -152,6 +152,9 @@ foreach($vehiculos as $v)
 						echo "</tr>";
 					}
 				?>
+                <tr>
+                	<td colspan="4">Seleccionar/Deseleccionar Todo: <input type="checkbox" name="select_all_int" onclick="select_all(this.checked)" /></td>
+                </tr>
                </tbody>
             </table></td></tr></table>
         </div>
@@ -180,14 +183,14 @@ foreach($vehiculos as $v)
 								if($rev['cantidad']==1)
 								{
 									echo "<tr>";
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='".$rev['id_revision']."' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";	
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]2' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";	
 								}
 								else
 								{
 									echo "<tr>";
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
+									echo "<td><input type='checkbox' name='revision[]2' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 								}
 								$aux=1;
 							}
@@ -195,14 +198,14 @@ foreach($vehiculos as $v)
 							{
 								if($rev['cantidad']==1)
 								{
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='".$rev['id_revision']."' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' size='1px'></td>";
+									echo "<td><input type='checkbox' name='revision[]2' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 									echo "</tr>";
 								}
 								else
 								{
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
+									echo "<td><input type='checkbox' name='revision[]2' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 									echo "</tr>";
 								}
 								$aux=0;
@@ -217,58 +220,41 @@ foreach($vehiculos as $v)
 						echo "</tr>";
 					}
 				?>
+                <tr>
+                	<td colspan="4">Seleccionar/Deseleccionar Todo: <input type="checkbox" name="select_all_ext" onclick="select_all2(this.checked)" /></td>
+                </tr>
                </tbody>
             </table></td></tr></table>
         </div>
     </div>
 </form>
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
-	$('#wizard').smartWizard(); 
-	$('#alfombras').change(
-		function()
-		{
-			if($("#alfombras").is(':checked'))
-			{  
-				$("#nalfombras").attr("disabled",false); 
-			}
-			else
-			{  
-				$("#nalfombras").attr("disabled",true);
-				$("#nalfombras").val("");
-			} 
-		}
-	);
-	$('#copas').change(
-		function()
-		{
-			if($("#copas").is(':checked'))
-			{  
-				$("#ncopas").attr("disabled",false); 
-			}
-			else
-			{  
-				$("#ncopas").attr("disabled",true);
-				$("#ncopas").val("");
-			} 
-		}
-	);
-	$('#vidrios').change(
-		function()
-		{
-			if($("#vidrios").is(':checked'))
-			{  
-				$("#nvidrios").attr("disabled",false); 
-			}
-			else
-			{  
-				$("#nvidrios").attr("disabled",true);
-				$("#nvidrios").val("");
-			} 
-		}
-	);
-	
+	$('#wizard').smartWizard(); 	
 });
+
+function select_all(chk)
+{
+	var cb = document.getElementsByName('revision1[]');
+	
+	for (i=0; i<cb.length; i++)
+	{
+		if(chk == true) cb[i].checked = true
+		else cb[i].checked = false;
+	}
+}
+
+function select_all2(chk)
+{
+	var cb = document.getElementsByName('revision2[]');
+	
+	for (i=0; i<cb.length; i++)
+	{
+		if(chk == true) cb[i].checked = true
+		else cb[i].checked = false;
+	}
+}
+
 
 function cargar(id)
 	{
