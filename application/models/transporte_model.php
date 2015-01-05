@@ -2229,10 +2229,11 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		if($this->db->query($consulta))
 		{
 			$bandera=1;
+			$revision=array_merge($revision1, $revision2);
 			if(!empty($revision))
 			{
 				$id_ingreso_taller=$this->ultimo_id_ingreso_taller();
-				$revision=array_merge($revision1, $revision2);
+				//print_r($revision);
 				$n=count($revision);
 				$y=0;				
 				for($i=0;$i<$n;$i++)

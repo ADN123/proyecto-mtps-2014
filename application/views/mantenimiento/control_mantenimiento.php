@@ -115,8 +115,8 @@ foreach($vehiculos as $v)
 								if($rev['cantidad']==1)
 								{
 									echo "<tr>";
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision1[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."' onchange='numero()' ></td>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' id='".$rev['id_revision']."_1' size='1px' disabled='disabled'></td>";
+									echo "<td><input type='checkbox' name='revision1[]' value='".$rev['id_revision']."' onchange='habilitar(".$rev['id_revision'].",this.checked)' ></td>";
 								}
 								else
 								{
@@ -130,8 +130,8 @@ foreach($vehiculos as $v)
 							{
 								if($rev['cantidad']==1)
 								{
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision1[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' id='".$rev['id_revision']."_1' size='1px' disabled='disabled'></td>";
+									echo "<td><input type='checkbox' name='revision1[]' value='".$rev['id_revision']."' onchange='habilitar(".$rev['id_revision'].",this.checked)'></td>";
 									echo "</tr>";
 								}
 								else
@@ -183,14 +183,14 @@ foreach($vehiculos as $v)
 								if($rev['cantidad']==1)
 								{
 									echo "<tr>";
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]2' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";	
+									echo "<td>".$rev['revision']." - Número: <input type='text' id='".$rev['id_revision']."_1' name='cantidad[]' size='1px' disabled='disabled'></td>";
+									echo "<td><input type='checkbox' name='revision2[]' value='".$rev['id_revision']."' onchange='habilitar(".$rev['id_revision'].",this.checked)'></td>";	
 								}
 								else
 								{
 									echo "<tr>";
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]2' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
+									echo "<td><input type='checkbox' name='revision2[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 								}
 								$aux=1;
 							}
@@ -198,14 +198,14 @@ foreach($vehiculos as $v)
 							{
 								if($rev['cantidad']==1)
 								{
-									echo "<td>".$rev['revision']." - Número: <input type='text' name='cantidad[]' size='1px'></td>";
-									echo "<td><input type='checkbox' name='revision[]2' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
+									echo "<td>".$rev['revision']." - Número: <input type='text' id='".$rev['id_revision']."_1' name='cantidad[]' size='1px' disabled='disabled'></td>";
+									echo "<td><input type='checkbox' name='revision2[]' value='".$rev['id_revision']."' onchange='habilitar(".$rev['id_revision'].",this.checked)'></td>";
 									echo "</tr>";
 								}
 								else
 								{
 									echo "<td>".$rev['revision'].": </td>";
-									echo "<td><input type='checkbox' name='revision[]2' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
+									echo "<td><input type='checkbox' name='revision2[]' id='".$rev['id_revision']."' value='".$rev['id_revision']."'></td>";
 									echo "</tr>";
 								}
 								$aux=0;
@@ -239,8 +239,16 @@ function select_all(chk)
 	
 	for (i=0; i<cb.length; i++)
 	{
-		if(chk == true) cb[i].checked = true
-		else cb[i].checked = false;
+		if(chk == true)
+		{
+			cb[i].checked = true;
+			habilitar(cb[i].value,cb[i].checked);
+		}
+		else
+		{
+			 cb[i].checked = false;
+			 habilitar(cb[i].value,cb[i].checked);
+		}
 	}
 }
 
@@ -250,11 +258,27 @@ function select_all2(chk)
 	
 	for (i=0; i<cb.length; i++)
 	{
-		if(chk == true) cb[i].checked = true
-		else cb[i].checked = false;
+		if(chk == true)
+		{
+			cb[i].checked = true;
+			habilitar(cb[i].value,cb[i].checked);
+		}
+		else
+		{
+			cb[i].checked = false;
+			habilitar(cb[i].value,cb[i].checked);
+		}
 	}
 }
 
+function habilitar(id,chk)
+{
+	var id2=id+'_1';
+	var tf=document.getElementById(id2);
+	
+	if(chk==true && tf!=null) tf.disabled=false;
+	else if(chk==false && tf!=null) tf.disabled=true;
+}
 
 function cargar(id)
 	{
