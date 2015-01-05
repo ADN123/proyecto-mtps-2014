@@ -2078,6 +2078,8 @@ function reporte_liquidacion()
 		$url='vales/reporte_liquidacion';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
+
+		$data['meses']=$this->vales_model->meses_registrados();
 		if($data['id_permiso']!=NULL) {
 			switch($data['id_permiso']) { /*Busqueda de informacion a mostrar en la pantalla segun el nivel del usuario logueado*/
 				case 1:
@@ -2111,6 +2113,30 @@ function reporte_liquidacion()
 		
 	}
 
+function liquidacion_pdf()
+{		
+		
+		extract($_POST);
+	
+		
+		
+		
+			$data['mesn']= $mes_input;
+			$data['seccion']= $id_seccion_input;
+		if($id_seccion==0){ //liquidacion general
+			$data['l']=$this->vales_model->liquidacion_mensual($mes, $id_fuente_fondo);	
+			$html = $this->load->view('vales/liquidacion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+			$this->mpdf->mPDF('utf-8','letter-L',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		}else{ //liquidacion por seccion
+			$html = $this->load->view('vales/liquidacion_seccion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+			$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		}
+		$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
+		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
+		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/	
+		$this->mpdf->Output(); /*Salida del pdf*/	
+
+}
 //////////////////////////Funciones de testeo
 function form()
 {
