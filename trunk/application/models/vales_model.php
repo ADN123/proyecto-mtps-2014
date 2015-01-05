@@ -1543,7 +1543,43 @@ function consultar_seccion($id_seccion=NULL)
         $query=$this->db->query($q);
         return $query->result_array();
 }
-     
+function meses_registrados()
+   {
+   	$query=$this->db->query(" SET lc_time_names = 'es_ES'");
+   	$q="SELECT DATE_FORMAT(CONCAT(SUBSTR(mes,1,4),'-', SUBSTR(mes,5,6),'-01' ),'%M %Y') AS mesn, mes  
+   					FROM tcm_requisicion GROUP BY mes ORDER BY mes DESC";
+    $query=$this->db->query($q);
+    return $query->result_array();
+   }   
+function liquidacion_mensual($mes=NULL, $fuente=NULL)
+   {
+   	$q="SELECT
+   	s.nombre_seccion as seccion,
+	DATE_FORMAT(r.fecha,'%d-%m-%Y') as fecha,
+	SUM(r.asignado) AS cuota,
+	SUM(r.restante_anterior) as anterior,
+	SUM(r.cantidad_entregado) as entregado,
+	SUM(r.restante_anterior) + SUM(cantidad_entregado) AS disponibles,
+	@con:=COALESCE(consumo(r.id_seccion,'$mes',id_fuente_fondo),0) AS consumido,
+	SUM(r.restante_anterior) + SUM(cantidad_entregado)-COALESCE(consumo(r.id_seccion,'$mes',id_fuente_fondo),0) AS sobrante,
+	r.mes,
+	r.id_seccion
+FROM
+	tcm_requisicion r
+	INNER JOIN org_seccion s ON s.id_seccion=r.id_seccion
+WHERE r.mes = $mes	AND r.id_fuente_fondo=$fuente
+GROUP BY r.mes, r.id_seccion";
+    $query=$this->db->query($q);
+    return $query->result_array();
+   }   
+}
+function name_mes($mes)
+{
+	   	$query=$this->db->query(" SET lc_time_names = 'es_ES'");
+	   	$query=$this->db->query("SET @mes:= '$mes';");
+   	$q="SELECT DATE_FORMAT(CONCAT(SUBSTR(@mes,1,4),'-', SUBSTR(@mes,5,6),'-01' ),'%M') AS mesn";
+    $query=$this->db->query($q);
+    return $query->result_array();
+}
 
-}	
 ?>
