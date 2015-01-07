@@ -114,11 +114,14 @@ extract($vehiculos);
 						{
 							echo "<tr>";
 							echo "<td>".$re['reparacion']."</td>";
-							echo "<td><input type='checkbox' name='reparacion[]' id='".$rev['id_reparacion']."' value='".$rev['id_reparacion']."'></td>";
+							echo "<td><input type='checkbox' name='reparacion1[]' value='".$rev['id_reparacion']."'></td>";
 							echo "</tr>";
 						}
 					}
                 ?>
+                <tr>
+                	<td colspan="2">Seleccionar/Deseleccionar Todo: <input type="checkbox" name="selectall1" onclick="select_all(this.checked)" /></td>
+                </tr>
                 <tr>
                 	<td>Otro mantenimiento: </td>
                     <td><textarea style="width:200px; resize:none;"  name="otro_mtto"></textarea></td>
@@ -145,11 +148,14 @@ extract($vehiculos);
 						{
 							echo "<tr>";
 							echo "<td>".$re['reparacion']."</td>";
-							echo "<td><input type='checkbox' name='reparacion[]' id='".$rev['id_reparacion']."' value='".$rev['id_reparacion']."'></td>";
+							echo "<td><input type='checkbox' name='reparacion2[]'  value='".$rev['id_reparacion']."'></td>";
 							echo "</tr>";
 						}
 					}
                 ?>
+                <tr>
+                	<td colspan="2">Seleccionar/Deseleccionar Todo: <input type="checkbox" name="selectall2" onclick="select_all2(this.checked)" /></td>
+                </tr>
                 <tr>
                 	<td>Obervaciones: </td>
                     <td><textarea style="width:200px; resize:none;"  name="observaciones"></textarea></td>
@@ -242,15 +248,26 @@ function art_info(id)
 		})
 }
 
-function habilitar(id,chk)
+function select_all(chk)
 {
-	if(chk.cheked==true)
+	var cb = document.getElementsByName('reparacion1[]');
+
+	for (i=0; i<cb.length; i++)
 	{
-		$("#"+id).attr("disabled",false);
-	}
-	else
-	{
-		$("#"+id).attr("disabled",true); 
+		if(chk == true) cb[i].checked = true;
+		else cb[i].checked = false;
 	}
 }
+
+function select_all2(chk)
+{
+	var cb = document.getElementsByName('reparacion2[]');
+	
+	for (i=0; i<cb.length; i++)
+	{
+		if(chk == true) cb[i].checked = true;
+		else cb[i].checked = false;
+	}
+}
+
 </script>

@@ -2191,7 +2191,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	/*************************FUNCIÓN PARA OBETENER LAS REVISIONES INTERNAS Y EXTERNAS DE ACUERDO A UN INGRESO A TALLER***********************/
 	function consultar_revisiones2($id_ingreso_taller)
 	{
-		$query="SELECT tr.revision, tcr.varios
+		$query="SELECT tr.revision, tcr.varios, tr.tipo
 				FROM tcm_chequeo_revision AS tcr
 				INNER JOIN tcm_revision AS tr on(tcr.id_revision=tr.id_revision)
 				WHERE tcr.id_ingreso_taller='$id_ingreso_taller'";
@@ -2332,6 +2332,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$consulta="INSERT INTO tcm_mantenimiento_interno (id_vehiculo, otro_mtto, observaciones, fecha, id_usuario) VALUES ('$id_vehiculo', '$otro_mtto', '$observaciones', '$fecha', '$id_usuario');";
 		if($this->db->query($consulta))
 		{
+			$reparacion=array_merge($reparacion1, $reparacion2);
 			if(!empty($reparacion))
 			{
 				$id_mantenimiento_interno=$this->ultimo_id_mantenimiento_interno();

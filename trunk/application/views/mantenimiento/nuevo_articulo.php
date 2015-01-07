@@ -41,6 +41,12 @@ else $action=base_url()."index.php/vehiculo/guardar_articulo";
                 <input type="text" name="nombre" <?php if($bandera=='true') echo "value='".$nombre."'"; ?> size="20">
             </p>
             <p>
+            	<label>Unidad de Medida: </label>
+                <select name="unidad_medida" class="select">
+               	
+                </select>
+            </p>
+            <p>
             	<label>Cantidad: </label>
                 <input type="text" name="cantidad" <?php if($bandera=='true') echo "value='".$cantidad."' disabled='disabled'"; ?> size="10">
             </p>
