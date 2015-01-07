@@ -26,12 +26,25 @@ extract($vehiculo);
 		echo "Trabajo Solicitado en Carrocería: <strong>".$trabajo_solicitado_carroceria."</strong> <br>";
 		echo "Accesorios Registrados al Ingresar: <br><strong>";
 		$i=1;
+		$j=1;
 		foreach($revision as $r)
 		{
-			echo $i." - ".$r['revision'];
-			if($r['varios']!=0) echo " --- Cantidad: ".$r['varios'];
-			echo "<br>";
-			$i++;
+			if($r['tipo']=='interno')
+			{
+				if($i==1) echo "INTERNO <br>";
+				echo $i." - ".$r['revision'];
+				if($r['varios']!=0) echo " --- Cantidad: ".$r['varios'];
+				echo "<br>";
+				$i++;
+			}
+			elseif($r['tipo']=='externo')
+			{
+				if($j==1) echo "<br>EXTERNO <br>";
+				echo $j." - ".$r['revision'];
+				if($r['varios']!=0) echo " --- Cantidad: ".$r['varios'];
+				echo "<br>";
+				$j++;
+			}
 		}
 		echo "</strong>";
 	?>
