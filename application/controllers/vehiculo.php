@@ -118,6 +118,24 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
+	*	Nombre: ventana_mantenimientos
+	*	Objetivo: carga la ventana de mantenimientos
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 07/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function ventana_mantenimientos($id,$id2)
+	{
+		$data['vehiculo']=$this->transporte_model->vehiculos_taller_interno(0,NULL,$id);
+		$data['vehiculo']=$data['vehiculo'][0];
+		$data['revision']=$this->transporte_model->consultar_revisiones2($id);
+		$data['mantenimientos']=$this->transporte_model->consultar_mantenimientos($id2,$id);
+		$this->load->view('mantenimiento/ventana_mantenimiento.php',$data);
+	}
+	
+	/*
 	*	Nombre: controlMtto
 	*	Objetivo: carga la vista de control de mantenimiento del vehículo
 	*	Hecha por: Oscar

@@ -2188,18 +2188,47 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*********************************************************************************************************************************************/
 	
+	/*************************FUNCIÓN PARA OBETENER LAS REVISIONES INTERNAS Y EXTERNAS DE ACUERDO A UN INGRESO A TALLER***********************/
+	function consultar_revisiones2($id_ingreso_taller)
+	{
+		$query="SELECT tr.revision, tcr.varios
+				FROM tcm_chequeo_revision AS tcr
+				INNER JOIN tcm_revision AS tr on(tcr.id_revision=tr.id_revision)
+				WHERE tcr.id_ingreso_taller='$id_ingreso_taller'";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+	
+	/**********************************FUNCIÓN PARA OBETENER LOS MANTENIMIENTOS A UN VEHÍCULO***************************************************/
+	function consultar_mantenimientos($id_vehiculo,$id_ingreso_taller=NULL)
+	{
+		$where="";
+		if($id_ingreso_taller!=NULL) $where=" and tit.id_ingreso_taller='$id_ingreso_taller'";
+		$query="SELECT  DATE_FORMAT(tmi.fecha,'%d-%m-%Y') AS fecha, tmi.observaciones, tmi.otro_mtto, tr.reparacion
+				FROM tcm_ingreso_taller AS tit
+				LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tit.id_ingreso_taller=tmi.id_ingreso_taller)
+				INNER JOIN tcm_chequeo_reparacion AS tcr ON (tmi.id_mantenimiento_interno=tcr.id_mantenimiento_interno)
+				INNER JOIN tcm_reparacion AS tr ON (tcr.id_reparacion=tr.id_reparacion)
+				WHERE tit.fecha_entrega!=NULL AND tit.id_vehiculo='$id_vehiculo'".$where;
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+	
 	/**********************************FUNCIÓN PARA OBETENER VER LOS VEHÍCULOS EN TALLER INTERNO***************************************************/
-	function vehiculos_taller_interno($id=0, $estado=NULL)
+	function vehiculos_taller_interno($id=0, $estado=NULL, $id_ingreso_taller=NULL)
 	{
 		$where="";
 		if($id!=0 && $estado!=NULL) $where=" where (v.id_vehiculo='$id' and v.estado='$estado')";
 		elseif($id!=0)	$where=" where v.id_vehiculo='$id'";
 		elseif($estado!=NULL)	$where=" where v.estado='$estado'";
+		elseif($id_ingreso_taller!=NULL) $where=" WHERE it.id_ingreso_taller='$id_ingreso_taller'";
 		
 		$query="select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
 				o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
 				ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
-				v.tipo_combustible, DATE_FORMAT(it.fecha_recepcion,'%d-%m-%Y') as fecha_recepcion, it.trabajo_solicitado, it.trabajo_solicitado_carroceria
+				v.tipo_combustible, it.id_ingreso_taller, DATE_FORMAT(it.fecha_recepcion,'%d-%m-%Y') as fecha_recepcion, it.trabajo_solicitado, it.trabajo_solicitado_carroceria
 				from tcm_vehiculo as v
 				inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 				inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
