@@ -249,7 +249,30 @@ function randomkey($length=16)
       }  
 
 function llaveform(){
-echo '<input value="'.randomkey().'" type="hidden" name="keyform"/>';
+	echo '<input value="'.randomkey().'" type="hidden" name="keyform"/>';
+}
+
+function restar_mes($mes=NULL,$rest=NULL)
+{	$arr2 = str_split($mes, 4); //divide en 4 digitos, cada arreglo
+	$a=$arr2[0];
+	$m=$arr2[1];
+	
+	while ( $rest>=12) {
+		$a--; $rest-=12;
+	}
+	
+	$m=$m-$rest;
+	if($m<=0){
+		$m=13-$rest;
+		$a--;
+	}	
+
+
+	if($m<10){ ///para que se mantenga el formato de dos digitos en mes
+		$m="0".$m;
+	}
+	$nmes=$a.$m;	
+	return $nmes;
 }
 
 /* End of file tools_helper.php */

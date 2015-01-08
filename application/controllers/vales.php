@@ -306,6 +306,16 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 							$this->vales_model->guardar_req_veh(NULL,$vehiculos[$i], $id_requisicion);
 						}
 					}
+
+					//proceso para guardar las series de vales sobrantes
+					$sobraInfo= array('bandera' => 1,
+					  'id_fuente_fondo'=>$_POST[id_fuente_fondo],
+					  'id_seccion'=>$_POST[id_seccion],
+					  'mes'=>restar_mes($_POST[mes],1) );
+
+					$r=$this->vales_model->simular_buscar_requisicion_vale($sobraInfo,1);
+					$this->vales_model->insertar_sobrante($r, $sobraInfo);
+					//fin del proceso de sobrantes
 					$proce=1;
 
 					deleteform($_POST);
@@ -2117,10 +2127,6 @@ function liquidacion_pdf()
 {		
 		
 		extract($_POST);
-	
-		
-		
-		
 			$data['mesn']= $mes_input;
 			$data['seccion']= $id_seccion_input;
 		if($id_seccion==0){ //liquidacion general
@@ -2128,8 +2134,10 @@ function liquidacion_pdf()
 			$html = $this->load->view('vales/liquidacion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 			$this->mpdf->mPDF('utf-8','letter-L',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 		}else{ //liquidacion por seccion
+			//$data['recibidos1']$this->vales_model->recibidos1($id_seccion,$mes);
 			$html = $this->load->view('vales/liquidacion_seccion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 			$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+
 		}
 		$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
 		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
@@ -2151,9 +2159,10 @@ print_r($_SESSION['form']);
 unset($_SESSION['form']);
 }
 
-function mostrar_form()
+function mostrar_form($mes=NULL,$rest=NULL)
 {
-print_r($_SESSION['form']);	
+	//print_r($_SESSION['form']);	
+print_r($_SERVER);
 
 }
 
