@@ -47,9 +47,21 @@ class Vales_model extends CI_Model {
 		$this->db->query($sentencia);
 	}
 	
- function simular_buscar_requisicion_vale($formuInfo)
+ function simular_buscar_requisicion_vale($formuInfo, $byfuente=NULL)
         {
                 extract($formuInfo);
+                        $where="";
+                        if ($byfuente==NULL) {
+            				$where="WHERE
+                                    tcm_requisicion_vale.cantidad_restante > 0
+                                    AND tcm_vale.id_gasolinera = $id_gasolinera
+                                    AND id_seccion = $id_seccion  ";
+                        } else {
+                        	 $where="WHERE
+                                    tcm_requisicion_vale.cantidad_restante > 0
+                                    AND tcm_vale.tipo_vehiculo =$id_fuente_fondo
+                                    AND id_seccion = $id_seccion  ";
+                        }
                         
                 $sentencia="SELECT tcm_requisicion_vale.id_requisicion_vale,
                                          (
@@ -64,10 +76,7 @@ class Vales_model extends CI_Model {
                                                 INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
                                                 INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
                                                 INNER JOIN tcm_fuente_fondo f ON f.id_fuente_fondo= tcm_vale.tipo_vehiculo 
-                                                WHERE
-                                                        tcm_requisicion_vale.cantidad_restante > 0
-                                                AND tcm_vale.id_gasolinera = $id_gasolinera
-                                                AND id_seccion = $id_seccion  
+													".$where."
                                         ORDER BY 	tcm_requisicion.fecha_entregado ASC";                                  
                                         
                 $query=$this->db->query($sentencia);
@@ -1572,7 +1581,6 @@ GROUP BY r.mes, r.id_seccion";
     $query=$this->db->query($q);
     return $query->result_array();
    }   
-}
 function name_mes($mes)
 {
 	   	$query=$this->db->query(" SET lc_time_names = 'es_ES'");
@@ -1582,4 +1590,14 @@ function name_mes($mes)
     return $query->result_array();
 }
 
+function insertar_sobrante($r,$formuInfo)
+{
+	extract($formuInfo);
+	foreach ($r as $key) {
+	$q="INSERT INTO tcm_sobrantes(id_seccion, id_requisicion_vale, inicial, final, cant, mes) 
+	VALUES ($id_seccion,$key[id_requisicion_vale], $key[inicial], $key[inicial]+$key[cantidad_restante]-1, $key[cantidad_restante], $mes);";
+	$this->db->query($q);
+	}
+}
+}
 ?>

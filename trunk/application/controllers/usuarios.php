@@ -513,7 +513,7 @@ class Usuarios extends CI_Controller
 			}
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
-			ir_a('index.php/usuarios/usuario/'.$tr.'/1');
+			ir_a('index.php/usuarios/usuarios/'.$tr.'/1');
 		}
 		else {
 			echo 'No tiene permisos para acceder';
@@ -545,9 +545,70 @@ class Usuarios extends CI_Controller
 			echo 'No tiene permisos para acceder';
 		}
 	}
-	function perfil()
+	function perfil($estado_transaccion=NULL, $accion=0)
 	{
-		pantalla('usuarios/clave');
+		$data['estado_transaccion']=$estado_transaccion;
+			switch ($accion) {
+				case 1:
+					$data['msj']="No se pudo completar la trasacion";
+
+					break;
+				case 2:
+					$data['msj']="Las contraseña nuevas no coinciden";
+					$data['estado_transaccion']=0;
+					break;
+				case 3:
+					$data['msj']="La contraseña actual es incorrecta";
+					$data['estado_transaccion']=0;
+					break;
+				default:
+					//$data['msj']="";
+					break;
+			}
+	
+		
+		$data['empleados']=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
+					foreach($data['empleados'] as $val) {
+						$band=0;
+						$data['info']=$this->transporte_model->info_adicional($val['NR']);
+		
+		}
+		pantalla('usuarios/clave',$data);
+		//print_r($data[empleados]);
+	}
+	function cambiar_clave()
+	{
+		
+			$login=$this->session->userdata('usuario');
+			$clave =$this->input->post('pass1');			
+			$id_usuario=$this->session->userdata('id_usuario');
+		
+
+			$v=$this->seguridad_model->consultar_usuario($login,$clave);  //Verificación en base de datos
+			
+		if($v['id_usuario']!=0){/*El usuario y la contraseñan son correctos*/
+			if($_POST[pass2]==$_POST[pass3]){
+				$formuInfo = array(
+					'password'=>$_POST[pass2],
+					'id_usuario'=>$id_usuario
+				);
+				$this->db->trans_start();
+				$this->usuario_model->actualizar_usuario($formuInfo); /*Actualizar usuario*/			
+				$this->db->trans_complete();
+				$tr=($this->db->trans_status()===FALSE)?0:1;
+				
+			$accion=1;
+			}else{
+				echo "Las contraseña nuevas no coinciden";
+				$accion=2;
+			}
+		}else{
+			echo "La contraseña actual es incorrecta";
+			$accion=3;
+
+		}	
+	
+	ir_a('index.php/usuarios/perfil/'.$tr.'/'.$accion);
 	}
 }
 ?>

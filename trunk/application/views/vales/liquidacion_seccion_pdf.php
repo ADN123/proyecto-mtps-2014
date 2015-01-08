@@ -46,7 +46,7 @@
   </tbody>
   <thead>
   <tr>
-    <th>SOBRANTES MES ANTERIOR</th>
+    <th>SOBRANTES MES ANTERIOR </th>
     <th></th>
     <th></th>
   </tr>
@@ -80,17 +80,21 @@
   </thead>
   <tbody>
   <?php// foreach ($recibidos as $key) {  ?>
-  <?php for ($i=0; $i <2 ; $i++)  {  ?>
+  <?php   $tconsumido=0;
+          for ($i=0; $i <2 ; $i++)  {  
+          $cant=5*($i+1);
+          $tconsumido+=$cant;
+    ?>
   <tr>
     <td aling="center">CARRO</td>
     <td>P-1231</td>
-    <td>31</td>
+    <td><?php echo $cant; ?></td>
   </tr>
   <?php }?>
   <tr>
     <td aling="center"><strong>TOTAL</strong></td>
     <td></td>
-    <td><strong>43</strong></td>
+    <td><strong><?php echo $tconsumido; ?></strong></td>
   </tr>
   </tbody>
 </table>
