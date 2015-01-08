@@ -516,7 +516,6 @@ class Usuario_model extends CI_Model {
 		extract($formuInfo);
 
 		$sentencia="UPDATE org_usuario SET password=MD5('$password') where id_usuario='$id_usuario'";
-		echo $sentencia;
 		$this->db->query($sentencia);
 
 	}

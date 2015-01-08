@@ -54,8 +54,7 @@ class Sessiones extends CI_Controller {
 		if ($in<=3)
 		{				
 			$login =$this->input->post('user');
-			$clave =$this->input->post('pass');
-		
+			$clave =$this->input->post('pass');		
 		$v=$this->seguridad_model->consultar_usuario2($login); //verifica únicamente por el nombre de usuario
 		
 		if($v['id_usuario']!=0){/*se verifica que el usuario exista*/
