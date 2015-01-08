@@ -142,8 +142,10 @@ class Vales extends CI_Controller
 				case 2://seccion
 					$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
 					$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
-					$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
-					if(sizeof($data['vehiculos'])==0) {
+					$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']); //verificaciones que tenga vehiculo
+					$data['otros']=$this->vales_model->otros($id_seccion['id_seccion']);			///o que tenga otros dispositivos
+
+					if(sizeof($data['vehiculos'])+sizeof($data['otros'])==0) {
 						$url.='Error';	
 					}
 					break;
@@ -157,7 +159,9 @@ class Vales extends CI_Controller
 						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
 						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
 						$data['vehiculos']=$this->vales_model->vehiculos($id_seccion['id_seccion']);
-						if(sizeof($data['vehiculos'])==0){
+						$data['otros']=$this->vales_model->otros($id_seccion['id_seccion']);
+
+					if(sizeof($data['vehiculos'])+sizeof($data['otros'])==0) {
 							$url.='error';	
 						}
 					}
@@ -899,6 +903,32 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 			echo "</pre>";
 			*/
 			$this->load->view("vales/vehiculos_consumo",$data);	
+
+		}
+		else {
+			echo 'No tiene permisos para acceder';
+		}	
+	}
+		/*
+	*	Nombre: tipo de combustible
+	*	Objetivo: Enviar obligaicon de los precios de combustible obligatorios
+	*	en la pantalla de ingrese de requisicion de combustible 
+	*	Hecha por: Jhonatan
+	*	Modificada por: Jhonatan
+	*	Última Modificación: 08/01/2015
+	*	Observaciones: Ninguna.
+	*/
+	function tipo_combustible($id_gasolinera = NULL, $fecha_factura_dia = NULL, $fecha_factura_mes = NULL, $fecha_factura_anio = NULL, $seccion=NULL)
+	{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO); 
+		
+		if($data['id_permiso']!=NULL) {
+			//$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));			
+			$id_seccion['id_seccion']=$seccion;
+			$fecha_factura=$fecha_factura_anio."-".$fecha_factura_mes."-".$fecha_factura_dia;
+			$fecha_factura2=$fecha_factura_anio."".$fecha_factura_mes;
+		echo json_encode($this->vales_model->consultar_tipos_combustible($id_seccion['id_seccion'],$id_gasolinera,$fecha_factura2));
+
 
 		}
 		else {
@@ -2162,7 +2192,7 @@ unset($_SESSION['form']);
 function mostrar_form($mes=NULL,$rest=NULL)
 {
 	//print_r($_SESSION['form']);	
-print_r($_SERVER);
+	echo "<pre>"; print_r($_SERVER); echo "</pre>";
 
 }
 

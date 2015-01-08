@@ -35,7 +35,7 @@
                 </a>
             </li>
         </ul>
-        <div id="step-2">	
+        <div id="step-1">	
             <h2 class="StepTitle">Datos de Usuario</h2>
             <p>
             	<div id="info_adicional">
@@ -52,7 +52,7 @@
             </p> 
         </div>
 
-        <div id="step-1">	
+        <div id="step-2">	
             <h2 class="StepTitle">Cambio de contraseña</h2>
             <p>
                 <label for="pass1" id="lpass1">Contraseña Actual </label>

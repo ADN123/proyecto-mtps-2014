@@ -770,6 +770,47 @@ GROUP BY r.id_requisicion");
 		$query=$this->db->query($sentencia);
 		return (array)$query->result_array();	
 	}
+	function consultar_tipos_combustible($id_seccion=NULL, $id_gasolinera=NULL, $fecha_factura=NULL)
+	{
+		if($id_seccion!=NULL)
+			$where="tcm_requisicion.id_seccion=".$id_seccion;
+		else
+			$where="tcm_requisicion.id_seccion<>52 AND tcm_requisicion.id_seccion<>53 AND tcm_requisicion.id_seccion<>54 AND tcm_requisicion.id_seccion<>55 AND tcm_requisicion.id_seccion<>56 AND tcm_requisicion.id_seccion<>57 AND tcm_requisicion.id_seccion<>58 AND tcm_requisicion.id_seccion<>59 AND tcm_requisicion.id_seccion<>60 AND tcm_requisicion.id_seccion<>61 AND tcm_requisicion.id_seccion<>64 AND tcm_requisicion.id_seccion<>65 AND tcm_requisicion.id_seccion<>66";
+		if($id_gasolinera!=NULL)
+			$where.=" AND tcm_vale.id_gasolinera='".$id_gasolinera."'";
+
+		if($fecha_factura!=NULL)// nuevo
+			$where.=" AND tcm_requisicion.mes<='".$fecha_factura."'";
+			
+			$sentencia="SELECT
+			tcm_vehiculo.tipo_combustible AS combustible
+			FROM
+				tcm_vehiculo
+			INNER JOIN tcm_req_veh ON tcm_req_veh.id_vehiculo = tcm_vehiculo.id_vehiculo
+			INNER JOIN tcm_requisicion ON tcm_req_veh.id_requisicion = tcm_requisicion.id_requisicion
+			INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
+			INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
+			WHERE
+				tcm_requisicion_vale.cantidad_restante > 0 AND $where
+			GROUP BY
+				tipo_combustible
+			UNION
+				SELECT
+					h.combustible
+				FROM
+					tcm_herramienta h
+				INNER JOIN tcm_req_veh ON tcm_req_veh.id_herramienta = h.id_herramienta
+				INNER JOIN tcm_requisicion ON tcm_req_veh.id_requisicion = tcm_requisicion.id_requisicion
+				INNER JOIN tcm_requisicion_vale ON tcm_requisicion_vale.id_requisicion = tcm_requisicion.id_requisicion
+				INNER JOIN tcm_vale ON tcm_requisicion_vale.id_vale = tcm_vale.id_vale
+				WHERE
+					tcm_requisicion_vale.cantidad_restante > 0 AND $where
+				GROUP BY
+					h.combustible";
+
+		$query=$this->db->query($sentencia);
+		return (array)$query->result_array();	
+	}
 
 	function consultar_vales_seccion($id_seccion=NULL, $id_gasolinera=NULL, $fecha_factura=NULL)
 	{

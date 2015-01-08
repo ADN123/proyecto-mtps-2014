@@ -22,15 +22,7 @@ $(document).ready(function() {
 		numMin:1,
 		ent: true
 	});
-	$("#valor_super").validacion({
-		valPrecio: true
-	});
-	$("#valor_regular").validacion({
-		valPrecio: true
-	});
-	$("#valor_diesel").validacion({
-		valPrecio: true
-	});
+
 	$("#id_gasolinera").change(function(){
 		var id_gasolinera = $(this).val();
 		var fecha_factura = $("#fecha_factura").val();
@@ -40,6 +32,8 @@ $(document).ready(function() {
 
 			$('#divVehiculos').load(base_url()+"index.php/vales/vehiculos_consumo/"+id_gasolinera+"/"+fecha_factura+"/"+seccion);
 			get_vales();
+			get_obligatorios("/"+id_gasolinera+"/"+fecha_factura+"/"+seccion);
+
 		}else{
 			$('#divVehiculos').html("<br/><br/><br/>Debe seleccionar una <strong>gasolinera</strong> e ingresar la <strong>fecha de la factura</strong>...");	
 		}
@@ -58,6 +52,45 @@ $(document).ready(function() {
 
 var valesStatic;
 
+function get_obligatorios(url) {
+		$.ajax({
+		  async:	true, 
+			url:	base_url()+"index.php/vales/tipo_combustible"+url,
+		  dataType: "json", 
+		  success: function(data) {
+		  		precios_obligatorios(data);			
+
+				  },
+		  error: function (data) {
+		  	console.log("error al verificar tipos de combustible");
+		  }
+		});
+
+}
+function precios_obligatorios(data) {
+
+	$("#valor_diesel").destruirValidacion();					
+	$("#valor_super").destruirValidacion();					
+	$("#valor_regular").destruirValidacion();
+	for (var i = 0; i < data.length; i++) {
+			if(data[i].combustible=="Diesel"){
+
+				$("#valor_diesel").validacion({
+					valPrecio: true
+				});
+
+			}
+			if(data[i].combustible=="Gasolina"){
+				$("#valor_super").validacion({
+					valPrecio: true
+				});
+				$("#valor_regular").validacion({
+					valPrecio: true
+				});
+			}
+		}
+}
+
 function get_vales() {
 	var send=$('form').serializeArray();
 
@@ -72,7 +105,7 @@ function get_vales() {
 
 				  },
 		  error: function (data) {
-		  	console.log("error");
+		  	console.log("error al obtener series de vales");
 		  }
 		});
 
@@ -91,8 +124,6 @@ function mostrar_a_consumir(id_fondo, consumir){
 	var vales = valesStactic;
 	var nfuente=""
 	
-
-
 if (restante>=consumir){
 		
 
