@@ -72,12 +72,17 @@ function precios_obligatorios(data) {
 	$("#valor_diesel").destruirValidacion();					
 	$("#valor_super").destruirValidacion();					
 	$("#valor_regular").destruirValidacion();
+	
+	$('#dregular').hide();
+	$('#dsuper').hide();
+	$('#ddiesel').hide();
 	for (var i = 0; i < data.length; i++) {
 			if(data[i].combustible=="Diesel"){
 
 				$("#valor_diesel").validacion({
 					valPrecio: true
 				});
+				$('#ddiesel').show();
 
 			}
 			if(data[i].combustible=="Gasolina"){
@@ -87,6 +92,8 @@ function precios_obligatorios(data) {
 				$("#valor_regular").validacion({
 					valPrecio: true
 				});
+				$('#dregular').show();
+				$('#dsuper').show();
 			}
 		}
 }
