@@ -73,7 +73,7 @@
                     <td><input class="actividad" type="text" name="actividad_consumo[]" id="actividad_consumo<?php echo $i ?>" style="width:90%"/></td>
                     <td>
                     	<select name="tip_gas[]" id="tip_gas<?php echo $i?>" class="tipo_gas">
-                       	<?php /* //desactivador temporalmente hasta que actualicen la base de datos
+                       	<?php 
 	                    		if ($val['combustible']=="Gasolina") {
 	                    				echo
 	                    				'<option value="1">Regular</option>
@@ -88,10 +88,11 @@
 	                    						 <option value="3">Diesel</option>';
 	                       				}
 	
-	                    			}*/
+	                    			}
+	                    			/* //activar solo si la base de datos esta desactualizada
 	                    					echo '<option value="1">Regular</option>
 	                    						 <option value="2">Super</option>
-	                    						 <option value="3">Diesel</option>';
+	                    						 <option value="3">Diesel</option>';*/
 	                    		?>
                         </select>
                     </td>

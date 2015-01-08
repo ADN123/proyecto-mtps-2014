@@ -55,15 +55,16 @@
 
            	</div>
             <div style="width: 40%; display: inline-block; margin-right: 9%; text-align: left;">
-                <p>
+                
+                <p id="dsuper">
                     <label for="valor_super" id="lvalor_super" style="width:35%;">Precio Super </label>
                     $ <input tabindex="4" id="valor_super" name="valor_super" type="text" size="5"/> US
                 </p>
-                <p>
+                <p id="dregular">
                     <label for="valor_regular" id="lvalor_regular" style="width:35%;">Precio Regular </label>
                     $ <input tabindex="5" id="valor_regular" name="valor_regular" type="text" size="5"/> US
                 </p>
-                <p>
+                <p id="ddiesel">
                     <label for="valor_diesel" id="lvalor_diesel" style="width:35%;">Precio Diesel </label>
                     $ <input tabindex="6" id="valor_diesel" name="valor_diesel" type="text" size="5"/> US
                 </p>

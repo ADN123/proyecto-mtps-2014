@@ -1,5 +1,9 @@
 <?php 
+
+define("SERVER_MTPS","192.168.1.200");
+
 class Sessiones extends CI_Controller {
+
 		
 	function Sessiones()
 	{
@@ -46,49 +50,65 @@ class Sessiones extends CI_Controller {
 	function iniciar_session()
 	{
 		$in=$this->verificar();
-		//error_reporting(0);
+		error_reporting(0);
 		if ($in<=3)
 		{				
 			$login =$this->input->post('user');
 			$clave =$this->input->post('pass');
-			
-			$v=$this->seguridad_model->consultar_usuario($login,$clave);  //Verificación en base de datos
-			
-			if($v['id_usuario']==0)/*El usuario y la contraseñan son incorrectos*/
-			{
-				/*Procedemos a buscar en el Active Directory*/
-				$active=$this->ldap_login($login,$clave); /// verifica si existe ese usuario con el password en el Active Directory
-				if($active=="login")
+		
+		$v=$this->seguridad_model->consultar_usuario2($login); //verifica únicamente por el nombre de usuario
+		
+		if($v['id_usuario']!=0){/*se verifica que el usuario exista*/
+			/////////////////////////////verificacion de usuario con la contraseña////////////////////////////
+				$v=$this->seguridad_model->consultar_usuario($login,$clave);  //Verificación en base de datos
+				
+				if($v['id_usuario']==0)/*El usuario y la contraseñan son incorrectos*/
 				{
-					$v=$this->seguridad_model->consultar_usuario2($login); //verifica únicamente por el nombre de usuario
-					if($v['id_usuario']==0)/*Si el usuario no ingreso sus datos correctamente*/
-					{
-						alerta("Datos Incorrectos",'index.php/sessiones');	
-					}
-					else 
-					{
-						$this->session->set_userdata('nombre', $v['nombre_completo']);
-						$this->session->set_userdata('id_usuario', $v['id_usuario']);
-						$this->session->set_userdata('usuario', $v['usuario']);
-						$this->session->set_userdata('nr', $v['NR']);			
-						$this->session->set_userdata('id_seccion', $v['id_seccion']);
-						$this->session->set_userdata('sexo', $v['sexo']);
-						setcookie('contador', 1, time() + 15* 60);			
-						ir_a('index.php/inicio'); 
+						
+					if (SERVER_MTPS==$_SERVER['SERVER_NAME']) { //Se verifica que active directory este disponible
+					
+						/*Procedemos a buscar en el Active Directory*/
+						$active=$this->ldap_login($login,$clave); /// verifica si existe ese usuario con el password en el Active Directory
+						if($active=="login")
+						{
+							$v=$this->seguridad_model->consultar_usuario2($login); //verifica únicamente por el nombre de usuario
+							if($v['id_usuario']==0)/*Si el usuario no ingreso sus datos correctamente*/
+							{
+								alerta("Clave incorrecta",'index.php/sessiones');	
+							}
+							else 
+							{
+								$this->session->set_userdata('nombre', $v['nombre_completo']);
+								$this->session->set_userdata('id_usuario', $v['id_usuario']);
+								$this->session->set_userdata('usuario', $v['usuario']);
+								$this->session->set_userdata('nr', $v['NR']);			
+								$this->session->set_userdata('id_seccion', $v['id_seccion']);
+								$this->session->set_userdata('sexo', $v['sexo']);
+								setcookie('contador', 1, time() + 15* 60);			
+								ir_a('index.php/inicio'); 
+							}
+						}
+						else alerta("Usuario y clave no coinciden en Active Directory",'index.php/sessiones');	
+					////////////////Fin verificacion con Active Directory
+											
+					} else {
+							alerta("Clave incorrecta",'index.php/sessiones');	
 					}
 				}
-				else alerta("Datos Incorrectos",'index.php/sessiones');	
-			}
-			else 
-			{
-				$this->session->set_userdata('nombre', $v['nombre_completo']);
-				$this->session->set_userdata('id_usuario', $v['id_usuario']);
-				$this->session->set_userdata('usuario', $v['usuario']);
-				$this->session->set_userdata('nr', $v['NR']);			
-				$this->session->set_userdata('id_seccion', $v['id_seccion']);
-				$this->session->set_userdata('sexo', $v['sexo']);
-				setcookie('contador', 1, time() + 15* 60);			
-				ir_a('index.php/inicio'); 
+				else 
+				{
+					$this->session->set_userdata('nombre', $v['nombre_completo']);
+					$this->session->set_userdata('id_usuario', $v['id_usuario']);
+					$this->session->set_userdata('usuario', $v['usuario']);
+					$this->session->set_userdata('nr', $v['NR']);			
+					$this->session->set_userdata('id_seccion', $v['id_seccion']);
+					$this->session->set_userdata('sexo', $v['sexo']);
+					setcookie('contador', 1, time() + 15* 60);			
+					ir_a('index.php/inicio'); 
+				}
+			////////////////////Fin de la verifiaciacion de usuario y contraseña
+			}else{
+			alerta("El usuario no esta registrado",'index.php/sessiones');	
 			}
 		}
 		else
@@ -162,11 +182,11 @@ class Sessiones extends CI_Controller {
 		$in;
 				 	
 		  if(!isset($_COOKIE['contador']))
-		  { 		// Caduca en 15 minutos y se ajusta a uno la primera vez
+		  { 		// Caduca en 10 minutos y se ajusta a uno la primera vez
 
 			 
 			 if($get==NULL)  {
-			 	setcookie('contador', 1, time() + 15* 60); 
+			 	setcookie('contador', 1, time() + 10* 60); 
 			 }
 
 			 	return 1;
