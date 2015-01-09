@@ -38,12 +38,19 @@ else $action=base_url()."index.php/vehiculo/guardar_articulo";
         	<h2 class="StepTitle">Ingreso de la informaci&oacute;n del artículo a bodega</h2>
             <p>
             	<label>Nombre: </label>
-                <input type="text" name="nombre" <?php if($bandera=='true') echo "value='".$nombre."'"; ?> size="20">
+                <input type="text" name="nombre" <?php if($bandera=='true') echo "value='".$nombre."'"; ?> size="48">
             </p>
             <p>
             	<label>Unidad de Medida: </label>
-                <select name="unidad_medida" class="select">
-               	
+                <select name="id_unidad_medida" class="select" style="width:150px" multiple="multiple">
+               	<?php
+				foreach($unidades as $um)
+				{
+                ?>
+                	<option value="<?php echo $um['id_unidad_medida'] ?>"  <?php if($bandera=='true') if($um['id_unidad_medida']==$id_unidad_medida) echo "selected='selected'"; ?> ><?php echo $um['unidad_medida']; ?></option>
+                <?php
+				}
+				?>
                 </select>
             </p>
             <p>

@@ -2038,7 +2038,19 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			$where=" where art.id_articulo='$id_articulo'";
 		}
 		
-		$query="SELECT art.id_articulo, art.nombre, art.descripcion, art.cantidad FROM tcm_articulo_bodega as art".$where;
+		$query="SELECT art.id_articulo, art.nombre, art.id_unidad_medida, tum.unidad_medida, art.descripcion, art.cantidad FROM tcm_articulo_bodega AS art
+				INNER JOIN tcm_unidad_medida AS tum ON (art.id_unidad_medida=tum.id_unidad_medida) ".$where;
+		$query=$this->db->query($query);
+		return (array)$query->result_array();
+	}
+	/******************************************************************************************************************/
+	
+	/************************************FUNCIÓN QUE MUESTRA LAS UNIDADES DE MEDIDA*********************************/
+	function UM($id=NULL)
+	{
+		$where="";
+		if($id!=NULL) $where=" where id_unidad_medida='$id'";
+		$query="SELECT * FROM tcm_unidad_medida".$where;
 		$query=$this->db->query($query);
 		return (array)$query->result_array();
 	}
@@ -2068,6 +2080,13 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$bandera=1;
 		$fecha=date('Y-m-d');
 		
+		$UM=$this->UM($id_unidad_medida);
+		
+		foreach($UM as $u)
+		{
+			$unidad=$u['unidad_medida'];
+		}
+		
 		if($adquisicion=='comprado' && $gasto>0.00)
 		{
 			$presupuesto=$this->presupuesto_activo();
@@ -2088,7 +2107,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			$cantidad_actual=$pre-$gasto_s;
 			if($gasto<$cantidad_actual)/*se valida que no se gaste más de lo que se dispone*/
 			{
-				$descripcion2="Se compraron ".$cantidad." ".$nombre;
+				$descripcion2="Se compraron ".$cantidad." ".$unidad." de ".$nombre;
 				$query_gasto="INSERT INTO tcm_gasto_presupuesto (gasto, descripcion, fecha, id_presupuesto) VALUES ('$gasto', '$descripcion2', '$fecha', '$id_presupuesto');";
 				if($this->db->query($query_gasto)) $bandera=$bandera*1;
 				else $bandera=$bandera*0;
@@ -2097,7 +2116,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		
 		if($bandera==1)
 		{
-			$query="INSERT INTO tcm_articulo_bodega (nombre, descripcion, cantidad) VALUES ('$nombre', '$descripcion', '$cantidad');";
+			$query="INSERT INTO tcm_articulo_bodega (nombre, id_unidad_medida, descripcion, cantidad) VALUES ('$nombre', '$id_unidad_medida', '$descripcion', '$cantidad');";
 			if($this->db->query($query))
 			{
 				$id_articulo=$this->ultimo_id_articulo();
@@ -2125,7 +2144,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	function modificar_articulo($datos)
 	{
 		extract($datos);
-		$query="UPDATE tcm_articulo_bodega SET nombre='$nombre', descripcion='$descripcion' WHERE (id_articulo='$id_articulo');";
+		$query="UPDATE tcm_articulo_bodega SET nombre='$nombre', id_unidad_medida='$id_unidad_medida', descripcion='$descripcion' WHERE (id_articulo='$id_articulo');";
 		return $this->db->query($query);
 	}
 	/*******************************************************************************************************************************************/

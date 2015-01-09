@@ -46,7 +46,7 @@ extract($articulo);
         	<h2 class="StepTitle">Información de adquisición del artículo a bodega</h2>
             <p>
             	<label>Cantidad de Artículos Adquiridos: </label>
-                <input type="text" name="cantidad" size="10">
+                <input type="text" name="cantidad" size="10"> <strong><?php echo $unidad_medida; ?></strong>
             </p>
             <p>
             	<label>Adquisición de el(los) Artículo(s): </label>
