@@ -47,6 +47,7 @@ extract($articulo);
             <p>
             	<label>Cantidad de Artículos Adquiridos: </label>
                 <input type="text" name="cantidad" size="10"> <strong><?php echo $unidad_medida; ?></strong>
+                <input type="hidden" name="unidad_medida" value="<?php echo $unidad_medida; ?>" />
             </p>
             <p>
             	<label>Adquisición de el(los) Artículo(s): </label>
