@@ -616,6 +616,7 @@ class Vehiculo extends CI_Controller
 		}
 		else $data['bandera']='false';
 		
+		$data['unidades']=$this->transporte_model->UM();
 		pantalla('mantenimiento/nuevo_articulo',$data);
 	}
 	
