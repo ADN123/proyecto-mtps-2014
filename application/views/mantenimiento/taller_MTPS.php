@@ -60,6 +60,7 @@ extract($vehiculos);
             </td>
             <td width="700px">
              <p>
+             	<input type="hidden" name="id_ingreso_taller" value="<?php echo $id_ingreso_taller ?>" />
             	<label class="label_textarea" style="width:100px">Trabajo solicitado: </label>
                 <textarea style="width:200px; resize:none;" name="trabajo_solicitado" readonly="readonly"><?php echo $trabajo_solicitado; ?></textarea>
                 <label class="label_textarea" style="width:100px">Trabajo solicitado en carrocería: </label>
@@ -186,9 +187,9 @@ extract($vehiculos);
 							echo "<tr>";
 							echo "<td>".$inv['nombre']."</td>";
 							echo "<td>".$inv['descripcion']."</td>";
-							echo "<td>".$inv['cantidad']."</td>";
-							echo "<td><input type='checkbox' value='".$inv['id_articulo']."' name='id_articulo[]' onclick='habilitar(".$inv['id_articulo'].",this)'></td>";
-							echo "<td><input type='text' name='cant_usada[]' id='".$inv['id_articulo']."'></td>";
+							echo "<td align='right'>".$inv['cantidad']." ".$inv['unidad_medida']."</td>";
+							echo "<td><input type='checkbox' value='".$inv['id_articulo']."' name='id_articulo[]' onclick='habilitar(".$inv['id_articulo'].",this.checked)'></td>";
+							echo "<td><input type='text' name='cant_usada[]' id='".$inv['id_articulo']."' disabled='disabled' size='1px'></td>";
 							echo "</tr>";
 						}
 					?>
@@ -268,6 +269,14 @@ function select_all2(chk)
 		if(chk == true) cb[i].checked = true;
 		else cb[i].checked = false;
 	}
+}
+
+function habilitar(id,chk)
+{
+	var tf = document.getElementById(id);
+	
+	if(chk==true) tf.disabled=false;
+	else tf.disabled=true;
 }
 
 </script>

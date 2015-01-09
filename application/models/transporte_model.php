@@ -2176,7 +2176,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			$cantidad_actual=$pre-$gasto_s;
 			if($gasto<$cantidad_actual)/*se valida que no se gaste más de lo que se dispone*/
 			{
-				$descripcion2="Se compraron ".$cantidad." ".$nombre;
+				$descripcion2="Se compraron ".$cantidad." ".$unidad_medida." ".$nombre;
 				$query_gasto="INSERT INTO tcm_gasto_presupuesto (gasto, descripcion, fecha, id_presupuesto) VALUES ('$gasto', '$descripcion2', '$fecha', '$id_presupuesto');";
 				if($this->db->query($query_gasto)) $bandera=$bandera*1;
 				else $bandera=$bandera*0;
@@ -2348,7 +2348,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	{
 		extract($datos);
 		$fecha=date('Y-m-d');
-		$consulta="INSERT INTO tcm_mantenimiento_interno (id_vehiculo, otro_mtto, observaciones, fecha, id_usuario) VALUES ('$id_vehiculo', '$otro_mtto', '$observaciones', '$fecha', '$id_usuario');";
+		$consulta="INSERT INTO tcm_mantenimiento_interno (id_ingreso_taller, otro_mtto, observaciones, fecha, id_usuario)
+					VALUES ('$id_ingreso_taller','$otro_mtto', '$observaciones', '$fecha', '$id_usuario');";
 		if($this->db->query($consulta))
 		{
 			$reparacion=array_merge($reparacion1, $reparacion2);
@@ -2368,26 +2369,28 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				
 				if($bandera==1)
 				{
-					$cant=array();
-					if(!empty($cant_usada))
+					if(!empty($id_articulo))
 					{
-						$x=0;
-						$i=0;
-						foreach($cant_usada as $c)
+						for($j=0;$j<count($id_articulo);$j++)
 						{
-							if($c[$x]!="" && $c[$x]!=NULL)
+							$id_art=$id_articulo[$j];
+							$cantidad_utilizada=$cant_usada[$j];
+							
+							$inventario=$this->inventario($id_art);
+							foreach($inventario as $inv)
 							{
-								$cant[$i]=$c[$x];
-								$i++;
+								$cantidad_disponible=$inv['cantidad'];
 							}
-							$x++;
+							
+							$cantidad_final=$cantidad_disponible-$cantidad_utilizada;
+							
+							$query2="UPDATE tcm_articulo_bodega SET cantidad='$cantidad_final' WHERE (id_articulo='$id_art');";
+							if($this->db->query($query2))
+							{
+								$query3="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo) VALUES ('SALIDA', '$cantidad_utilizada', '$fecha', '$id_art');";
+								return $this->db->query($query3);
+							}
 						}
-					}
-					
-					$m=count($cant);
-					for($i=0;$i<$m;$i++)
-					{
-						
 					}
 				}
 			}

@@ -203,7 +203,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
                         <option value="2" <?php if($estado==2) echo "selected='selected'"; ?>>En Taller Interno</option>
                         <option value="3" <?php if($estado==3) echo "selected='selected'"; ?>>En Taller Externo</option>
                         <option value="4" <?php if($estado==4) echo "selected='selected'"; ?>>Robado</option>
-                        <option value="5">Extraviado</option>
+                        <option value="5" <?php if($estado==5) echo "selected='selected'"; ?>>Extraviado</option>
                     </select>
             	</p>
 				<?php
