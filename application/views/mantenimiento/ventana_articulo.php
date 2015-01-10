@@ -8,6 +8,7 @@ extract($articulo);
     Nombre: <strong><?php echo $nombre; ?></strong><br />
     Descripción: <strong><?php echo $descripcion; ?></strong><br />
     Cantidad Disponible: <strong><?php echo $cantidad; ?></strong><br />
+    Unidad de Medida: <strong><?php echo $unidad_medida; ?></strong>
 </fieldset>
 <fieldset>
 	<legend>Transacciones del Artículo</legend>
@@ -21,6 +22,7 @@ extract($articulo);
     </thead>
     <tbody>
     	<?php
+		$total=0;
 		foreach($tta as $t)
 		{
 			echo "<tr>";
@@ -28,8 +30,14 @@ extract($articulo);
 			echo "<td>".$t['tipo_transaccion']."</td>";
 			echo "<td align='right'>".$t['cantidad']."</td>";
 			echo "</tr>";
+			if($t['tipo_transaccion']=='ENTRADA') $total=$total+$t['cantidad'];
+			elseif($t['tipo_transaccion']=='SALIDA') $total=$total-$t['cantidad'];
 		}
         ?>
+        <tr>
+        	<td colspan="2" align="right">Total: </td>
+            <td align="right"><strong><?php echo $total; ?></strong></td>
+        </tr>
     </tbody>
     </table>
 </fieldset>

@@ -115,11 +115,12 @@ extract($vehiculos);
 						{
 							echo "<tr>";
 							echo "<td>".$re['reparacion']."</td>";
-							echo "<td><input type='checkbox' name='reparacion1[]' value='".$rev['id_reparacion']."'></td>";
+							echo "<td><input type='checkbox' name='reparacion1[]' value='".$re['id_reparacion']."' /></td>";
 							echo "</tr>";
 						}
 					}
                 ?>
+               
                 <tr>
                 	<td colspan="2">Seleccionar/Deseleccionar Todo: <input type="checkbox" name="selectall1" onclick="select_all(this.checked)" /></td>
                 </tr>
@@ -149,7 +150,7 @@ extract($vehiculos);
 						{
 							echo "<tr>";
 							echo "<td>".$re['reparacion']."</td>";
-							echo "<td><input type='checkbox' name='reparacion2[]'  value='".$rev['id_reparacion']."'></td>";
+							echo "<td><input type='checkbox' name='reparacion2[]'  value='".$re['id_reparacion']."'></td>";
 							echo "</tr>";
 						}
 					}
@@ -184,13 +185,16 @@ extract($vehiculos);
                 	<?php
 						foreach($inventario as $inv)
 						{
-							echo "<tr>";
-							echo "<td>".$inv['nombre']."</td>";
-							echo "<td>".$inv['descripcion']."</td>";
-							echo "<td align='right'>".$inv['cantidad']." ".$inv['unidad_medida']."</td>";
-							echo "<td><input type='checkbox' value='".$inv['id_articulo']."' name='id_articulo[]' onclick='habilitar(".$inv['id_articulo'].",this.checked)'></td>";
-							echo "<td><input type='text' name='cant_usada[]' id='".$inv['id_articulo']."' disabled='disabled' size='1px'></td>";
-							echo "</tr>";
+							if($inv['cantidad']>0)
+							{
+								echo "<tr>";
+								echo "<td>".$inv['nombre']."</td>";
+								echo "<td>".$inv['descripcion']."</td>";
+								echo "<td align='right'>".$inv['cantidad']." ".$inv['unidad_medida']."</td>";
+								echo "<td><input type='checkbox' value='".$inv['id_articulo']."' name='id_articulo[]' onclick='habilitar(".$inv['id_articulo'].",this.checked)'></td>";
+								echo "<td><input type='text' name='cant_usada[]' id='".$inv['id_articulo']."' disabled='disabled' size='1px'></td>";
+								echo "</tr>";
+							}
 						}
 					?>
                 </tbody>
@@ -199,29 +203,6 @@ extract($vehiculos);
          </div>
     </div>
 </form>
-<div id="ventana">
-    <div id='signup-header'>
-        <h2>Listado de Artículos en Bodega</h2>
-        <a class="modal_close" id="cerrar"></a>
-    </div>
-
-    <form method="post" id="form_articulos" name="form_articulos">
-    <p>
-    	<label>Seleccione un artículo</label>
-        <select name="id_articulo" id="id_articulo" onclick='art_info(this.value)' class="select" style="width:150px">
-        <?php
-			foreach($inventario as $inv)
-			{
-				echo "<option value='".$inv['id_articulo']."'>".$inv['nombre']."</option>";
-			}
-		?>
-        </select>
-    </p>
-    <p style="text-align: center;">
-        <button type="button" class="boton_validador" onclick="agregar()">Agregar</button>
-    </p>
-</form>
-</div>
 <script>
 $(document).ready(function(){
 	$('#wizard').smartWizard();
