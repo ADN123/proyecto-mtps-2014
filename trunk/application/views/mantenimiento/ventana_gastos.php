@@ -16,7 +16,7 @@ extract($presupuesto_info)
     <thead>
     	<tr>
 	        <th>Descripción</th>
-            <th>Fecha</th>
+            <th width="100px">Fecha</th>
             <th>Cantidad Gastada($)</th>
         </tr>
     </thead>

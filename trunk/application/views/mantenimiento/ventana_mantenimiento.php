@@ -11,7 +11,7 @@ extract($vehiculo);
         Marca: <strong>".$marca."</strong> <br>
         Modelo: <strong>".$modelo."</strong> <br>";
 		echo "Sección: <strong>".$seccion."</strong> <br>
-		Motorista: <strong>".$motorista."</strong> <br>
+		Motorista: <strong>".ucwords($motorista)."</strong> <br>
 		Fuente de Fondo: <strong>".$fuente_fondo."</strong> <br>
 		Kilometraje Recorrido: <strong>".$kilometraje." km</strong> <br>";
 	?>
@@ -31,7 +31,7 @@ extract($vehiculo);
 		{
 			if($r['tipo']=='interno')
 			{
-				if($i==1) echo "INTERNO <br>";
+				if($i==1) echo "<br>INTERNO <br>";
 				echo $i." - ".$r['revision'];
 				if($r['varios']!=0) echo " --- Cantidad: ".$r['varios'];
 				echo "<br>";
@@ -56,12 +56,34 @@ extract($vehiculo);
 <fieldset>
 	<legend>Mantenimientos Realizados</legend>
     <?php
+		$x=0;
+		$fecha='';
 		foreach($mantenimientos as $m)
 		{
-			echo "Fecha: <strong>".$m['fecha']."</strong> <br>";
-			echo "Observaciones: <strong>".$m['observaciones']."</strong><br>";
+			if($x==0)
+			{
+				echo "<fieldset><legend>".$m['fecha']."</legend>";
+				$fecha=$m['fecha'];
+				$x++;
+			}
+			if($fecha!=$m['fecha'])
+			{
+				echo "</fieldset><fieldset><legend>".$m['fecha']."</legend>";
+				$fecha=$m['fecha'];
+			}
+			if($m['tipo']=='mantenimiento')
+			{
+				echo "Mantenimientos: <br><strong>".$m['reparacion']."</strong><br>";
+				if($m['otro_mtto']!=NULL && $m['otro_mtto']!='') echo "Mantenimientos Adicionales: <strong>".$m['otro_mtto']."</strong><br>";
+			}
+			elseif($m['tipo']=='inspeccion')
+			{
+				echo "<br>Inspecciones o Chequeos: <br><strong>".$m['reparacion']."</strong><br>";
+				if($m['observaciones']!=NULL && $m['observaciones']!='')echo "Observaciones: <strong>".$m['observaciones']."</strong><br>";
+			}
 		}
 	?>
+    </fieldset>
 </fieldset>
 <?php
 	}

@@ -1,3 +1,8 @@
+<script>
+	estado_transaccion='<?php echo $estado_transaccion?>';
+	estado_correcto='<?php echo $mensaje?>';
+	estado_incorrecto='Error de conexión al servidor. Por favor vuelva a intentarlo más tarde.';
+</script>
 <section>
     <h2>Vehículos en Taller Interno</h2>
 </section>

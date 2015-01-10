@@ -2213,7 +2213,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$query="SELECT tr.revision, tcr.varios, tr.tipo
 				FROM tcm_chequeo_revision AS tcr
 				INNER JOIN tcm_revision AS tr on(tcr.id_revision=tr.id_revision)
-				WHERE tcr.id_ingreso_taller='$id_ingreso_taller'";
+				WHERE tcr.id_ingreso_taller='$id_ingreso_taller'
+				ORDER BY tcr.id_revision ASC";
 		$query=$this->db->query($query);
 		return (array) $query->result_array();
 	}
@@ -2224,12 +2225,15 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	{
 		$where="";
 		if($id_ingreso_taller!=NULL) $where=" and tit.id_ingreso_taller='$id_ingreso_taller'";
-		$query="SELECT  DATE_FORMAT(tmi.fecha,'%d-%m-%Y') AS fecha, tmi.observaciones, tmi.otro_mtto, tr.reparacion
-				FROM tcm_ingreso_taller AS tit
-				LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tit.id_ingreso_taller=tmi.id_ingreso_taller)
-				INNER JOIN tcm_chequeo_reparacion AS tcr ON (tmi.id_mantenimiento_interno=tcr.id_mantenimiento_interno)
-				INNER JOIN tcm_reparacion AS tr ON (tcr.id_reparacion=tr.id_reparacion)
-				WHERE tit.fecha_entrega!=NULL AND tit.id_vehiculo='$id_vehiculo'".$where;
+			$query="SELECT  DATE_FORMAT(tmi.fecha,'%d-%m-%Y') AS fecha, tmi.observaciones, tmi.otro_mtto, 
+					GROUP_CONCAT(tr.reparacion SEPARATOR '<br>') as reparacion,tit.id_vehiculo, tr.tipo
+					FROM tcm_mantenimiento_interno AS tmi
+					INNER JOIN tcm_ingreso_taller AS tit ON (tit.id_ingreso_taller=tmi.id_ingreso_taller)
+					INNER JOIN tcm_chequeo_reparacion AS tcr ON (tmi.id_mantenimiento_interno=tcr.id_mantenimiento_interno)
+					INNER JOIN tcm_reparacion AS tr ON (tcr.id_reparacion=tr.id_reparacion)
+					WHERE tit.id_vehiculo='$id_vehiculo' ".$where."
+					GROUP BY fecha, tipo, tmi.id_mantenimiento_interno
+					ORDER BY fecha DESC, tr.id_reparacion ASC";
 		$query=$this->db->query($query);
 		return (array) $query->result_array();
 	}
@@ -2357,7 +2361,6 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			{
 				$id_mantenimiento_interno=$this->ultimo_id_mantenimiento_interno();
 				$n=count($reparacion);
-				
 				$bandera=1;
 				for($i=0;$i<$n;$i++)
 				{
@@ -2369,6 +2372,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				
 				if($bandera==1)
 				{
+					$bandera2=1;
 					if(!empty($id_articulo))
 					{
 						for($j=0;$j<count($id_articulo);$j++)
@@ -2388,9 +2392,12 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 							if($this->db->query($query2))
 							{
 								$query3="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo) VALUES ('SALIDA', '$cantidad_utilizada', '$fecha', '$id_art');";
-								return $this->db->query($query3);
+								if($this->db->query($query3)) $bandera2=$bandera2*1;
+								else $bandera2=$bandera2*0;
 							}
 						}
+						if($bandera2==1) return true;
+						else return false;
 					}
 				}
 			}

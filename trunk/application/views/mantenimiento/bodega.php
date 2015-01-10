@@ -24,7 +24,7 @@
         <tr align="center">
             <td><?php echo $fila['id_articulo']?></td>
             <td><?php echo $fila['nombre']?></td>
-            <td><?php echo $fila['cantidad']?></td>
+            <td><?php echo $fila['cantidad']." ".$fila['unidad_medida']?></td>
             <td><?php echo $fila['descripcion']?></td>
             <td>
             	<a rel="leanModal" title="Ver información detallada del artículo" href="#ventana" onclick="dialogo(<?php echo $fila['id_articulo'] ?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
