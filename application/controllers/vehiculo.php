@@ -199,6 +199,32 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
+	*	Nombre: ingresar_taller_externo
+	*	Objetivo: carga la vista de para ingresar vehiculo a taller externo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 11/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function ingresar_taller_externo($id_vehiculo=0, $estado_transaccion=NULL)
+	{
+		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
+		if($id_vehiculo!=0)
+		{
+			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1,$id_vehiculo);
+			$data['bandera']='true';
+		}
+		else
+		{
+			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
+			$data['bandera']='false';
+		}
+		$data['revision']=$this->transporte_model->consultar_revisiones();
+		pantalla('mantenimiento/ingresar_taller_externo',$data);
+	}
+	
+	/*
 	*	Nombre: guardar_taller
 	*	Objetivo: insertar en la Base de Datos un nuevo registro de mtto. del taller del MTPS
 	*	Hecha por: Oscar
