@@ -207,13 +207,25 @@ class Vehiculo extends CI_Controller
 	*	Observaciones: Ninguna
 	*/
 	
-	function control_taller_ext($estado_transaccion=NULL)
+	function control_taller_ext($estado_transaccion=NULL,$tipo=NULL)
 	{
-		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,2);
-		$data['vehiculos']=$data['vehiculos'][0];
-		$data['reparacion']=$this->transporte_model->consultar_reparacion();
-		$data['inventario']=$this->transporte_model->inventario();
-		pantalla('mantenimiento/taller_MTPS',$data);
+		if($estado_transaccion!=NULL)
+		{
+			$data['estado_transaccion']=$estado_transaccion;
+			
+			if($tipo!=NULL)
+			{
+				switch($tipo)
+				{
+					case 1: $data['mensaje']="Se ha ingresado el vehículo al taller externo éxitosamente";
+							break;
+					case 2: $data['mensaje']="Se ha dado de alta al vehículo éxitosamente";
+							break;
+				}
+			}
+		}
+		$data['taller_externo']=$this->transporte_model->vehiculos_taller_externo();
+		pantalla('mantenimiento/control_taller_ext',$data);
 	}
 	
 	/*
@@ -221,25 +233,60 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: carga la vista de para ingresar vehiculo a taller externo
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 12/01/2015
+	*	Última Modificación: 13/01/2015
 	*	Observaciones: Ninguna
 	*/
 	
-	function ingreso_taller_ext($id_vehiculo=0)
+	function ingreso_taller_ext($id_vehiculo=0,$estado_transaccion=NULL)
 	{
 		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
 		if($id_vehiculo!=0)
 		{
-			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1,$id_vehiculo);
+			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(2,$id_vehiculo);
 			$data['bandera']='true';
 		}
 		else
 		{
-			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
+			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(2);
 			$data['bandera']='false';
 		}
-		$data['revision']=$this->transporte_model->consultar_revisiones();
-		pantalla('mantenimiento/ingresar_taller_externo',$data);
+		pantalla('mantenimiento/ingreso_taller_externo',$data);
+	}
+	
+	/*
+	*	Nombre: guardar_taller_ext
+	*	Objetivo: Inserta en la Base de Datos un nuevo registro de vehiculo en el taller del externo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 13/01/2015
+	*	Observaciones: Ninguna
+	*/
+
+	function guardar_taller_ext()
+	{
+		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$this->transporte_model->guardar_taller_ext($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		if($_POST['pantalla']==1) ir_a("index.php/vehiculo/control_taller_ext/".$tr."/1");
+		elseif($_POST['pantalla']==2) ir_a("index.php/vehiculo/control_taller/".$tr."/2");
+	}
+	
+	/*
+	*	Nombre: ventana_taller_ext
+	*	Objetivo: carga la ventana de información para un vehículo en taller externo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 13/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function ventana_taller_ext($id)
+	{
+		$data['vehiculo']=$this->transporte_model->vehiculos_taller_externo(0,NULL,$id);
+		$data['vehiculo']=$data['vehiculo'][0];
+		$this->load->view('mantenimiento/ventana_taller_ext.php',$data);
 	}
 	
 	/*
@@ -259,6 +306,41 @@ class Vehiculo extends CI_Controller
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
 		ir_a("index.php/vehiculo/control_taller/".$tr."/1");
+	}
+	
+	/*
+	*	Nombre: alta_taller_ext
+	*	Objetivo: carga la vista para dar de alta a un vehículo en taller externo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 13/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function alta_taller_ext($id)
+	{
+		$data['vehiculo']=$this->transporte_model->vehiculos_taller_externo(0,NULL,$id);
+		$data['vehiculo']=$data['vehiculo'][0];
+		pantalla('mantenimiento/alta_taller_ext.php',$data);
+	}
+	
+	/*
+	*	Nombre: dar_alta_taller_ext
+	*	Objetivo: da de alta a un vehículo en taller externo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 13/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function dar_alta_taller_ext()
+	{
+		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$this->transporte_model->alta_taller_ext($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/control_taller_ext/".$tr."/2");
 	}
 	
 	/*

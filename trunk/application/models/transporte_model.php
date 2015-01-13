@@ -2419,12 +2419,90 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	/*******************************************************************************************************************************************/
 	
 	/************************************FUNCIÓN PARA OBTENER LOS VEHÍCULOS QUE SE ENCUENTRAN EN TALLER EXTERNO*********************************/
-	function vehiculos_taller_externo($id_vehiculo=NULL)
+	function vehiculos_taller_externo($id_vehiculo=0,$estado=NULL,$id_ingreso_taller_ext=NULL)
 	{
 		$where="";
-		if($id_vehiculo!=NULL) $where=" where v.id_vehiculo='$id_vehiculo'";
+		if($id_vehiculo!=0 && $estado!=NULL) $where=" where (v.id_vehiculo='$id_vehiculo' and v.estado='$estado')";
+		elseif($id_vehiculo!=0)	$where=" where v.id_vehiculo='$id_vehiculo'";
+		elseif($estado!=NULL)	$where=" where v.estado='$estado'";
+		elseif($id_ingreso_taller_ext!=NULL) $where=" WHERE itx.id_ingreso_taller_ext='$id_ingreso_taller_ext'";
+		
+		$query="select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
+				o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
+				ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
+				v.tipo_combustible, itx.id_ingreso_taller_ext, DATE_FORMAT(itx.fecha_recepcion,'%d-%m-%Y') as fecha_recepcion, itx.trabajo_solicitado
+				from tcm_vehiculo as v
+				inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+				inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+				inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+				inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+				left join tcm_vehiculo_motorista as vmot on (v.id_vehiculo=vmot.id_vehiculo)
+				left join tcm_vehiculo_kilometraje as vk on (vk.id_vehiculo=v.id_vehiculo)
+				left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
+				inner join org_seccion as o on (v.id_seccion=o.id_seccion)
+				inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
+				inner join tcm_ingreso_taller_ext as itx on (itx.id_vehiculo=v.id_vehiculo)".$where."
+				GROUP BY v.placa,motorista,seccion,marca,modelo,clase,condicion";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
 	}
 	/*******************************************************************************************************************************************/
-
+	
+	/*******************************FUNCIÓN PARA GUARDAR LOS MANTENIMIENTOS DE VEHÍCULOS EN TALLER EXTERNO*****************************************/
+	function guardar_taller_ext($datos)
+	{
+		extract($datos);
+		$fecha_recepcion=date('Y-m-d');
+		$consulta="INSERT INTO tcm_ingreso_taller_ext (id_vehiculo, trabajo_solicitado, fecha_recepcion, id_usuario)
+								VALUES ('$id_vehiculo', '$trabajo_solicitado', '$fecha_recepcion', '$id_usuario');";
+		if($this->db->query($consulta))
+		{
+			$consulta2="UPDATE tcm_vehiculo SET estado='3' WHERE (id_vehiculo='$id_vehiculo');";
+			return $this->db->query($consulta2);
+		}
+	}
+	/*********************************************************************************************************************************************/
+	
+	/*******************************FUNCIÓN PARA GUARDAR LOS MANTENIMIENTOS DE VEHÍCULOS EN TALLER EXTERNO*****************************************/
+	function alta_taller_ext($datos)
+	{
+		extract($datos);
+		$bandera=1;
+		$fecha=date('Y-m-d');
+				
+		if($adquisicion=='pagada' && $gasto>0.00)
+		{
+			$presupuesto=$this->presupuesto_activo();
+			foreach($presupuesto as $p)
+			{
+				$id_presupuesto=$p['id_presupuesto'];
+				$pre=$p['presupuesto'];
+			}
+			
+			
+			$gastos_a=$this->gastos($id_presupuesto);
+			$gasto_s=0;
+			foreach($gastos_a as $gastos_b)
+			{
+				$gasto_s=$gasto_s+$gastos_b['gasto'];
+			}
+			
+			$cantidad_actual=$pre-$gasto_s;
+			if($gasto<$cantidad_actual)/*se valida que no se gaste más de lo que se dispone*/
+			{
+				$descripcion2="Se canceló al taller externo la reparación del vehículo con número de placa: ".$placa;
+				$query_gasto="INSERT INTO tcm_gasto_presupuesto (gasto, descripcion, fecha, id_presupuesto) VALUES ('$gasto', '$descripcion2', '$fecha', '$id_presupuesto');";
+				if($this->db->query($query_gasto)) $bandera=$bandera*1;
+				else $bandera=$bandera*0;
+			}
+		}
+		
+		if($bandera==1)
+		{
+			$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$id_vehiculo');";
+			return $this->db->query($consulta2);
+		}
+	}
+	/*********************************************************************************************************************************************/
 }
 ?>
