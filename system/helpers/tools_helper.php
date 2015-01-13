@@ -108,9 +108,46 @@
 		$mail->Subject = $title;
 		$mail->Body = $message;
 		$r=$mail->Send();
+		if(!$r) {
+			//echo "Error al enviar: " .$mail->ErrorInfo;
+			} else {
+			//echo "Mensaje enviado!";
+		}
 		return $r;
 	}
 	
+	function enviar_por_gmail($correo,$title,$message) 
+	{
+			$CI =& get_instance();
+			$CI->load->library("phpmailer");		
+			$mail = new PHPMailer();
+			//indico a la clase que use SMTP
+			$mail->isSMTP();
+			//permite modo debug para ver mensajes de las cosas que van ocurriendo
+			$mail->SMTPDebug = 2;
+			//Debo de hacer autenticación SMTP
+			$mail->SMTPAuth = true;
+			$mail->SMTPSecure = "ssl";
+			//indico el servidor de Gmail para SMTP
+			$mail->Host = "smtp.gmail.com";
+			//indico el puerto que usa Gmail
+			$mail->Port = 465;
+			//indico un usuario / clave de un usuario de gmail
+			$mail->Username = "informatica.mtps@gmail.com";
+			$mail->Password = "wsx!@#mko";
+			$mail->From = "thanf92@gmail.com";
+			$mail->FromName = "Informatica MTPS";
+			$mail->AddReplyTo("informatica.mtps@gmail.com","Informatica mtps");
+			$mail->Subject = $title;
+			$mail->MsgHTML($message);
+			//indico destinatario
+			$mail->AddAddress($correo, "Jhonatan Flores");
+			if(!$mail->Send()) {
+				echo "Error al enviar: " .$mail->ErrorInfo;
+			} else {
+				echo "Mensaje enviado!";
+			}
+	}
 	function enviar_correo_automatico_administracion($id_solicitud_transporte=NULL, $id_modulo=NULL) 
 	{
 		$CI =& get_instance();
