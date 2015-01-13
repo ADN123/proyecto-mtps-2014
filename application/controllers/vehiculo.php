@@ -199,15 +199,33 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
-	*	Nombre: ingresar_taller_externo
-	*	Objetivo: carga la vista de para ingresar vehiculo a taller externo
+	*	Nombre: control_taller_ext
+	*	Objetivo: carga el listado de vehículos que se encuentran en taller externo
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 11/01/2015
+	*	Última Modificación: 12/01/2015
 	*	Observaciones: Ninguna
 	*/
 	
-	function ingresar_taller_externo($id_vehiculo=0, $estado_transaccion=NULL)
+	function control_taller_ext($estado_transaccion=NULL)
+	{
+		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,2);
+		$data['vehiculos']=$data['vehiculos'][0];
+		$data['reparacion']=$this->transporte_model->consultar_reparacion();
+		$data['inventario']=$this->transporte_model->inventario();
+		pantalla('mantenimiento/taller_MTPS',$data);
+	}
+	
+	/*
+	*	Nombre: ingreso_taller_ext
+	*	Objetivo: carga la vista de para ingresar vehiculo a taller externo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 12/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function ingreso_taller_ext($id_vehiculo=0)
 	{
 		if($estado_transaccion!=NULL) $data['estado_transaccion']=$estado_transaccion;
 		if($id_vehiculo!=0)

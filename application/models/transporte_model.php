@@ -2417,6 +2417,14 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		}
 	}
 	/*******************************************************************************************************************************************/
+	
+	/************************************FUNCIÓN PARA OBTENER LOS VEHÍCULOS QUE SE ENCUENTRAN EN TALLER EXTERNO*********************************/
+	function vehiculos_taller_externo($id_vehiculo=NULL)
+	{
+		$where="";
+		if($id_vehiculo!=NULL) $where=" where v.id_vehiculo='$id_vehiculo'";
+	}
+	/*******************************************************************************************************************************************/
 
 }
 ?>
