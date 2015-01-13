@@ -1,6 +1,16 @@
 <section>
     <h2>Inicio de sesi&oacute;n</h2>
 </section>
+<style type="text/css">
+    .hvr-grow:hover, .hvr-grow:focus, .hvr-grow:active {
+    -webkit-transform: scale(1.7);
+      transform: scale(1.7);
+}
+.hvr-grow{
+    color: #00436F
+}
+
+</style>
 <div id="contenedor">
     <form name="form1" id="form1" action="<?php echo base_url();?>index.php/sessiones/iniciar_session"  method="post" name="form1" style="width: 300px;"> 
         <p>
@@ -20,7 +30,7 @@
             <button type="submit" class="button tam-1 boton_validador" tabindex="3" id="entrar" name="entrar"> Entrar</button>
         </p>
    </form>
-   <p align="center"> <label id="olvido" title="Contáctese con la Unidad de Desarrollo Tecnológico al teléfono: 2529-3725 ">¿Ha olvidado su contraseña?</label></p>
+   <p align="center"> <a  class="hvr-grow" href="<?php echo base_url(); ?>index.php/sessiones/recuperar">¿Ha olvidado su contraseña?</a></p>
 </div>
 
 <script type="text/javascript">

@@ -50,21 +50,25 @@
 					?>
                 </div>
             </p> 
+           <p>
+                <label for="email" id="lemail">Correo Electronico</label>
+                <input type="text" tabindex="1" id="email" name="email"  value="<?php echo $empleados[0][correo]; ?>"/>
+            </p>
         </div>
 
         <div id="step-2">	
             <h2 class="StepTitle">Cambio de contraseña</h2>
             <p>
                 <label for="pass1" id="lpass1">Contraseña Actual </label>
-                <input type="password" tabindex="1" id="pass1" name="pass1" />
+                <input type="password" tabindex="2" id="pass1" name="pass1" />
             </p>
            <p>
                 <label for="pass2" id="lpass2">Nueva Contraseña</label>
-                <input type="password" tabindex="2" id="pass2" name="pass2" />
+                <input type="password" tabindex="3" id="pass2" name="pass2" />
             </p>
            <p>
                 <label for="pass3" id="lpass3">Confirmacion de Contraseña</label>
-                <input type="password" tabindex="3" id="pass3" name="pass3" />
+                <input type="password" tabindex="4" id="pass3" name="pass3" />
             </p>
       	</div>
         
@@ -85,6 +89,9 @@
      });
     $("#pass3").validacion({       
         lonMin: 5        
+     }); 
+    $("#email").validacion({       
+        valCorreo: true        
      }); 
   
     $("#pass3").blur(function() {
