@@ -1,19 +1,8 @@
-<?php
-foreach($vehiculos as $v)
-{
-	$id_vehiculo=$v->id;
-	$placa=$v->placa;
-}
-?>
-<script>
-	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='Se ha ingresado el vehículo a taller externo, éxitosamente';
-	estado_incorrecto='Error de conexión al servidor. Por favor vuelva a intentarlo.';
-</script>
+<?php extract($vehiculo) ?>
 <section>
-    <h2>Ingreso de Vehículo al Taller Externo</h2>
+    <h2>Dar de Alta a Vehículo</h2>
 </section>
-<form name="form_taller_ext" method="post" action="<?php echo base_url()?>index.php/vehiculo/guardar_taller_ext" >
+<form name="form_alta_taller_ext" method="post" action="<?php echo base_url()?>index.php/vehiculo/dar_alta_taller_ext" >
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -22,6 +11,15 @@ foreach($vehiculos as $v)
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
                         <small>&nbsp;Información del Vehículo</small>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#step-2">
+                    <span class="stepNumber">2<small>do</small></span>
+                    <span class="stepDesc">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
+                        <small>&nbsp;Reparación del Vehículo</small>
                     </span>
                 </a>
             </li>
@@ -35,32 +33,18 @@ foreach($vehiculos as $v)
                 <label style="width:150px">Fecha de Recepción: </label>
                 <strong><?php echo date('d/m/Y')?></strong>
             </p>
-            <?php if($bandera=='false'){ ?>
             <p>
-            	<input type="hidden" name="pantalla" value="1" />
-                <label style="width:100px">Seleccione un número de placa: </label>
-                <select class="select" style="width:100px" onchange="cargar(this.value)" name="id_vehiculo" id="id_vehiculo">
-                	<?php
-					foreach($vehiculos as $v)
-					{
-						echo "<option value='".$v->id."'>".$v->placa."</option>";
-					}
-                    ?>
-                </select>
-            </p>
-            <?php }else{ ?>
-            <p>
-            	<input type="hidden" name="pantalla" value="2" />
             	<input type="hidden" name="id_vehiculo" value="<?php echo $id_vehiculo; ?>" />
+                <input type="hidden" name="placa" value="<?php echo $placa; ?>" />
+                <input type="hidden" name="id_ingreso_taller_ext" value="<?php echo $id_ingreso_taller_ext; ?>" />
                 <label style="width:150px">Número de placa: </label>
                 <strong><?php echo $placa; ?></strong>
             </p>
-			<?php } ?>
-            </td>
+			</td>
             <td width="700px">
             <p>
             	<label class="label_textarea" style="width:100px">Trabajo solicitado: </label>
-                <textarea style="width:200px; resize:none;" name="trabajo_solicitado"></textarea>
+                <textarea style="width:200px; resize:none;" name="trabajo_solicitado"><?php echo $trabajo_solicitado; ?></textarea>
             </p>
             </td>
             </tr>
@@ -72,17 +56,48 @@ foreach($vehiculos as $v)
             </tr>
             </table>
         </div>
+        <div id="step-2">	
+           <h2 class="StepTitle">Información del trabajo realizado en taller externo</h2>
+           <p>
+            	<label class="label_textarea" style="width:100px">Trabajo realizado: </label>
+                <textarea style="width:400px; resize:none;" name="trabajo_realizado"></textarea>
+            </p>
+            <p>
+            	<label>Tipo de reparación: </label>
+                <select style="width:150px" class="select" name="adquisicion" id="adquisicion" placeholder="Seleccione...">
+                	<option value="pagada">Pagada</option>
+                    <option value="donada">Donada</option>
+                </select>
+                <div id="precio"></div>
+            </p>
+        </div>
     </div>
 </form>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#wizard').smartWizard(); 	
+	$('#wizard').smartWizard();
+	
+	$('#adquisicion').change(
+		function()
+		{
+			if(document.getElementById('adquisicion').value=='pagada')
+			{
+				cont='<p><label>Precio de la reparación($):&nbsp;</label><input type="text" name="gasto" size="10"></p>';
+				$("#precio").html(cont); 
+			}
+			else
+			{
+				cont="";
+				$("#precio").html(cont);
+			} 
+		}
+	); 	
 });
 
 function cargar(id)
 	{
 		$('#info_vehiculo').html("");
-		var  dur = "<?php echo base_url()?>index.php/vehiculo/vehiculo_info/"+id+"/2";
+		var  dur = "<?php echo base_url()?>index.php/vehiculo/vehiculo_info/"+id+"/3";
 		console.log(dur);
 		$.ajax({
 			async:	true, 
@@ -111,14 +126,7 @@ function cargar(id)
 		
 	}
 </script>
-<?php
-if($bandera=='true')
-{
-?>
-	<script>
-		var id_v=<?php echo $id_vehiculo; ?>;
-		cargar(id_v);
-    </script>
-<?php
-}
-?>
+<script>
+	var id_v=<?php echo $id_vehiculo; ?>;
+	cargar(id_v);
+</script>
