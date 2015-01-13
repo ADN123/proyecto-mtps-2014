@@ -554,7 +554,7 @@ class Usuarios extends CI_Controller
 
 					break;
 				case 2:
-					$data['msj']="Las contraseña nuevas no coinciden";
+					$data['msj']="Las confirmacion de la contraseña nueva no conincide";
 					$data['estado_transaccion']=0;
 					break;
 				case 3:
@@ -568,8 +568,8 @@ class Usuarios extends CI_Controller
 	
 		
 		$data['empleados']=$this->transporte_model->consultar_empleado($this->session->userdata('nr'));
+		//$data['empleados']=$this->usuario_model->consultar_usuario($this->session->userdata('nr'));
 					foreach($data['empleados'] as $val) {
-						$band=0;
 						$data['info']=$this->transporte_model->info_adicional($val['NR']);
 		
 		}
@@ -590,7 +590,8 @@ class Usuarios extends CI_Controller
 			if($_POST[pass2]==$_POST[pass3]){
 				$formuInfo = array(
 					'password'=>$_POST[pass2],
-					'id_usuario'=>$id_usuario
+					'id_usuario'=>$id_usuario,
+					'email'=>$_POST[email]
 				);
 				$this->db->trans_start();
 				$this->usuario_model->actualizar_usuario($formuInfo); /*Actualizar usuario*/			
@@ -599,16 +600,19 @@ class Usuarios extends CI_Controller
 				
 			$accion=1;
 			}else{
-				echo "Las contraseña nuevas no coinciden";
+				//echo "Las contraseña nuevas no coinciden";
 				$accion=2;
+				$tr=0;
 			}
 		}else{
-			echo "La contraseña actual es incorrecta";
+			//echo "La contraseña actual es incorrecta";
 			$accion=3;
+			$tr=0;
 
 		}	
 	
 	ir_a('index.php/usuarios/perfil/'.$tr.'/'.$accion);
 	}
+
 }
 ?>

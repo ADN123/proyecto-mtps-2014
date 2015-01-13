@@ -289,6 +289,61 @@ canvas {
 	position: relative;
 }
 
+	.ayuda{
+		color: #000;
+		margin-top: 60px;
+
+	}
+	#contenAyuda{
+		margin-top: 150px;
+	}
+
+	/* todo lo de aqui es  temporal */
+.sidebar-right-heading{
+
+	right: 0px;
+	height: 60px;
+	background-color: #2C3439;
+	width: 325px;
+	z-index: 6;
+	-webkit-transition:All 0.3s ease;
+	-moz-transition:All 0.3s ease;
+	-o-transition:All 0.3s ease;
+	top: 60px;
+	text-align: center;
+	}
+
+
+	.sidebar-right-heading .nav-tabs{
+		border-bottom: none;
+		background: #00436F;
+		margin-top: -20px;}
+
+	.sidebar-right-heading .nav-tabs > li{margin-bottom: 0px;}
+	.sidebar-right-heading .nav-tabs > li > a{margin-right: 0px;
+		border: none;
+		height: 60px;
+		padding: 20px 0;
+		color: #E6E9ED;}
+.sidebar-right-heading .nav-tabs.nav-justified > li{
+		display: table-cell;
+		width: 1%;}
+.sidebar-right-heading .nav-tabs.nav-justified > li > a{
+	margin-bottom: 0;}
+.sidebar-right-heading .nav-tabs > li > a:hover{
+	background-color: transparent;
+	color: #E6E9ED;}
+
+.sidebar-right-heading .nav-tabs > li.active > a,.sidebar-right-heading .nav-tabs > li.active > a:hover,.sidebar-right-heading .nav-tabs > li.active > a:focus{
+	color: #E6E9ED;
+	cursor: default;
+	border: none;
+	background-color: #F48F35}
+
+.sidebar-right{
+
+	float: right;
+}
 /*.oculto {
 
 }*/

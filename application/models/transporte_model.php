@@ -85,13 +85,13 @@ class Transporte_model extends CI_Model {
 	{
 		$sentencia="SELECT
 					sir_empleado.id_empleado AS NR,
-					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre
+					LOWER(CONCAT_WS(' ',sir_empleado.primer_nombre, sir_empleado.segundo_nombre, sir_empleado.tercer_nombre, sir_empleado.primer_apellido, sir_empleado.segundo_apellido, sir_empleado.apellido_casada)) AS nombre,
+					correo
 					FROM sir_empleado
 					WHERE sir_empleado.NR='".$nr."'";
 		$query=$this->db->query($sentencia);
 		if($query->num_rows>0) {
-			return (array)$query->result_array();
-		}
+			return (array)$query->result_array();		}
 		else {
 			return 0;
 		}

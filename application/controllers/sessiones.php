@@ -10,7 +10,9 @@ class Sessiones extends CI_Controller {
         parent::__construct();
 		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('seguridad_model');
+		$this->load->model('usuario_model');
 		$this->load->helper('cookie');
+		$this->load->library("securimage/securimage");
 		//error_reporting(0);
     }
 
@@ -178,8 +180,7 @@ class Sessiones extends CI_Controller {
 	   	redirect('index.php/sessiones/');
 	}
 	function verificar($get=NULL){
-		$in;
-				 	
+			$in;				 	
 		  if(!isset($_COOKIE['contador']))
 		  { 		// Caduca en 10 minutos y se ajusta a uno la primera vez
 
@@ -199,6 +200,98 @@ class Sessiones extends CI_Controller {
 				return $_COOKIE['contador'];
 		  }//fin else de intentos
 	
+	}
+	function recuperar($estado_transaccion=NULL, $accion=0)
+	{
+		echo "string";
+			$data['estado_transaccion']=$estado_transaccion;
+			switch ($accion) {
+				case 1:
+					$data['msj']="No se pudo completar la trasacion";
+
+					break;
+				case 2:
+					$data['msj']="Las contraseña nuevas no coinciden";
+					$data['estado_transaccion']=0;
+					break;
+				case 3:
+					$data['msj']="La contraseña actual es incorrecta";
+					$data['estado_transaccion']=0;
+					break;
+				default:
+					$data['msj']="";
+					break;
+			}
+	
+			$this->load->view('encabezadoLogin.php'); 
+			$this->load->view('usuarios/recuperar',$data); 
+			$this->load->view('piePagina.php');		
+		//print_r($data[empleados]);
+	}
+	function recuperar_clave()
+	{			$correo="thanf92@gmail.com";
+				$title="recuperar clave";
+				$msj="Esta sera su nueva clave para acceder dsdfsdksldkflskd";
+				echo "<pre>";
+			//enviar_correo($correo,$title,$msj);
+
+				$formuInfo = array(
+					'password'=>'sasas',
+					'id_usuario'=>'dsds'
+				);
+				//$this->usuario_model->actualizar_clave($formuInfo);
+			echo "</pre>";
+	}
+		function capcha()
+	{
+		$img = new Securimage();
+		$img->show(); 
+	}
+
+	function sendmail()
+	{
+		header('Content-type: application/json');
+		$securimage = new Securimage();
+		$correo=$this->input->post('nr');
+		$captcha_code=$this->input->post('captcha_code');
+		if ($securimage->check($captcha_code)) {
+			$letras = "ABCDEFGHJKLMNPRSTUVWXYZ98765432";
+			$contra=str_shuffle($letras);
+			$contra=substr($contra,0,10);
+			
+			$letras2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0987654321";
+			$contra2=str_shuffle($letras2);
+			$contra2=substr($contra2,0,40);	
+			
+			/*$info=$this->seguridad_model->info_empleado(NULL,"id_usuario, nombre, correo",NULL,$correo);
+			
+			$formuInfo = array(
+				'id_usuario'=>$info['id_usuario'],
+				'fecha_caso'=>date('Y-m-d'),
+				'nuevo_pass'=>md5($contra),
+				'codigo_caso'=>$contra2
+			);
+			$this->seguridad_model->guardar_caso($formuInfo);
+			*/
+			$message='
+				Hola '.$info['nombre'].'! Esta es tu nueva contraseña: '.$contra.'. Si la quieres activar da clic <a href="'.base_url().'/index.php/sessiones/activar/'.$contra2.'" target="_blank">aquí</a>. Tiene 3 días para activar este código.
+			';
+			
+			$r=enviar_correo($info['correo'],"SCRS - Restablecimiento de Contraseña",$message);
+						
+			$correo2=$info['correo'];
+			$needle='@';
+			$pos=strripos($correo2, $needle);
+			for($i=2;$i<$pos;$i++)
+				$correo2[$i]="*";
+			if($r=1)
+				echo json_encode(array('status' => 1, 'message' => $contra));
+			else
+				echo json_encode(array('status' => 0, 'message' => 'Ha fallado el envío del correo'));
+		}
+		else {
+			echo json_encode(array('status' => 0, 'message' => 'El código ingresado no es corecto!'));
+		}
 	}
 }
 ?>

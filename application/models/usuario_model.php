@@ -513,11 +513,26 @@ class Usuario_model extends CI_Model {
 	
 	function actualizar_usuario($formuInfo) 
 	{
+
+		print_r($formuInfo);
+		error_reporting(0);
 		extract($formuInfo);
 
-		$sentencia="UPDATE org_usuario SET password=MD5('$password') where id_usuario='$id_usuario'";
+		if($email!=NULL){
+			$sentencia="UPDATE sir_empleado SET correo ='$email' WHERE nr = 
+						(SELECT o.nr FROM org_usuario o  WHERE id_usuario=$id_usuario) ";
+			$this->db->query($sentencia);
+		}
+		$sentencia="UPDATE org_usuario SET password=MD5('$password')  where id_usuario='$id_usuario'";
 		$this->db->query($sentencia);
 
 	}
+	function correo_usuario($id_usuario=NULL){
+			$sentencia="SELECT correo FROM  sir_empleado  WHERE nr =
+						(SELECT o.nr FROM org_usuario o  WHERE id_usuario=$id_usuario) ";
+			$query=$this->db->query($sentencia);
+			return (array)$query->row();
+	}
+
 }
 ?>

@@ -36,6 +36,9 @@
 		<script src="<?php echo base_url()?>js/amcharts.js" type="text/javascript"></script>
 		<script src="<?php echo base_url()?>js/serial.js" type="text/javascript"></script>  
 		        
+<!-- para ayuda-->
+		<link href="<?php echo base_url()?>plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"> 		<!-- icons-->
+		<script src="<?php echo base_url()?>js/bootstrap.min.js" type="text/javascript"></script>  
 
    
 
@@ -104,6 +107,10 @@
 					else {
 						$head.attr('class', 'ha-header ha-header-hide');
 					}
+					if(ayudaActiva){
+						$('#verAyuda').click();
+					}
+
 				});
 				
 				<?php echo $fun?>
@@ -144,12 +151,33 @@
 							$head.attr('class', 'ha-header ha-header-rotate');
 							if($(this).scrollTop()>=300 ) {
 								/*$head.attr('class', 'ha-header ha-header-box');*/
+								
+								$("#contenAyuda").css("margin-top", "52px");
+								$("#contenAyuda").css("margin-right", "17px");
+
+								if (ayudaActiva) {
+									$("#contenAyuda").css("margin-right", "17px");	
+								} else{
+									$("#contenAyuda").css("margin-right", "0px");	
+								}
 							}
 							else {
+								
+								$("#contenAyuda").css("margin-top", "52px");
+								if (ayudaActiva) {
+									$("#contenAyuda").css("margin-right", "17px");	
+								} else{
+									$("#contenAyuda").css("margin-right", "0px");	
+								}
+
+								
 							}
 						}
 						else {
 							$head.attr('class', 'ha-header ha-header-subshow');
+							$("#contenAyuda").css("margin-top", "150px");
+							$("#contenAyuda").css("margin-right", "-13px");
+							
 						}
 				});
 
@@ -184,7 +212,8 @@
                 <div class="ha-header-bottom" style="height: 52px;">
                     <nav class="cl-effect-12">
                         <a id="verMenu1"><img src="<?php echo base_url()?>img/menu.png"> Men&uacute; <span>Principal</span></a>
-                        <a style="float: right;margin-right: 20px;"><img src="<?php echo base_url()?>img/usuario.png"> <?php echo $nick?> <span>- <?php echo $nombre?><span></a>
+                        <a id="verAyuda" style="float: right;margin-right: 20px;">
+                        	<?php echo $nick?> <span>- <?php echo $nombre?><span> <img src="<?php echo base_url()?>img/ayuda_ico.png" alt="Ayuda"></a>
                     </nav>
                 </div>
             </div>
@@ -229,7 +258,47 @@
                         </nav>
                 <?php	
                     }
-                ?>
+			           ?>
             </div>
+
             <div class="container" id="container">
                 <div class="main">
+             	<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="contenAyuda">
+
+				<div class="sidebar-right-heading" id="tabs">
+					<h3>Ayuda</h3>	
+
+		 			<ul class="nav nav-tabs square nav-justified">
+					  <li class="active"><a href="#tabs-1" data-toggle="tab"><i class="fa fa-comments"></i></a></li>
+					  <li class=""><a href="#tabs-2" data-toggle="tab"><i class="fa fa-bell"></i></a></li>
+					  <li class=""><a href="#tabs-3" data-toggle="tab"><i class="fa fa-tasks"></i></a></li>								 
+					</ul>
+					  <div id="tabs-1">
+					    <p>Aqui descripcion Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>
+					  </div>
+					  <div id="tabs-2">
+					    <p>aqui pasos Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+					  </div>
+					  <div id="tabs-3">
+					    <p>Aqui errores Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+
+					  </div>
+
+				</div><!-- /.tab-content -->
+						
+
+					<script type="text/javascript">
+						var showRight = document.getElementById( 'verAyuda' ),
+							menuRight = document.getElementById( 'contenAyuda' );
+						showRight.onclick = function() {
+							classie.toggle( this, 'active' );
+							classie.toggle( menuRight, 'cbp-spmenu-open' );
+							//disableOther( 'showRight' );
+							ayudaActiva=!ayudaActiva;
+						};	
+					var ayudaActiva=false;
+					  $(function() {
+					    $( "#tabs" ).tabs();
+					  });
+					</script>
+				</nav>

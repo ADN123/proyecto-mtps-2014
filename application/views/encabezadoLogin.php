@@ -7,21 +7,26 @@
 		<title>Ministerio de Trabajo y Previsi&oacute;n Social</title>
         <!--<link href="<?php echo base_url()?>css/jquery-ui-1.9.0.custom.css" rel="stylesheet" type="text/css" />-->
 		<link href="<?php echo base_url()?>css/default.css" rel="stylesheet" type="text/css" />
-		<link href="<?php echo base_url()?>css/component.css" rel="stylesheet" type="text/css" />
+        <link href="<?php echo base_url()?>css/component.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url()?>css/kendo.common.min.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url()?>css/kendo.bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url()?>css/kendo.dataviz.bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="<?php echo base_url()?>css/tooltipster.css" rel="stylesheet" type="text/css" />
-		<link href="<?php echo base_url()?>css/alertify.core.css" rel="stylesheet" />
-		<link href="<?php echo base_url()?>css/alertify.default.css" rel="stylesheet" />
+        <link href="<?php echo base_url()?>css/smart_wizard.css" rel="stylesheet" type="text/css">
+        <link href="<?php echo base_url()?>css/alertify.core.css" rel="stylesheet" />
+        <link href="<?php echo base_url()?>css/alertify.default.css" rel="stylesheet" />
         <link href="<?php echo base_url()?>css/style-base.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="<?php  echo base_url() ?>/css/datatable.css">
+
         <script src="<?php echo base_url()?>js/jquery-1.8.2.js"></script>
-        <!--<script src="<?php echo base_url()?>js/jquery-ui-1.9.0.custom.js"></script>-->
-		<script src="<?php echo base_url()?>js/classie.js"></script>
+        <script src="<?php echo base_url()?>js/jquery-ui-1.9.0.custom.js"></script>
+        <script src="<?php echo base_url()?>js/jquery.dataTables.js"></script>
+        <script src="<?php echo base_url()?>js/classie.js"></script>
         <script src="<?php echo base_url()?>js/kendo.all.min.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/jquery.tooltipster.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/jquery.leanModal.min.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/waypoints.min.js"></script>
+        <script src="<?php echo base_url()?>js/jquery.smartWizard-2.0.min.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/alertify.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/funciones.js" type="text/javascript"></script>
         <script src="<?php echo base_url()?>js/validador.js" type="text/javascript"></script>
