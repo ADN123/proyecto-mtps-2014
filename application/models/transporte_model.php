@@ -2220,7 +2220,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*********************************************************************************************************************************************/
 	
-	/**********************************FUNCIÓN PARA OBETENER LOS MANTENIMIENTOS A UN VEHÍCULO***************************************************/
+	/**********************************FUNCIÓN PARA OBTENER LOS MANTENIMIENTOS A UN VEHÍCULO***************************************************/
 	function consultar_mantenimientos($id_vehiculo,$id_ingreso_taller=NULL)
 	{
 		$where="";
@@ -2239,7 +2239,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*********************************************************************************************************************************************/
 	
-	/**********************************FUNCIÓN PARA OBETENER VER LOS VEHÍCULOS EN TALLER INTERNO***************************************************/
+	/**********************************FUNCIÓN PARA VER LOS VEHÍCULOS EN TALLER INTERNO***************************************************/
 	function vehiculos_taller_interno($id=0, $estado=NULL, $id_ingreso_taller=NULL)
 	{
 		$where="";
@@ -2276,7 +2276,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	{
 		extract($datos);
 		$fecha_recepcion=date('Y-m-d');
-		$consulta="INSERT INTO tcm_ingreso_taller (fecha_recepcion, id_vehiculo, trabajo_solicitado, trabajo_solicitado_carroceria, id_empleado)
+		$consulta="INSERT INTO tcm_ingreso_taller (fecha_recepcion, id_vehiculo, trabajo_solicitado, trabajo_solicitado_carroceria, id_usuario_recibe_taller)
 									VALUES ('$fecha_recepcion', '$id_vehiculo', '$trabajo_solicitado', '$trabajo_solicitado_carroceria', '$id_usuario');";
 		if($this->db->query($consulta))
 		{
@@ -2405,6 +2405,21 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*********************************************************************************************************************************************/
 	
+	/*******************************FUNCIÓN PARA GUARDAR LOS MANTENIMIENTOS DE VEHÍCULOS EN TALLER EXTERNO*****************************************/
+	function alta_taller_MTPS($datos)
+	{
+		extract($datos);
+		$fecha=date('Y-m-d');
+				
+		$consulta="UPDATE tcm_ingreso_taller SET fecha_entrega='$fecha', id_motorista_recibe='$id_motorista_recibe' WHERE id_ingreso_taller='$id_ingreso_taller';";
+		if($this->db->query($consulta))
+		{
+			$consulta2="UPDATE tcm_vehiculo SET estado='1' WHERE (id_vehiculo='$id_vehiculo');";
+			return $this->db->query($consulta2);
+		}
+	}
+	/*********************************************************************************************************************************************/
+	
 	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_INGRESO_TALLER********************************************/
 	function ultimo_id_mantenimiento_interno()
 	{
@@ -2499,8 +2514,12 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		
 		if($bandera==1)
 		{
-			$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$id_vehiculo');";
-			return $this->db->query($consulta2);
+			$consulta="UPDATE tcm_ingreso_taller_ext SET trabajo_realizado='$trabajo_realizado', fecha_entrega='$fecha', id_usuario='$id_usuario' WHERE id_ingreso_taller_ext='$id_ingreso_taller_ext'";
+			if($this->db->query($consulta))
+			{
+				$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$id_vehiculo');";
+				return $this->db->query($consulta2);
+			}
 		}
 	}
 	/*********************************************************************************************************************************************/

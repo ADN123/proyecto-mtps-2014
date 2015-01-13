@@ -30,7 +30,7 @@
             <tr>
             <td width="300px">
 			<p>
-                <label style="width:150px">Fecha de Recepción: </label>
+                <label style="width:150px">Fecha de Entrega: </label>
                 <strong><?php echo date('d/m/Y')?></strong>
             </p>
             <p>
