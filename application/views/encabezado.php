@@ -280,16 +280,23 @@
 
 					  </div>
 					  <div id="tabs-2">
-					   <ol class"pasos">
+					   <ol  class="rounded-list">
 					   	<?php foreach ($pasos as $p) {
-					   		echo "<li>$p</li>";
+					   		echo "
+					   			<li><a href='#'>$p</a></li>";
 					   	}?>
 
 					   </ol>	
 
 					  </div>
 					  <div id="tabs-3">
-					    <p>Aqui errores Mauris e nec, luctus a, lacus.</p>
+						   <ol  >
+							   	<?php foreach ($errores as $p) {
+						   		echo "
+						   			<li class='e'><a href='#' >$p</a></li>";
+							   	}?>
+
+						   </ol>	
 
 					  </div>
 

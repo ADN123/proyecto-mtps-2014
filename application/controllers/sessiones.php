@@ -24,12 +24,13 @@ class Sessiones extends CI_Controller {
 	*	Ultima Modificacion: 15/03/2014
 	*	Observaciones: Ninguna
 	*/
-	function index(){
+	function index($estado_transaccion=200){
 	
 		$in=$this->verificar(1);
 		if($in<=3){
+			$data['estado_transaccion']=$estado_transaccion;
 			$this->load->view('encabezadoLogin.php'); 
-			$this->load->view('login.php'); 
+			$this->load->view('login.php', $data); 
 			$this->load->view('piePagina.php');		
 		}else{
 		//echo"Sistema Bloqueado";
@@ -274,10 +275,10 @@ class Sessiones extends CI_Controller {
 			$this->seguridad_model->guardar_caso($formuInfo);
 			
 			$message='
-				Hola '.$info['nombre'].'! Esta es tu nueva contraseña: '.$contra.'. Si la quieres activar da clic <a href="'.base_url().'/index.php/sessiones/activar/'.$contra2.'" target="_blank">aquí</a>. Tiene 3 días para activar este código.
-			';
+				Hola '.ucwords($info['nombre']).'! Esta es tu nueva contraseña: '.$contra.'. Si la quieres activar da clic <a href="'.base_url().'index.php/sessiones/activar/'.$contra2.'" target="_blank">aquí</a>. 
+					o copia el siguiente codigo en el formulario de restablecimiento <br><br>'.$contra2.'<br><br>Tiene 3 días para activar a partir  del '.date("d-m-Y H:i:s");
 			
-			$r=enviar_correo($info['correo'],"SCRS - Restablecimiento de Contraseña",$message);
+			$r= enviar_por_gmail($info['correo'],"SITCOM - Restablecimiento de Contraseña",$message);
 						
 			$correo2=$info['correo'];
 			$needle='@';
@@ -292,6 +293,31 @@ class Sessiones extends CI_Controller {
 		else {
 			echo json_encode(array('status' => 0, 'message' => 'El código ingresado no es corecto!'));
 		}
+	}
+	
+	function activar($codigo_caso=NULL)
+	{
+		
+		if ($codigo_caso!=NULL || isset($_POST['pass1'])) {
+			
+			if ($codigo_caso==NULL) {
+				$codigo_caso=$_POST['pass1'];
+			}
+			$est=$caso=$this->seguridad_model->buscar_caso($codigo_caso);
+			$this->index($est);
+
+			if ($est==1) {
+				//alerta("Nueva Clave Activada",'index.php/sessiones');	
+			}
+			if ($est==2) {
+				//alerta("Se produjo un error al intentar activar la clave",'index.php/sessiones');	
+			}
+
+		}else{
+			alerta("Error desconocido",'index.php/sessiones');	
+			
+		}
+
 	}
 }
 ?>

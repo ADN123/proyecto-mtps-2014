@@ -49,18 +49,20 @@
 		
 ////para ayuda
 		$descripcion_ayuda= "Descripcion del modulo ";
-					  			for ($i=0; $i <5 ; $i++) { 
+					  			for ($i=0; $i <4 ; $i++) { 
 					  				$descripcion_ayuda.=$descripcion_ayuda;
 					  			}
-		$pasos = array("paso 1", 
-						"paso 2",
-						"paso 3",
-						"paso 2");
-//fin para ayuda
+		$pasos = array("paso 1 tambiem ", 
+						"paso 2 van los ",
+						"paso 4 errores",
+						"paso 5 de ejemplo");
 
 		$data['descripcion_ayuda']=$descripcion_ayuda;
 		$data['pasos']=$pasos;
+		$data['errores']=$pasos;
 	
+	//fin para ayuda
+
 		$CI->load->view('encabezado',$data);
 	 	$CI->load->view($vista);	
 	 	$CI->load->view('piePagina');
@@ -130,6 +132,7 @@
 		return $r;
 	}
 	
+	
 	function enviar_por_gmail($correo,$title,$message) 
 	{
 			$CI =& get_instance();
@@ -137,8 +140,8 @@
 			$mail = new PHPMailer();
 			//indico a la clase que use SMTP
 			$mail->isSMTP();
-			//permite modo debug para ver mensajes de las cosas que van ocurriendo
-			$mail->SMTPDebug = 2;
+			//permite modo debug para ver mensajes de las cosas que van ocurriendo 2 para desactivar  1
+			$mail->SMTPDebug = 1;
 			//Debo de hacer autenticación SMTP
 			$mail->SMTPAuth = true;
 			$mail->SMTPSecure = "ssl";
@@ -155,13 +158,16 @@
 			$mail->Subject = $title;
 			$mail->MsgHTML($message);
 			//indico destinatario
-			$mail->AddAddress($correo, "Jhonatan Flores");
-			if(!$mail->Send()) {
-				echo "Error al enviar: " .$mail->ErrorInfo;
-			} else {
-				echo "Mensaje enviado!";
-			}
+			$mail->AddAddress( $correo);
+			$r=$mail->Send();
+				if(!$r) {
+					//echo "Error al enviar: " .$mail->ErrorInfo;
+					} else {
+					//echo "Mensaje enviado!";
+				}
+				return $r;
 	}
+	
 	function enviar_correo_automatico_administracion($id_solicitud_transporte=NULL, $id_modulo=NULL) 
 	{
 		$CI =& get_instance();

@@ -44,5 +44,10 @@
         lonMin: 5   
      });
 
+    estado_transaccion='<?php echo $estado_transaccion?>';
+    estado_correcto='El cambio de contraseña se ha realizado correctamente.';
+    estado_incorrecto='Se produjo un error al cambiar la contraseña';
 </script>
+
+
 

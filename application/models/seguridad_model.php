@@ -193,7 +193,8 @@ class Seguridad_model extends CI_Model {
         if($id_usuario!=NULL)
             $where.=" AND id_usuario=".$id_usuario;
         if($usuario!="")
-            $where.=" AND usuario LIKE '".$usuario."'";
+            $where.=" AND usuario LIKE '".$usuario."'
+        			OR nr LIKE '".$usuario."'";
         $sentencia="SELECT ".$select." FROM tcm_empleado WHERE TRUE ".$where;
         $query=$this->db->query($sentencia);
         return (array)$query->row();
