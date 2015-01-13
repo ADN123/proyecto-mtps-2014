@@ -344,6 +344,17 @@ canvas {
 
 	float: right;
 }
+
+.descrip{
+	margin-top: 25px;
+	padding-left: 25px;
+	padding-right: 30px;
+	text-align: justify;
+}
+.pasos{
+text-align:left;
+
+}
 /*.oculto {
 
 }*/

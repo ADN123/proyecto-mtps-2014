@@ -46,7 +46,21 @@
 		$data['nick']=$CI->session->userdata('usuario');
 		$data['nombre']=$CI->session->userdata('nombre');
 		$data['menus']=$CI->seguridad_model->buscar_menus($CI->session->userdata('id_usuario'));
+		
+////para ayuda
+		$descripcion_ayuda= "Descripcion del modulo ";
+					  			for ($i=0; $i <5 ; $i++) { 
+					  				$descripcion_ayuda.=$descripcion_ayuda;
+					  			}
+		$pasos = array("paso 1", 
+						"paso 2",
+						"paso 3",
+						"paso 2");
+//fin para ayuda
 
+		$data['descripcion_ayuda']=$descripcion_ayuda;
+		$data['pasos']=$pasos;
+	
 		$CI->load->view('encabezado',$data);
 	 	$CI->load->view($vista);	
 	 	$CI->load->view('piePagina');
