@@ -12,7 +12,7 @@
 	display: inline-block;
 }
 </style>
-<form name="form_recuperar" method="post" action="<?php echo base_url()?>index.php/usuarios/recuperar_clave" id="form">
+<form name="form_recuperar" method="post" action="<?php echo base_url()?>index.php/sessiones/activar" id="form">
 	<div id="wizard" class="swMain">
         <ul>
             <li>
@@ -51,8 +51,10 @@
                         <img id="captcha" src="<?php echo base_url()?>/index.php/sessiones/capcha" alt="CAPTCHA Image"  style="margin-left: 150px;"/></a>
                     
                     </p>
+                    <p style="display:none;">
                     <button class="btn btn-success" type="submit" name="feedbackSubmit" id="feedbackSubmit">
                      <span class="glyphicon glyphicon-send"></span> Enviar</button>                       
+                    </p>
 
 
                 </div>
@@ -61,7 +63,10 @@
 
         <div id="step-2">	
             <h2 class="StepTitle">Codigo de activacion</h2>
-            <div id="mensaje"></div>
+            <div id="mensaje">
+                Espere <img src="<?php echo base_url()?>css/Bootstrap/loading.gif" />
+
+            </div>
             <p>
                 <label for="pass1" id="lpass1">Codigo de activación</label>
                 <input type="text" tabindex="1" id="pass1" name="pass1" class="tam-3" />
@@ -90,22 +95,21 @@
                     $("#cap").click();
                     if(data.status==1) {
                         $("#mensaje").html( '<div class="alert alert-success">'+
-                            '   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                            '   <span class="glyphicon glyphicon-exclamation-sign"></span> El <strong>envío solicitud de cambio de contraseña</strong> se ha realizado exitosamente al correo: '+data.message+
+                            '   <span class="glyphicon glyphicon-exclamation-sign"></span> La <strong>solicitud de cambio de contraseña</strong> se ha realizado exitosamente. Por favor revise su correo. '+
+                            '<br> <br> Puede abrir el enlace enviado o pegar aqui el codigo de activación y dar clic en finalizar'+
                             '</div>');
                         $("#correo").val("");
                         $("#captcha_code").val("");                     
                     }
                     else
                         $("#mensaje").html( '<div class="alert alert-danger">'+
-                            '   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                             '   <span class="glyphicon glyphicon-exclamation-sign"></span> Error al intentar <strong>enviar solicitud de cambio de contraseña</strong>: '+data.message+
                             '</div>');
                 },
+                
                 error: function(response) {
                     $("#mensaje").html( '<div class="alert alert-danger">'+
-                                        '   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                                        '   <span class="glyphicon glyphicon-exclamation-sign"></span> Error al intentar <strong>enviar solicitud de cambio de contraseña</strong>: Se perdió la señal de la red. Porfavor vuelva a intentarlo.'+
+                                      '   <span class="glyphicon glyphicon-exclamation-sign"></span> Error al intentar <strong>enviar solicitud de cambio de contraseña</strong>: Se perdió la señal de la red. Porfavor vuelva a intentarlo.'+
                                         '</div>');
                 }
             });
