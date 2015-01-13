@@ -263,7 +263,7 @@ class Sessiones extends CI_Controller {
 			$contra2=str_shuffle($letras2);
 			$contra2=substr($contra2,0,40);	
 			
-			/*$info=$this->seguridad_model->info_empleado(NULL,"id_usuario, nombre, correo",NULL,$correo);
+			$info=$this->seguridad_model->info_empleado(NULL,"id_usuario, nombre, correo",NULL,$correo);
 			
 			$formuInfo = array(
 				'id_usuario'=>$info['id_usuario'],
@@ -272,7 +272,7 @@ class Sessiones extends CI_Controller {
 				'codigo_caso'=>$contra2
 			);
 			$this->seguridad_model->guardar_caso($formuInfo);
-			*/
+			
 			$message='
 				Hola '.$info['nombre'].'! Esta es tu nueva contraseña: '.$contra.'. Si la quieres activar da clic <a href="'.base_url().'/index.php/sessiones/activar/'.$contra2.'" target="_blank">aquí</a>. Tiene 3 días para activar este código.
 			';

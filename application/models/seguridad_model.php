@@ -185,5 +185,47 @@ class Seguridad_model extends CI_Model {
 			);
 		}
 	}
+	   function info_empleado($id_empleado=NULL, $select="*", $id_usuario=NULL, $usuario="")
+    {
+        $where="";
+        if($id_empleado!=NULL)
+            $where.=" AND id_empleado=".$id_empleado;
+        if($id_usuario!=NULL)
+            $where.=" AND id_usuario=".$id_usuario;
+        if($usuario!="")
+            $where.=" AND usuario LIKE '".$usuario."'";
+        $sentencia="SELECT ".$select." FROM tcm_empleado WHERE TRUE ".$where;
+        $query=$this->db->query($sentencia);
+        return (array)$query->row();
+    }
+	
+	function guardar_caso($formuInfo)
+	{
+		extract($formuInfo);
+        $sentencia="INSERT INTO sac_caso
+                    (id_usuario, fecha_caso, nuevo_pass, codigo_caso) 
+                    VALUES 
+                    ($id_usuario, '$fecha_caso', '$nuevo_pass', '$codigo_caso')";
+        $this->db->query($sentencia);
+	}
+	
+	function buscar_caso($codigo_caso)
+	{
+		$sentencia="SELECT
+                    id_usuario, nuevo_pass
+                    FROM sac_caso
+                    WHERE estado_caso=1 AND DATEDIFF(CURDATE(),fecha_caso)<=3 AND codigo_caso LIKE '".$codigo_caso."'";
+        $query=$this->db->query($sentencia);
+		$caso=(array)$query->row();
+        $count=0+$query->num_rows;
+		if($count>0) {
+			$sentencia="UPDATE sac_caso SET estado_caso=0 WHERE codigo_caso LIKE '".$codigo_caso."'";
+			$this->db->query($sentencia);
+			$sentencia="UPDATE org_usuario SET password='".$caso['nuevo_pass']."' WHERE id_usuario=".$caso['id_usuario'];
+			$this->db->query($sentencia);
+		}
+        return $count;
+	}
+
 }
 ?>
