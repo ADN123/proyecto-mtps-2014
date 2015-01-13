@@ -224,7 +224,7 @@ class Vehiculo extends CI_Controller
 				}
 			}
 		}
-		$data['taller_externo']=$this->transporte_model->vehiculos_taller_externo();
+		$data['taller_externo']=$this->transporte_model->vehiculos_taller_externo(0,3);
 		pantalla('mantenimiento/control_taller_ext',$data);
 	}
 	
@@ -341,6 +341,42 @@ class Vehiculo extends CI_Controller
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
 		ir_a("index.php/vehiculo/control_taller_ext/".$tr."/2");
+	}
+	
+	/*
+	*	Nombre: alta_taller_ext
+	*	Objetivo: carga la vista para dar de alta a un vehículo en taller externo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 13/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function alta_taller_MTPS($id)
+	{
+		$data['vehiculo']=$this->transporte_model->vehiculos_taller_interno(0,NULL,$id);
+		$data['vehiculo']=$data['vehiculo'][0];
+		$data['empleado']=$this->transporte_model->consultar_empleados();
+		pantalla('mantenimiento/alta_taller_MTPS.php',$data);
+	}
+	
+	/*
+	*	Nombre: dar_alta_taller_ext
+	*	Objetivo: da de alta a un vehículo en taller externo
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 13/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function dar_alta_taller_MTPS()
+	{
+		$this->db->trans_start();
+		$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$this->transporte_model->alta_taller_MTPS($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/control_taller/".$tr."/3");
 	}
 	
 	/*
