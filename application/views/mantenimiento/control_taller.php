@@ -36,6 +36,9 @@ Ingresar Vehículo
                 <a rel="leanModal" title="Reparar Vehículo" href="<?php echo base_url()."index.php/vehiculo/tallerMTPS/".$fila['id_vehiculo'] ?>" ><img src="<?php echo base_url()?>img/reparacion.png" height="23px"/></a>&nbsp;&nbsp;
                 <a rel="leanModal" title="Enviar a Taller Externo" href="<?php echo base_url()."index.php/vehiculo/ingreso_taller_ext/".$fila['id_vehiculo'] ?>" ><img src="<?php echo base_url()?>img/taller.png" height="35px"/></a>&nbsp;&nbsp;
                 <a rel="leanModal" title="Dar de Alta" href="<?php echo base_url()."index.php/vehiculo/alta_taller_MTPS/".$fila['id_ingreso_taller'] ?>" ><img src="<?php echo base_url()?>img/alta.png" height="23px"/></a>
+                <a rel="leanModal" title="Imprimir Hoja de Control de Ingreso al Taller"
+                href="<?php echo base_url()."index.php/vehiculo/hoja_ingreso_taller/".$fila['id_ingreso_taller'] ?>" >
+                <img src="<?php echo base_url()?>img/ico_pdf.png" height="23px"/></a>
             </td>
         </tr>
     <?php } ?>

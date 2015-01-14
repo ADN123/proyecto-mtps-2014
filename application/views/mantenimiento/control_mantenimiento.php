@@ -7,7 +7,7 @@ foreach($vehiculos as $v)
 ?>
 <script>
 	estado_transaccion='<?php echo $estado_transaccion?>';
-	estado_correcto='Se ha ingresado el vehículo a taller interno, éxitosamente';
+	estado_correcto='';
 	estado_incorrecto='Error de conexión al servidor. Por favor vuelva a intentarlo.';
 </script>
 <section>
@@ -51,10 +51,11 @@ foreach($vehiculos as $v)
             <td width="300px">
 			<p>
                 <label style="width:150px">Fecha de Recepción: </label>
-                <strong><?php echo date('d/m/Y')?></strong>
+                <strong><?php echo date('d/m/Y'); //$fecha=getdate(); echo $fecha[year]."-".$fecha[mon]."-".$fecha[mday]." ".$fecha[hour]." ".$fecha[minutes].":".$fecha[seconds]?></strong>
             </p>
             <?php if($bandera=='false'){ ?>
             <p>
+            	<input type="hidden" name="pantalla" value="1" />
                 <label style="width:100px">Seleccione un número de placa: </label>
                 <select class="select" style="width:100px" onchange="cargar(this.value)" name="id_vehiculo" id="id_vehiculo">
                 	<?php
@@ -67,6 +68,7 @@ foreach($vehiculos as $v)
             </p>
             <?php }else{ ?>
             <p>
+            	<input type="hidden" name="pantalla" value="2" />
             	<input type="hidden" name="id_vehiculo" value="<?php echo $id_vehiculo; ?>" />
                 <label style="width:150px">Número de placa: </label>
                 <strong><?php echo $placa; ?></strong>
