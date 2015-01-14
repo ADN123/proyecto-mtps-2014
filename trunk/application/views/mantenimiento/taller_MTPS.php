@@ -51,7 +51,7 @@ extract($vehiculos);
             <td width="300px">
 			<p>
                 <label style="width:150px">Fecha de Revisión: </label>
-                <strong><?php echo date('d/m/Y')?></strong>
+                <strong><?php echo date('d/m/Y');// $fecha=getdate(); echo $fecha[year]."-".$fecha[mon]."-".$fecha[mday]?></strong>
             </p>
             <p>
                 <label style="width:150px">Número de Placa: </label>
@@ -78,7 +78,7 @@ extract($vehiculos);
             <tbody>
                 <tr>
                 	<td>Marca: <strong><?php echo $marca ?></strong></td>
-                    <td>Motorista Asignado: <strong><?php echo $motorista ?></strong></td>
+                    <td>Motorista Asignado: <strong><?php echo ucwords($motorista); ?></strong></td>
                 </tr>
                 <tr>
                     <td>Modelo: <strong><?php echo $modelo ?></strong></td>
@@ -159,7 +159,7 @@ extract($vehiculos);
                 	<td colspan="2">Seleccionar/Deseleccionar Todo: <input type="checkbox" name="selectall2" onclick="select_all2(this.checked)" /></td>
                 </tr>
                 <tr>
-                	<td>Obervaciones: </td>
+                	<td>Observaciones: </td>
                     <td><textarea style="width:200px; resize:none;"  name="observaciones"></textarea></td>
                 </tr>
               </tbody>

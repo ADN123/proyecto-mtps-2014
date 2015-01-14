@@ -25,7 +25,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga el catálogo de Vehículos y permite la modificación de los datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 13/11/2014
+	*	Última Modificación: 13/01/2015
 	*	Observaciones: Ninguna
 	*/
 	function vehiculos($estado_transaccion=NULL,$tipo=NULL)
@@ -41,6 +41,8 @@ class Vehiculo extends CI_Controller
 					case 1: $data['mensaje']="Se ha ingresado la información de un nuevo vehículo éxitosamente";
 							break;
 					case 2: $data['mensaje']="Se ha modificado la información del vehículo éxitosamente";
+							break;
+					case 3: $data['mensaje']="Se ha reportado anomalía del vehículo a taller institucional éxitosamente";
 							break;
 				}
 			}
@@ -90,7 +92,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga el catálogo de Vehículos que se encuentran en taller.
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 22/12/2014
+	*	Última Modificación: 13/01/2015
 	*	Observaciones: Ninguna
 	*/
 	
@@ -109,6 +111,8 @@ class Vehiculo extends CI_Controller
 					case 2: $data['mensaje']="Se ha enviado el vehículo a taller externo éxitosamente";
 							break;
 					case 3: $data['mensaje']="Se ha dado de alta al vehículo éxitosamente";
+							break;
+					case 4: $data['mensaje']="Se ha ingresado el vehículo a taller interno éxitosamente";
 							break;
 				}
 			}
@@ -166,7 +170,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: insertar en la Base de Datos un nuevo registro de ingreso de un vehiculo al taller del MTPS
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 19/08/2014
+	*	Última Modificación: 13/01/2015
 	*	Observaciones: Ninguna
 	*/
 	
@@ -177,7 +181,8 @@ class Vehiculo extends CI_Controller
 		$this->transporte_model->guardar_mtto($_POST);
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
-		ir_a("index.php/vehiculo/controlMtto/0/".$tr);
+		if($_POST['pantalla']==1) ir_a("index.php/vehiculo/control_taller/".$tr."/4");
+		elseif($_POST['pantalla']==2) ir_a("index.php/vehiculo/vehiculos/".$tr."/3");
 	}
 	
 	/*
@@ -903,6 +908,34 @@ class Vehiculo extends CI_Controller
 		}
 		$data['inventario']=$this->transporte_model->inventario();
 		pantalla('mantenimiento/bodega',$data);
+	}
+	
+	/*
+	*	Nombre: hoja_ingreso_taller
+	*	Objetivo: llama a la vista de hoja_ingreso_taller_pdf para observar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 14/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function hoja_ingreso_taller($id)
+	{
+		$data['vehiculo']=$this->transporte_model->vehiculos_taller_interno(0,NULL,$id);
+		$data['vehiculo']=$data['vehiculo'][0];
+		$data['revisiones']=$this->transporte_model->consultar_revisiones();
+		$data['revision']=$this->transporte_model->consultar_revisiones2($id);
+		$this->mpdf->mPDF('utf-8','A4-L'); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		$stylesheet = file_get_contents('css/pdf/solicitud.css'); /*Selecionamos la hoja de estilo del pdf*/
+		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
+		$html = $this->load->view('mantenimiento/hoja_ingreso_taller_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
+		//if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
+		//	$this->mpdf->AddPage();
+		//	$html = $this->load->view('transporte/reverso_solicitud_pdf.php', $data, true);
+		//	$this->mpdf->WriteHTML($html,2);
+		//}
+		$this->mpdf->Output(); /*Salida del pdf*/	
 	}
 }
 ?>
