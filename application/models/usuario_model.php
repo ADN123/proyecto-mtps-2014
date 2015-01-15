@@ -514,7 +514,7 @@ class Usuario_model extends CI_Model {
 	function actualizar_usuario($formuInfo) 
 	{
 
-		print_r($formuInfo);
+		
 		error_reporting(0);
 		extract($formuInfo);
 
