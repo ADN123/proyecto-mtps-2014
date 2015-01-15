@@ -1,4 +1,4 @@
-<?php 
+﻿<?php 
 
 define("SERVER_MTPS","192.168.1.200");
 
@@ -90,8 +90,7 @@ class Sessiones extends CI_Controller {
 								setcookie('contador', 1, time() + 15* 60);			
 								ir_a('index.php/inicio'); 
 							}
-						}
-						else alerta("Usuario y clave no coinciden en Active Directory",'index.php/sessiones');	
+						}	else alerta("Usuario y clave no coinciden en Active Directory",'index.php/sessiones');	
 					////////////////Fin verificacion con Active Directory
 											
 					} else {
@@ -133,16 +132,17 @@ class Sessiones extends CI_Controller {
 	*/
 	
 	function ldap_login($user,$pass)
-	{
+	{	
+		
 		$ldaprdn = $user.'@trabajo.local';
 		$ldappass = $pass;
 		$ds = 'trabajo.local';
 		$dn = 'dc=trabajo,dc=local';
 		$puertoldap = 389; 
-		//$ldapconn = ldap_connect($ds,$puertoldap)
-		//or die("ERROR: No se pudo conectar con el Servidor LDAP."); 
+		$ldapconn = ldap_connect($ds,$puertoldap)
+		or die("ERROR: No se pudo conectar con el Servidor LDAP."); 
 		
-		if (ldap_connect($ds,$puertoldap)) 
+		if ($ldapconn) 
 		{ 
 			ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION,3); 
 			ldap_set_option($ldapconn, LDAP_OPT_REFERRALS,0); 

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 	define("INGRESO",69);
 	define("REQUISICION",81);
 	define("AUTORIZAR",86);
@@ -1785,7 +1785,8 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 	function reporte_vehiculo_pdf($xls=NULL)
 	{
 
-				$id_seccion=$this->input->post('id_seccion');
+
+			$id_seccion=$this->input->post('id_seccion');
 			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
 			
 					//para formar mensaje
@@ -1820,6 +1821,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 			$data['base']=FALSE;
 		$data['datos']=$this->vales_model->consumo_vehiculo($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
 				
+
 		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 		$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
 		$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
@@ -1844,7 +1846,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		//	$html = $this->load->view('transporte/reverso_solicitud_pdf.php', $data, true);
 		//	$this->mpdf->WriteHTML($html,2);
 		//}
-		$this->mpdf->Output(); /*Salida del pdf*/	
+		$this->mpdf->Output(); //Salida del pdf */	
 		//echo $html;
 	//	echo "<pre>$fecha_inicio m  $fecha_fin </pre>";
 	

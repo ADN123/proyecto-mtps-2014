@@ -1380,11 +1380,11 @@ function consumo_seccion_fuente_d($id_seccion='', $id_fuente_fondo="", $fecha_in
 										LEFT  JOIN (
 													SELECT id_vehiculo, SUM(km_final-km_inicial ) as recor FROM tcm_vehiculo_kilometraje 
 													".$where1."			
-													GROUP BY id_vehiculo ) AS K  ON k.id_vehiculo = d.id_vehiculo
+													GROUP BY id_vehiculo ) AS k  ON k.id_vehiculo = d.id_vehiculo
 										INNER JOIN tcm_consumo_vehiculo_valores vg ON cv.id_consumo_vehiculo = vg.id_consumo_vehiculo 
 									".$where2."
 								GROUP BY id_vehiculo
-								) AS X
+								) AS x
 
 								ORDER BY vales DESC ";
 				
