@@ -230,11 +230,15 @@ function tabla1 (json) {
                 }  
 }
 function tabla2 (json) {
-                var fila;
+                var fila, total, suma_vales, suma_gal, suma_rec;
+                suma_vales=suma_rec=suma_gal=0;
 
             $('#datos tbody').remove();        
             for (i=0;i<json.length;i++) {   
             var n = new Number(json[i].rendimiento);;
+            suma_vales+=Number(json[i].vales);
+            suma_gal+=Number(json[i].gal);
+            suma_rec+=Number(json[i].recorrido);
              fila= "<tr>" +
               "<td align='center'>" + json[i].placa + "</td>" +
               "<td align='center'>" + json[i].marca + "</td>" +
@@ -245,6 +249,17 @@ function tabla2 (json) {
             "</tr>";    
                 $('#datos').append(fila)    
                 }  
+
+                         var total= "<tr>" +
+              "<td align='center'><strong>TOTAL</strong></td>" +
+              "<td align='center'></td>" +
+              "<td align='center'><strong>" + suma_vales + "</strong></td>" +
+              "<td align='center'><strong>" + suma_gal.toFixed(2) + "</strong></td>" +
+              "<td align='center'><strong>" + suma_rec + "<strong></td>" +
+              "<td align='center'> </td>" +
+            "</tr>";    
+            $('#datos').append(total);
+
 }
 
 function tabla3 (json) {

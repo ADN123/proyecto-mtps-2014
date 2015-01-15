@@ -271,10 +271,10 @@ class Vales_model extends CI_Model {
 	{
 		$where="";
 		if($id_seccion!=NULL){
-			$where="WHERE 	tv.id_seccion = ".$id_seccion;
+			$where="WHERE 	tv.id_seccion_vale = ".$id_seccion;
 
 		}
-		$query=$this->db->query("	SELECT
+		$q="	SELECT
 									ff.id_fuente_fondo,
 									ff.nombre_fuente_fondo AS nombre_fuente
 								FROM
@@ -282,7 +282,10 @@ class Vales_model extends CI_Model {
 								INNER JOIN tcm_vehiculo tv ON tv.id_fuente_fondo = ff.id_fuente_fondo
 								".$where."
 								GROUP BY
-									id_fuente_fondo");
+									id_fuente_fondo";
+
+							$query=$this->db->query($q);
+
 			return (array)$query->result_array();
 
 	}
@@ -1639,6 +1642,25 @@ function insertar_sobrante($r,$formuInfo)
 	VALUES ($id_seccion,$key[id_requisicion_vale], $key[inicial], $key[inicial]+$key[cantidad_restante]-1, $key[cantidad_restante], $mes);";
 	$this->db->query($q);
 	}
+}
+function cantidades_requisiciones($id_seccion=NULL, $mes=NULL, $id_fuente_fondo=NULL)
+{
+		   	$q="SELECT
+					id_seccion,
+					mes,
+				SUM(cantidad_solicitada) AS solicitada,
+					SUM(cantidad_entregado) AS entregado,
+					SUM(restante_anterior) AS restante,
+					SUM(asignado) AS asignado
+				FROM
+					tcm_requisicion
+				WHERE
+					id_seccion = $id_seccion
+				AND mes = '$mes'
+				AND id_fuente_fondo= $id_fuente_fondo
+				GROUP BY id_seccion, mes";
+    	$query=$this->db->query($q);
+    return $query->result_array();	
 }
 }
 ?>

@@ -25,6 +25,7 @@ class Vales extends CI_Controller
 		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('vales_model');
 		$this->load->model('transporte_model');
+		$this->load->model('seguridad_model');
 		$this->load->library("mpdf");
     	if(!$this->session->userdata('id_usuario')){
 			redirect('index.php/sessiones');
@@ -155,6 +156,7 @@ class Vales extends CI_Controller
 
 					break;
 				case 4: //departamental
+
 					if($this->vales_model->is_departamental($id_seccion['id_seccion'])) {// fuera de san salvador
 						$data['oficinas']=$this->vales_model->consultar_oficinas($id_seccion['id_seccion']);
 						$data['fuente']=$this->vales_model->consultar_fuente_fondo($id_seccion['id_seccion']);
@@ -173,8 +175,8 @@ class Vales extends CI_Controller
 			}
 			$data['estado_transaccion']=$estado_transaccion;
 			$data['accion']=$accion;
-		//	echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
-			//print_r($data['oficinas']);  
+		
+			//echo"<pre>"; print_r($data); echo "</pre>";
 			pantalla($url,$data);	
 		}
 		else {
@@ -1763,8 +1765,8 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 					$fecha_inicio=date("Y-m-d", strtotime($fecha_inicio));
 					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
 			}else{
-					$fecha_inicio=NULL;
-					$fecha_fin=NULL;
+					$fecha_fin=date('Y-m-').getUltimoDiaMes();
+					$fecha_inicio=date('Y-m-1');
 			}
 			if($id_seccion==0){
 				$id_seccion=NULL;
@@ -1780,7 +1782,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 			echo 'No tiene permisos para acceder';
 		}		
 	}
-	function reporte_vehiculo_pdf()
+	function reporte_vehiculo_pdf($xls=NULL)
 	{
 
 				$id_seccion=$this->input->post('id_seccion');
@@ -1797,11 +1799,11 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 					$fecha_fin=date("Y-m-d", strtotime($fecha_fin));
 
 
-					$f.="del ".$_POST['start']." al ".$_POST['end'];
+					$f.=" del ".$_POST['start']." al ".$_POST['end'];
 			}else{
-						$f.=" hasta  el ".date('d-m-Y'); 
-					$fecha_inicio=NULL;
-					$fecha_fin=NULL;
+					$f.=" del ".date('01-m-Y')." hasta  el ".getUltimoDiaMes().date('-m-Y'); 
+					$fecha_fin=date('Y-m-').getUltimoDiaMes();
+					$fecha_inicio=date('Y-m-1');
 			}
 			if($id_seccion==0){
 				$id_seccion=NULL;
@@ -1815,25 +1817,38 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 				$f.=" con fuente de fondo ".$_POST['id_fuente_fondo_input'];	
 			}
 			$data['f']=$f;			
-
+			$data['base']=FALSE;
 		$data['datos']=$this->vales_model->consumo_vehiculo($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
-	
+				
 		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 		$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
-		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
-		//$data['nombre'] = "Renatto NL";
 		$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
 		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
+		if ($xls!=NULL) {
+
+			header("Content-type: application/octet-stream");
+			header("Content-Disposition: attachment; filename=vehiculos.xls");
+			header("Pragma: no-cache");
+			header("Expires: 0");
+			
+			echo base_url();
+			$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+			echo $html;
+
+
+		}
+
 		//if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
 		//	$this->mpdf->AddPage();
 		//	$html = $this->load->view('transporte/reverso_solicitud_pdf.php', $data, true);
 		//	$this->mpdf->WriteHTML($html,2);
 		//}
 		$this->mpdf->Output(); /*Salida del pdf*/	
+		//echo $html;
+	//	echo "<pre>$fecha_inicio m  $fecha_fin </pre>";
 	
 	}
-
-
 		/*
 	*	Nombre: asingacion de vehiculos
 	*	Objetivo: esta funcion junto con las que le siguen son para darle mantenimiento a la asignacion de vehiculos
@@ -2165,6 +2180,11 @@ function liquidacion_pdf()
 			$this->mpdf->mPDF('utf-8','letter-L',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 		}else{ //liquidacion por seccion
 			//$data['recibidos1']$this->vales_model->recibidos1($id_seccion,$mes);
+			$req=$this->vales_model->cantidades_requisiciones($mes,$id_seccion, $id_fuente_fondo);
+			$req=$req[0];
+			print_r($req);
+
+
 			$html = $this->load->view('vales/liquidacion_seccion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 			$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 
@@ -2172,27 +2192,23 @@ function liquidacion_pdf()
 		$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
 		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
 		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/	
-		$this->mpdf->Output(); /*Salida del pdf*/	
+		//$this->mpdf->Output(); /*Salida del pdf*/	
 
 }
 //////////////////////////Funciones de testeo
-function form()
-{
 
-$key=randomkey();
-print_r($_SESSION['form']);	
-}
-
-function reset_form()
-{
-print_r($_SESSION['form']);	
-unset($_SESSION['form']);
-}
 
 function mostrar_form($mes=NULL,$rest=NULL)
 {
 	//print_r($_SESSION['form']);	
-	echo "<pre>"; print_r($_SERVER); echo "</pre>";
+	$login="ana.saldana";
+
+	$v=$this->seguridad_model->consultar_usuario2($login); //verifica únicamente por el nombre de usuario
+	echo "<pre>"; 
+	echo getUltimoDiaMes(); 
+	echo "</pre>";
+
+
 
 }
 

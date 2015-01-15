@@ -79,7 +79,8 @@ class Sessiones extends CI_Controller {
 								alerta("Clave incorrecta",'index.php/sessiones');	
 							}
 							else 
-							{
+							{	
+								
 								$this->session->set_userdata('nombre', $v['nombre_completo']);
 								$this->session->set_userdata('id_usuario', $v['id_usuario']);
 								$this->session->set_userdata('usuario', $v['usuario']);
@@ -98,7 +99,7 @@ class Sessiones extends CI_Controller {
 					}
 				}
 				else 
-				{
+				{	//se guardan los datos cuando, sin requerir verificacion en base de datos
 					$this->session->set_userdata('nombre', $v['nombre_completo']);
 					$this->session->set_userdata('id_usuario', $v['id_usuario']);
 					$this->session->set_userdata('usuario', $v['usuario']);

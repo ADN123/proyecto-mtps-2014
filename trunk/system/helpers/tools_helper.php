@@ -332,5 +332,14 @@ function restar_mes($mes=NULL,$rest=NULL)
 	return $nmes;
 }
 
+function getUltimoDiaMes($elAnio=NULL,$elMes=NULL) {
+		if ($elMes==NULL) {
+			$elMes=date('m');
+		}
+		if ($elAnio==NULL) {
+			$elAnio=date('Y');
+		}
+  return date("d",(mktime(0,0,0,$elMes+1,1,$elAnio)-1));
+}
 /* End of file tools_helper.php */
 /* Location: ./system/helpers/form_helper.php */
