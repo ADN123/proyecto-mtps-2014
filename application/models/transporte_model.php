@@ -2262,7 +2262,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
 				inner join org_seccion as o on (v.id_seccion=o.id_seccion)
 				inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
-				inner join tcm_ingreso_taller as it on (it.id_vehiculo=v.id_vehiculo)
+				left join tcm_ingreso_taller as it on (it.id_vehiculo=v.id_vehiculo)
 				".$where."
 				GROUP BY v.placa,motorista,seccion,marca,modelo,clase,condicion";
 		$query=$this->db->query($query);
