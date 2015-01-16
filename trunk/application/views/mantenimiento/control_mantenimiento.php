@@ -30,13 +30,22 @@ foreach($vehiculos as $v)
                     <span class="stepNumber">2<small>do</small></span>
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
-                        <small>&nbsp;Revisión Interna</small>
+                        <small>&nbsp;Datos de Ingreso</small>
                     </span>
                 </a>
             </li>
             <li>
                 <a href="#step-3">
                     <span class="stepNumber">3<small>er</small></span>
+                    <span class="stepDesc">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
+                        <small>&nbsp;Revisión Interna</small>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a href="#step-4">
+                    <span class="stepNumber">4<small>to</small></span>
                     <span class="stepDesc">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paso<br/>
                         <small>&nbsp;Revisión Externa</small>
@@ -46,10 +55,7 @@ foreach($vehiculos as $v)
         </ul>
         <div id="step-1">	
            <h2 class="StepTitle">Datos Generales del Vehículo</h2>
-            <table>
-            <tr>
-            <td width="300px">
-			<p>
+            <p>
                 <label style="width:150px">Fecha de Recepción: </label>
                 <strong><?php echo date('d/m/Y'); //$fecha=getdate(); echo $fecha[year]."-".$fecha[mon]."-".$fecha[mday]." ".$fecha[hour]." ".$fecha[minutes].":".$fecha[seconds]?></strong>
             </p>
@@ -74,25 +80,31 @@ foreach($vehiculos as $v)
                 <strong><?php echo $placa; ?></strong>
             </p>
 			<?php } ?>
-            </td>
-            <td width="700px">
+            <div id="info_vehiculo">
+            </div>
+        </div>
+        <div id="step-2">
+        	<h2 class="StepTitle">Información de ingreso del Vehículo</h2>
+             <p>
+            	<label style="width:100px">Mecánico que recibió el vehículo: </label>
+                <select style="width:300px" class="select" name="id_usuario_recibe_taller" placeholder="Seleccione..." multiple="multiple">
+                	<?php foreach($empleado as $e){?>
+                    <option value="<?php echo $e['NR']; ?>"><?php echo ucwords($e['nombre']) ?></option>
+                    <?php }?>
+                </select>
+            </p>
             <p>
             	<label class="label_textarea" style="width:100px">Trabajo solicitado: </label>
                 <textarea style="width:200px; resize:none;" name="trabajo_solicitado"></textarea>
-                <label class="label_textarea" style="width:100px">Trabajo solicitado en carrocería: </label>
+                <label class="label_textarea" style="width:100px">Trabajo solicitado en la carrocería: </label>
                 <textarea style="width:200px; resize:none;" name="trabajo_solicitado_carroceria"></textarea>
             </p>
-            </td>
-            </tr>
-            <tr>
-            <td colspan="2" valign="bottom">
-			<div id="info_vehiculo">
-            </div>
-            </td>
-            </tr>
-            </table>
+            <p>
+                <label style="width:100px">Kilometraje: </label>
+                <input type="text" name="kilometraje_ingreso" />
+            </p>
         </div>
-        <div id="step-2">	
+        <div id="step-3">	
             <h2 class="StepTitle">Revisión Interna del Vehículo</h2>
             <table width="600px" align="center">
             <tr><td>
@@ -160,7 +172,7 @@ foreach($vehiculos as $v)
                </tbody>
             </table></td></tr></table>
         </div>
-        <div id="step-3">	
+        <div id="step-4">	
             <h2 class="StepTitle">Revisión Externa del vehículo</h2>
             <table width="600px" align="center">
             <tr><td>

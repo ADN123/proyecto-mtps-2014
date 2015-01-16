@@ -14,7 +14,7 @@ class Vehiculo extends CI_Controller
         parent::__construct();
 		date_default_timezone_set('America/El_Salvador');
 		$this->load->model('transporte_model');
-//		$this->load->model('vehiculo_model');
+		$this->load->model('seguridad_model');
 		$this->load->library("mpdf");
     	if(!$this->session->userdata('id_usuario')){
 		 redirect('index.php/sessiones');
@@ -57,6 +57,8 @@ class Vehiculo extends CI_Controller
 									case 2: $data['mensaje']="Se ha modificado la información del vehículo éxitosamente";
 											break;
 									case 3: $data['mensaje']="Se ha reportado anomalía del vehículo a taller institucional éxitosamente";
+											break;
+									case 4: $data['mensaje']="Se ha registrado el mantenimiento rutinario al vehículo éxitosamente";
 											break;
 								}
 							}
@@ -179,6 +181,7 @@ class Vehiculo extends CI_Controller
 			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
 			$data['bandera']='false';
 		}
+		$data['empleado']=$this->transporte_model->consultar_empleados();
 		$data['revision']=$this->transporte_model->consultar_revisiones();
 		pantalla('mantenimiento/control_mantenimiento',$data);
 	}
@@ -212,21 +215,31 @@ class Vehiculo extends CI_Controller
 	*	Observaciones: Ninguna
 	*/
 	
-	function tallerMTPS($id_v,$mtto=NULL)
+	function tallerMTPS($id_v)
 	{
-		if($mtto!=NULL)
-		{
-			$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,1);
-			$data['vehiculos']=$data['vehiculos'][0];
-		}
-		else
-		{
-			$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,2);
-			$data['vehiculos']=$data['vehiculos'][0];
-		}		
+		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,2);
+		$data['vehiculos']=$data['vehiculos'][0];
 		$data['reparacion']=$this->transporte_model->consultar_reparacion();
 		$data['inventario']=$this->transporte_model->inventario();
 		pantalla('mantenimiento/taller_MTPS',$data);
+	}
+	
+	/*
+	*	Nombre: mantenimiento_rutinario
+	*	Objetivo: Carga la vista de mantenimiento rutinario
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 16/01/2014
+	*	Observaciones: Ninguna
+	*/
+	
+	function mantenimiento_rutinario($id_v)
+	{
+		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,1);
+		$data['vehiculos']=$data['vehiculos'][0];
+		$data['inventario']=$this->transporte_model->inventario();
+		$data['empleado']=$this->transporte_model->consultar_empleados();
+		pantalla('mantenimiento/mantenimiento_rutinario',$data);
 	}
 	
 	/*
@@ -337,6 +350,25 @@ class Vehiculo extends CI_Controller
 		$this->db->trans_complete();
 		$tr=($this->db->trans_status()===FALSE)?0:1;
 		ir_a("index.php/vehiculo/control_taller/".$tr."/1");
+	}
+	
+	/*
+	*	Nombre: guardar_mtto_rutinario
+	*	Objetivo: Insertar en la Base de Datos un nuevo registro de mtto. rutinario
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 16/01/2015
+	*	Observaciones: Ninguna
+	*/
+
+	function guardar_mtto_rutinario()
+	{
+		$this->db->trans_start();
+		//$_POST['id_usuario']=$this->session->userdata('id_usuario');
+		$this->transporte_model->guardar_mtto_rutinario($_POST);
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a("index.php/vehiculo/vehiculos/".$tr."/4");
 	}
 	
 	/*

@@ -45,7 +45,7 @@
             <p>
             	<label class="label_textarea" style="width:100px">Trabajo solicitado: </label>
                 <textarea style="width:200px; resize:none;" name="trabajo_solicitado"><?php echo $trabajo_solicitado; ?></textarea>
-                <label class="label_textarea" style="width:100px">Trabajo solicitado en carrocería: </label>
+                <label class="label_textarea" style="width:100px">Trabajo solicitado en la carrocería: </label>
                 <textarea style="width:200px; resize:none;" name="trabajo_solicitado_carroceria" readonly="readonly"><?php echo $trabajo_solicitado_carroceria; ?></textarea>
             </p>
             </td>
@@ -61,7 +61,7 @@
         <div id="step-2">	
            <h2 class="StepTitle">Información de entrega del vehículo</h2>
            <p>
-            	<label>Motorista o persona que recibe el vehículo: </label>
+            	<label style="width:100px">Motorista o persona que recibe el vehículo: </label>
                 <select style="width:300px" class="select" name="id_motorista_recibe" placeholder="Seleccione..." multiple="multiple">
                 	<?php foreach($empleado as $e){ 
 					if($e['NR']==$id_empleado) $selected='selected="selected"';
@@ -70,6 +70,10 @@
                     <option value="<?php echo $e['NR']; ?>" <?php echo $selected ?>><?php echo ucwords($e['nombre']) ?></option>
                     <?php }?>
                 </select>
+            </p>
+            <p>
+            	<label class="label_textarea" style="width:100px">Notas: </label>
+                <textarea style="width:200px; resize:none;" name="notas"></textarea>
             </p>
         </div>
     </div>

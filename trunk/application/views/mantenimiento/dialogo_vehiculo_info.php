@@ -52,6 +52,7 @@
 		else if($estado==2) $msj="En Reparación(Taller Interno)";
 		else if($estado==3) $msj="En Reparación(Taller Externo)";
 		else if($estado==4) $msj="Robado";
+		else if($fila->estado==5) $msj="Extraviado";
 		else if($estado==0) $msj="Inactivo";
 			 echo "Condición del vehículo: <strong>".$condicion."</strong> <br>
                 Estado Actual: <strong>".$msj."</strong> <br>

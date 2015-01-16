@@ -91,11 +91,11 @@ extract($vehiculo);
         	<td>Nombre de motorista: <strong><?php echo ucwords($motorista) ?></strong></td>
             <td align="center" rowspan="8">Trabajo Solicitado: <strong><?php echo $trabajo_solicitado ?></strong></td>
         </tr>
-        <tr><td>Kilometraje: <strong><?php echo $kilometraje ?></strong></td></tr>
+        <tr><td>Kilometraje: <strong><?php echo $kilometraje_ingreso ?></strong></td></tr>
         <tr><td>Marca: <strong><?php echo $marca ?></strong></td></tr>
         <tr><td>Año: <strong><?php echo $anio ?></strong> Placa: <strong><?php echo $placa ?></strong></td></tr>
         <tr><td>Modelo: <strong><?php echo $modelo ?></strong></td></tr>
-        <tr><td>Kilometraje de Mantenimiento: <strong><?php echo $kilometraje ?></strong></td></tr>
+        <tr><td>Kilometraje de Mantenimiento: <strong><?php echo ($kilometraje_ingreso+5000) ?></strong></td></tr>
         <tr><td>Fecha de Recepción: <strong><?php echo $fecha_recepcion ?></strong></td></tr>
         <tr><td>Fecha de Entrega: <strong><?php echo $fecha_entrega ?></strong></td></tr>
     </table>
