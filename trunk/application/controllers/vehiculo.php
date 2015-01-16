@@ -1,4 +1,11 @@
 <?php
+
+define("PRESUPUESTO",80);
+define("BODEGA",124);
+define("VEHICULOS",79);
+define("TALLER_INT",116);
+define("TALLER_EXT",125);
+
 class Vehiculo extends CI_Controller
 {
     
@@ -25,28 +32,39 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga el catálogo de Vehículos y permite la modificación de los datos
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 13/01/2015
+	*	Última Modificación: 15/01/2015
 	*	Observaciones: Ninguna
 	*/
 	function vehiculos($estado_transaccion=NULL,$tipo=NULL)
 	{
-		if($estado_transaccion!=NULL)
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),VEHICULOS); 
+		
+		if($data['id_permiso']!=NULL)
 		{
-			$data['estado_transaccion']=$estado_transaccion;
-			
-			if($tipo!=NULL)
+			switch($data['id_permiso'])
 			{
-				switch($tipo)
-				{
-					case 1: $data['mensaje']="Se ha ingresado la información de un nuevo vehículo éxitosamente";
-							break;
-					case 2: $data['mensaje']="Se ha modificado la información del vehículo éxitosamente";
-							break;
-					case 3: $data['mensaje']="Se ha reportado anomalía del vehículo a taller institucional éxitosamente";
-							break;
-				}
+				case 1:
+				case 2: if($estado_transaccion!=NULL)
+						{
+							$data['estado_transaccion']=$estado_transaccion;
+							
+							if($tipo!=NULL)
+							{
+								switch($tipo)
+								{
+									case 1: $data['mensaje']="Se ha ingresado la información de un nuevo vehículo éxitosamente";
+											break;
+									case 2: $data['mensaje']="Se ha modificado la información del vehículo éxitosamente";
+											break;
+									case 3: $data['mensaje']="Se ha reportado anomalía del vehículo a taller institucional éxitosamente";
+											break;
+								}
+							}
+						}
+						break;
 			}
 		}
+		
 		$data['datos']=$this->transporte_model->consultar_vehiculos();
 		pantalla('mantenimiento/vehiculos',$data);
 	}
@@ -190,14 +208,22 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: carga la vista de Reparación y mantenimiento en taller del MTPS
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 22/12/2014
+	*	Última Modificación: 16/01/2014
 	*	Observaciones: Ninguna
 	*/
 	
-	function tallerMTPS($id_v)
+	function tallerMTPS($id_v,$mtto=NULL)
 	{
-		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,2);
-		$data['vehiculos']=$data['vehiculos'][0];
+		if($mtto!=NULL)
+		{
+			$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,1);
+			$data['vehiculos']=$data['vehiculos'][0];
+		}
+		else
+		{
+			$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,2);
+			$data['vehiculos']=$data['vehiculos'][0];
+		}		
 		$data['reparacion']=$this->transporte_model->consultar_reparacion();
 		$data['inventario']=$this->transporte_model->inventario();
 		pantalla('mantenimiento/taller_MTPS',$data);
