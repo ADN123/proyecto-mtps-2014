@@ -14,6 +14,7 @@
         <th>Marca</th>
         <th>Modelo</th>
         <th>Clase</th>
+        <th>Estado</th>
         <th>Opción</th>
       </tr>
      </thead>
@@ -22,15 +23,34 @@
         foreach ($datos as $fila) {
     ?>
         <tr>
-            <td><?php echo $fila->placa?></td>
-            <td><?php echo ucwords($fila->marca)?></td>
-            <td><?php echo ucwords($fila->modelo)?></td>
-            <td><?php echo ucwords($fila->clase)?></td>
+            <td align="center"><?php echo $fila->placa?></td>
+            <td align="center"><?php echo ucwords($fila->marca)?></td>
+            <td align="center"><?php echo ucwords($fila->modelo)?></td>
+            <td align="center"><?php echo ucwords($fila->clase)?></td>
+            <td align="center">
+            <?php
+			if($fila->estado==1) $msj="Activo";
+			else if($fila->estado==2) $msj="En Taller Interno";
+			else if($fila->estado==3) $msj="En Taller Externo";
+			else if($fila->estado==4) $msj="Robado";
+			else if($fila->estado==5) $msj="Extraviado";
+			else if($fila->estado==0) $msj="Inactivo";
+			
+			echo $msj;
+			?>
+            </td>
             <td>
             	<a rel="leanModal" title="Ver información del Vehículo" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
                 <a rel="leanModal" title="Modificar información del Vehículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_vehiculo/".$fila->id ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
-                 <a rel="leanModal" title="Reportar Anomalía del Vehículo" href="<?php echo base_url()."index.php/vehiculo/controlMtto/".$fila->id ?>" ><img src="<?php echo base_url()?>img/mantenimiento.png" height="20px"/></a>
-                <a rel="leanModal" title="Reparar Vehículo" href="<?php echo base_url()."index.php/vehiculo/tallerMTPS/".$fila->id."/1" ?>" ><img src="<?php echo base_url()?>img/reparacion.png" height="23px"/></a>
+                <?php 
+				if($fila->estado==1)
+				{
+				?>
+                <a rel="leanModal" title="Reportar Anomalía del Vehículo" href="<?php echo base_url()."index.php/vehiculo/controlMtto/".$fila->id ?>" ><img src="<?php echo base_url()?>img/mantenimiento.png" height="20px"/></a>
+                <a rel="leanModal" title="Reparar Vehículo" href="<?php echo base_url()."index.php/vehiculo/mantenimiento_rutinario/".$fila->id ?>" ><img src="<?php echo base_url()?>img/reparacion.png" height="23px"/></a>
+                <?php
+				}
+				?>
             </td>
         </tr>
     <?php } ?>

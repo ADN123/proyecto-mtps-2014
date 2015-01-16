@@ -730,7 +730,7 @@ function solicitudes_por_asignar_depto(){
 			if($id!=NULL) $where=" where v.id_vehiculo='$id'";
 			
 			$consulta="
-			select v.id_vehiculo id, v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
+			select v.id_vehiculo id, v.placa, v.estado, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
 			from tcm_vehiculo as v
 			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
@@ -744,7 +744,7 @@ function solicitudes_por_asignar_depto(){
 			else $where=" where v.estado='$estado'";
 			
 			$consulta="
-			select v.id_vehiculo id, v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
+			select v.id_vehiculo id, v.placa, v.estado, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
 			from tcm_vehiculo as v
 			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
@@ -2059,14 +2059,20 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	/************************************FUNCIÓN QUE MUESTRA LAS TRANSACCIONES DE LOS ARTÍCULOS*********************************/
 	function transaccion_articulo($id=NULL)
 	{
+		$fecha_inicial=date('Y')."-01-01";
+		$fecha_final=date('Y')."-12-31";
+		$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
+		$fecha_final2=date('Y-m-d',strtotime($fecha_final));
 		$where="";
 		if($id!=NULL)
 		{
-			$where=" WHERE tta.id_articulo='$id'";
+			$where=" AND tta.id_articulo='$id'";
 		}
 		
 		$query="SELECT tta.id_transaccion_articulo, tta.tipo_transaccion, tta.cantidad,  DATE_FORMAT(tta.fecha,'%d-%m-%Y') AS fecha,
-				tta.id_articulo FROM tcm_transaccion_articulo as tta".$where;
+				tta.id_articulo FROM tcm_transaccion_articulo as tta
+				where tta.fecha between '$fecha_inicial2' and '$fecha_final2'
+				".$where;
 		$query=$this->db->query($query);
 		return (array)$query->result_array();
 	}
@@ -2251,7 +2257,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$query="select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
 				o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
 				ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
-				v.tipo_combustible, it.id_ingreso_taller, DATE_FORMAT(it.fecha_recepcion,'%d-%m-%Y') as fecha_recepcion, DATE_FORMAT(it.fecha_entrega,'%d-%m-%Y') as fecha_entrega, it.trabajo_solicitado, it.trabajo_solicitado_carroceria, it.notas
+				v.tipo_combustible, it.id_ingreso_taller, DATE_FORMAT(it.fecha_recepcion,'%d-%m-%Y') as fecha_recepcion, DATE_FORMAT(it.fecha_entrega,'%d-%m-%Y') as fecha_entrega, it.trabajo_solicitado,
+				it.trabajo_solicitado_carroceria, it.notas, it.kilometraje_ingreso
 				from tcm_vehiculo as v
 				inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 				inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
@@ -2276,8 +2283,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	{
 		extract($datos);
 		$fecha_recepcion=date('Y-m-d');
-		$consulta="INSERT INTO tcm_ingreso_taller (fecha_recepcion, id_vehiculo, trabajo_solicitado, trabajo_solicitado_carroceria, id_usuario_recibe_taller)
-									VALUES ('$fecha_recepcion', '$id_vehiculo', '$trabajo_solicitado', '$trabajo_solicitado_carroceria', '$id_usuario');";
+		$consulta="INSERT INTO tcm_ingreso_taller (fecha_recepcion, id_vehiculo, trabajo_solicitado, trabajo_solicitado_carroceria, id_usuario_recibe_taller, kilometraje_ingreso)
+									VALUES ('$fecha_recepcion', '$id_vehiculo', '$trabajo_solicitado', '$trabajo_solicitado_carroceria', '$id_usuario_recibe_taller', '$kilometraje_ingreso');";
 		if($this->db->query($consulta))
 		{
 			$bandera=1;
@@ -2405,13 +2412,52 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*********************************************************************************************************************************************/
 	
+	/*******************************FUNCIÓN PARA GUARDAR LOS MANTENIMIENTOS RUTINARIOS DE LOS VEHÍCULOS*****************************************/
+	function guardar_mtto_rutinario($datos)
+	{
+		extract($datos);
+		$fecha=date('Y-m-d');
+		$consulta="INSERT INTO tcm_mantenimiento_rutinario (id_vehiculo, trabajo_realizado, id_empleado_repara, fecha) VALUES ('$id_vehiculo', '$trabajo_realizado', '$id_empleado_repara', '$fecha');";
+		if($this->db->query($consulta))
+		{
+			$bandera2=1;
+			if(!empty($id_articulo))
+			{
+				for($j=0;$j<count($id_articulo);$j++)
+				{
+					$id_art=$id_articulo[$j];
+					$cantidad_utilizada=$cant_usada[$j];
+					
+					$inventario=$this->inventario($id_art);
+					foreach($inventario as $inv)
+					{
+						$cantidad_disponible=$inv['cantidad'];
+					}
+					
+					$cantidad_final=$cantidad_disponible-$cantidad_utilizada;
+					
+					$query2="UPDATE tcm_articulo_bodega SET cantidad='$cantidad_final' WHERE (id_articulo='$id_art');";
+					if($this->db->query($query2))
+					{
+						$query3="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo) VALUES ('SALIDA', '$cantidad_utilizada', '$fecha', '$id_art');";
+						if($this->db->query($query3)) $bandera2=$bandera2*1;
+						else $bandera2=$bandera2*0;
+					}
+				}
+				if($bandera2==1) return true;
+				else return false;
+			}
+		}
+	}
+	/*********************************************************************************************************************************************/
+	
 	/*******************************FUNCIÓN PARA GUARDAR LOS MANTENIMIENTOS DE VEHÍCULOS EN TALLER EXTERNO*****************************************/
 	function alta_taller_MTPS($datos)
 	{
 		extract($datos);
 		$fecha=date('Y-m-d');
 				
-		$consulta="UPDATE tcm_ingreso_taller SET fecha_entrega='$fecha', id_motorista_recibe='$id_motorista_recibe' WHERE id_ingreso_taller='$id_ingreso_taller';";
+		$consulta="UPDATE tcm_ingreso_taller SET fecha_entrega='$fecha', id_motorista_recibe='$id_motorista_recibe', notas='$notas' WHERE id_ingreso_taller='$id_ingreso_taller';";
 		if($this->db->query($consulta))
 		{
 			$consulta2="UPDATE tcm_vehiculo SET estado='1' WHERE (id_vehiculo='$id_vehiculo');";
