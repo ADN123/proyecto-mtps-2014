@@ -1,10 +1,10 @@
 <?php
 
 define("PRESUPUESTO",80);
-define("BODEGA",124);
+define("BODEGA",117);
 define("VEHICULOS",79);
 define("TALLER_INT",116);
-define("TALLER_EXT",125);
+define("TALLER_EXT",118);
 
 class Vehiculo extends CI_Controller
 {
@@ -983,7 +983,8 @@ class Vehiculo extends CI_Controller
 		$data['vehiculo']=$data['vehiculo'][0];
 		$data['revisiones']=$this->transporte_model->consultar_revisiones();
 		$data['revision']=$this->transporte_model->consultar_revisiones2($id);
-		$this->mpdf->mPDF('utf-8','A4-L'); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		
+		$this->mpdf->mPDF('utf-8','A4'); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 		$stylesheet = file_get_contents('css/pdf/solicitud.css'); /*Selecionamos la hoja de estilo del pdf*/
 		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
 		$html = $this->load->view('mantenimiento/hoja_ingreso_taller_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
@@ -993,7 +994,8 @@ class Vehiculo extends CI_Controller
 		//	$html = $this->load->view('transporte/reverso_solicitud_pdf.php', $data, true);
 		//	$this->mpdf->WriteHTML($html,2);
 		//}
-		$this->mpdf->Output(); /*Salida del pdf*/	
+		$this->mpdf->Output(); /*Salida del pdf*/
+		//echo $html;	
 	}
 }
 ?>
