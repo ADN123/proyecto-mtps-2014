@@ -1,19 +1,12 @@
 <?php
 extract($vehiculo);
 ?>
-<table align="center" cellpadding="0" cellspacing="0">
+<br><br><br>
+<table align="center" cellpadding="0" cellspacing="0" width="100%">
 <tr>
-	<td align="right" valign="top"><img src="img/escudo.min.png" width="90px" /></td>
-    <td align="center" valign="top" colspan="2" width="450px">
-    MINISTERIO DE TRABAJO Y PREVISIÓN SOCIAL<br />
-    Departamento de Servicios Generales-Mantenimiento<hr align="center" />
-    </td>
-    <td align="center" valign="middle"><img src="img/mtps_report.jpg" width="110px" /></td>
-</tr>
-<tr>
-<td width="210px">
+<td valign="top" width="200px">
 	<br />
-	<table border="1"  cellpadding="0" cellspacing="0">
+	<table border="1" cellpadding="0" cellspacing="0">
    	  <tr>
         	<th>Interno</th>
             <th>Si</th>
@@ -41,9 +34,9 @@ extract($vehiculo);
 		?>
     </table>
 </td>
-<td>
+<td valign="top" width="190px">
 	<br />
-    <table border="1" style="border:thin" cellpadding="0" cellspacing="0">
+    <table border="1" cellpadding="0" cellspacing="0">
     	<tr>
         	<th>Externo</th>
             <th>Si</th>
@@ -71,14 +64,10 @@ extract($vehiculo);
 		?>
     </table>
 </td>
-<td colspan="2">
-</td>
+<td width="255px" valign="top">&nbsp;</td>
 </tr>
-	<td>
-    <br />
-    </td>
 <tr>
-	<td colspan="4" valign="top">
+	<td colspan="3" valign="top">
 	<table align="center" cellpadding="0" cellspacing="0" border="1" width="800px">
     	<tr>
         	<td width="350px">Nombre de motorista: <strong><?php echo ucwords($motorista) ?></strong></td>
@@ -95,7 +84,7 @@ extract($vehiculo);
    	</td>
 </tr>
 <tr>
-	<td colspan="4">
+	<td colspan="3">
     <br>
     <table align="center" cellpadding="0" cellspacing="0" style="border:dotted" border="1" width="800px">
     	<tr>
@@ -113,20 +102,5 @@ extract($vehiculo);
         <tr><td>FIRMA DE MOTORISTA</td></tr>
     </table>
    	</td>
-</tr>
-<tr>
-	<td align="center" valign="bottom" colspan="4">
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    HOJA DE CONTROL DE ENCARGADO DE MANTENIMIENTO.- <br>
-<u>===========================================</u></td>
 </tr>
 </table>

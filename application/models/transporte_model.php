@@ -2264,9 +2264,11 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	/*********************************************************************************************************************************************/
 	
 	/**********************************FUNCIÓN PARA VER LOS VEHÍCULOS EN TALLER INTERNO***************************************************/
-	function vehiculos_taller_interno($id=0, $estado=NULL, $id_ingreso_taller=NULL)
+	function vehiculos_taller_interno($id=0, $estado=NULL, $id_ingreso_taller=NULL,$rutinario=NULL)
 	{
 		$where="";
+		if($rutinario==NULL) $join="inner";
+		else $join="left";
 		if($id!=0 && $estado!=NULL) $where=" where (v.id_vehiculo='$id' and v.estado='$estado')";
 		elseif($id!=0)	$where=" where v.id_vehiculo='$id'";
 		elseif($estado!=NULL)	$where=" where v.estado='$estado'";
@@ -2287,7 +2289,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
 				inner join org_seccion as o on (v.id_seccion=o.id_seccion)
 				inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
-				inner join tcm_ingreso_taller as it on (it.id_vehiculo=v.id_vehiculo)
+				".$join." join tcm_ingreso_taller as it on (it.id_vehiculo=v.id_vehiculo)
 				left join(select e.id_empleado, e.nombre from tcm_empleado as e) as emp1 on (it.id_motorista_recibe=emp1.id_empleado)
 				left join(select e.id_empleado, e.nombre from tcm_empleado as e) as emp2 on (it.id_usuario_recibe_taller=emp2.id_empleado)
 				".$where."
