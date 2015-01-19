@@ -1,25 +1,19 @@
 <?php
 extract($vehiculo);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-</head>
-<body>
-<table align="center">
+<table align="center" cellpadding="0" cellspacing="0">
 <tr>
-	<td align="center" valign="middle"><img src="<?php echo base_url() ?>img/escudo.min.png" /></td>
-    <td align="center" valign="middle" colspan="2">
+	<td align="right" valign="top"><img src="img/escudo.min.png" width="90px" /></td>
+    <td align="center" valign="top" colspan="2" width="450px">
     MINISTERIO DE TRABAJO Y PREVISIÓN SOCIAL<br />
     Departamento de Servicios Generales-Mantenimiento<hr />
     </td>
-    <td align="center" valign="middle"><img src="<?php echo base_url() ?>img/mtps_report.jpg" /></td>
+    <td align="center" valign="middle"><img src="img/mtps_report.jpg" width="110px" /></td>
 </tr>
 <tr>
-<td>
+<td width="210px">
 	<br />
-	<table border="1" style="border:thin" cellpadding="0" cellspacing="0">
+	<table border="1"  cellpadding="0" cellspacing="0">
    	  <tr>
         	<th>Interno</th>
             <th>Si</th>
@@ -84,12 +78,11 @@ extract($vehiculo);
     <br />
     </td>
 <tr>
-	<td colspan="4">
-	<br />
-    <table align="center" cellpadding="0" cellspacing="0" border="1">
+	<td colspan="4" valign="top">
+	<table align="center" cellpadding="0" cellspacing="0" border="1" width="800px">
     	<tr>
         	<td>Nombre de motorista: <strong><?php echo ucwords($motorista) ?></strong></td>
-            <td align="center" rowspan="8">Trabajo Solicitado: <strong><?php echo $trabajo_solicitado ?></strong></td>
+            <td rowspan="8" valign="top">Trabajo Solicitado: <strong><?php echo $trabajo_solicitado ?></strong></td>
         </tr>
         <tr><td>Kilometraje: <strong><?php echo $kilometraje_ingreso ?></strong></td></tr>
         <tr><td>Marca: <strong><?php echo $marca ?></strong></td></tr>
@@ -103,11 +96,10 @@ extract($vehiculo);
 </tr>
 <tr>
 	<td colspan="4">
-	<br />
-    <table align="center" cellpadding="0" cellspacing="0" border="1">
+    <table align="center" cellpadding="0" cellspacing="0" border="1" width="800px">
     	<tr>
         	<td align="center">Nivel de Combustible:</td>
-            <td align="center" rowspan="4">Trabajo Solicitado en la Carrocería: <strong><?php echo $trabajo_solicitado_carroceria ?></strong></td>
+            <td align="center" rowspan="5">Trabajo Solicitado en la Carrocería: <strong><?php echo $trabajo_solicitado_carroceria ?></strong></td>
         </tr>
         <tr><td>R...../.....M...../.....F</td></tr>
         <tr><td>Firma de entregado para Revisión.</td></tr>
@@ -117,13 +109,11 @@ extract($vehiculo);
         <tr><td>mi entera satisfacción sin problemas mecánicos</td></tr>
         <tr><td>&nbsp;</td></tr>
         <tr><td>F.</td></tr>
-        <tr>FIRMA DE MOTORISTA</tr>
+        <tr><td>FIRMA DE MOTORISTA</td></tr>
     </table>
    	</td>
 </tr>
 </table>
 <br />
 <center>HOJA DE CONTROL DE ENCARGADO DE MANTENIMIENTO.-</center>
-<center><u>=====================================================================</u></center>
-</body>
-</html>
+<center><u>=============================================================</u></center>
