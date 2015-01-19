@@ -1684,7 +1684,7 @@ function consumo_herramientas($id_seccion, $id_fuente_fondo, $fecha_inicio, $fec
 				}
 				$where2= $fechaF1.$seccionF.$fuenteF;
 
-			    $q="SELECT h.nombre , nombre_seccion  as seccion , SUM(vv.cantidad_vales) as vales , SUM(galones) as gal  FROM tcm_herramienta as h 
+			    $q="SELECT h.nombre , nombre_seccion  as seccion , SUM(vv.cantidad_vales) as vales ,ROUND( SUM(galones), 2 ) as gal  FROM tcm_herramienta as h 
 						INNER JOIN tcm_consumo_vehiculo_valores AS vv USING(id_herramienta)
 						INNER JOIN tcm_consumo_vehiculo USING(id_consumo_vehiculo)
 						INNER JOIN tcm_consumo c USING(id_consumo)
