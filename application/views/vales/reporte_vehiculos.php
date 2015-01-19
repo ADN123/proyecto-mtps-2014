@@ -48,13 +48,18 @@
                     </select>               
             </p>
             <p align="center">
+                    <input name="salida" value="1" checked type="radio">  PDF 
+                    <input name="salida" value="2"  type="radio">   XLS
+
+            </p>
+            <p align="center">
                     <button type="button" id="Filtrar" class="button tam-1" >Filtrar</button>                    
-                    <button   id="imp1" class="button tam-1" >Imprimir</button
+                    <button   id="imp1" class="button tam-1" >Imprimir</button>
 
             </p>
 </form>
 <br><br>
-
+<h3>Vehiculos</h3>
 <table cellspacing='0' align='center' class='table_design' id="datos" >
             <thead>
                <th>
@@ -80,7 +85,25 @@
             <tbody>
             </tbody>
         </table>
-
+<h3>Herramientas y otros articulos</h3>
+<table cellspacing='0' align='center' class='table_design' id="datos2" >
+            <thead> 
+               <th>
+                    Nombre
+                </th>
+                <th>
+                    Sección
+                </th>
+                <th>
+                    Vales aplicados
+                </th>
+                 <th>
+                    Combustible Aplicado (gal)
+                </th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
 
     <!----------------------------------------------------------------------------------------------------------------- -->
 
@@ -95,7 +118,7 @@
         });
 
     function reporte(formu){  
-                $.ajax({
+                $.ajax({  //para vehiculos
             async:  true, 
             url:    base_url()+"index.php/vales/reporte_vehiculo_json",
             dataType:"json",
@@ -106,7 +129,22 @@
 
                 },
             error:function(data){
-                    alertify.alert('Error al cargar datos');
+                    alertify.alert('Error al cargar datos de vehiculos');
+
+                }
+        });          
+                    $.ajax({  //para vehiculos
+            async:  true, 
+            url:    base_url()+"index.php/vales/reporte_vehiculo_json/2",
+            dataType:"json",
+             type: "POST",
+            data: formu,
+            success: function(data){
+                tabla2_2(data) 
+
+                },
+            error:function(data){
+                    alertify.alert('Error al cargar datos de Herramientas');
 
                 }
         });          

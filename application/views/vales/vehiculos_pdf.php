@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <?php if($base){
-     echo '<link href="'.base_url().'/css/kendo.common.min.css" rel="stylesheet" type="text/css" />';
+     echo '<link href="'.base_url().'/css/style-base.css" rel="stylesheet" type="text/css" />';
  } ?>
 </head>
 <body>
@@ -64,6 +64,7 @@
 		?>
     </tbody>
     </table>
+    
 </body>
         <br><br>
         <p style="width:650px; margin:auto;"> <?php echo$f; ?></p>

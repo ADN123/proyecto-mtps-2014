@@ -81,7 +81,8 @@
 
     $("#pass1").validacion({       
         men: "Por favor ingrese su contraseña",
-        lonMin: 5 
+        lonMin: 5,
+            req:false 
      });
     $("#pass2").validacion({       
         men: "Por favor ingrese su contraseña",
