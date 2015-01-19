@@ -6,7 +6,7 @@ extract($vehiculo);
 	<td align="right" valign="top"><img src="img/escudo.min.png" width="90px" /></td>
     <td align="center" valign="top" colspan="2" width="450px">
     MINISTERIO DE TRABAJO Y PREVISIÓN SOCIAL<br />
-    Departamento de Servicios Generales-Mantenimiento<hr />
+    Departamento de Servicios Generales-Mantenimiento<hr align="center" />
     </td>
     <td align="center" valign="middle"><img src="img/mtps_report.jpg" width="110px" /></td>
 </tr>
@@ -81,10 +81,10 @@ extract($vehiculo);
 	<td colspan="4" valign="top">
 	<table align="center" cellpadding="0" cellspacing="0" border="1" width="800px">
     	<tr>
-        	<td>Nombre de motorista: <strong><?php echo ucwords($motorista) ?></strong></td>
-            <td rowspan="8" valign="top">Trabajo Solicitado: <strong><?php echo $trabajo_solicitado ?></strong></td>
+        	<td width="350px">Nombre de motorista: <strong><?php echo ucwords($motorista) ?></strong></td>
+            <td align="center" valign="top">Trabajo Solicitado:</td>
         </tr>
-        <tr><td>Kilometraje: <strong><?php echo $kilometraje_ingreso ?></strong></td></tr>
+        <tr><td>Kilometraje: <strong><?php echo $kilometraje_ingreso ?></strong></td><td rowspan="7" valign="top" align="justify"><strong><?php echo $trabajo_solicitado ?></strong></td></tr>
         <tr><td>Marca: <strong><?php echo $marca ?></strong></td></tr>
         <tr><td>Año: <strong><?php echo $anio ?></strong> Placa: <strong><?php echo $placa ?></strong></td></tr>
         <tr><td>Modelo: <strong><?php echo $modelo ?></strong></td></tr>
@@ -96,24 +96,37 @@ extract($vehiculo);
 </tr>
 <tr>
 	<td colspan="4">
-    <table align="center" cellpadding="0" cellspacing="0" border="1" width="800px">
+    <br>
+    <table align="center" cellpadding="0" cellspacing="0" style="border:dotted" border="1" width="800px">
     	<tr>
         	<td align="center">Nivel de Combustible:</td>
-            <td align="center" rowspan="5">Trabajo Solicitado en la Carrocería: <strong><?php echo $trabajo_solicitado_carroceria ?></strong></td>
+            <td align="center" valign="top">Trabajo Solicitado en la Carrocería: </td>
         </tr>
-        <tr><td>R...../.....M...../.....F</td></tr>
+        <tr><td>R...../.....M...../.....F</td><td align="justify" valign="top" rowspan="4"><strong><?php echo $trabajo_solicitado_carroceria ?></strong></td></tr>
         <tr><td>Firma de entregado para Revisión.</td></tr>
         <tr><td>&nbsp;</td></tr>
-        <tr><td>F.</td></tr>
-        <tr><td>Por este medio hago constar que estoy recibiendo el vehículo a</td><td rowspan="5">NOTAS: <strong><?php echo $notas ?></strong></td></tr>
-        <tr><td>mi entera satisfacción sin problemas mecánicos</td></tr>
+        <tr><td>F. <strong><?php echo ucwords($persona_entrega) ?></strong></td></tr>
+        <tr><td>Por este medio hago constar que estoy recibiendo el vehículo a</td><td valign="top" align="center">NOTAS:</strong></td></tr>
+        <tr><td>mi entera satisfacción sin problemas mecánicos</td><td valign="top" align="justify" rowspan="4"><strong><?php echo $notas ?></td></tr>
         <tr><td>&nbsp;</td></tr>
-        <tr><td>F.</td></tr>
+        <tr><td>F. <strong><?php echo ucwords($persona_recibe) ?></strong></td></tr>
         <tr><td>FIRMA DE MOTORISTA</td></tr>
     </table>
    	</td>
 </tr>
+<tr>
+	<td align="center" valign="bottom" colspan="4">
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    HOJA DE CONTROL DE ENCARGADO DE MANTENIMIENTO.- <br>
+<u>===========================================</u></td>
+</tr>
 </table>
-<br />
-<center>HOJA DE CONTROL DE ENCARGADO DE MANTENIMIENTO.-</center>
-<center><u>=============================================================</u></center>
