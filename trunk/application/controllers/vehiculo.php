@@ -997,5 +997,20 @@ class Vehiculo extends CI_Controller
 		$this->mpdf->Output(); /*Salida del pdf*/
 		//echo $html;	
 	}
+	
+	/*
+	*	Nombre: hoja_mtto_preventivo
+	*	Objetivo: llama a la vista de hoja_mtto_preventivo para observar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 19/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function hoja_mtto_preventivo()
+	{
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculos_ingreso_taller();
+		pantalla('mantenimiento/hoja_mtto_preventivo',$data);
+	}
 }
 ?>

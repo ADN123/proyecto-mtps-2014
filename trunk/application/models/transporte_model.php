@@ -2226,6 +2226,24 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*********************************************************************************************************************************************/
 	
+	/*******************FUNCIÓN PARA OBTENER LOS VEHÍCULOS QUE HAN PASADO POR MANTENIMIENTO PREVENTIVO***************************************/
+	function consultar_vehiculos_ingreso_taller($id_ingreso_taller=NULL)
+	{
+		$where="";
+		if($id_ingreso_taller!=NULL) $where=" where tit.id_ingreso_taller='$id_ingreso_taller'";
+			$query="SELECT tit.id_ingreso_taller, COALESCE(DATE_FORMAT(tit.fecha_entrega,'%d-%m-%Y'),'No ha sido dado de alta') as fecha_entrega,
+					DATE_FORMAT(tit.fecha_recepcion,'%d-%m-%Y') as fecha_recepcion, tit.id_vehiculo,
+					v.placa, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase
+					FROM tcm_ingreso_taller as tit
+					INNER JOIN tcm_vehiculo as v on (tit.id_vehiculo=v.id_vehiculo)
+					inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+					inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+					inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+	
 	/**********************************FUNCIÓN PARA OBTENER LOS MANTENIMIENTOS A UN VEHÍCULO***************************************************/
 	function consultar_mantenimientos($id_vehiculo,$id_ingreso_taller=NULL)
 	{
@@ -2258,7 +2276,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
 				ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
 				v.tipo_combustible, it.id_ingreso_taller, DATE_FORMAT(it.fecha_recepcion,'%d-%m-%Y') as fecha_recepcion, DATE_FORMAT(it.fecha_entrega,'%d-%m-%Y') as fecha_entrega, it.trabajo_solicitado,
-				it.trabajo_solicitado_carroceria, it.notas, it.kilometraje_ingreso
+				it.trabajo_solicitado_carroceria, it.notas, it.kilometraje_ingreso, emp1.nombre as persona_recibe, emp2.nombre as persona_entrega
 				from tcm_vehiculo as v
 				inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 				inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
@@ -2269,7 +2287,9 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
 				inner join org_seccion as o on (v.id_seccion=o.id_seccion)
 				inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
-				left join tcm_ingreso_taller as it on (it.id_vehiculo=v.id_vehiculo)
+				inner join tcm_ingreso_taller as it on (it.id_vehiculo=v.id_vehiculo)
+				left join(select e.id_empleado, e.nombre from tcm_empleado as e) as emp1 on (it.id_motorista_recibe=emp1.id_empleado)
+				left join(select e.id_empleado, e.nombre from tcm_empleado as e) as emp2 on (it.id_usuario_recibe_taller=emp2.id_empleado)
 				".$where."
 				GROUP BY v.placa,motorista,seccion,marca,modelo,clase,condicion";
 		$query=$this->db->query($query);
