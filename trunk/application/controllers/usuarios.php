@@ -584,7 +584,7 @@ class Usuarios extends CI_Controller
 			$id_usuario=$this->session->userdata('id_usuario');
 		
 
-			$v=$this->seguridad_model->consultar_usuario($login,$clave);  //Verificación en base de datos
+			$v=$this->seguridad_model->consultar_usuario($login,$clave,true);  //Verificación en base de datos
 			
 		if($v['id_usuario']!=0){/*El usuario y la contraseñan son correctos*/
 			if($_POST[pass2]==$_POST[pass3]){

@@ -1662,5 +1662,38 @@ function cantidades_requisiciones($id_seccion=NULL, $mes=NULL, $id_fuente_fondo=
     	$query=$this->db->query($q);
     return $query->result_array();	
 }
+
+function consumo_herramientas($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin)
+{
+				$fuenteF="";
+				$seccionF="";
+				
+				if($fecha_inicio !=NULL && $fecha_fin!=NULL){
+				
+
+					$fechaF1=" WHERE  c.fecha_factura > DATE('".$fecha_inicio."') AND c.fecha_factura < DATE('".$fecha_fin."')";
+
+				}
+				if($id_seccion!=NULL){
+
+					$seccionF=" AND id_seccion_vale = ".$id_seccion; //solo al where 2
+				}
+				if($id_fuente_fondo!=NULL){
+
+					$fuenteF=" AND id_fuente_fondo = ".$id_fuente_fondo;
+				}
+				$where2= $fechaF1.$seccionF.$fuenteF;
+
+			    $q="SELECT h.nombre , nombre_seccion  as seccion , SUM(vv.cantidad_vales) as vales , SUM(galones) as gal  FROM tcm_herramienta as h 
+						INNER JOIN tcm_consumo_vehiculo_valores AS vv USING(id_herramienta)
+						INNER JOIN tcm_consumo_vehiculo USING(id_consumo_vehiculo)
+						INNER JOIN tcm_consumo c USING(id_consumo)
+						INNER JOIN org_seccion ON id_seccion_vale = id_seccion
+						".$where2."
+						GROUP BY h.id_herramienta";
+			    	$query=$this->db->query($q);
+    				return $query->result_array();					
+
+}
 }
 ?>

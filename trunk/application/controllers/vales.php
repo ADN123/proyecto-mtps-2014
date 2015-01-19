@@ -970,7 +970,17 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 					$tip_gas_bruto=$this->input->post('tip_gas');
 					$cantidad_consumo=$this->input->post('cantidad_consumo');
 					
-					
+					//esto se agrego debido a que no siempre se pedira el tipo de combustible
+					if ($valor_diesel=="") {
+						$valor_diesel=0;
+					}
+					if ($valor_super=="") {
+						$valor_super=0;
+					}
+					if ($valor_regular=="") {
+						$valor_regular=0;
+					}
+					//esto fin de inicializacion de valores de combustibles
 					if(count($tip_gas_bruto)>count($id_vehiculo)) {
 						for($x=1;$x<count($tip_gas_bruto);$x++) {
 							if($x%2!=0)
@@ -1747,7 +1757,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		}		
 	}
 	
-	function reporte_vehiculo_json()
+	function reporte_vehiculo_json($op=1)
 	{
 
 
@@ -1775,19 +1785,26 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 				$id_fuente_fondo= NULL;
 			}			
 
-			$data=$this->vales_model->consumo_vehiculo($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+			if ($op==1) {
+				$data=$this->vales_model->consumo_vehiculo($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+			}elseif ($op==2) {
+				$data=$this->vales_model->consumo_herramientas($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+			}
+
 			echo json_encode($data);	
 
 		}else {
 			echo 'No tiene permisos para acceder';
 		}		
 	}
-	function reporte_vehiculo_pdf($xls=NULL)
+	function reporte_vehiculo_pdf()
 	{
 
 
 			$id_seccion=$this->input->post('id_seccion');
+
 			$id_fuente_fondo=$this->input->post('id_fuente_fondo');
+			$salida=$this->input->post('salida');
 			
 					//para formar mensaje
 			$f="Consumo de vales de combustible aplicacados a vehiculos";
@@ -1818,9 +1835,12 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 				$f.=" con fuente de fondo ".$_POST['id_fuente_fondo_input'];	
 			}
 			$data['f']=$f;			
-			$data['base']=FALSE;
-		$data['datos']=$this->vales_model->consumo_vehiculo($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
+			$data['datos']=$this->vales_model->consumo_vehiculo($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
 				
+<<<<<<< .mine
+		
+		if ($salida==2) { //excel
+=======
 
 		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 		$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
@@ -1828,18 +1848,31 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
 		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
 		if ($xls!=NULL) {
+>>>>>>> .r442
 
 			header("Content-type: application/octet-stream");
 			header("Content-Disposition: attachment; filename=vehiculos.xls");
 			header("Pragma: no-cache");
 			header("Expires: 0");
-			
-			echo base_url();
+			$data['base']=true;
 			$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 			echo $html;
-
-
+		}elseif ($salida==1) {
+			$data['base']=false;
+			$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+			$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
+			$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+			$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
+			$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
+			$this->mpdf->Output(); /*Salida del pdf*/	
+			# code...
+		}else{
+			$data['base']=true;
+			$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+			echo $html;
 		}
+<<<<<<< .mine
+=======
 
 		//if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
 		//	$this->mpdf->AddPage();
@@ -1849,6 +1882,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 		$this->mpdf->Output(); //Salida del pdf */	
 		//echo $html;
 	//	echo "<pre>$fecha_inicio m  $fecha_fin </pre>";
+>>>>>>> .r442
 	
 	}
 		/*

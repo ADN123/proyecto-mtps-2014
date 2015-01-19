@@ -261,6 +261,34 @@ function tabla2 (json) {
             $('#datos').append(total);
 
 }
+function tabla2_2(json) {
+                var fila, total, suma_vales, suma_gal, suma_rec;
+                suma_vales=suma_rec=suma_gal=0;
+
+            $('#datos2 tbody').remove();        
+            for (i=0;i<json.length;i++) {   
+            suma_vales+=Number(json[i].vales);
+            var g=Number(json[i].gal);
+            suma_gal+=g;
+
+             fila= "<tr>" +
+              "<td align='center'>" + json[i].nombre + "</td>" +
+              "<td align='center'>" + json[i].seccion + "</td>" +
+              "<td align='center'>" + json[i].vales + "</td>" +
+              "<td align='center'>" + g.toFixed(2) + "</td>" +
+            "</tr>";    
+                $('#datos2').append(fila)    
+                }  
+
+                var total= "<tr>" +
+              "<td align='center'><strong>TOTAL</strong></td>" +
+              "<td align='center'></td>" +
+              "<td align='center'><strong>" + suma_vales + "</strong></td>" +
+              "<td align='center'><strong>" + suma_gal.toFixed(2) + "</strong></td>" +
+            "</tr>";    
+            $('#datos2').append(total);
+
+}
 
 function tabla3 (json) {
                 var fila;
