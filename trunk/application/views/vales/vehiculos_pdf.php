@@ -19,18 +19,20 @@
         </tr>
         <tr>
         	<td colspan="2" align="center">
-            	<strong id="titulo">CONSUMO EN VEHICULOS</strong>
+            	<strong id="titulo">CONSUMO EN VEHICULOS Y HERRAMIENTAS</strong>
             </td>
         </tr>
   	</table>
     <br>
+    <h4 align="center">Vehiculos</h4>
+
     <table align="center"   cellspacing="0" class='table_design'>    
         <thead>
         <tr>
             <th>Placa</th>
             <th>Marca</th>
             <th>Vales aplicados</th>
-            <th>Combustible Aplicado (gal)</th>
+            <th>Combustible aplicado (gal)</th>
             <th>Recorrido (Km)</th>  
             <th>Rendimiento (Km/gal)</th>             
         </tr>
@@ -64,9 +66,48 @@
 		?>
     </tbody>
     </table>
-    
+        <br>
+        <h4 align="center">Herramientas</h4>
+        <br>
+        <table align="center"   cellspacing="0" class='table_design'>    
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Sección</th>
+            <th>Vales aplicados</th>
+            <th>Combustible aplicado (gal)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        $s4=$s5=0;
+            foreach($herramientas as $d)
+            {    
+                $s4+=$d['vales'];
+                $s5+=$d['gal'];
+                echo "<tr>";
+                echo "<td>".$d['nombre']."</td>";
+                echo "<td>".$d['descripcion']."</td>";
+                echo "<td>".$d['vales']."</td>";
+                echo "<td>".$d['gal']."</td>";
+                echo "</tr>";
+            }
+
+                echo "<tr>";
+                echo "<td><strong>TOTAL</strong></td>";
+                echo "<td></td>";
+                echo "<td><strong>".$s4."</strong></td>";
+                echo "<td><strong>".$s5."</strong></td>";
+
+                echo "</tr>";
+                $st1=$s1+$s4;
+                $st2=$s2+$s5;
+        ?>
+    </tbody>
+    </table>
+
 </body>
         <br><br>
-        <p style="width:650px; margin:auto;"> <?php echo$f; ?></p>
+        <p style="width:650px; margin:auto;"> <?php echo$f.". Total de vales aplicados <strong>".$st1."</strong>. para <strong>".$st2."</strong> galones";  ?></p>
 
 </html>

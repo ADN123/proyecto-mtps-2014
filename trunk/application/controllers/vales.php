@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	define("INGRESO",69);
 	define("REQUISICION",81);
 	define("AUTORIZAR",86);
@@ -946,7 +946,8 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 	*	Última Modificación: 07/07/2014
 	*	Observaciones: Falta la creacion de la tabla "configuraciones" para saber si los vales se pueden "mezclar".
 	*/
-	function guardar_consumo()
+	
+function guardar_consumo()
 	{
 		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO); 
 		
@@ -1047,6 +1048,10 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 			echo 'No tiene permisos para acceder';
 		}	
 	}
+
+	
+
+
 
 	/*	
 	*	Nombre: vales a consumir
@@ -1797,7 +1802,8 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 			echo 'No tiene permisos para acceder';
 		}		
 	}
-	function reporte_vehiculo_pdf()
+	
+function reporte_vehiculo_pdf()
 	{
 
 
@@ -1836,19 +1842,9 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 			}
 			$data['f']=$f;			
 			$data['datos']=$this->vales_model->consumo_vehiculo($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
-				
-<<<<<<< .mine
-		
+			$data['herramientas']=$this->vales_model->consumo_herramientas($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin);
 		if ($salida==2) { //excel
-=======
 
-		$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
-		$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
-		$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
-		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
-		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
-		if ($xls!=NULL) {
->>>>>>> .r442
 
 			header("Content-type: application/octet-stream");
 			header("Content-Disposition: attachment; filename=vehiculos.xls");
@@ -1857,7 +1853,7 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 			$data['base']=true;
 			$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 			echo $html;
-		}elseif ($salida==1) {
+		}elseif ($salida==1) { //PDF
 			$data['base']=false;
 			$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 			$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
@@ -1866,26 +1862,16 @@ $data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usu
 			$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
 			$this->mpdf->Output(); /*Salida del pdf*/	
 			# code...
-		}else{
+		}else{ //HTML
 			$data['base']=true;
 			$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 			echo $html;
 		}
-<<<<<<< .mine
-=======
 
-		//if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
-		//	$this->mpdf->AddPage();
-		//	$html = $this->load->view('transporte/reverso_solicitud_pdf.php', $data, true);
-		//	$this->mpdf->WriteHTML($html,2);
-		//}
-		$this->mpdf->Output(); //Salida del pdf */	
-		//echo $html;
-	//	echo "<pre>$fecha_inicio m  $fecha_fin </pre>";
->>>>>>> .r442
 	
 	}
-		/*
+
+			/*
 	*	Nombre: asingacion de vehiculos
 	*	Objetivo: esta funcion junto con las que le siguen son para darle mantenimiento a la asignacion de vehiculos
 	*	Hecha por: Jhonatan
