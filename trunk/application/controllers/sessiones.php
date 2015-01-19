@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 
 define("SERVER_MTPS","192.168.1.200");
 
@@ -256,6 +256,7 @@ class Sessiones extends CI_Controller {
 		$securimage = new Securimage();
 		$correo=$this->input->post('nr');
 		$captcha_code=$this->input->post('captcha_code');
+
 		if ($securimage->check($captcha_code)) {
 			$letras = "ABCDEFGHJKLMNPRSTUVWXYZ98765432";
 			$contra=str_shuffle($letras);
