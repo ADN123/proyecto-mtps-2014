@@ -235,7 +235,7 @@ class Vehiculo extends CI_Controller
 	
 	function mantenimiento_rutinario($id_v)
 	{
-		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,1);
+		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,1,NULL,1);
 		$data['vehiculos']=$data['vehiculos'][0];
 		$data['inventario']=$this->transporte_model->inventario();
 		$data['empleado']=$this->transporte_model->consultar_empleados();
@@ -985,6 +985,24 @@ class Vehiculo extends CI_Controller
 		$data['revision']=$this->transporte_model->consultar_revisiones2($id);
 		
 		$this->mpdf->mPDF('utf-8','A4'); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		$this->mpdf->SetHTMLHeader('
+								<table align="center" cellpadding="0" cellspacing="0">
+									<tr>
+										<td align="right" valign="top"><img src="img/escudo.min.png" width="90px" /></td>
+										<td align="center" valign="top" colspan="2" width="450px">
+										MINISTERIO DE TRABAJO Y PREVISIÓN SOCIAL<br />
+										Departamento de Servicios Generales-Mantenimiento<hr align="center" />
+										</td>
+										<td align="center" valign="middle"><img src="img/mtps_report.jpg" width="110px" /></td>
+									</tr>
+								</table>
+								');
+		$this->mpdf->SetHTMLFooter('
+								<table align="center">
+								<tr><td align="center">HOJA DE CONTROL DE ENCARGADO DE MANTENIMIENTO.-</td></tr>
+								<tr><td align="center"><u>=========================================================</u></td></tr>
+								</table>
+								');
 		$stylesheet = file_get_contents('css/pdf/solicitud.css'); /*Selecionamos la hoja de estilo del pdf*/
 		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
 		$html = $this->load->view('mantenimiento/hoja_ingreso_taller_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
