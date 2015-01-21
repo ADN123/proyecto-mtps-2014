@@ -8,13 +8,13 @@
 	define("ESTADO",111);
 	define("VER_REQUISICIONES",89);
 	define("CONSUMO_S",114);	//consumo vr asignacion
-	define("CONSUMO_H",114);	//consumo historico
+	define("CONSUMO_H",123);	//consumo historico
 	define("CONSUMO_V",115);	//consumo por vehiculo
-	define("LIQUIDACION",115); 
+	define("LIQUIDACION",138); 
 	define("REQUISICION_PDF",115); ///no esta 
 	define("HERRAMIENTA",115); ///son herramientas y otros posibles consumidores de combustibles
 	define("ONLY_SOURCE",1); ///hay que cambiar a 0 si los vales de banco mundial y goes se trabajaran como uno solo
-	define("ADMIN_FACTURA",115); 
+	define("ADMIN_FACTURA",137); 
 
 class Vales extends CI_Controller
 {
