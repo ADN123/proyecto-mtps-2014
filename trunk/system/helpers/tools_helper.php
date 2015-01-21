@@ -319,10 +319,16 @@ function restar_mes($mes=NULL,$rest=NULL)
 	}
 	
 	$m=$m-$rest;
-	if($m<=0){
-		$m=13-$rest;
+	//echo $m;
+	if($m<0){
+		//$m=13-$rest;
+		$m=12-(-$m);
 		$a--;
 	}	
+	if($m==0){
+		$m=12;
+		$a--;
+	}
 
 
 	if($m<10){ ///para que se mantenga el formato de dos digitos en mes
