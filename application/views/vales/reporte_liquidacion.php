@@ -55,6 +55,8 @@
                     ?>
                                                                 
                     </select>
+                    <input name="salida" value="1" checked type="radio">  PDF 
+                    <input name="salida" value="2"  type="radio">   XLS
 
             </p>
             <p align="center">                   

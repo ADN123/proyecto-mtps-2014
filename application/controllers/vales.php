@@ -9,10 +9,11 @@
 	define("VER_REQUISICIONES",89);
 	define("CONSUMO_S",114);	//consumo vr asignacion
 	define("CONSUMO_H",114);	//consumo historico
-	define("CONSUMO_V",115);
+	define("CONSUMO_V",115);	//consumo por vehiculo
+	define("LIQUIDACION",115); 
 	define("REQUISICION_PDF",115); ///no esta 
 	define("HERRAMIENTA",115); ///son herramientas y otros posibles consumidores de combustibles
-	define("ONLY_SOURCE",1); ///son herramientas y otros posibles consumidores de combustibles
+	define("ONLY_SOURCE",1); ///hay que cambiar a 0 si los vales de banco mundial y goes se trabajaran como uno solo
 
 class Vales extends CI_Controller
 {
@@ -288,6 +289,7 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 			}else{			
 				$temp= $this->vales_model->asignaciones($_POST['id_seccion'],$_POST['id_fuente_fondo']);			
 				$_POST['asignado']=$temp[0][cantidad];
+
 			}
 			$this->db->trans_start();
 
@@ -313,15 +315,17 @@ function consultar_refuerzo($id_seccion, $id_fuente_fondo, $mes)
 						}
 					}
 
-					//proceso para guardar las series de vales sobrantes
-					$sobraInfo= array('bandera' => 1,
-					  'id_fuente_fondo'=>$_POST[id_fuente_fondo],
-					  'id_seccion'=>$_POST[id_seccion],
-					  'mes'=>restar_mes($_POST[mes],1) );
+					if($_POST['refuerzo']!=1){
+						//proceso para guardar las series de vales sobrantes
+						$sobraInfo= array('bandera' => 1,
+						  'id_fuente_fondo'=>$_POST[id_fuente_fondo],
+						  'id_seccion'=>$_POST[id_seccion],
+						  'mes'=>restar_mes($_POST[mes],1) );
 
-					$r=$this->vales_model->simular_buscar_requisicion_vale($sobraInfo,1);
-					$this->vales_model->insertar_sobrante($r, $sobraInfo);
-					//fin del proceso de sobrantes
+						$r=$this->vales_model->simular_buscar_requisicion_vale($sobraInfo,1);
+						$this->vales_model->insertar_sobrante($r, $sobraInfo);
+						//fin del proceso de sobrantes
+					}
 					$proce=1;
 
 					deleteform($_POST);
@@ -2151,7 +2155,7 @@ function asignacion_vehiculo()
 
 function reporte_liquidacion()
 	{
-		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),CONSUMO_S); /*Verificacion de permiso para crear requisiciones*/
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),LIQUIDACION); /*Verificacion de permiso para crear requisiciones*/
 		$url='vales/reporte_liquidacion';
 		$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 		//$data['id_permiso']=$permiso;
@@ -2183,8 +2187,7 @@ function reporte_liquidacion()
 			/*echo "<br>  id seccion ".$id_seccion['id_seccion']." permiso ".$data['id_permiso'];
 			print_r($data['oficinas']);  */
 			pantalla($url,$data);	
-		}
-		else {
+		}else {
 			echo 'No tiene permisos para acceder';
 		}
 		
@@ -2192,29 +2195,73 @@ function reporte_liquidacion()
 
 function liquidacion_pdf()
 {		
-		
-		extract($_POST);
-			$data['mesn']= $mes_input;
-			$data['seccion']= $id_seccion_input;
-		if($id_seccion==0){ //liquidacion general
-			$data['l']=$this->vales_model->liquidacion_mensual($mes, $id_fuente_fondo);	
-			$html = $this->load->view('vales/liquidacion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
-			$this->mpdf->mPDF('utf-8','letter-L',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
-		}else{ //liquidacion por seccion
-			//$data['recibidos1']$this->vales_model->recibidos1($id_seccion,$mes);
-			$req=$this->vales_model->cantidades_requisiciones($mes,$id_seccion, $id_fuente_fondo);
-			$req=$req[0];
-			print_r($req);
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),LIQUIDACION); /*Verificacion de permiso */		
+		if($data['id_permiso']!=NULL) {
+				//DATOS GENERALES	
+				extract($_POST);
+
+				$data['mesn']= $mes_input;
+				$mes1=restar_mes($mes,1); //le resta un mes
+				$mes2=restar_mes($mes,2); //le resta dos meses
+				$data['seccion']= $id_seccion_input;
+				$data['mesn1']=$this->vales_model->name_mes($mes1);
+				$data['mesn2']=$this->vales_model->name_mes($mes2);
+				$data['base']=($salida==2);
+				
+					//DEFINICION DE TIPO DE REPORTE
+				$html="";
+			if($id_seccion==0){ //liquidacion general
+				$data['l']=$this->vales_model->liquidacion_mensual($mes, $id_fuente_fondo);	
+				$html = $this->load->view('vales/liquidacion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+				$this->mpdf->mPDF('utf-8','letter-L',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+			}else{ //liquidacion por seccion
+				
+				$req=$this->vales_model->cantidades_requisiciones($id_seccion,$mes, $id_fuente_fondo);
+				$req=$req[0];
 
 
-			$html = $this->load->view('vales/liquidacion_seccion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
-			$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+				$data['s_entregada']=$this->vales_model->cantidad_entregada($id_seccion,$mes1, $id_fuente_fondo);			
+				$data['s_sobrante']=$this->vales_model->cantidad_sobrante($id_seccion,$mes2, $id_fuente_fondo);			
+				$a_consumir= array_merge($data['s_sobrante'],$data['s_entregada']);
+				$data['consumo_clase']=$this->vales_model->consumo_clase($id_seccion,$mes1, $id_fuente_fondo);
+				if (sizeof($data['consumo_clase'])>12) { //para no hacer una lista demasiado grande de vehiculos
+					$data['consumo_clase']=$this->vales_model->consumo_clase($id_seccion,$mes1, $id_fuente_fondo,true);
+				}
+				$temp=$this->vales_model->simular_consumo_liquidacion($a_consumir, $data['consumo_clase']);
+				$data['s_consumida']=$temp['c'];
+				$data['s_sobrante2']=$temp['s'];
+				$data['vacio']=" <tr><td>--</td><td>--</td><td>--</td></tr>"; 
+				$data['asignado']=$this->vales_model->consultar_asignacion($id_seccion, $mesn, $id_fuente_fondo);
+			//	echo "<pre>"; 		print_r($data);		echo "</pre>"; 
 
+				$html = $this->load->view('vales/liquidacion_seccion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+				$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+
+			}
+
+			if ($salida==2) { //excel
+
+				header("Content-type: application/octet-stream");
+				header("Content-Disposition: attachment; filename=liquidacion.xls");
+				header("Pragma: no-cache");
+				header("Expires: 0");
+				echo $html;
+			}elseif ($salida==1) { //PDF
+
+				$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
+				$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
+				$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
+				$this->mpdf->Output(); /*Salida del pdf*/	
+				# code...
+			}else{ //HTML
+				$data['base']=true;
+				$html = $this->load->view('vales/vehiculos_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+				echo $html;
+			}
+		}else{
+			echo 'No tiene permisos para acceder';	
 		}
-		$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
-		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
-		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/	
-		//$this->mpdf->Output(); /*Salida del pdf*/	
+
 
 }
 //////////////////////////Funciones de testeo
@@ -2222,15 +2269,10 @@ function liquidacion_pdf()
 
 function mostrar_form($mes=NULL,$rest=NULL)
 {
-	//print_r($_SESSION['form']);	
-	$login="ana.saldana";
-
-	$v=$this->seguridad_model->consultar_usuario2($login); //verifica únicamente por el nombre de usuario
-	echo "<pre>"; 
-	echo getUltimoDiaMes(); 
-	echo "</pre>";
-
-
+				echo "<pre>";
+			$mes2=restar_mes($mes,$rest); //le resta dos meses
+			echo "<br>".$mes2;
+				echo "</pre>";
 
 }
 

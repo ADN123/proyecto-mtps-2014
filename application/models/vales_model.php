@@ -1599,8 +1599,20 @@ function consultar_seccion($id_seccion=NULL)
 function meses_registrados()
    {
    	$query=$this->db->query(" SET lc_time_names = 'es_ES'");
-   	$q="SELECT DATE_FORMAT(CONCAT(SUBSTR(mes,1,4),'-', SUBSTR(mes,5,6),'-01' ),'%M %Y') AS mesn, mes  
-   					FROM tcm_requisicion GROUP BY mes ORDER BY mes DESC";
+   	$q="SELECT * FROM (
+				 SELECT
+					DATE_FORMAT(CONCAT(SUBSTR(mes, 1, 4),'-',SUBSTR(mes, 5, 6),'-01'),'%M %Y') AS mesn,
+						mes
+				FROM 	tcm_requisicion
+				GROUP BY
+					mes
+				) as x 
+				UNION 
+				SELECT DATE_FORMAT(CURDATE(),'%M %Y') mes_nombre, DATE_FORMAT(CURDATE(),'%Y%m') mes
+				UNION 
+				SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL 15 DAY),'%M %Y') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL 15 DAY),'%Y%m') mes 
+				ORDER BY
+					mes DESC";
     $query=$this->db->query($q);
     return $query->result_array();
    }   
@@ -1629,17 +1641,20 @@ function name_mes($mes)
 {
 	   	$query=$this->db->query(" SET lc_time_names = 'es_ES'");
 	   	$query=$this->db->query("SET @mes:= '$mes';");
-   	$q="SELECT DATE_FORMAT(CONCAT(SUBSTR(@mes,1,4),'-', SUBSTR(@mes,5,6),'-01' ),'%M') AS mesn";
+   	$q="SELECT DATE_FORMAT(CONCAT(SUBSTR(@mes,1,4),'-', SUBSTR(@mes,5,6),'-01' ),'%M %Y') AS mesn";
     $query=$this->db->query($q);
-    return $query->result_array();
+    $temp=$query->result_array();
+	$temp=$temp[0]['mesn'];
+	$temp=strtoupper($temp);
+    return $temp;
 }
 
 function insertar_sobrante($r,$formuInfo)
 {
 	extract($formuInfo);
 	foreach ($r as $key) {
-	$q="INSERT INTO tcm_sobrantes(id_seccion, id_requisicion_vale, inicial, final, cant, mes) 
-	VALUES ($id_seccion,$key[id_requisicion_vale], $key[inicial], $key[inicial]+$key[cantidad_restante]-1, $key[cantidad_restante], $mes);";
+	$q="INSERT INTO tcm_sobrantes(id_seccion, id_requisicion_vale, inicial, final, cant, mes,id_fuente_fondo) 
+	VALUES ($id_seccion,$key[id_requisicion_vale], $key[inicial], $key[inicial]+$key[cantidad_restante]-1, $key[cantidad_restante], $mes,$id_fuente_fondo);";
 	$this->db->query($q);
 	}
 }
@@ -1659,8 +1674,126 @@ function cantidades_requisiciones($id_seccion=NULL, $mes=NULL, $id_fuente_fondo=
 				AND mes = '$mes'
 				AND id_fuente_fondo= $id_fuente_fondo
 				GROUP BY id_seccion, mes";
+
     	$query=$this->db->query($q);
     return $query->result_array();	
+}
+function cantidad_entregada($id_seccion, $mes='',$id_fuente_fondo)
+{
+	$q="SELECT
+			rv.numero_inicial AS inicial,
+			rv.numero_inicial + rv.cantidad_entregado -1 as final,
+			rv.cantidad_entregado as cant,		
+			 1 as tipo
+		FROM
+			tcm_requisicion_vale rv
+		INNER JOIN tcm_requisicion r USING (id_requisicion)
+		WHERE
+			id_seccion = $id_seccion
+		AND mes = '$mes'
+		AND id_fuente_fondo = $id_fuente_fondo";
+		   $query=$this->db->query($q);
+    return $query->result_array();	
+}
+function cantidad_sobrante($id_seccion, $mes='',$id_fuente_fondo)
+{
+	$q="	SELECT
+			s.inicial,
+			s.final,
+			s.cant,
+			2 AS tipo
+		FROM
+			tcm_sobrantes s
+		WHERE
+			id_seccion = $id_seccion
+		AND mes = '$mes'
+		AND id_fuente_fondo = $id_fuente_fondo";
+
+			$query=$this->db->query($q);
+    return $query->result_array();	
+}
+
+function consumo_clase($id_seccion, $mes='',$id_fuente_fondo, $group=false)
+{	
+		$s=$g="";
+		if($group){
+			$g=" GROUP BY clase ";
+			$s=" SUM(cantidad_vales) as cant, clase";
+		}else{
+			$s=" cantidad_vales as cant, articulo as clase";
+		}
+		$q="SELECT $s FROM tcm_consumo_vehiculo_info 
+			WHERE id_fuente_fondo = $id_fuente_fondo AND mes='$mes' AND id_seccion= $id_seccion
+			$g";
+			$query=$this->db->query($q);
+    	return $query->result_array();	
+
+}
+function simular_consumo_liquidacion($a_consumir, $consumo)
+{	$i=0;
+	$gasto=array();
+	$fila = array('inicial' => $a_consumir[$i]['inicial'],
+					'final'=> $a_consumir[$i]['inicial'],
+					'cant'=>0);
+	$bandera=true;
+	for ($j=0; $j <sizeof($consumo) &&$bandera; $j++) { 
+
+		if($consumo[$j]['cant']<=$a_consumir[$i]['cant']){
+			
+			$a_consumir[$i]['cant']-=$consumo[$j]['cant'];
+			$fila['cant']=$fila['cant']+$consumo[$j]['cant'];
+
+		}else{
+			
+			$consumo[$j]['cant']-=$a_consumir[$i]['cant'];
+			$fila['cant']=$fila['cant']+$a_consumir[$i]['cant'];
+			$fila['final']=$fila['inicial']+$fila['cant']-1;
+			$i++;
+			$bandera=($i<sizeof($a_consumir));
+			//guardamos la serie, y agarramos la proxima
+			array_push($gasto, $fila);
+			$fila['inicial']=$a_consumir[$i]['inicial'];
+			$fila['final']=$a_consumir[$i]['inicial'];
+			$fila['cant']=0;
+			$j--; //engañamos al for para que vuelva a procesar el mismo consumo
+			
+		}//fin else
+	}//fin for
+	$fila['final']=$fila['inicial']+$fila['cant']-1;
+	array_push($gasto, $fila);
+////FINALIZADO LO QUE SE A CONSUMIDO
+
+///cOMIEZA LO QUE SOBRO
+	$sobro=array();
+	$fila['inicial']=$fila['final']+1;
+	$fila['final']=$a_consumir[$i]['final'];
+	$fila['cant']=$fila['final']-$fila['inicial']+1;
+
+	while ($i < sizeof($a_consumir)) {
+		
+		if($fila['cant']>0) array_push($sobro, $fila);
+
+		$i++;		
+		
+		if($i<sizeof($a_consumir)){
+			$fila=$a_consumir[$i];
+		}
+
+	}
+
+$datos['c']=$gasto;
+$datos['s']=$sobro;
+	return $datos;
+}
+function consultar_asignacion($id_seccion, $mesn, $id_fuente_fondo)
+{
+	$q="SELECT r.asignado  as cant FROM tcm_requisicion r WHERE id_seccion = $id_seccion AND id_fuente_fondo =$id_fuente_fondo AND mes = '$mes'
+			UNION
+		SELECT cantidad  as cant FROM tcm_seccion_asignacion  WHERE id_seccion = $id_seccion AND id_fuente_fondo =$id_fuente_fondo ";
+    $query=$this->db->query($q);
+    $temp=$query->result_array();
+	$temp=$temp[0]['cant'];
+    return $temp;
 }
 
 function consumo_herramientas($id_seccion, $id_fuente_fondo, $fecha_inicio, $fecha_fin)
