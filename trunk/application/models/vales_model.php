@@ -1828,5 +1828,164 @@ function consumo_herramientas($id_seccion, $id_fuente_fondo, $fecha_inicio, $fec
     				return $query->result_array();					
 
 }
+
+function consultar_facturas()
+{
+	$q="SELECT 
+				c.id_consumo,
+				numero_factura AS factura,
+				DATE_FORMAT(fecha_factura,'%d-%m-%Y') AS fecha,
+				cv.inicial AS del,
+				cv.inicial + SUM(cv.cantidad_vales) - 1 AS al,
+				SUM(cv.cantidad_vales) as cantidad,
+				nombre_seccion as seccion,
+				1 as eliminable
+			FROM
+				tcm_consumo c
+			INNER JOIN tcm_consumo_vehiculo cv ON cv.id_consumo = c.id_consumo
+			INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
+			INNER JOIN  tcm_requisicion_vale USING(id_requisicion_vale)
+			INNER JOIN  tcm_requisicion USING(id_requisicion)
+			INNER JOIN org_seccion USING(id_seccion)
+			WHERE c.id_consumo IN (SELECT id_consumo FROM tcm_ultima_factura)
+			GROUP BY
+				c.id_consumo 
+			UNION
+SELECT 
+				c.id_consumo,
+				numero_factura AS factura,
+				DATE_FORMAT(fecha_factura,'%d-%m-%Y') AS fecha,
+				cv.inicial AS del,
+				cv.inicial + SUM(cv.cantidad_vales) - 1 AS al,
+				SUM(cv.cantidad_vales) as cantidad,
+				nombre_seccion as seccion,
+				0 as eliminable
+			FROM
+				tcm_consumo c
+			INNER JOIN tcm_consumo_vehiculo cv ON cv.id_consumo = c.id_consumo
+			INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
+			INNER JOIN  tcm_requisicion_vale USING(id_requisicion_vale)
+			INNER JOIN  tcm_requisicion USING(id_requisicion)
+			INNER JOIN org_seccion USING(id_seccion)
+			WHERE c.id_consumo NOT IN (SELECT id_consumo FROM tcm_ultima_factura)
+			GROUP BY
+				c.id_consumo 
+			LIMIT   600";
+		    	$query=$this->db->query($q);
+		return $query->result_array();					
+}
+function eliminar_factura($id_consumo)
+{
+	$q="SELECT 
+				c.id_consumo,
+				rvcv.id_requisicion_vale	,
+			SUM(	cv.cantidad_vales) as cant
+			FROM
+				tcm_consumo c
+			INNER JOIN tcm_consumo_vehiculo cv ON cv.id_consumo = c.id_consumo
+			INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
+			INNER JOIN  tcm_requisicion_vale USING(id_requisicion_vale)
+			WHERE c.id_consumo IN (SELECT id_consumo FROM tcm_ultima_factura) AND		c.id_consumo = $id_consumo
+	GROUP BY rvcv.id_requisicion_vale;";
+
+	$query=$this->db->query($q);
+	$actualizar=$query->result_array();
+			
+	foreach ($actualizar as $k ) { //por cada seie que se utiliza se ejecuta una actualizacion y eliminacion
+		
+		$q="UPDATE  tcm_requisicion_vale  rv SET rv.cantidad_restante= rv.cantidad_restante + ".$k['cant']." WHERE rv.id_requisicion_vale= ".$k['id_requisicion_vale'];
+		$this->db->query($q);
+		
+	}	
+	if (sizeof($actualizar)>0) {
+		$q="DELETE FROM tcm_requisicion_vale_consumo_vehiculo WHERE 
+					id_consumo_vehiculo IN( SELECT id_consumo_vehiculo FROM tcm_consumo_vehiculo WHERE id_consumo= $id_consumo)";
+		$this->db->query($q);
+		
+		$q="DELETE FROM tcm_consumo_vehiculo WHERE id_consumo = ".$id_consumo;
+		$this->db->query($q);
+		
+		$q="DELETE FROM tcm_consumo WHERE id_consumo = ".$id_consumo;
+		$this->db->query($q);
+		
+	}
+}
+	function copiar_factura($id_consumo)
+	{
+		$q="INSERT INTO tcm_consumo_copy (
+				id_consumo,
+				numero_factura,
+				fecha_factura,
+				id_usuario_crea,
+				fecha_creacion,
+				id_usuario_modifica,
+				fecha_modificacion,
+				valor_super,
+				valor_regular,
+				valor_diesel
+			) SELECT
+				id_consumo,
+				numero_factura,
+				fecha_factura,
+				id_usuario_crea,
+				fecha_creacion,
+				id_usuario_modifica,
+				fecha_modificacion,
+				valor_super,
+				valor_regular,
+				valor_diesel
+			FROM
+				tcm_consumo
+			WHERE
+				id_consumo = $id_consumo";
+		$this->db->query($q);
+
+	$q="INSERT INTO tcm_consumo_vehiculo_copy () 
+			SELECT 
+				*
+			FROM
+				tcm_consumo_vehiculo
+			WHERE
+				id_consumo = $id_consumo";
+		$this->db->query($q);
+	$q="INSERT INTO tcm_requisicion_vale_consumo_vehiculo_copy () 
+		SELECT	* FROM
+			tcm_requisicion_vale_consumo_vehiculo
+		WHERE
+			id_consumo_vehiculo IN (
+				SELECT
+					id_consumo_vehiculo
+				FROM
+					tcm_consumo_vehiculo
+				WHERE
+					id_consumo = $id_consumo
+			) ";
+		$this->db->query($q);
+}
+function info_factura($id_consumo)
+{
+		$q="SELECT 
+				c.id_consumo,
+				numero_factura AS factura,
+				DATE_FORMAT(fecha_factura,'%d-%m-%Y') AS fecha,
+				SUM(cv.cantidad_vales) as cant,
+				nombre_seccion as seccion,
+				c.valor_super as super,
+				c.valor_diesel as diesel,
+				c.valor_regular as regular
+			FROM
+				tcm_consumo c
+			INNER JOIN tcm_consumo_vehiculo cv ON cv.id_consumo = c.id_consumo
+			INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
+			INNER JOIN tcm_requisicion_vale USING(id_requisicion_vale)
+			INNER JOIN tcm_requisicion USING(id_requisicion)
+			INNER JOIN	org_seccion USING(id_seccion)
+			WHERE
+			c.id_consumo = $id_consumo	
+		GROUP BY
+				c.id_consumo";
+		$query = $this->db->query($q);
+		return $query->result_array();
+}
 }
 ?>

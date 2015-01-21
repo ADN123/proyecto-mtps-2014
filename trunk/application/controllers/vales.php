@@ -14,6 +14,7 @@
 	define("REQUISICION_PDF",115); ///no esta 
 	define("HERRAMIENTA",115); ///son herramientas y otros posibles consumidores de combustibles
 	define("ONLY_SOURCE",1); ///hay que cambiar a 0 si los vales de banco mundial y goes se trabajaran como uno solo
+	define("ADMIN_FACTURA",115); 
 
 class Vales extends CI_Controller
 {
@@ -2264,6 +2265,54 @@ function liquidacion_pdf()
 
 
 }
+
+function ver_facturas($estado_transaccion=NULL)
+{
+
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ADMIN_FACTURA); /*Verificacion de permiso */		
+	if($data['id_permiso']!=NULL) {
+		$data['estado_transaccion']=$estado_transaccion;
+		$data['d']=$this->vales_model->consultar_facturas();
+		pantalla('vales/ver_facturas',$data);
+	}else{
+			echo 'No tiene permisos para acceder';	
+	}
+
+
+}
+function eliminar_factura($id_consumo=NULL)
+{
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ADMIN_FACTURA); /*Verificacion de permiso */		
+	if($data['id_permiso']!=NULL) {
+		$this->db->trans_start();	
+			
+			$this->vales_model->copiar_factura($id_consumo);		//se hace una copia de seguridad de la factura
+			$this->vales_model->eliminar_factura($id_consumo);
+		
+		$this->db->trans_complete();
+		$tr=($this->db->trans_status()===FALSE)?0:1;
+		ir_a('index.php/vales/ver_facturas/'.$tr);
+	}else{
+			echo 'No tiene permisos para acceder';	
+	}	
+}
+
+function dialogo_factura($id_consumo=NULL)
+{
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ADMIN_FACTURA); /*Verificacion de permiso */		
+	if($data['id_permiso']!=NULL) {
+		$data['d']=$this->vales_model->detalleF($id_consumo);
+		$data['g']=$this->vales_model->info_factura($id_consumo);
+		$data['g']=$data['g'][0];
+		//echo "<pre>"; print_r($data); echo "</pre>";
+		$this->load->view('vales/dialogo_factura',$data);
+
+
+	}else{
+			echo 'No tiene permisos para acceder';	
+	}	
+}
+
 //////////////////////////Funciones de testeo
 
 
