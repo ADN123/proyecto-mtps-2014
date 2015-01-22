@@ -2313,6 +2313,136 @@ function dialogo_factura($id_consumo=NULL)
 	}	
 }
 
+
+	function gasolineras($estado_transaccion=NULL,$accion=NULL)
+	{
+		$data['id_permiso']=1;		
+
+		if($data['id_permiso']!=NULL) {
+		$data['estado_transaccion']=$estado_transaccion;
+			if($accion==0)
+				$data['accion']="elimina";
+			if($accion==1)
+				$data['accion']="actualiza";
+			if($accion==2)
+				$data['accion']="guarda";
+
+			$data['titulo']="Gasolinera";
+			$data['d']=$this->vales_model->consultar_gasolineras();
+			pantalla('vales/gasolineras',$data);	
+		
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
+	}
+
+function modificar_gasolinera($id)
+	{
+		$data['id_permiso']=1;		
+		if($data['id_permiso']!=NULL) {
+
+			$data['d']=$this->vales_model->consultar_gasolineras($id);
+	
+			$this->load->view('vales/DM_gasolinera',$data);
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
+	}
+
+function actualizar_gasolinera()
+{		//	print_r($_POST);
+			$this->db->trans_start();			
+			$this->vales_model->actualizar_gasolinera($_POST);			
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/gasolineras/'.$tr.'/1');
+
+}
+function nuevo_gasolinera()
+{
+		$this->load->view('vales/DN_gasolinera');
+}
+function guardar_gasolinera()
+{
+			$this->db->trans_start();			
+			$this->vales_model->insertar_gasolinera($_POST);			
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/gasolineras/'.$tr.'/2');	
+}
+function eliminar_gasolinera($id)
+{
+			$this->db->trans_start();			
+			$this->vales_model->eliminar_gasolinera($id);			
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/gasolineras/'.$tr.'/3');	
+}
+
+function fuente_fondos($estado_transaccion=NULL,$accion=NULL)
+	{
+		$data['id_permiso']=1;		
+
+		if($data['id_permiso']!=NULL) {
+		$data['estado_transaccion']=$estado_transaccion;
+			if($accion==0)
+				$data['accion']="elimina";
+			if($accion==1)
+				$data['accion']="actualiza";
+			if($accion==2)
+				$data['accion']="guarda";
+
+			$data['titulo']="fuente de fondo";
+			$data['d']=$this->vales_model->consultar_fuente_fondo2();
+			pantalla('vales/fuente_fondos',$data);	
+		
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
+	}
+function actualizar_fuente_fondo()
+{		//	print_r($_POST);
+			$this->db->trans_start();			
+			$this->vales_model->actualizar_fuente_fondo($_POST);			
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/fuente_fondos/'.$tr.'/1');
+
+}
+function modificar_fuente_fondo($id)
+	{
+		$data['id_permiso']=1;		
+		if($data['id_permiso']!=NULL) {
+
+			$data['d']=$this->vales_model->consultar_fuente_fondo2($id);
+	
+			$this->load->view('vales/DM_fuente_fondo',$data);
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
+	}
+function nuevo_fuente_fondo()
+{
+		$this->load->view('vales/DN_fuente_fondo');
+}
+function guardar_fuente_fondo()
+{
+			$this->db->trans_start();			
+			$this->vales_model->insertar_fuente_fondo($_POST);			
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/fuente_fondos/'.$tr.'/2');	
+}
+function eliminar_fuente_fondo($id)
+{
+			$this->db->trans_start();			
+			$this->vales_model->eliminar_fuente_fondo($id);			
+			$this->db->trans_complete();
+			$tr=($this->db->trans_status()===FALSE)?0:1;
+			ir_a('index.php/vales/fuente_fondos/'.$tr.'/3');	
+}
+
+
 //////////////////////////Funciones de testeo
 
 

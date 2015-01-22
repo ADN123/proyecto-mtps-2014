@@ -8,9 +8,14 @@ class Vales_model extends CI_Model {
 	
     }
 	
-	function consultar_gasolineras()
+	function consultar_gasolineras($id=NULL )
 	{
-		$sentencia="SELECT tcm_gasolinera.id_gasolinera, tcm_gasolinera.nombre FROM tcm_gasolinera";
+			$where="";
+			if ($id!=NULL) {
+				$where=" AND id_gasolinera = $id";
+			}
+
+		$sentencia="SELECT tcm_gasolinera.id_gasolinera, tcm_gasolinera.nombre, tcm_gasolinera.telefono  FROM tcm_gasolinera WHERE estado= 1 ".$where;
 		$query=$this->db->query($sentencia);
 	
 		return (array)$query->result_array();
@@ -1986,6 +1991,59 @@ function info_factura($id_consumo)
 				c.id_consumo";
 		$query = $this->db->query($q);
 		return $query->result_array();
+}
+
+function actualizar_gasolinera($info)
+{
+	extract($info);
+
+	$q="UPDATE tcm_gasolinera SET nombre='$nombre', telefono='$telefono' WHERE id_gasolinera=$id";
+	$query = $this->db->query($q);
+}
+function eliminar_gasolinera($id=NULL)
+{
+
+	$q="UPDATE tcm_gasolinera SET estado=0 WHERE id_gasolinera=$id";
+	$query = $this->db->query($q);
+
+}
+function insertar_gasolinera($info)
+{
+	extract($info);
+	$q=" INSERT INTO `tcm_gasolinera` ( `nombre`, `telefono`, `estado`) VALUES ( '$nombre', '$telefono', '1');";
+	$query = $this->db->query($q);
+	
+}
+function consultar_fuente_fondo2($id=NULL)
+{
+	$where="";
+	if ($id!=NULL) {
+		$where=" AND id_fuente_fondo = $id";
+	}
+	$q=" SELECT nombre_fuente_fondo as nombre, id_fuente_fondo, descripcion FROM  tcm_fuente_fondo WHERE estado=1 ".$where ;
+			$query = $this->db->query($q);
+		return $query->result_array();
+}
+function actualizar_fuente_fondo($info)
+{
+	extract($info);
+
+	$q="UPDATE tcm_fuente_fondo SET nombre_fuente_fondo='$nombre', descripcion='$descripcion' WHERE id_fuente_fondo=$id";
+	$query = $this->db->query($q);
+}
+function eliminar_fuente_fondo($id=NULL)
+{
+
+	$q="UPDATE tcm_fuente_fondo SET estado=0 WHERE id_fuente_fondo=$id";
+	$query = $this->db->query($q);
+
+}
+function insertar_fuente_fondo($info)
+{
+	extract($info);
+	$q=" INSERT INTO `tcm_fuente_fondo` ( `nombre_fuente_fondo`, `descripcion`, `estado`) VALUES ( '$nombre', '$descripcion', '1');";
+	$query = $this->db->query($q);
+	
 }
 }
 ?>
