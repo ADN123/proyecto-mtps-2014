@@ -59,7 +59,15 @@ extract($vehiculos);
             </p>
             </td>
             <td width="700px">
-             <p>
+            <p>
+            	<label style="width:150px">Mecánico que realizó el mantenimiento al vehículo: </label>
+                <select style="width:300px" class="select" name="id_empleado_mtto" placeholder="Seleccione..." multiple="multiple">
+                	<?php foreach($mecanicos as $m){?>
+                    <option value="<?php echo $m['id_empleado']; ?>"><?php echo ucwords($m['nombre']) ?></option>
+                    <?php }?>
+                </select>
+            </p>
+            <p>
              	<input type="hidden" name="id_ingreso_taller" value="<?php echo $id_ingreso_taller ?>" />
             	<label class="label_textarea" style="width:100px">Trabajo solicitado: </label>
                 <textarea style="width:200px; resize:none;" name="trabajo_solicitado" readonly="readonly"><?php echo $trabajo_solicitado; ?></textarea>

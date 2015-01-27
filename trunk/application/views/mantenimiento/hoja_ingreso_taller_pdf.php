@@ -4,7 +4,7 @@ extract($vehiculo);
 <br><br><br>
 <table align="center" cellpadding="0" cellspacing="0" width="100%">
 <tr>
-<td valign="top" width="200px">
+<td valign="top" width="210px">
 	<br />
 	<table border="1" cellpadding="0" cellspacing="0">
    	  <tr>
@@ -17,13 +17,26 @@ extract($vehiculo);
 		{
 			if($rev['tipo']=='interno')
 			{
+				if($rev['cantidad']==1) $band=1;
+				else $band=0;
+				
 				echo "<tr>";
-				echo "<td>".$rev['revision']."</td>";
+				if($band==1) echo "<td>".$rev['revision']." # ";
+				else echo "<td>".$rev['revision'];
+				
 				$id_revision=$rev['id_revision'];
 				$aux=0;
 				foreach($revision as $re)
 				{
-					if($id_revision==$re['id_revision']) $aux=$aux+1;
+					if($id_revision==$re['id_revision'])
+					{
+						$aux=$aux+1;
+						if($band==1)
+						{
+							echo $re['varios']."</td>";
+						}
+						else echo "</td>";
+					}
 					else $aux=$aux+0;
 				}
 				if($aux>0) echo "<td>X</td><td>&nbsp;</td>";
@@ -34,7 +47,7 @@ extract($vehiculo);
 		?>
     </table>
 </td>
-<td valign="top" width="190px">
+<td valign="top" width="210px">
 	<br />
     <table border="1" cellpadding="0" cellspacing="0">
     	<tr>
@@ -47,13 +60,26 @@ extract($vehiculo);
 		{
 			if($rev['tipo']=='externo')
 			{
+				if($rev['cantidad']==1) $band=1;
+				else $band=0;
+				
 				echo "<tr>";
-				echo "<td>".$rev['revision']."</td>";
+				if($band==1) echo "<td>".$rev['revision']." # ";
+				else echo "<td>".$rev['revision'];
+				
 				$id_revision=$rev['id_revision'];
 				$aux=0;
 				foreach($revision as $re)
 				{
-					if($id_revision==$re['id_revision']) $aux=$aux+1;
+					if($id_revision==$re['id_revision'])
+					{
+						$aux=$aux+1;
+						if($band==1)
+						{
+							echo $re['varios']."</td>";
+						}
+						else echo "</td>";
+					}
 					else $aux=$aux+0;
 				}
 				if($aux>0) echo "<td>X</td><td>&nbsp;</td>";
@@ -64,7 +90,7 @@ extract($vehiculo);
 		?>
     </table>
 </td>
-<td width="255px" valign="top">&nbsp;</td>
+<td width="245px" valign="top">&nbsp;</td>
 </tr>
 <tr>
 	<td colspan="3" valign="top">
