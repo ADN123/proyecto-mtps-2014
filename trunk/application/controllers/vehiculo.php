@@ -1044,6 +1044,7 @@ class Vehiculo extends CI_Controller
 	function kardex_articulo()
 	{
 		$data['articulos']=$this->transporte_model->inventario();
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
 		pantalla('mantenimiento/kardex_articulos',$data);
 	}
 	

@@ -2,9 +2,9 @@
     <h2>Kardex de Artículos</h2>
 </section>
 <p>
-	<label>Artículo: </label>
-    <select class="select" style="width:400px" name="id_articulo">
-    	<option value="*">[Todos]</option>
+	<label style="width:100px">Artículo: </label>
+    <select class="select" style="width:350px" name="id_articulo">
+    	<option value="*" selected>[Todos]</option>
 		<?php
 			foreach($articulos as $art)
 			{
@@ -12,12 +12,22 @@
 			}
         ?>
     </select>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <label>Vehículo: </label>
+    <select class="select" style="width:100px" name="id_vehiculo">
+    	<option value="*" selected='selected'>[Todos]</option>
+    	<?php
+			foreach($vehiculos as $v)
+			{
+				echo "<option value='".$v->id."'>".$v->placa."</option>";
+			}
+        ?>
+    </select>
 </p>
 <p>
-    <label>Fecha Inicial: </label>
+    <label style="width:100px">Fecha Inicial: </label>
     <input type="text" name="fecha_inicial" id="fecha_inicial" <?php if($bandera=='true') echo "value='".$fecha_inicial."'"; ?>>
-</p>
-<p>    
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
     <label>Fecha Final: </label>
     <input type="text" name="fecha_final" id="fecha_final" <?php if($bandera=='true') echo "value='".$fecha_final."'"; ?>>
 </p>
