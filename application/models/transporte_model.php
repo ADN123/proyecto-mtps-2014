@@ -2226,6 +2226,28 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*********************************************************************************************************************************************/
 	
+	/**********************************FUNCIÓN PARA OBETENER LAS REPARACIONES***************************************************/
+	function consultar_reparaciones()
+	{
+		$query="SELECT * FROM tcm_reparacion WHERE estado=1";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+	
+	/*************************FUNCIÓN PARA OBETENER LAS REPARACIONES DE ACUERDO A UN INGRESO A UN MANTENIMIENTOS***********************/
+	function consultar_reparaciones2($id_mantenimiento_interno)
+	{
+		$query="SELECT tr.id_reparacion, tr.reparacion, tr.tipo
+				FROM tcm_chequeo_reparacion AS tcr
+				INNER JOIN tcm_reparacion AS tr on (tcr.id_reparacion=tr.id_reparacion)
+				WHERE tcr.id_mantenimiento_interno='$id_mantenimiento_interno'
+				ORDER BY tcr.id_reparacion ASC";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+	
 	/*******************FUNCIÓN PARA OBTENER LOS VEHÍCULOS QUE HAN PASADO POR MANTENIMIENTO PREVENTIVO***************************************/
 	function consultar_vehiculos_ingreso_taller($id_ingreso_taller=NULL)
 	{
@@ -2258,6 +2280,37 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 					WHERE tit.id_vehiculo='$id_vehiculo' ".$where."
 					GROUP BY fecha, tipo, tmi.id_mantenimiento_interno
 					ORDER BY fecha DESC, tr.id_reparacion ASC";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+	
+	/**********************************FUNCIÓN PARA OBTENER LOS MANTENIMIENTOS DE UN VEHÍCULO***************************************************/
+	function consultar_mantenimientos2($id_mantenimiento_interno=NULL)
+	{
+		$where=" ";
+		if($id_mantenimiento_interno!=NULL) $where=" where tmi.id_mantenimiento_interno='$id_mantenimiento_interno'";
+			$query="select v.placa, IF(vmot.id_empleado=0,'No tiene asignado',LOWER(CONCAT_WS(' ',s.primer_nombre, s.segundo_nombre, s.tercer_nombre, s.primer_apellido,s.segundo_apellido,s.apellido_casada))) AS motorista,
+					o.nombre_seccion as seccion, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion, COALESCE(max(vk.km_final),'0') as kilometraje, v.anio, v.estado,
+					ff.nombre_fuente_fondo as fuente_fondo,v.imagen, v.id_seccion, v.id_clase, v.id_condicion, v.id_fuente_fondo, v.id_marca, v.id_modelo, v.id_vehiculo, vmot.id_empleado,
+					v.tipo_combustible, DATE_FORMAT(tmi.fecha,'%d-%m-%Y') as fecha, tmi.id_ingreso_taller, tmi.id_mantenimiento_interno, tmi.otro_mtto, tmi.observaciones,
+					temp.nombre as mecanico, it.kilometraje_ingreso
+					from tcm_vehiculo as v
+					inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+					inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+					inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+					inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+					left join tcm_vehiculo_motorista as vmot on (v.id_vehiculo=vmot.id_vehiculo)
+					left join tcm_vehiculo_kilometraje as vk on (vk.id_vehiculo=v.id_vehiculo)
+					left join sir_empleado as s on (vmot.id_empleado=s.id_empleado)
+					inner join org_seccion as o on (v.id_seccion=o.id_seccion)
+					inner join tcm_fuente_fondo as ff on (ff.id_fuente_fondo=v.id_fuente_fondo)
+					inner join tcm_ingreso_taller as it on (it.id_vehiculo=v.id_vehiculo)
+					INNER JOIN tcm_mantenimiento_interno as tmi on (tmi.id_ingreso_taller=it.id_ingreso_taller)
+					inner join tcm_empleado as temp on (tmi.id_empleado_mtto=temp.id_empleado)
+					".$where."
+					GROUP BY tmi.id_mantenimiento_interno
+					ORDER BY tmi.id_mantenimiento_interno DESC";
 		$query=$this->db->query($query);
 		return (array) $query->result_array();
 	}
@@ -2381,8 +2434,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	{
 		extract($datos);
 		$fecha=date('Y-m-d');
-		$consulta="INSERT INTO tcm_mantenimiento_interno (id_ingreso_taller, otro_mtto, observaciones, fecha, id_usuario)
-					VALUES ('$id_ingreso_taller','$otro_mtto', '$observaciones', '$fecha', '$id_usuario');";
+		$consulta="INSERT INTO tcm_mantenimiento_interno (id_ingreso_taller, otro_mtto, observaciones, fecha, id_empleado_mtto)
+					VALUES ('$id_ingreso_taller','$otro_mtto', '$observaciones', '$fecha', '$id_empleado_mtto');";
 		if($this->db->query($consulta))
 		{
 			$reparacion=array_merge($reparacion1, $reparacion2);
@@ -2591,5 +2644,18 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		}
 	}
 	/*********************************************************************************************************************************************/
+	
+	/*******************************FUNCIÓN PARA OBTENER LOS MECÁNICOS DEL MTPS*****************************************/
+	function mecanicos()
+	{
+		$query="SELECT e.id_empleado, e.nombre, e.nominal, e.funcional
+				FROM tcm_empleado AS e
+				WHERE (e.funcional like 'mecanico' OR e.nominal like 'mecanico')
+				OR (e.nominal like 'tecnico en mantenimiento i' OR e.funcional like 'jefe de mecanicos')";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+
 }
 ?>

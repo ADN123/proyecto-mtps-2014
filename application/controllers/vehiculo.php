@@ -164,7 +164,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: carga la vista de control de mantenimiento del vehículo
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 19/12/2014
+	*	Última Modificación: 27/01/2014
 	*	Observaciones: Ninguna
 	*/
 	
@@ -181,7 +181,7 @@ class Vehiculo extends CI_Controller
 			$data['vehiculos']=$this->transporte_model->consultar_vehiculos(1);
 			$data['bandera']='false';
 		}
-		$data['empleado']=$this->transporte_model->consultar_empleados();
+		$data['mecanicos']=$this->transporte_model->mecanicos();
 		$data['revision']=$this->transporte_model->consultar_revisiones();
 		pantalla('mantenimiento/control_mantenimiento',$data);
 	}
@@ -211,7 +211,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: carga la vista de Reparación y mantenimiento en taller del MTPS
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 16/01/2014
+	*	Última Modificación: 27/01/2014
 	*	Observaciones: Ninguna
 	*/
 	
@@ -221,6 +221,7 @@ class Vehiculo extends CI_Controller
 		$data['vehiculos']=$data['vehiculos'][0];
 		$data['reparacion']=$this->transporte_model->consultar_reparacion();
 		$data['inventario']=$this->transporte_model->inventario();
+		$data['mecanicos']=$this->transporte_model->mecanicos();
 		pantalla('mantenimiento/taller_MTPS',$data);
 	}
 	
@@ -1029,6 +1030,87 @@ class Vehiculo extends CI_Controller
 	{
 		$data['vehiculos']=$this->transporte_model->consultar_vehiculos_ingreso_taller();
 		pantalla('mantenimiento/hoja_mtto_preventivo',$data);
+	}
+	
+	/*
+	*	Nombre: kardex_articulo
+	*	Objetivo: llama a la vista de kardex_articulo para generar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 27/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function kardex_articulo()
+	{
+		$data['articulos']=$this->transporte_model->inventario();
+		pantalla('mantenimiento/kardex_articulos',$data);
+	}
+	
+	/*
+	*	Nombre: articulo_vehiculo
+	*	Objetivo: llama a la vista de articulo_vehiculo para generar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 23/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function articulo_vehiculo()
+	{
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculos_ingreso_taller();
+		pantalla('mantenimiento/hoja_mtto_preventivo',$data);
+	}
+	
+	/*
+	*	Nombre: hoja_control_vehiculo
+	*	Objetivo: llama a la vista de hoja_control_vehiculo para generar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 26/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function hoja_control_vehiculo()
+	{
+		$data['vehiculos']=$this->transporte_model->consultar_mantenimientos2();
+		pantalla('mantenimiento/hoja_control_vehiculo',$data);
+	}
+	
+	/*
+	*	Nombre: hoja_control_vehiculo_pdf
+	*	Objetivo: llama a la vista de hoja_control_vehiculo para generar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 26/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function hoja_control_vehiculo_pdf($id)
+	{
+		$data['vehiculo']=$this->transporte_model->consultar_mantenimientos2($id);
+		$data['vehiculo']=$data['vehiculo'][0];
+		$data['reparaciones']=$this->transporte_model->consultar_reparaciones();
+		$data['reparacion']=$this->transporte_model->consultar_reparaciones2($id);
+		
+		$this->mpdf->mPDF('utf-8','A4-L'); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
+		$this->mpdf->SetHTMLHeader('
+								<table align="center" cellpadding="0" cellspacing="0">
+									<tr>
+										<td align="right" valign="top"><img src="img/escudo.min.png" width="70px" /></td>
+										<td align="center" valign="top" colspan="2" width="450px">
+										<h3>Hoja Control por Vehículo<br />
+										Reparación y Mantenimiento en Taller MINTRAB
+										</h3></td>
+										<td align="center" valign="middle"><img src="img/mtps_report.jpg" width="90px" /></td>
+									</tr>
+								</table>
+								');
+		$stylesheet = file_get_contents('css/pdf/solicitud.css'); /*Selecionamos la hoja de estilo del pdf*/
+		$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
+		$html = $this->load->view('mantenimiento/hoja_control_vehiculo_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
+		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
+		$this->mpdf->Output(); /*Salida del pdf*/
 	}
 }
 ?>

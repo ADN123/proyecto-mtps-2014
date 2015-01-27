@@ -85,11 +85,11 @@ foreach($vehiculos as $v)
         </div>
         <div id="step-2">
         	<h2 class="StepTitle">Información de ingreso del Vehículo</h2>
-             <p>
+            <p>
             	<label style="width:100px">Mecánico que recibió el vehículo: </label>
                 <select style="width:300px" class="select" name="id_usuario_recibe_taller" placeholder="Seleccione..." multiple="multiple">
-                	<?php foreach($empleado as $e){?>
-                    <option value="<?php echo $e['NR']; ?>"><?php echo ucwords($e['nombre']) ?></option>
+                	<?php foreach($mecanicos as $m){?>
+                    <option value="<?php echo $m['id_empleado']; ?>"><?php echo ucwords($m['nombre']) ?></option>
                     <?php }?>
                 </select>
             </p>
