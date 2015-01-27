@@ -15,6 +15,8 @@
 	define("HERRAMIENTA",115); ///son herramientas y otros posibles consumidores de combustibles
 	define("ONLY_SOURCE",1); ///hay que cambiar a 0 si los vales de banco mundial y goes se trabajaran como uno solo
 	define("ADMIN_FACTURA",137); 
+	define("GASOLINERA",140); 
+	define("FUENTE_FONDO",119); 
 
 class Vales extends CI_Controller
 {
@@ -2281,9 +2283,26 @@ function ver_facturas($estado_transaccion=NULL)
 {
 
 	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ADMIN_FACTURA); /*Verificacion de permiso */		
+	$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));	
 	if($data['id_permiso']!=NULL) {
+		switch ($data['id_permiso']) {
+			case 1:
+			case 2: //seccion
+					
+				$data['d']=$this->vales_model->consultar_facturas($id_seccion['id_seccion']);
+				break;
+			case 3:  //departamental
+				# code...
+				break;
+			case 4: //nacional
+				$data['d']=$this->vales_model->consultar_facturas();
+				break;
+			
+			default:
+				# code...
+				break;
+		}
 		$data['estado_transaccion']=$estado_transaccion;
-		$data['d']=$this->vales_model->consultar_facturas();
 		pantalla('vales/ver_facturas',$data);
 	}else{
 			echo 'No tiene permisos para acceder';	
@@ -2327,7 +2346,8 @@ function dialogo_factura($id_consumo=NULL)
 
 	function gasolineras($estado_transaccion=NULL,$accion=NULL)
 	{
-		$data['id_permiso']=1;		
+
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),GASOLINERA); /*Verificacion de permiso */		
 
 		if($data['id_permiso']!=NULL) {
 		$data['estado_transaccion']=$estado_transaccion;
@@ -2349,7 +2369,8 @@ function dialogo_factura($id_consumo=NULL)
 
 function modificar_gasolinera($id)
 	{
-		$data['id_permiso']=1;		
+
+$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),GASOLINERA); /*Verificacion de permiso */		
 		if($data['id_permiso']!=NULL) {
 
 			$data['d']=$this->vales_model->consultar_gasolineras($id);
@@ -2361,39 +2382,65 @@ function modificar_gasolinera($id)
 	}
 
 function actualizar_gasolinera()
-{		//	print_r($_POST);
+{
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),GASOLINERA); /*Verificacion de permiso */		
+		if($data['id_permiso']!=NULL) {
+		//	print_r($_POST);
 			$this->db->trans_start();			
 			$this->vales_model->actualizar_gasolinera($_POST);			
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/gasolineras/'.$tr.'/1');
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
 
 }
 function nuevo_gasolinera()
 {
-		$this->load->view('vales/DN_gasolinera');
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),GASOLINERA); /*Verificacion de permiso */		
+
+		if($data['id_permiso']!=NULL) {
+
+			$this->load->view('vales/DN_gasolinera');
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
 }
 function guardar_gasolinera()
 {
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),GASOLINERA); /*Verificacion de permiso */		
+
+		if($data['id_permiso']!=NULL) {
+
 			$this->db->trans_start();			
 			$this->vales_model->insertar_gasolinera($_POST);			
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/gasolineras/'.$tr.'/2');	
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
 }
 function eliminar_gasolinera($id)
 {
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),GASOLINERA); /*Verificacion de permiso */		
+
+		if($data['id_permiso']!=NULL) {
+
 			$this->db->trans_start();			
 			$this->vales_model->eliminar_gasolinera($id);			
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/gasolineras/'.$tr.'/3');	
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
 }
 
 function fuente_fondos($estado_transaccion=NULL,$accion=NULL)
 	{
-		$data['id_permiso']=1;		
-
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),FUENTE_FONDO); /*Verificacion de permiso */		
 		if($data['id_permiso']!=NULL) {
 		$data['estado_transaccion']=$estado_transaccion;
 			if($accion==0)
@@ -2412,17 +2459,23 @@ function fuente_fondos($estado_transaccion=NULL,$accion=NULL)
 		}	
 	}
 function actualizar_fuente_fondo()
-{		//	print_r($_POST);
+{	
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),FUENTE_FONDO); /*Verificacion de permiso */		
+		if($data['id_permiso']!=NULL) {
+
 			$this->db->trans_start();			
 			$this->vales_model->actualizar_fuente_fondo($_POST);			
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/fuente_fondos/'.$tr.'/1');
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
 
 }
 function modificar_fuente_fondo($id)
 	{
-		$data['id_permiso']=1;		
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),FUENTE_FONDO); /*Verificacion de permiso */		
 		if($data['id_permiso']!=NULL) {
 
 			$data['d']=$this->vales_model->consultar_fuente_fondo2($id);
@@ -2433,24 +2486,42 @@ function modificar_fuente_fondo($id)
 		}	
 	}
 function nuevo_fuente_fondo()
-{
-		$this->load->view('vales/DN_fuente_fondo');
+{		
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),FUENTE_FONDO); /*Verificacion de permiso */		
+		if($data['id_permiso']!=NULL) {
+
+			$this->load->view('vales/DN_fuente_fondo');
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
 }
 function guardar_fuente_fondo()
 {
+	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),FUENTE_FONDO); /*Verificacion de permiso */		
+		if($data['id_permiso']!=NULL) {
+
 			$this->db->trans_start();			
 			$this->vales_model->insertar_fuente_fondo($_POST);			
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/fuente_fondos/'.$tr.'/2');	
+		}else {
+		echo 'No tiene permisos para acceder';
+	}	
 }
 function eliminar_fuente_fondo($id)
 {
+		$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),FUENTE_FONDO); /*Verificacion de permiso */		
+		if($data['id_permiso']!=NULL) {
+
 			$this->db->trans_start();			
 			$this->vales_model->eliminar_fuente_fondo($id);			
 			$this->db->trans_complete();
 			$tr=($this->db->trans_status()===FALSE)?0:1;
 			ir_a('index.php/vales/fuente_fondos/'.$tr.'/3');	
+		}else {
+			echo 'No tiene permisos para acceder';
+		}	
 }
 
 

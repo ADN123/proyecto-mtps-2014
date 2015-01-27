@@ -15,7 +15,7 @@ class Vales_model extends CI_Model {
 				$where=" AND id_gasolinera = $id";
 			}
 
-		$sentencia="SELECT tcm_gasolinera.id_gasolinera, tcm_gasolinera.nombre, tcm_gasolinera.telefono  FROM tcm_gasolinera WHERE estado= 1 ".$where;
+		$sentencia="SELECT tcm_gasolinera.id_gasolinera, tcm_gasolinera.nombre, tcm_gasolinera.telefono  FROM tcm_gasolinera WHERE estadoF= 1 ".$where;
 		$query=$this->db->query($sentencia);
 	
 		return (array)$query->result_array();
@@ -1899,8 +1899,13 @@ function consumo_herramientas($id_seccion, $id_fuente_fondo, $fecha_inicio, $fec
 
 }
 
-function consultar_facturas()
+function consultar_facturas($id_seccion=NULL)
 {
+	$where="";
+	if($id_seccion!=NULL){
+
+		$where =" AND s.id_seccion IN($id_seccion) ";
+	}
 	$q="SELECT 
 				c.id_consumo,
 				numero_factura AS factura,
@@ -1916,12 +1921,12 @@ function consultar_facturas()
 			INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
 			INNER JOIN  tcm_requisicion_vale USING(id_requisicion_vale)
 			INNER JOIN  tcm_requisicion USING(id_requisicion)
-			INNER JOIN org_seccion USING(id_seccion)
-			WHERE c.id_consumo IN (SELECT id_consumo FROM tcm_ultima_factura)
+			INNER JOIN org_seccion s USING(id_seccion)
+			WHERE c.id_consumo IN (SELECT id_consumo FROM tcm_ultima_factura) $where
 			GROUP BY
 				c.id_consumo 
 			UNION
-SELECT 
+		SELECT 
 				c.id_consumo,
 				numero_factura AS factura,
 				DATE_FORMAT(fecha_factura,'%d-%m-%Y') AS fecha,
@@ -1936,8 +1941,8 @@ SELECT
 			INNER JOIN tcm_requisicion_vale_consumo_vehiculo rvcv ON rvcv.id_consumo_vehiculo = cv.id_consumo_vehiculo
 			INNER JOIN  tcm_requisicion_vale USING(id_requisicion_vale)
 			INNER JOIN  tcm_requisicion USING(id_requisicion)
-			INNER JOIN org_seccion USING(id_seccion)
-			WHERE c.id_consumo NOT IN (SELECT id_consumo FROM tcm_ultima_factura)
+			INNER JOIN org_seccion s USING(id_seccion)
+			WHERE c.id_consumo NOT IN (SELECT id_consumo FROM tcm_ultima_factura) $where
 			GROUP BY
 				c.id_consumo 
 			LIMIT   600";
@@ -2068,14 +2073,14 @@ function actualizar_gasolinera($info)
 function eliminar_gasolinera($id=NULL)
 {
 
-	$q="UPDATE tcm_gasolinera SET estado=0 WHERE id_gasolinera=$id";
+	$q="UPDATE tcm_gasolinera SET estadoF=0 WHERE id_gasolinera=$id";
 	$query = $this->db->query($q);
 
 }
 function insertar_gasolinera($info)
 {
 	extract($info);
-	$q=" INSERT INTO `tcm_gasolinera` ( `nombre`, `telefono`, `estado`) VALUES ( '$nombre', '$telefono', '1');";
+	$q=" INSERT INTO `tcm_gasolinera` ( `nombre`, `telefono`, `estadoF`) VALUES ( '$nombre', '$telefono', '1');";
 	$query = $this->db->query($q);
 	
 }
@@ -2085,7 +2090,7 @@ function consultar_fuente_fondo2($id=NULL)
 	if ($id!=NULL) {
 		$where=" AND id_fuente_fondo = $id";
 	}
-	$q=" SELECT nombre_fuente_fondo as nombre, id_fuente_fondo, descripcion FROM  tcm_fuente_fondo WHERE estado=1 ".$where ;
+	$q=" SELECT nombre_fuente_fondo as nombre, id_fuente_fondo, descripcion FROM  tcm_fuente_fondo WHERE estadoF=1 ".$where ;
 			$query = $this->db->query($q);
 		return $query->result_array();
 }
@@ -2099,14 +2104,14 @@ function actualizar_fuente_fondo($info)
 function eliminar_fuente_fondo($id=NULL)
 {
 
-	$q="UPDATE tcm_fuente_fondo SET estado=0 WHERE id_fuente_fondo=$id";
+	$q="UPDATE tcm_fuente_fondo SET estadoF=0 WHERE id_fuente_fondo=$id";
 	$query = $this->db->query($q);
 
 }
 function insertar_fuente_fondo($info)
 {
 	extract($info);
-	$q=" INSERT INTO `tcm_fuente_fondo` ( `nombre_fuente_fondo`, `descripcion`, `estado`) VALUES ( '$nombre', '$descripcion', '1');";
+	$q=" INSERT INTO `tcm_fuente_fondo` ( `nombre_fuente_fondo`, `descripcion`, `estadoF`) VALUES ( '$nombre', '$descripcion', '1');";
 	$query = $this->db->query($q);
 	
 }
