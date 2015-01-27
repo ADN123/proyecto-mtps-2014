@@ -1907,8 +1907,7 @@ function asignacion_vehiculo()
 }
 	function dialogo_asignacion_vehiculo($id_vehiculo = NULL)
 	{
-			error_reporting(E_ALL);
-			ini_set('display_errors', '1');
+
 
 	$data=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),ASIGNACION); /*Verificacion de permiso gestionar asignaciones*/
 		if($data['id_permiso']!=NULL) {
@@ -2218,6 +2217,7 @@ function liquidacion_pdf()
 					//DEFINICION DE TIPO DE REPORTE
 				$html="";
 			if($id_seccion==0){ //liquidacion general
+
 				$data['l']=$this->vales_model->liquidacion_mensual2($mes, $id_fuente_fondo);	
 				$html = $this->load->view('vales/liquidacion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 				$this->mpdf->mPDF('utf-8','letter-L',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
