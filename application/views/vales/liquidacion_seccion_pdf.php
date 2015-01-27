@@ -31,7 +31,7 @@
 
   <thead>
   <tr>
-    <th>VALES RECIBIDOS <?php echo $mesn1; ?></th>
+    <th>VALES RECIBIDOS <?php echo strtoupper($mesn); ?></th>
     <th>DEL</th>
     <th>AL</th>
   </tr>
@@ -49,7 +49,7 @@
   </tbody>
   <thead>
   <tr>
-    <th>SOBRANTES <?php echo $mesn2; ?></th>
+    <th>SOBRANTES <?php echo $mesn1; ?></th>
     <th></th>
     <th></th>
   </tr>
@@ -154,11 +154,11 @@
   <br>
   <table class="table_design" style="width:300px;" id="final">
   <tr>
-    <td>SOBRANTES DE <?php echo $mesn1;?></td>
+    <td>SOBRANTES DE <?php echo strtoupper($mesn);;?></td>
     <td><?php echo $tso; ?></td>
   </tr>
   <tr>
-    <td>SOLICITADOS PARA <?php echo strtoupper($mesn);?></td>
+    <td>SOLICITADOS PARA <?php echo strtoupper($mesn2);?></td>
     <td><?php $tsolicit=$asignado-$tso; echo $tsolicit; ?></td>
   </tr>
   <tr>

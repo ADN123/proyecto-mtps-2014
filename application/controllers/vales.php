@@ -2171,7 +2171,7 @@ function reporte_liquidacion()
 					
 					break;
 				case 3://administrador
-					$data['oficinas']=$this->vales_model->consultar_oficinas();
+					$data['oficinas']=$this->vales_model->secciones_vales();
 					$data['fuente']=$this->vales_model->consultar_fuente_fondo();
 
 					break;
@@ -2203,7 +2203,11 @@ function liquidacion_pdf()
 
 				$data['mesn']= $mes_input;
 				$mes1=restar_mes($mes,1); //le resta un mes
-				$mes2=restar_mes($mes,2); //le resta dos meses
+				$mes2=restar_mes($mes,-1); //le resta dos meses
+				$mes1s=restar_mes($mes,-1); //le suma un mes
+
+
+
 				$data['seccion']= $id_seccion_input;
 				$data['mesn1']=$this->vales_model->name_mes($mes1);
 				$data['mesn2']=$this->vales_model->name_mes($mes2);
@@ -2212,21 +2216,27 @@ function liquidacion_pdf()
 					//DEFINICION DE TIPO DE REPORTE
 				$html="";
 			if($id_seccion==0){ //liquidacion general
-				$data['l']=$this->vales_model->liquidacion_mensual($mes, $id_fuente_fondo);	
+				$data['l']=$this->vales_model->liquidacion_mensual2($mes, $id_fuente_fondo);	
 				$html = $this->load->view('vales/liquidacion_pdf', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
 				$this->mpdf->mPDF('utf-8','letter-L',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
 			}else{ //liquidacion por seccion
-				
+					//$mes2=$mes1;
+					//$mes1=$mes;				
 				$req=$this->vales_model->cantidades_requisiciones($id_seccion,$mes, $id_fuente_fondo);
 				$req=$req[0];
+////temp
+				$data['mesn1']=$this->vales_model->name_mes($mes1);
+				$data['mesn2']=$this->vales_model->name_mes($mes2);
+				$data['mesn1s']=$this->vales_model->name_mes($mes1s);
+				//end temp
 
-
-				$data['s_entregada']=$this->vales_model->cantidad_entregada($id_seccion,$mes1, $id_fuente_fondo);			
-				$data['s_sobrante']=$this->vales_model->cantidad_sobrante($id_seccion,$mes2, $id_fuente_fondo);			
+				$data['s_entregada']=$this->vales_model->cantidad_entregada($id_seccion,$mes, $id_fuente_fondo);			
+				//$data['s_sobrante']=$this->vales_model->cantidad_sobrante($id_seccion,$mes2, $id_fuente_fondo);			
+				$data['s_sobrante']=$this->vales_model->cantidad_sobrante2($id_seccion,$mes, $id_fuente_fondo);			
 				$a_consumir= array_merge($data['s_sobrante'],$data['s_entregada']);
-				$data['consumo_clase']=$this->vales_model->consumo_clase($id_seccion,$mes1, $id_fuente_fondo);
+				$data['consumo_clase']=$this->vales_model->consumo_clase($id_seccion,$mes, $id_fuente_fondo);
 				if (sizeof($data['consumo_clase'])>12) { //para no hacer una lista demasiado grande de vehiculos
-					$data['consumo_clase']=$this->vales_model->consumo_clase($id_seccion,$mes1, $id_fuente_fondo,true);
+					$data['consumo_clase']=$this->vales_model->consumo_clase($id_seccion,$mes, $id_fuente_fondo,true);
 				}
 				$temp=$this->vales_model->simular_consumo_liquidacion($a_consumir, $data['consumo_clase']);
 				$data['s_consumida']=$temp['c'];
@@ -2252,6 +2262,7 @@ function liquidacion_pdf()
 				$stylesheet = file_get_contents('css/style-base.css'); /*Selecionamos la hoja de estilo del pdf*/
 				$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
 				$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
+
 				$this->mpdf->Output(); /*Salida del pdf*/	
 				# code...
 			}else{ //HTML
