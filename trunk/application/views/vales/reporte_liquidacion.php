@@ -49,7 +49,7 @@
                     <?php     
                         foreach($oficinas as $val) 
                         {                    ?>
-                                <option value="<?php echo $val['id_seccion'] ?>"><?php echo $val['nombre_seccion'] ?></option>                
+                                <option value="<?php echo $val['id_seccion'] ?>"><?php echo $val['seccion']; echo $val['nombre_seccion'];  ?></option>                
                     <?php
                         } 
                     ?>

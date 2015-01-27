@@ -742,7 +742,7 @@ GROUP BY r.id_requisicion");
 						INNER JOIN tcm_vehiculo_marca ON tcm_vehiculo.id_marca = tcm_vehiculo_marca.id_vehiculo_marca
 						INNER JOIN tcm_vehiculo_modelo ON tcm_vehiculo.id_modelo = tcm_vehiculo_modelo.id_vehiculo_modelo
 						INNER JOIN tcm_fuente_fondo ON tcm_vehiculo.id_fuente_fondo = tcm_fuente_fondo.id_fuente_fondo
-						WHERE tcm_requisicion_vale.cantidad_restante>0 AND ".$where." 
+						WHERE tcm_requisicion_vale.cantidad_restante>0 AND  (tcm_vehiculo.estado = 1  OR tcm_vehiculo.estado= 2 ) AND ".$where." 
 						GROUP BY tcm_vehiculo.id_vehiculo, tcm_vehiculo.placa, tcm_vehiculo.id_fuente_fondo, tcm_fuente_fondo.nombre_fuente_fondo, marca, tcm_vehiculo_modelo.modelo
 					
 					UNION
@@ -1612,10 +1612,6 @@ function meses_registrados()
 				GROUP BY
 					mes
 				) as x 
-				UNION 
-				SELECT DATE_FORMAT(CURDATE(),'%M %Y') mes_nombre, DATE_FORMAT(CURDATE(),'%Y%m') mes
-				UNION 
-				SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL 15 DAY),'%M %Y') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL 15 DAY),'%Y%m') mes 
 				ORDER BY
 					mes DESC";
     $query=$this->db->query($q);
@@ -1642,6 +1638,29 @@ GROUP BY r.mes, r.id_seccion";
     $query=$this->db->query($q);
     return $query->result_array();
    }   
+   function liquidacion_mensual2($mes=NULL, $fuente=NULL)
+   {
+   	$q="SELECT
+		   	s.nombre_seccion as seccion,
+			DATE_FORMAT(r.fecha,'%d-%m-%Y') as fecha,
+			SUM(r.asignado) AS cuota,
+			SUM(r.restante_anterior) as anterior,
+			SUM(r.cantidad_entregado) as entregado,
+			SUM(r.restante_anterior) + SUM(cantidad_entregado) AS disponibles,
+			COALESCE(c.cant,0) AS consumido ,
+			SUM(r.restante_anterior) + SUM(cantidad_entregado)-COALESCE(c.cant,0) AS sobrante,
+			r.mes,
+			r.id_seccion
+		FROM
+			tcm_requisicion r
+			INNER JOIN org_seccion s ON s.id_seccion=r.id_seccion
+			LEFT JOIN tcm_consumido_mes c ON c.mesc=r.mes AND c.id_fuente_fondo=r.id_fuente_fondo AND c.id_seccion=r.id_seccion
+		WHERE r.mes = '$mes'	AND r.id_fuente_fondo=$fuente
+		GROUP BY r.mes, r.id_seccion";
+
+		 $query=$this->db->query($q);
+    return $query->result_array();
+   }
 function name_mes($mes)
 {
 	   	$query=$this->db->query(" SET lc_time_names = 'es_ES'");
@@ -1718,6 +1737,51 @@ function cantidad_sobrante($id_seccion, $mes='',$id_fuente_fondo)
     return $query->result_array();	
 }
 
+function cantidad_sobrante2($id_seccion, $mes='',$id_fuente_fondo)
+{
+				$query=$this->db->query("SET @id_req:=0;");
+				$q="SELECT
+						@id_req:=id_requisicion_vale AS id_requisicion_vale,
+						inicial,
+						final_rv AS final,
+						final_rv - inicial + 1 AS cant,
+						2 AS tipo,
+						mes
+					FROM
+						tcm_consumo_vehiculo_info
+					WHERE
+						inicial = (
+							SELECT
+								MIN(inicial) AS inicial
+							FROM
+								tcm_consumo_vehiculo_info i
+							WHERE
+								mesc = $mes
+							AND id_seccion = $id_seccion
+							AND id_fuente_fondo = $id_fuente_fondo
+						)
+					UNION
+						SELECT
+							id_requisicion_vale,
+							inicial,
+							final_rv AS final,
+							final_rv - inicial + 1 AS cant,
+							2 AS tipo,
+							mes
+						FROM
+							tcm_consumo_vehiculo_info
+						WHERE
+							id_seccion = $id_seccion
+						AND mesc = $mes
+						AND mes < $mes
+						AND id_fuente_fondo = $id_fuente_fondo
+						AND id_requisicion_vale NOT IN(@id_req)
+						GROUP BY
+							id_requisicion";
+								$query=$this->db->query($q);
+    					return $query->result_array();	
+
+}
 function consumo_clase($id_seccion, $mes='',$id_fuente_fondo, $group=false)
 {	
 		$s=$g="";
@@ -1725,10 +1789,11 @@ function consumo_clase($id_seccion, $mes='',$id_fuente_fondo, $group=false)
 			$g=" GROUP BY clase ";
 			$s=" SUM(cantidad_vales) as cant, clase";
 		}else{
-			$s=" cantidad_vales as cant, articulo as clase";
+			$s=" SUM(cantidad_vales) as cant, articulo as clase";
+			$g=" GROUP BY articulo";
 		}
 		$q="SELECT $s FROM tcm_consumo_vehiculo_info 
-			WHERE id_fuente_fondo = $id_fuente_fondo AND mes='$mes' AND id_seccion= $id_seccion
+			WHERE id_fuente_fondo = $id_fuente_fondo AND mesc='$mes' AND id_seccion= $id_seccion
 			$g";
 			$query=$this->db->query($q);
     	return $query->result_array();	

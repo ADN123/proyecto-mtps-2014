@@ -313,23 +313,44 @@ function restar_mes($mes=NULL,$rest=NULL)
 {	$arr2 = str_split($mes, 4); //divide en 4 digitos, cada arreglo
 	$a=$arr2[0];
 	$m=$arr2[1];
-	
-	while ( $rest>=12) {
-		$a--; $rest-=12;
-	}
-	
-	$m=$m-$rest;
-	//echo $m;
-	if($m<0){
-		//$m=13-$rest;
-		$m=12-(-$m);
-		$a--;
-	}	
-	if($m==0){
-		$m=12;
-		$a--;
-	}
 
+	if($rest>0){
+		
+		while ( $rest>=12) {
+			$a--; $rest-=12;
+		}
+		
+		$m=$m-$rest;
+		//echo $m;
+		if($m<0){
+			//$m=13-$rest;
+			$m=12-(-$m);
+			$a--;
+		}	
+		if($m==0){
+			$m=12;
+			$a--;
+		}
+	}else{
+
+		while ( $rest<=-12) {
+			$a++; $rest+=12;
+		}
+		
+		$m=$m-$rest;
+		//echo $m;
+				
+		if($m>12){
+			//$m=13-$rest;
+			$m-=12;
+			$a++;
+		}	
+		if($m==0){
+			$m=1;
+			$a++;
+		}
+
+	}
 
 	if($m<10){ ///para que se mantenga el formato de dos digitos en mes
 		$m="0".$m;
