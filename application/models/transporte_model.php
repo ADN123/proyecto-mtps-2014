@@ -2246,7 +2246,9 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			$where_vehiculo=" and (v.id_vehiculo='$id_vehiculo')";
 		}
 		
-		$query="SELECT tab.nombre, DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, tta.tipo_transaccion,v.placa
+		$query="SELECT tab.nombre, DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, tta.tipo_transaccion,
+				v.placa, tta.cantidad, tum.unidad_medida, tta.descripcion, tab.id_articulo, tta.id_transaccion_articulo,
+				v.id_vehiculo, tmi.id_mantenimiento_interno, tmr.id_mantenimiento_rutinario, tit.id_ingreso_taller
 				FROM tcm_articulo_bodega AS tab
 				INNER JOIN tcm_unidad_medida AS tum ON (tum.id_unidad_medida=tab.id_unidad_medida)
 				INNER JOIN tcm_transaccion_articulo AS tta ON (tab.id_articulo=tta.id_articulo)
@@ -2254,8 +2256,9 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tta.id_mantenimiento_rutinario)
 				LEFT JOIN tcm_ingreso_taller AS tit ON (tit.id_ingreso_taller=tmi.id_ingreso_taller)
 				LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo OR tmr.id_vehiculo=v.id_vehiculo)
-				".$where_fecha.$where_articulo.$where_vehiculo."
-				order by tta.fecha ASC";
+				".$where_fecha.$where_articulo.$where_vehiculo;
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
 	}
 	/*******************************************************************************************************************************************/
 	
