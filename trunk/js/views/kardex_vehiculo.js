@@ -79,40 +79,76 @@ function reporte(formu)
 		data: formu,
 		success: function(data)
 		{
-			tabla(data), 
-			grafico(data)
+			tabla(data) 
+			//grafico(data)
 		},
 		error:function(data)
 		{
-			alertify.alert('Error al cargar datos de vehiculos');
+			alertify.alert('Error al cargar datos de los articulos');
 		}
-	});          
-	
-	$.ajax({  //para vehiculos
-		async:  true, 
-		url: base_url()+"index.php/vales/reporte_vehiculo_json/2",
-		dataType: "json",
-		type: "POST",
-		data: formu,
-		success: function(data)
-		{
-			tabla3(data)
-		},
-		error:function(data)
-		{
-			alertify.alert('Error al cargar datos de Herramientas');
-		}
-	});          
-
+	});
 }
 
 function tabla(json)
 {
-	var fila;
+	var cont='';
+	var n=json.length;
 	
-	$('#datos tbody').remove();        
+	$('#tabla_resultado').html("");
 	
-	for (i=0;i<json.length;i++)
+	if(json[0]=='true')
+	{
+		var ingresos=0;
+		var egresos=0;
+		cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
+		cont=cont+'<thead>';
+		cont=cont+'<tr>';
+		cont=cont+'<th>Fecha</th>';
+		cont=cont+'<th>Placa de Vehículo</th>';
+		cont=cont+'<th>Entrada</th>';
+		cont=cont+'<th>Salida</th>';
+		cont=cont+'<th>Existencia</th>';
+		cont=cont+'<th>Decripción</th>';
+		cont=cont+'</tr>';
+		cont=cont+'</thead>';
+		cont=cont+'<tbody>';
+		
+		for(i=1;i<n;i++)
+		{
+			cont=cont+'<tr>';
+			cont=cont+'<td>'+json[i].fecha_transaccion+'</td>';
+			cont=cont+'<td>'+json[i].placa+'</td>';
+			if(json[i].tipo_transaccion=='ENTRADA')
+			{
+				cont=cont+'<td>'+json[i].cantidad+'</td>';
+				cont=cont+'<td>Salida</td>';
+			}
+			cont=cont+'<td>Existencia</td>';
+			cont=cont+'<td>'+json[i].descripcion+'</td>';
+			cont=cont+'</tr>';
+		}
+		
+		cont=cont+'</tbody>';
+		cont=cont+'</table>';
+	}
+	else
+	{
+		cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
+		cont=cont+'<thead>';
+		cont=cont+'<tr>';
+		cont=cont+'<th>Fecha</th>';
+		cont=cont+'<th>Artículo</th>';
+		cont=cont+'<th>Entrada</th>';
+		cont=cont+'<th>Salida</th>';
+		cont=cont+'<th>Existencia</th>';
+		cont=cont+'</tr>';
+		cont=cont+'</thead>';
+		cont=cont+'<tbody>';
+		cont=cont+'</tbody>';
+		cont=cont+'</table>';
+	}
+	$('#tabla_resultado').html(cont);
+	/*for (i=0;i<json.length;i++)
 	{   
 		fila= "<tr>" +
 		"<td align='center'>" + json[i].row_number + "</td>" +
@@ -132,7 +168,7 @@ function tabla(json)
 		fila+= "</td>" +
 		"</tr>";    
 		$('#datos').append(fila)    
-	}  
+	}  */
 }
 
 function grafico(chartData, label)
