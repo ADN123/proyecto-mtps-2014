@@ -2027,7 +2027,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/******************************************************************************************************************/
 	
-	//////////////////////////////////////////////FUNCIONES DE LOS ARTÍCUlOS////////////////////////////////////////////
+	//////////////////////////////////////////////FUNCIONES DE LOS ARTÍCULOS////////////////////////////////////////////
 	
 	/************************************FUNCIÓN QUE MUESTRA LOS ARTÍCULOS DISPONIBLES*********************************/
 	function inventario($id_articulo=NULL)
@@ -2199,6 +2199,63 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				return $this->db->query($query2);
 			}
 		}		
+	}
+	/*******************************************************************************************************************************************/
+	
+	/*******************************************FUNCIÓN PARA OBTENER EL REPORTE DEL KARDEX********************************************/
+	function kardex_articulo($datos)
+	{
+		extract($datos);
+		$where_fecha="";
+		$where_vehiculo="";
+		$where_articulo="";
+		
+		//////////////////FILTRO DE FECHAS/////////////////////
+		if($fecha_inicial!='' && $fecha_final!='')
+		{
+			$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
+			$fecha_final2=date('Y-m-d',strtotime($fecha_final));
+			$where_fecha="where (tta.fecha between '$fecha_inicial2' and '$fecha_final2')";
+		}
+		elseif($fecha_inicial=='' && $fecha_final=='')
+		{
+			$fecha_inicial=date('Y')."-01-01";
+			$fecha_final=date('Y')."-12-31";
+			$where_fecha="where (tta.fecha between '$fecha_inicial2' and '$fecha_final2')";
+		}
+		elseif($fecha_inicial!='')
+		{
+			$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
+			$where_fecha="where (tta.fecha='$fecha_inicial2')";
+		}
+		elseif($fecha_final!='')
+		{
+			$fecha_final2=date('Y-m-d',strtotime($fecha_final));
+			$where_fecha="where (tta.fecha='$fecha_final2')";
+		}
+		
+		//////////////////////FILTRO ARTICULOS/////////////////
+		if($id_articulo!='' && $id_articulo!=0)
+		{
+			$where_articulo=" and (tab.id_articulo='$id_articulo')";
+		}
+		
+		////////////////////FILTRO DE VEHICULOS///////////////////
+		if($id_vehiculo!='' && $id_vehiculo!=0)
+		{
+			$where_vehiculo=" and (v.id_vehiculo='$id_vehiculo')";
+		}
+		
+		$query="SELECT tab.nombre, DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, tta.tipo_transaccion,v.placa
+				FROM tcm_articulo_bodega AS tab
+				INNER JOIN tcm_unidad_medida AS tum ON (tum.id_unidad_medida=tab.id_unidad_medida)
+				INNER JOIN tcm_transaccion_articulo AS tta ON (tab.id_articulo=tta.id_articulo)
+				LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tta.id_mantenimiento_interno=tmi.id_mantenimiento_interno)
+				LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tta.id_mantenimiento_rutinario)
+				LEFT JOIN tcm_ingreso_taller AS tit ON (tit.id_ingreso_taller=tmi.id_ingreso_taller)
+				LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo OR tmr.id_vehiculo=v.id_vehiculo)
+				".$where_fecha.$where_articulo.$where_vehiculo."
+				order by tta.fecha ASC";
 	}
 	/*******************************************************************************************************************************************/
 	

@@ -1059,8 +1059,15 @@ class Vehiculo extends CI_Controller
 	
 	function kardex_articulo_json()
 	{
-		$id_vehiculo=$this->input->post('id_vehiculo');
-		//if()
+		$id_articulo=$_POST['id_articulo'];
+		if($id_articulo=="" || $id_articulo==0)
+		{
+			$data=$this->transporte_model->kardex_articulo($_POST);
+		}
+		else
+		{
+		}
+		
 		$data['articulos']=$this->transporte_model->inventario();
 		$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
 		pantalla('mantenimiento/kardex_articulos',$data);
