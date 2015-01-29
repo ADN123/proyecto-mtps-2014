@@ -1049,6 +1049,24 @@ class Vehiculo extends CI_Controller
 	}
 	
 	/*
+	*	Nombre: kardex_articulo_json
+	*	Objetivo: Obtiene la información relacionada al kardex_articulo para generar los informes y estadísticas
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 29/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function kardex_articulo_json()
+	{
+		$id_vehiculo=$this->input->post('id_vehiculo');
+		//if()
+		$data['articulos']=$this->transporte_model->inventario();
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
+		pantalla('mantenimiento/kardex_articulos',$data);
+	}
+	
+	/*
 	*	Nombre: articulo_vehiculo
 	*	Objetivo: llama a la vista de articulo_vehiculo para generar los reportes
 	*	Hecha por: Oscar
