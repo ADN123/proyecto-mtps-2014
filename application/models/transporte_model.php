@@ -2255,7 +2255,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		else
 		{
 			$select_articulo=" tab.cantidad as existencias,";
-			if($aux==0) $group_by_articulo="group by tab.id_articulo";
+			if($aux==0) $group_by_articulo="group by tab.id_articulo ";
 		}
 		
 		$query="SELECT tab.nombre, DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, tta.tipo_transaccion,".$select_articulo."
@@ -2270,7 +2270,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				LEFT JOIN tcm_ingreso_taller AS tit ON (tit.id_ingreso_taller=tmi.id_ingreso_taller)
 				LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo OR tmr.id_vehiculo=v.id_vehiculo)
 				".$where_fecha.$where_articulo.$where_vehiculo."
-				".$group_by_vehiculo.$group_by_articulo;
+				".$group_by_vehiculo.$group_by_articulo."; ";
 
 		$query=$this->db->query($query);
 		return (array) $query->result_array();
