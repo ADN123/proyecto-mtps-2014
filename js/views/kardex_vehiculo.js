@@ -93,10 +93,10 @@ function tabla(json)
 {
 	var cont='';
 	var n=json.length;
-	
+	var filtro=document.getElementById('id_articulo');
 	$('#tabla_resultado').html("");
 	
-	if(json[0]=='true')
+	if(filtro.value!='' && filtro.value!=0)
 	{
 		var ingresos=0;
 		var egresos=0;
@@ -113,7 +113,7 @@ function tabla(json)
 		cont=cont+'</thead>';
 		cont=cont+'<tbody>';
 		
-		for(i=1;i<n;i++)
+		for(i=0;i<n;i++)
 		{
 			cont=cont+'<tr>';
 			cont=cont+'<td>'+json[i].fecha_transaccion+'</td>';
@@ -145,16 +145,16 @@ function tabla(json)
 		cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
 		cont=cont+'<thead>';
 		cont=cont+'<tr>';
-		cont=cont+'<th>Fecha</th>';
-		cont=cont+'<th>Artículo</th>';
-		cont=cont+'<th>Entrada</th>';
-		cont=cont+'<th>Salida</th>';
-		cont=cont+'<th>Existencia</th>';
+		cont=cont+'<th width="90px" align="center">Fecha</th>';
+		cont=cont+'<th width="120px" align="center">Artículo</th>';
+		cont=cont+'<th width="80px" align="center">Entrada</th>';
+		cont=cont+'<th width="80px" align="center">Salida</th>';
+		cont=cont+'<th width="80px" align="center">Existencia</th>';
 		cont=cont+'</tr>';
 		cont=cont+'</thead>';
 		cont=cont+'<tbody>';
 		
-		for(i=1;i<n;i++)
+		for(i=0;i<n;i++)
 		{
 			cont=cont+'<tr>';
 			cont=cont+'<td>'+json[i].fecha_transaccion+'</td>';
@@ -185,6 +185,7 @@ function grafico(chartData)
 {
 	var color1 = "#ADD981";
 	var color2 ="#27c5ff";
+	var filtro=document.getElementById('id_articulo');
 	var titulo;
 	var chart;
 	//color1 = $("#color1").val();
@@ -193,7 +194,7 @@ function grafico(chartData)
 	// SERIAL CHART
 	chart = new AmCharts.AmSerialChart();
 	chart.dataProvider = chartData;
-	if(chartData[0]=='true')
+	if(filtro.value!='' && filtro.value!=0)
 	{
 		titulo='KARDEX DE INSUMOS';
 		chart.categoryField = "placa";
@@ -227,7 +228,7 @@ function grafico(chartData)
 	
 	// GRAPHS
 	// column graph
-	if(chartData[0]=='true')
+	if(filtro.value!='' && filtro.value!=0)
 	{
 		var graph1 = new AmCharts.AmGraph();
 		graph1.type = "column";

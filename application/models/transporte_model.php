@@ -2251,6 +2251,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		if($id_articulo!='' && $id_articulo!=0)
 		{
 			$where_articulo=" and (tab.id_articulo='$id_articulo')";
+			$group_by_vehiculo="group by v.placa";
+			$select_vehiculo=" SUM(tta.cantidad) AS cant_usada,";
 		}
 		else
 		{
@@ -2271,7 +2273,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo OR tmr.id_vehiculo=v.id_vehiculo)
 				".$where_fecha.$where_articulo.$where_vehiculo."
 				".$group_by_vehiculo.$group_by_articulo."; ";
-
+		//echo $query;
 		$query=$this->db->query($query);
 		return (array) $query->result_array();
 	}
