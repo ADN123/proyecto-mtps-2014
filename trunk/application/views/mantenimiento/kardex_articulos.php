@@ -49,6 +49,7 @@
 <br><br>
 <div id="tabla_resultado">
 </div>
+<br><br>
 <div style="height:400px; background:#FFFFFF;" id="chartdiv">
 </div>
 <script language="javascript" src="<?php echo base_url()?>js/views/kardex_vehiculo.js"></script>

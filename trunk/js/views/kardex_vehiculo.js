@@ -79,8 +79,8 @@ function reporte(formu)
 		data: formu,
 		success: function(data)
 		{
-			tabla(data) 
-			//grafico(data)
+			tabla(data), 
+			grafico(data)
 		},
 		error:function(data)
 		{
@@ -103,11 +103,11 @@ function tabla(json)
 		cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
 		cont=cont+'<thead>';
 		cont=cont+'<tr>';
-		cont=cont+'<th>Fecha</th>';
-		cont=cont+'<th>Placa de Vehículo</th>';
-		cont=cont+'<th>Entrada</th>';
-		cont=cont+'<th>Salida</th>';
-		cont=cont+'<th>Existencia</th>';
+		cont=cont+'<th width="90px" align="center">Fecha</th>';
+		cont=cont+'<th width="120px" align="center">Placa de Vehículo</th>';
+		cont=cont+'<th width="80px" align="center">Entrada</th>';
+		cont=cont+'<th width="80px" align="center">Salida</th>';
+		cont=cont+'<th width="80px" align="center">Existencia</th>';
 		cont=cont+'<th>Decripción</th>';
 		cont=cont+'</tr>';
 		cont=cont+'</thead>';
@@ -120,10 +120,17 @@ function tabla(json)
 			cont=cont+'<td>'+json[i].placa+'</td>';
 			if(json[i].tipo_transaccion=='ENTRADA')
 			{
-				cont=cont+'<td>'+json[i].cantidad+'</td>';
-				cont=cont+'<td>Salida</td>';
+				cont=cont+'<td align="rigth">'+json[i].cantidad+'</td>';
+				cont=cont+'<td>&nbsp;</td>';
+				ingresos=ingresos+parseFloat(json[i].cantidad);
 			}
-			cont=cont+'<td>Existencia</td>';
+			else if(json[i].tipo_transaccion=='SALIDA')
+			{
+				cont=cont+'<td>&nbsp;</td>';
+				cont=cont+'<td align="right">'+json[i].cantidad+'</td>';
+				egresos=egresos+parseFloat(json[i].cantidad);
+			}
+			cont=cont+'<td align="right">'+parseFloat(ingresos-egresos)+'</td>';
 			cont=cont+'<td>'+json[i].descripcion+'</td>';
 			cont=cont+'</tr>';
 		}
@@ -133,6 +140,8 @@ function tabla(json)
 	}
 	else
 	{
+		var ingresos=0;
+		var egresos=0;
 		cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
 		cont=cont+'<thead>';
 		cont=cont+'<tr>';
@@ -144,46 +153,56 @@ function tabla(json)
 		cont=cont+'</tr>';
 		cont=cont+'</thead>';
 		cont=cont+'<tbody>';
+		
+		for(i=1;i<n;i++)
+		{
+			cont=cont+'<tr>';
+			cont=cont+'<td>'+json[i].fecha_transaccion+'</td>';
+			cont=cont+'<td>'+json[i].nombre+'</td>';
+			if(json[i].tipo_transaccion=='ENTRADA')
+			{
+				cont=cont+'<td align="rigth">'+json[i].cantidad+'</td>';
+				cont=cont+'<td>&nbsp;</td>';
+				ingresos=ingresos+parseFloat(json[i].cantidad);
+			}
+			else if(json[i].tipo_transaccion=='SALIDA')
+			{
+				cont=cont+'<td>&nbsp;</td>';
+				cont=cont+'<td align="right">'+json[i].cantidad+'</td>';
+				egresos=egresos+parseFloat(json[i].cantidad);
+			}
+			cont=cont+'<td align="right">'+parseFloat(ingresos-egresos)+'</td>';
+			cont=cont+'</tr>';
+		}
+		
 		cont=cont+'</tbody>';
 		cont=cont+'</table>';
 	}
-	$('#tabla_resultado').html(cont);
-	/*for (i=0;i<json.length;i++)
-	{   
-		fila= "<tr>" +
-		"<td align='center'>" + json[i].row_number + "</td>" +
-		"<td align='center'>" + json[i].seccion + "</td>" +
-		"<td align='center'>" + json[i].asignado + "</td>" +
-		"<td align='center'>" + json[i].entregado + "</td>" +
-		"<td align='center'>"; 
-		var series1=json[i].inicial.split(",");
-		var series2=json[i].final.split(",");
-		
-		for (var j= 0; j < series1.length; j++)
-		{
-			fila+=series1[j]+" - "+ series2[j];
-			if(j!=series1.length-1){ fila+="<br>"}
-		}
-		
-		fila+= "</td>" +
-		"</tr>";    
-		$('#datos').append(fila)    
-	}  */
+	$('#tabla_resultado').html(cont);	
 }
 
-function grafico(chartData, label)
+function grafico(chartData)
 {
 	var color1 = "#ADD981";
 	var color2 ="#27c5ff";
+	var titulo;
 	var chart;
-	color1 = $("#color1").val();
-	color2 = $("#color2").val();
-	
+	//color1 = $("#color1").val();
+	//color2 = $("#color2").val();
 	
 	// SERIAL CHART
 	chart = new AmCharts.AmSerialChart();
 	chart.dataProvider = chartData;
-	chart.categoryField = label;
+	if(chartData[0]=='true')
+	{
+		titulo='KARDEX DE INSUMOS';
+		chart.categoryField = "placa";
+	}
+	else
+	{
+		titulo='MATERIALES EN EXISTENCIA EN BODEGA DE TALLER INSTITUCIONAL';
+		chart.categoryField = "nombre";
+	}
 	chart.startDuration = 1;
 	chart.rotate = true;
 	
@@ -199,7 +218,7 @@ function grafico(chartData, label)
 	valueAxis.dashLength = 3;
 	valueAxis.axisAlpha = 0.2;
 	valueAxis.position = "top";
-	valueAxis.title = "vales";
+	valueAxis.title = titulo;
 	valueAxis.minorGridEnabled = true;
 	valueAxis.minorGridAlpha = 0.08;
 	
@@ -208,27 +227,31 @@ function grafico(chartData, label)
 	
 	// GRAPHS
 	// column graph
-	var graph1 = new AmCharts.AmGraph();
-	graph1.type = "column";
-	graph1.title = "Consumido";
-	graph1.valueField = "consumido";
-	graph1.lineAlpha = 0;
-	graph1.fillColors = color1;
-	graph1.fillAlphas = 0.8;
-	graph1.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
-	chart.addGraph(graph1);
-	
-	
-	// column graph
-	var graph2 = new AmCharts.AmGraph();
-	graph2.type = "column";
-	graph2.title = "Asignado";
-	graph2.valueField = "asignado";
-	graph2.lineAlpha=0;
-	graph2.fillColors = color2
-	graph2.fillAlphas = 0.8;
-	graph2.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
-	chart.addGraph(graph2);
+	if(chartData[0]=='true')
+	{
+		var graph1 = new AmCharts.AmGraph();
+		graph1.type = "column";
+		graph1.title = "cantidad usada";
+		graph1.valueField = "cant_usada";
+		graph1.lineAlpha = 0;
+		graph1.fillColors = color1;
+		graph1.fillAlphas = 0.8;
+		graph1.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
+		chart.addGraph(graph1);
+	}
+	else
+	{	
+		// column graph
+		var graph2 = new AmCharts.AmGraph();
+		graph2.type = "column";
+		graph2.title = "Existencia";
+		graph2.valueField = "existencias";
+		graph2.lineAlpha=0;
+		graph2.fillColors = color2
+		graph2.fillAlphas = 0.8;
+		graph2.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
+		chart.addGraph(graph2);
+	}
 	
 	
 	// LEGEND
