@@ -1,12 +1,12 @@
 <section>
     <h2>Kardex de Artículos</h2>
 </section>
-<form id="filtro">
+<form id="filtro" action="<? echo base_url()?>index.php/vehiculo/kardex_pdf" method="post">
 <table align="center" width="100%">
     <tr>
         <td width="50%">
         <label style="width:100px">Artículo: </label>
-            <select class="select" style="width:300px" name="id_articulo" multiple="multiple">
+            <select class="select" style="width:300px" name="id_articulo" id="id_articulo" multiple="multiple">
                 <option value="0" selected="selected">[Todos]</option>
                 <?php
                     foreach($articulos as $art)

@@ -1053,15 +1053,28 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Obtiene la información relacionada al kardex_articulo para generar los informes y estadísticas
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 29/01/2015
+	*	Última Modificación: 30/01/2015
 	*	Observaciones: Ninguna
 	*/
 	
 	function kardex_articulo_json()
 	{
 		$data=$this->transporte_model->kardex_articulo($_POST);
-		if($_POST['id_articulo']!='' && $_POST['id_articulo']!=0) array_unshift($data,"true");
-		else array_unshift($data,"false");
+		echo json_encode($data);
+	}
+	
+	/*
+	*	Nombre: kardex_pdf
+	*	Objetivo: Función que genera el pdf a imprimir de los informes y estadísticas
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 30/01/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function kardex_pdf()
+	{
+		$data=$this->transporte_model->kardex_articulo($_POST);
 		echo json_encode($data);
 	}
 	
