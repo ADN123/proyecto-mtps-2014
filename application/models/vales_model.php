@@ -276,7 +276,7 @@ class Vales_model extends CI_Model {
 	{
 		$where="";
 		if($id_seccion!=NULL){
-			$where="WHERE 	tv.id_seccion_vale = ".$id_seccion;
+			$where="WHERE 	id_seccion_vale = ".$id_seccion;
 
 		}
 		$q="	SELECT
@@ -285,7 +285,12 @@ class Vales_model extends CI_Model {
 								FROM
 									tcm_fuente_fondo ff
 								INNER JOIN tcm_vehiculo tv ON tv.id_fuente_fondo = ff.id_fuente_fondo
-								".$where."
+									$where
+								UNION
+				SELECT 		ff.id_fuente_fondo, 		ff.nombre_fuente_fondo AS nombre_fuente 	
+								FROM 		tcm_fuente_fondo ff
+								INNER JOIN tcm_herramienta h ON h.id_fuente_fondo = ff.id_fuente_fondo
+									$where
 								GROUP BY
 									id_fuente_fondo";
 
