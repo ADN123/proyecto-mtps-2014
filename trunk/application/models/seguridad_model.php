@@ -238,5 +238,13 @@ class Seguridad_model extends CI_Model {
         return $count;
 	}
 
+	function get_ayuda($id_modulo=NULL)
+	{
+		$q="SELECT * FROM glb_ayuda WHERE id_modulo=$id_modulo";
+		$query=$this->db->query($q);
+		$temp= $query->result_array();
+		return $temp[0];
+	}	
+
 }
 ?>
