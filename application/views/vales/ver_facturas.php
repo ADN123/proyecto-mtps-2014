@@ -32,7 +32,7 @@
     <td><?php echo $fila['factura']?></td>
 
     <td><a title="Ver Factura" rel="leanModal" href="#ventana" onclick="dialogo(<?php echo $fila['id_consumo']?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
-        <?php if($fila['eliminable']==1 && $id_permiso==4){  ?>
+        <?php if($fila['eliminable']==1 && $id_permiso==3){  ?>
             <a title="Eliminar Factura" href="javascript:enviar(<?php echo $fila[id_consumo]; ?>)"><img  src="<?php echo base_url()?>img/ico_basura.png"/></a>
         <?php }?>
 	</td>

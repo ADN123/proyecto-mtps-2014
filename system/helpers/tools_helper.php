@@ -43,19 +43,22 @@
 	function pantalla($vista, $data=NULL) 
 	{
 		$CI =& get_instance();
-		$data['nick']=$CI->session->userdata('usuario');
+
+
+		$data['usuario']=$CI->session->userdata('usuario');
 		$data['nombre']=$CI->session->userdata('nombre');
 		$data['menus']=$CI->seguridad_model->buscar_menus($CI->session->userdata('id_usuario'));
 		
 ////para ayuda
-		$descripcion_ayuda= "Descripcion del modulo ";
-					  			for ($i=0; $i <4 ; $i++) { 
-					  				$descripcion_ayuda.=$descripcion_ayuda;
-					  			}
-		$pasos = array("paso 1 tambiem ", 
-						"paso 2 van los ",
-						"paso 4 errores",
-						"paso 5 de ejemplo");
+
+		$descripcion_ayuda="";
+		$pasos="";
+		$errores="";
+		if($data['id_modulo']!=NULL){
+			$descripcion_ayuda=$CI->seguridad_model->get_ayuda($data['id_modulo']);
+			$descripcion_ayuda=$descripcion_ayuda['descripcion_ayuda'];
+
+		}
 
 		$data['descripcion_ayuda']=$descripcion_ayuda;
 		$data['pasos']=$pasos;
@@ -152,7 +155,7 @@
 			//indico un usuario / clave de un usuario de gmail
 			$mail->Username = "informatica.mtps@gmail.com";
 			$mail->Password = "wsx!@#mko";
-			$mail->From = "thanf92@gmail.com";
+			$mail->From = "informatica.mtps@gmail.com";
 			$mail->FromName = "Informatica MTPS";
 			$mail->AddReplyTo("informatica.mtps@gmail.com","Informatica mtps");
 			$mail->Subject = $title;
@@ -368,5 +371,6 @@ function getUltimoDiaMes($elAnio=NULL,$elMes=NULL) {
 		}
   return date("d",(mktime(0,0,0,$elMes+1,1,$elAnio)-1));
 }
+
 /* End of file tools_helper.php */
 /* Location: ./system/helpers/form_helper.php */

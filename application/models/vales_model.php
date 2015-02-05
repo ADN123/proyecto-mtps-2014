@@ -158,9 +158,36 @@ class Vales_model extends CI_Model {
 	function vehiculos_req($id_seccion=NULL, $id_fuente_fondo= NULL, $id_requisicion=NULL)	
 	{	
 		
+//verificaremos que tenga vehiculos
+		$q="		SELECT
+							id_vehiculo
+						FROM
+							tcm_req_veh
+						WHERE
+							id_requisicion = $id_requisicion";
+		$query=$this->db->query($q);
+		$t=$query->result_array();
+		
+$qin="";
+		if($t[0]['id_vehiculo']!=''){
+$qin="			AND v.id_vehiculo NOT IN (
+						SELECT
+							id_vehiculo
+						FROM
+							tcm_req_veh
+						WHERE
+							id_requisicion = @id_requisicion
+					)";
+		}
+		
+//SELECCION
+
 		$query=$this->db->query("SET @id_requisicion= $id_requisicion;");
 		$query=$this->db->query("SET @id_fuente_fondo= $id_fuente_fondo;");
 		$query=$this->db->query("SET @id_seccion= $id_seccion;");
+
+
+
 		$sentencia="SELECT
 						v.id_vehiculo,
 						v.placa,
@@ -175,14 +202,7 @@ class Vales_model extends CI_Model {
 					WHERE
 						v.id_fuente_fondo = @id_fuente_fondo
 					AND v.id_seccion_vale = @id_seccion
-					AND v.id_vehiculo NOT IN (
-						SELECT
-							id_vehiculo
-						FROM
-							tcm_req_veh
-						WHERE
-							id_requisicion = @id_requisicion
-					)
+							$qin
 					UNION
 					SELECT
 						v.id_vehiculo,
@@ -197,6 +217,7 @@ class Vales_model extends CI_Model {
 					INNER JOIN tcm_vehiculo_modelo vmo ON vmo.id_vehiculo_modelo = v.id_modelo
 					INNER JOIN tcm_req_veh rv ON rv.id_vehiculo=  v.id_vehiculo
 					WHERE id_requisicion = @id_requisicion";
+			//echo $sentencia;
 		$query=$this->db->query($sentencia);
 		
 		return (array)$query->result_array();
@@ -455,6 +476,7 @@ class Vales_model extends CI_Model {
 				ff.nombre_fuente_fondo as fuente_fondo,
 				r.cantidad_entregado,
 				r.cantidad_solicitada,
+				r.observaciones,
 				justificacion,
 				LOWER(CONCAT_WS(' ',e.primer_nombre, e.segundo_nombre, e.tercer_nombre, e.primer_apellido,e.segundo_apellido,e.apellido_casada)) AS nombre,
 				DATE_FORMAT(fecha_visto_bueno,'%d/%m/%Y %h:%i %p') as fecha_visto_bueno,			
@@ -1950,7 +1972,7 @@ function consultar_facturas($id_seccion=NULL)
 			WHERE c.id_consumo NOT IN (SELECT id_consumo FROM tcm_ultima_factura) $where
 			GROUP BY
 				c.id_consumo 
-			LIMIT   600";
+					";
 		    	$query=$this->db->query($q);
 		return $query->result_array();					
 }
@@ -2119,6 +2141,22 @@ function insertar_fuente_fondo($info)
 	$q=" INSERT INTO `tcm_fuente_fondo` ( `nombre_fuente_fondo`, `descripcion`, `estadoF`) VALUES ( '$nombre', '$descripcion', '1');";
 	$query = $this->db->query($q);
 	
+}
+function info_seccion($id_seccion){
+	$q="SELECT DISTINCT
+					tcm_empleado.id_seccion,
+					UPPER(tcm_empleado.seccion) AS nivel_1,
+					UPPER(tcm_empleado.padre) AS nivel_2,
+					UPPER(tcm_empleado.abuelo) AS nivel_3
+					FROM tcm_empleado WHERE tcm_empleado.id_seccion = $id_seccion";
+	$query = $this->db->query($q);
+	return (array) $query->row();
+}
+function id_seccion_requisicion($id_requisicion){
+	$q="SELECT id_seccion FROM tcm_requisicion WHERE id_requisicion = $id_requisicion";
+	$query = $this->db->query($q);
+	$t=(array) $query->row();
+	return $t['id_seccion'];
 }
 }
 ?>

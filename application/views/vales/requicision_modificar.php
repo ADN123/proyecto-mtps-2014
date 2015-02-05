@@ -101,7 +101,7 @@ var ban= $(k).prop('checked');
                  <p>
 
                 <label for="mes" id="lmes">Para el mes de: </label>
-                <select  style="width:200px;" tabindex="5" id="mes" name="mes" onChange="cargar_vehiculo()">
+                <select  style="width:200px;" tabindex="5" id="mes" name="mes" onChange="cargar_vehiculo()" multiple="multiple">
                     <?php
                         foreach($m as $val) {
                     ?>

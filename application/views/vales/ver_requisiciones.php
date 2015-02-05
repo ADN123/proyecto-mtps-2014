@@ -58,6 +58,9 @@
         <?php if($fila['estado']<=3){  ?>
             <a title="Modificar Requisicion" href="<?php echo base_url().'index.php/vales/requisicion_modificar/'.$fila[id_requisicion];?>"><img  src="<?php echo base_url()?>img/editar.png"/></a>
         <?php }?>
+        <?php if($fila['estado']==3){  ?>
+         <a title="Crear .pdf de Requisicion" target="_blank" href="<?php echo base_url().'index.php/vales/requisicion_pdf/'.$fila[id_requisicion];?>"><img  src="<?php echo base_url()?>img/ico_pdf.png"/></a>
+         <?php } ?>
 	</td>
   </tr>
 <?php } ?>
