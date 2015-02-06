@@ -70,7 +70,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             <h2 class="StepTitle">Ingreso de la informaci&oacute;n del vehículo</h2>
 			<p>
                 <label>Número de Placa: </label>
-                <input type="text" name="placa" size="10" <?php if($bandera=='true') echo "value='".$placa."'" ?> />
+                <input type="text" name="placa" id="placa" size="10" <?php if($bandera=='true') echo "value='".$placa."'" ?> />
                
             </p>
             <p>
@@ -139,7 +139,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             </p>
             <p>
             	<label>A&ntilde;o: </label>
-                <input type="text" name="anio" size="10" <?php if($bandera=='true') echo "value='".$anio."'"; ?> />
+                <input type="text" name="anio" id="anio" size="10" <?php if($bandera=='true') echo "value='".$anio."'"; ?> />
             </p>
             <p>
                 <label>Fotografía: </label>
@@ -198,12 +198,13 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
 				<p>
                     <label>Estado: </label>
                     <select name="estado" id="estado" placeholder="[Seleccione...]" class="select" style="width:150px" multiple="multiple">
-                        <option value="0" <?php if($estado==0) echo "selected='selected'"; ?>>De Baja</option>
+                        <option value="0" <?php if($estado==0) echo "selected='selected'"; ?>>Inactivo</option>
                         <option value="1" <?php if($estado==1) echo "selected='selected'"; ?>>Activo</option>
                         <option value="2" <?php if($estado==2) echo "selected='selected'"; ?>>En Taller Interno</option>
                         <option value="3" <?php if($estado==3) echo "selected='selected'"; ?>>En Taller Externo</option>
                         <option value="4" <?php if($estado==4) echo "selected='selected'"; ?>>Robado</option>
-                        <option value="5" <?php if($estado==5) echo "selected='selected'"; ?>>Extraviado</option>
+                        <option value="5" <?php if($estado==5) echo "selected='selected'"; ?>>Hurtado</option>
+                        <option value="6" <?php if($estado==6) echo "selected='selected'"; ?>>Extraviado</option>
                     </select>
             	</p>
 				<?php
@@ -211,7 +212,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             ?>
             <p>
             	<label>Tipo de Combustible</label>
-                <select name="tipo_combustible" class="select" placeholder="[Seleccione...]" style="width:150px" multiple="multiple">
+                <select id="tipo_combustible" name="tipo_combustible" class="select" placeholder="[Seleccione...]" style="width:150px" multiple="multiple">
                 	<option value="Diesel" <?php if($bandera=='true'){ if(strcmp($tipo_combustible,'Diesel')==0) echo "selected='selected'";} ?>>Diesel</option>
                     <option value="Gasolina" <?php if($bandera=='true'){ if(strcmp($tipo_combustible,'Gasolina')==0) echo "selected='selected'";} ?>>Gasolina</option>
                 </select>
@@ -221,7 +222,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             <h2 class="StepTitle">Informaci&oacute;n de asignación de motorista, oficina y sección del vehículo</h2>
             <p>
                 <label>Sección: </label>
-                <select name="seccion" class="select" placeholder="[Seleccione...]" style="width:350px" multiple="multiple">
+                <select name="seccion" id="seccion" class="select" placeholder="[Seleccione...]" style="width:350px" multiple="multiple">
                 <?php
                 
                 foreach($seccion as $sec)
@@ -239,7 +240,7 @@ else $action=base_url()."index.php/vehiculo/guardar_vehiculo";
             </p>
             <p>
                 <label>Motorista: </label>
-                <select name="motorista" class="select" placeholder="[Seleccione...]" style="width:300px" multiple="multiple">
+                <select name="motorista" id="motorista" class="select" placeholder="[Seleccione...]" style="width:300px" multiple="multiple">
 				<?php
                 
                 foreach($motoristas as $mot)
@@ -336,7 +337,55 @@ $(document).ready(function(){
             $('#seccion_vales').empty();
 
     }
-	/*$('#estado').kendoDropDownList().select(<?php //echo $estado; ?>);*/
+	$('#placa').validacion({
+		req: true
+	});
+	$('#marca').validacion({
+		req: true
+	});
+	$('#nmarca').validacion({
+		req: false,
+		lonMin:3
+	});
+	$('#modelo').validacion({
+		req: true
+	});
+	$('#nmodelo').validacion({
+		req: false,
+		lonMin:3
+	});
+	$('#clase').validacion({
+		req: true
+	});
+	$('#nclase').validacion({
+		req: false,
+		lonMin:3
+	});
+	$('#anio').validacion({
+		req: true,
+		ent:true,
+		lonMin:4,
+		lonMax:4
+	});
+	$('#fuente').validacion({
+		req: true
+	});
+	$('#nfuente').validacion({
+		req: false,
+		lonMin:3
+	});
+	$('#condicion').validacion({
+		req: true
+	});
+	$('#tipo_combustible').validacion({
+		req: true
+	});
+	$('#seccion').validacion({
+		req: true
+	});
+	$('#motorista').validacion({
+		req: true
+	});
 });
 
 

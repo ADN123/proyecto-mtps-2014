@@ -80,5 +80,16 @@ $(document).ready(function()
 			} 
 		}
 	);
+	$('#cantidad').validacion({
+		req:true,
+		num: true
+	});
+	$('#adquisicion').validacion({
+		req: true
+	})
+	$('#gasto').validacion({
+		req:true,
+		num: true
+	});
 });
 </script>
