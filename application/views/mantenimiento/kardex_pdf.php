@@ -21,7 +21,7 @@ header('Content-Type: text/html; charset=UTF-8');
                 <img src="<?php echo base_url()?>/img/mtps_report.jpg" />
             </td>
             <td align="right">
-                <h3>REPORTE DE VALES DE COMBUSTIBLE</h3>
+                <h3>KARDEX</h3>
                 <h6>Fecha: <strong><?php echo date('d-m-Y') ?></strong> </h6>
             </td>
         </tr>

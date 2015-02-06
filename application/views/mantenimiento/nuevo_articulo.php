@@ -38,11 +38,11 @@ else $action=base_url()."index.php/vehiculo/guardar_articulo";
         	<h2 class="StepTitle">Ingreso de la informaci&oacute;n del artículo a bodega</h2>
             <p>
             	<label>Nombre: </label>
-                <input type="text" name="nombre" <?php if($bandera=='true') echo "value='".$nombre."'"; ?> size="48">
+                <input type="text" id="nombre" name="nombre" <?php if($bandera=='true') echo "value='".$nombre."'"; ?> size="48">
             </p>
             <p>
             	<label>Unidad de Medida: </label>
-                <select name="id_unidad_medida" class="select" style="width:150px" multiple="multiple">
+                <select name="id_unidad_medida" id="id_unidad_medida" class="select" style="width:150px" multiple="multiple" placeholder="Seleccione...">
                	<?php
 				foreach($unidades as $um)
 				{
@@ -55,11 +55,11 @@ else $action=base_url()."index.php/vehiculo/guardar_articulo";
             </p>
             <p>
             	<label>Cantidad: </label>
-                <input type="text" name="cantidad" <?php if($bandera=='true') echo "value='".$cantidad."' disabled='disabled'"; ?> size="10">
+                <input type="text" id="cantidad" name="cantidad" <?php if($bandera=='true') echo "value='".$cantidad."' disabled='disabled'"; ?> size="10">
             </p>
             <p>
             	<label class="label_textarea">Descripción: </label>
-                <textarea name="descripcion" style="resize:none; width:200px"><?php if($bandera=='true') echo $descripcion; ?></textarea>
+                <textarea name="descripcion" id="descripcion" style="resize:none; width:200px"><?php if($bandera=='true') echo $descripcion; ?></textarea>
             </p>
         </div>
         <?php if($bandera!=NULL && $bandera!='true'){ ?>
@@ -87,7 +87,7 @@ $(document).ready(function()
 		{
 			if(document.getElementById('adquisicion').value=='comprado')
 			{
-				cont='<p><label>Precio artículos($):&nbsp;</label><input type="text" name="gasto" size="10"></p>';
+				cont='<p><label>Precio artículos($):&nbsp;</label><input type="text" id="gasto" name="gasto" size="10"></p>';
 				$("#compra").html(cont); 
 			}
 			else
@@ -97,5 +97,28 @@ $(document).ready(function()
 			} 
 		}
 	);
+	
+	$('#nombre').validacion({
+		req:true,
+		lonMin: 3
+	});
+	$('#id_unidad_medida').validacion({
+		req: true
+	})
+	$('#cantidad').validacion({
+		req:true,
+		num: true
+	});
+	$('#descripcion').validacion({
+		req:false,
+		lonMin: 10
+	});
+	$('#adquisicion').validacion({
+		req: true
+	})
+	$('#gasto').validacion({
+		req:true,
+		num: true
+	});
 });
 </script>

@@ -739,7 +739,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: carga la ventana en donde se miran detalladamente los gastos realizados de un presupuesto específico
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 10/11/2014
+	*	Última Modificación: 05/02/2015
 	*	Observaciones: Ninguna
 	*/
 	
@@ -748,6 +748,7 @@ class Vehiculo extends CI_Controller
 		$data['presupuesto_info']=$this->transporte_model->presupuesto($id_presupuesto);
 		$data['presupuesto_info']=$data['presupuesto_info'][0];
 		$data['gastos']=$this->transporte_model->gastos($id_presupuesto);
+		$data['refuerzos']=$this->transporte_model->refuerzos($id_presupuesto);
 		$this->load->view('mantenimiento/ventana_gastos',$data);
 	}
 	
