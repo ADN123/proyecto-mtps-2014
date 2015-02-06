@@ -103,10 +103,19 @@ $(document).ready(function()
 
 	start.max(end.value());
 	end.min(start.value());
-});
-
-$('#presupuesto').validacion({
-num: true,
-req: true
+	
+	
+	$('#presupuesto').validacion({
+	num: true,
+	req: true
+	});
+	$('#fecha_inicial').validacion({
+		req: true,
+		valFecha:true
+	});
+	$('#fecha_final').validacion({
+		req: true,
+		valFecha:true
+	});
 });
 </script>

@@ -20,11 +20,11 @@
             </p>
             <p>
             	<label style="width:150px">Cantidad a Reforzar($): </label>
-                <input type="text" name="refuerzo" size="10">
+                <input type="text" name="refuerzo" size="10" id="refuerzo">
             </p>
             <p>
             	<label style="width:150px" class="label_textarea">Justificación: </label>
-                <textarea name="justificacion" style="resize:none; width:300px" rows="2"></textarea>
+                <textarea name="justificacion" style="resize:none; width:300px" rows="2" id="justificacion"></textarea>
             </p>
         </div>
 	</div>
@@ -33,5 +33,13 @@
 $(document).ready(function()
 {
 	$('#wizard').smartWizard();
+	$('#refuerzo').validacion({
+		req:true,
+		num:true
+	});
+	$('#justificacion').validacion({
+		req:true,
+		lonMin: 10
+	});
 });
 </script>

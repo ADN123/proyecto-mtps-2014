@@ -2018,6 +2018,20 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*****************************************************************************************************************/
 	
+	/******************FUNCIÓN QUE OBTIENE LOS REFUERZOS REALIZADOS DE UN PRESUPUESTO EN ESPECÍFICO**********************/
+	function refuerzos($id_presupuesto)
+	{
+		$query="SELECT tfp.justificacion, DATE_FORMAT(tfp.fecha_creacion,'%d-%m-&Y') AS fecha,
+				tfp.refuerzo
+				FROM tcm_refuerzo_presupuesto AS tfp
+				INNER JOIN tcm_presupuesto_mantenimiento AS tpm ON (tfp.id_presupuesto=tpm.id_presupuesto)
+				WHERE tfp.id_presupuesto='$id_presupuesto'";
+				
+		$query=$this->db->query($query);
+		return (array)$query->result_array();
+	}
+	/*****************************************************************************************************************/
+	
 	/**********************FUNCIÓN QUE RETORNA El PRESUPUESTO QUE SE ENCUENTRA ACTIVO**********************************/
 	function presupuesto_activo()
 	{

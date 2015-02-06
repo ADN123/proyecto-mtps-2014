@@ -42,6 +42,43 @@ extract($presupuesto_info)
     </tfoot>
     </table>
 </fieldset>
+<?php
+if(!empty($refuerzos))
+{
+?>
+<fieldset>
+	<legend>Información de los refuerzos</legend>
+    <table align="center" class="table_design" cellpadding="0" cellspacing="0">
+    <thead>
+    	<tr>
+	        <th>Justificación</th>
+            <th width="100px">Fecha</th>
+            <th>Cantidad Reforzada($)</th>
+        </tr>
+    </thead>
+    <tbody>
+    	<?php
+		$suma=0;
+		foreach($refuerzos as $r)
+		{
+			echo "<tr>";
+			echo "<td>".$r['justificacion']."</td>";
+			echo "<td>".$r['fecha_creacion']."</td>";
+			echo "<td align='right'>".number_format($r['refuerzo'],2)."</td>";
+			echo "</tr>";
+			$suma=$suma+$r['refuerzo'];
+		}
+        ?>
+    </tbody>
+    <tfoot>
+    	<tr>
+        	<td colspan="2" align="right">Refuerzo Total ($): </td>
+            <td align="right"><strong><?php echo number_format($suma,2); ?></strong></td>
+        </tr>
+    </tfoot>
+    </table>
+</fieldset>
+<?php } ?>
 <p style='text-align: center;'>
 	<button type="button" id="aceptar" onclick="cerrar_vent()" name="Aceptar">Aceptar</button>
 </p>
