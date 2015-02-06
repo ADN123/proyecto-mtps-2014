@@ -2449,8 +2449,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	{
 		extract($datos);
 		$fecha_recepcion=date('Y-m-d');
-		$consulta="INSERT INTO tcm_ingreso_taller (fecha_recepcion, id_vehiculo, trabajo_solicitado, trabajo_solicitado_carroceria, id_usuario_recibe_taller, kilometraje_ingreso)
-									VALUES ('$fecha_recepcion', '$id_vehiculo', '$trabajo_solicitado', '$trabajo_solicitado_carroceria', '$id_usuario_recibe_taller', '$kilometraje_ingreso');";
+		$consulta="INSERT INTO tcm_ingreso_taller (fecha_recepcion, id_vehiculo, trabajo_solicitado, trabajo_solicitado_carroceria, id_usuario_recibe_taller, kilometraje_ingreso) VALUES ('$fecha_recepcion', '$id_vehiculo', '$trabajo_solicitado', '$trabajo_solicitado_carroceria', '$id_usuario_recibe_taller', '$kilometraje_ingreso');";
 		if($this->db->query($consulta))
 		{
 			$bandera=1;
@@ -2557,14 +2556,19 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 							foreach($inventario as $inv)
 							{
 								$cantidad_disponible=$inv['cantidad'];
+								$unidad_medida=$inv['unidad_medida'];
+								$articulo=$inv['nombre'];
 							}
+							
+							if($cantidad_utilizada==1)	$descripcion="Se usó ".$cantidad_utilizada." ".$unidad_medida." de ".$articulo;
+							else $descripcion="Se usaron ".$cantidad_utilizada." ".$unidad_medida." de ".$articulo;
 							
 							$cantidad_final=$cantidad_disponible-$cantidad_utilizada;
 							
 							$query2="UPDATE tcm_articulo_bodega SET cantidad='$cantidad_final' WHERE (id_articulo='$id_art');";
 							if($this->db->query($query2))
 							{
-								$query3="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo) VALUES ('SALIDA', '$cantidad_utilizada', '$fecha', '$id_art');";
+								$query3="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo, id_mantenimiento_interno, descripcion) VALUES ('SALIDA', '$cantidad_utilizada', '$fecha', '$id_art', '$id_mantenimiento_interno', '$descripcion');";
 								if($this->db->query($query3)) $bandera2=$bandera2*1;
 								else $bandera2=$bandera2*0;
 							}
@@ -2587,25 +2591,32 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		if($this->db->query($consulta))
 		{
 			$bandera2=1;
+			$id_mantenimiento_rutinario=$this->ultimo_id_mantenimiento_rutinario();
 			if(!empty($id_articulo))
 			{
 				for($j=0;$j<count($id_articulo);$j++)
 				{
 					$id_art=$id_articulo[$j];
+					
 					$cantidad_utilizada=$cant_usada[$j];
 					
 					$inventario=$this->inventario($id_art);
 					foreach($inventario as $inv)
 					{
 						$cantidad_disponible=$inv['cantidad'];
+						$unidad_medida=$inv['unidad_medida'];
+						$articulo=$inv['nombre'];
 					}
 					
 					$cantidad_final=$cantidad_disponible-$cantidad_utilizada;
 					
+					if($cantidad_utilizada==1)	$descripcion="Se usó ".$cantidad_utilizada." ".$unidad_medida." de ".$articulo;
+					else $descripcion="Se usaron ".$cantidad_utilizada." ".$unidad_medida." de ".$articulo;
+					
 					$query2="UPDATE tcm_articulo_bodega SET cantidad='$cantidad_final' WHERE (id_articulo='$id_art');";
 					if($this->db->query($query2))
 					{
-						$query3="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo) VALUES ('SALIDA', '$cantidad_utilizada', '$fecha', '$id_art');";
+						$query3="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo, id_mantenimiento_rutinario, descripcion) VALUES ('SALIDA', '$cantidad_utilizada', '$fecha', '$id_art', '$id_mantenimiento_rutinario', '$descripcion');";
 						if($this->db->query($query3)) $bandera2=$bandera2*1;
 						else $bandera2=$bandera2*0;
 					}
@@ -2632,7 +2643,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	}
 	/*********************************************************************************************************************************************/
 	
-	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_INGRESO_TALLER********************************************/
+	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_MANTENIMIENTO_INTERNO********************************************/
 	function ultimo_id_mantenimiento_interno()
 	{
 		$query="select max(id_mantenimiento_interno) as id_mantenimiento_interno from tcm_mantenimiento_interno;";
@@ -2641,6 +2652,19 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		foreach($id as $i)
 		{
 			return $i['id_mantenimiento_interno'];
+		}
+	}
+	/*******************************************************************************************************************************************/
+	
+	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_MANTENIMIENTO_RUTINARIO********************************************/
+	function ultimo_id_mantenimiento_rutinario()
+	{
+		$query="select max(id_mantenimiento_rutinario) as id_mantenimiento_rutinario from tcm_mantenimiento_rutinario;";
+		$query=$this->db->query($query);
+		$id=$query->result_array();
+		foreach($id as $i)
+		{
+			return $i['id_mantenimiento_rutinario'];
 		}
 	}
 	/*******************************************************************************************************************************************/
