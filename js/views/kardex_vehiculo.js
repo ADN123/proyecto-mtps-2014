@@ -145,7 +145,6 @@ function tabla(json)
 		cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
 		cont=cont+'<thead>';
 		cont=cont+'<tr>';
-		cont=cont+'<th width="90px" align="center">Fecha</th>';
 		cont=cont+'<th width="120px" align="center">Artículo</th>';
 		cont=cont+'<th width="80px" align="center">Entrada</th>';
 		cont=cont+'<th width="80px" align="center">Salida</th>';
@@ -157,21 +156,10 @@ function tabla(json)
 		for(i=0;i<n;i++)
 		{
 			cont=cont+'<tr>';
-			cont=cont+'<td>'+json[i].fecha_transaccion+'</td>';
 			cont=cont+'<td>'+json[i].nombre+'</td>';
-			if(json[i].tipo_transaccion=='ENTRADA')
-			{
-				cont=cont+'<td align="rigth">'+json[i].cantidad+'</td>';
-				cont=cont+'<td>&nbsp;</td>';
-				ingresos=ingresos+parseFloat(json[i].cantidad);
-			}
-			else if(json[i].tipo_transaccion=='SALIDA')
-			{
-				cont=cont+'<td>&nbsp;</td>';
-				cont=cont+'<td align="right">'+json[i].cantidad+'</td>';
-				egresos=egresos+parseFloat(json[i].cantidad);
-			}
-			cont=cont+'<td align="right">'+parseFloat(ingresos-egresos)+'</td>';
+			cont=cont+'<td>'+json[i].entradas+'</td>';
+			cont=cont+'<td>'+json[i].salidas+'</td>';
+			cont=cont+'<td>'+json[i].existencia+'</td>';
 			cont=cont+'</tr>';
 		}
 		
@@ -246,7 +234,7 @@ function grafico(chartData)
 		var graph2 = new AmCharts.AmGraph();
 		graph2.type = "column";
 		graph2.title = "Existencia";
-		graph2.valueField = "existencias";
+		graph2.valueField = "existencia";
 		graph2.lineAlpha=0;
 		graph2.fillColors = color2
 		graph2.fillAlphas = 0.8;
