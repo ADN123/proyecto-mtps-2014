@@ -1,100 +1,8 @@
 // JavaScript Document
-$(document).ready(function()
-{
-	function startChange()
-	{
-		var startDate = start.value(),
-		endDate = end.value();
-	
-		if (startDate) 
-		{
-			//startDate = new Date(2014,07,01);
-			startDate.setDate(startDate.getDate());
-			end.min(startDate);
-		}
-		else if (endDate)
-		{
-			start.max(new Date(endDate));
-		}
-		else
-		{
-			endDate = new Date();
-			start.max(endDate);
-			end.min(endDate);
-		}
-	}
-	
-	function endChange()
-	{
-		var endDate = end.value(),
-		startDate = start.value();
-	
-		if (endDate)
-		{
-			endDate = new Date(endDate);
-			endDate.setDate(endDate.getDate());
-			start.max(endDate);
-		}
-		else if (startDate)
-		{
-			end.min(new Date(startDate));
-		}
-		else
-		{
-			endDate = new Date();
-			start.max(endDate);
-			end.min(endDate);
-		}
-	}
-	
-	var start = $("#fecha_inicial").kendoDatePicker({
-		change: startChange,
-		format: "dd-MM-yyyy"		 
-	}).data("kendoDatePicker");
-
-	var end = $("#fecha_final").kendoDatePicker({
-		change: endChange,
-		format: "dd-MM-yyyy" 
-	}).data("kendoDatePicker");
-
-	start.max(end.value());
-	end.min(start.value());
-});
-
-$("#Filtrar").click(function()
-{             
-	var formu = $('#filtro').serializeArray();
-	//    console.log(formu); 
-	reporte(formu);
-});
-
-
-function reporte(formu)
-{  
-	$.ajax({  //para articulos
-		async: true, 
-		url: base_url()+"index.php/vehiculo/kardex_articulo_json",
-		dataType: "json",
-		type: "POST",
-		data: formu,
-		success: function(data)
-		{
-			tabla(data), 
-			grafico(data)
-		},
-		error:function(data)
-		{
-			alertify.alert('Error al cargar datos de los articulos');
-		}
-	});
-}
-
 function tabla(json)
 {
 	var cont='';
 	var n=json.length;
-	var filtro=document.getElementById('id_articulo');
-	var filtro2=document.getElementById('id_vehiculo');
 	$('#tabla_resultado').html("");
 	
 	if(filtro.value!='' && filtro.value!=0)
@@ -174,7 +82,6 @@ function grafico(chartData)
 {
 	var color1 = "#ADD981";
 	var color2 ="#27c5ff";
-	var filtro=document.getElementById('id_articulo');
 	var titulo;
 	var chart;
 	//color1 = $("#color1").val();
