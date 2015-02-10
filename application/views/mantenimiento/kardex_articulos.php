@@ -18,7 +18,7 @@
         </td>
         <td>
             <label>Vehículo: </label>
-            <select class="select" style="width:100px" name="id_vehiculo" multiple="multiple">
+            <select class="select" style="width:100px" name="id_vehiculo" id="id_vehiculo" multiple="multiple">
                 <option value="0" selected='selected'>[Todos]</option>
                 <?php
                     foreach($vehiculos as $v)

@@ -1069,14 +1069,17 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Función que genera el pdf a imprimir de los informes y estadísticas
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 30/01/2015
+	*	Última Modificación: 10/02/2015
 	*	Observaciones: Ninguna
 	*/
 	
 	function kardex_pdf()
 	{
-		$data=$this->transporte_model->kardex_articulo($_POST);
-		echo json_encode($data);
+		$aux=$this->transporte_model->kardex_articulo($_POST);
+		$data['j']=json_encode($aux);
+		$data['id_articulo']=$_POST['id_articulo'];
+		$data['id_vehiculo']=$_POST['id_vehiculo'];
+		$this->load->view('mantenimiento/kardex_pdf',$data);
 	}
 	
 	/*

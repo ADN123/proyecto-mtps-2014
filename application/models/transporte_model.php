@@ -2228,6 +2228,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$group_by_articulo="";
 		$group_by_vehiculo="";
 		$aux=0;
+		//print_r($datos);
 		//////////////////FILTRO DE FECHAS/////////////////////
 		if($fecha_inicial!='' && $fecha_final!='')
 		{
@@ -2253,19 +2254,22 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		}
 		
 		////////////////////FILTRO DE VEHICULOS///////////////////
-		if($id_vehiculo!='' && $id_vehiculo!=0)
+		if($id_vehiculo>0)
 		{
-			$select_vehiculo=" SUM(tta.cantidad) AS cant_usada,";
 			$where_vehiculo=" and (v.id_vehiculo='$id_vehiculo')";
-			$group_by_vehiculo="group by v.placa";
-			$aux++;
+			$select_vehiculo=" sum(tta.cantidad) as cantidad,";
+			$group_by_vehiculo=" group by v.placa";
+		}
+		else
+		{
+			$select_vehiculo=" tta.cantidad,";
 		}
 		
 		//////////////////////FILTRO ARTICULOS/////////////////
 		if($id_articulo!='' && $id_articulo!=0)
 		{
-			$query="SELECT DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, COALESCE(v.placa,'--') AS placa, tab.nombre,
-					tta.tipo_transaccion, tta.cantidad, tum.unidad_medida, COALESCE(tta.descripcion,'') AS descripcion,
+			$query="SELECT tab.nombre, DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, tta.tipo_transaccion,
+					COALESCE(v.placa,'--') AS placa, ".$select_vehiculo." tum.unidad_medida, COALESCE(tta.descripcion,'') AS descripcion,
 					tab.id_articulo, tta.id_transaccion_articulo, v.id_vehiculo, tmi.id_mantenimiento_interno,
 					tmr.id_mantenimiento_rutinario, tit.id_ingreso_taller
 					FROM tcm_articulo_bodega AS tab
@@ -2275,10 +2279,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 					LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tta.id_mantenimiento_rutinario)
 					LEFT JOIN tcm_ingreso_taller AS tit ON (tit.id_ingreso_taller=tmi.id_ingreso_taller)
 					LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo OR tmr.id_vehiculo=v.id_vehiculo)
-					GROUP BY v.placa";
-			$where_articulo=" and (tab.id_articulo='$id_articulo')";
-			$group_by_vehiculo="group by v.placa";
-			$select_vehiculo=" SUM(tta.cantidad) AS cant_usada,";
+					".$where_fecha." and tab.id_articulo='$id_articulo' ".$where_vehiculo." ".$group_by_vehiculo;
 		}
 		else
 		{
@@ -2305,20 +2306,6 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 					GROUP BY tab.id_articulo";
 		}
 		
-		/*$query="SELECT tab.nombre, DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, tta.tipo_transaccion,".$select_articulo."
-				COALESCE(v.placa,'--') AS placa, tta.cantidad, ".$select_vehiculo." tum.unidad_medida, COALESCE(tta.descripcion,'') AS descripcion,
-				tab.id_articulo, tta.id_transaccion_articulo, v.id_vehiculo, tmi.id_mantenimiento_interno,
-				tmr.id_mantenimiento_rutinario, tit.id_ingreso_taller
-				FROM tcm_articulo_bodega AS tab
-				INNER JOIN tcm_unidad_medida AS tum ON (tum.id_unidad_medida=tab.id_unidad_medida)
-				INNER JOIN tcm_transaccion_articulo AS tta ON (tab.id_articulo=tta.id_articulo)
-				LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tta.id_mantenimiento_interno=tmi.id_mantenimiento_interno)
-				LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tta.id_mantenimiento_rutinario)
-				LEFT JOIN tcm_ingreso_taller AS tit ON (tit.id_ingreso_taller=tmi.id_ingreso_taller)
-				LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo OR tmr.id_vehiculo=v.id_vehiculo)
-				".$where_fecha.$where_articulo.$where_vehiculo."
-				".$group_by_vehiculo.$group_by_articulo."; ";*/
-		//echo $query;
 		$query=$this->db->query($query);
 		return (array) $query->result_array();
 	}
