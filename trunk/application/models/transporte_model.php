@@ -730,12 +730,68 @@ function solicitudes_por_asignar_depto(){
 			if($id!=NULL) $where=" where v.id_vehiculo='$id'";
 			
 			$consulta="
-			select v.id_vehiculo id, v.placa, v.estado, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
+			select v.id_vehiculo id, v.placa, v.estado, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion,
+			coalesce(max(tvk.km_final),0) as km_actual, coalesce(mtto.dif_km,0) as dif_km
 			from tcm_vehiculo as v
 			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
 			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
 			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
 			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+			left join tcm_vehiculo_kilometraje as tvk on (tvk.id_vehiculo=v.id_vehiculo)
+			left join (
+						select max(tit.id_ingreso_taller) as id_ingreso_taller, tit.id_vehiculo, (tit.kilometraje_ingreso+5000) as km_mtto, coalesce(max(tvk.km_final),0) as km_actual,
+							  ((tit.kilometraje_ingreso+5000)-coalesce(max(tvk.km_final),0)) as dif_km
+							  from tcm_ingreso_taller as tit
+							  left join tcm_vehiculo_kilometraje as tvk on (tit.id_vehiculo=tvk.id_vehiculo)
+							  group by tit.id_vehiculo
+					  ) as mtto on (v.id_vehiculo=mtto.id_vehiculo)
+			".$where."
+			group by v.id_vehiculo";
+		}
+		else
+		{
+			if($id!=NULL) $where=" where v.estado='$estado' and v.id_vehiculo='$id'";
+			else $where=" where v.estado='$estado'";
+			
+			$consulta="
+			select v.id_vehiculo id, v.placa, v.estado, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion,
+			coalesce(max(tvk.km_final),0) as km_actual, coalesce(mtto.dif_km,0) as dif_km
+			from tcm_vehiculo as v
+			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
+			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
+			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
+			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
+			left join tcm_vehiculo_kilometraje as tvk on (tvk.id_vehiculo=v.id_vehiculo)
+			left join (
+						select max(tit.id_ingreso_taller) as id_ingreso_taller, tit.id_vehiculo, (tit.kilometraje_ingreso+5000) as km_mtto, coalesce(max(tvk.km_final),0) as km_actual,
+							  ((tit.kilometraje_ingreso+5000)-coalesce(max(tvk.km_final),0)) as dif_km
+							  from tcm_ingreso_taller as tit
+							  left join tcm_vehiculo_kilometraje as tvk on (tit.id_vehiculo=tvk.id_vehiculo)
+							  group by tit.id_vehiculo
+					  ) as mtto on (v.id_vehiculo=mtto.id_vehiculo)
+			".$where."
+			group by v.id_vehiculo";
+		}
+		$query=$this->db->query($consulta);
+		return $query->result();
+	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/////////////////////////////////CONSULTAR VEHÍCULOS 2//////////////////////////////////////////
+	function consultar_vehiculos2($estado=NULL, $id=NULL)
+	{
+		$where="";
+		
+		if($estado==NULL)
+		{
+			if($id!=NULL) $where=" where v.id_vehiculo='$id'";
+			
+			$consulta="
+			select max(tit.id_ingreso_taller) as id_ingreso_taller, tit.id_vehiculo, (tit.kilometraje_ingreso+5000) as km_mtto, coalesce(max(tvk.km_final),0) as km_actual,
+			((tit.kilometraje_ingreso+5000)-coalesce(max(tvk.km_final),0)) as dif_km
+			from tcm_ingreso_taller as tit
+			left join tcm_vehiculo_kilometraje as tvk on (tit.id_vehiculo=tvk.id_vehiculo)
+			group by tit.id_vehiculo
 			".$where;
 		}
 		else
@@ -2040,6 +2096,22 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		return (array)$query->result_array();
 	}
 	/******************************************************************************************************************/
+	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_MANTENIMIENTO_INTERNO********************************************/
+	function presupuesto_mtto()
+	{
+		$query="SELECT tpm.presupuesto
+				FROM tcm_presupuesto_mantenimiento AS tpm
+				INNER JOIN tcm_gasto_presupuesto AS tgp ON (tpm.id_presupuesto=tgp.id_presupuesto)
+				LEFT JOIN tcm_articulo_bodega AS tab ON (tab.id_articulo=tgp.id_articulo)
+				LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tmi.id_mantenimiento_interno=tgp.id_mantenimiento_interno)
+				LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tgp.id_mantenimiento_rutinario)
+				LEFT JOIN tcm_ingreso_taller_ext AS tit ON (tit.id_ingreso_taller_ext=tgp.id_ingreso_taller_ext)
+				";
+		$query=$this->db->query($query);
+		return (array)$query->result_array();
+	}
+	/*******************************************************************************************************************************************/
+
 	
 	//////////////////////////////////////////////FUNCIONES DE LOS ARTÍCULOS////////////////////////////////////////////
 	
@@ -2496,7 +2568,11 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			if($bandera==1)
 			{
 				$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$id_vehiculo');";
-				return $this->db->query($consulta2);
+				if($this->db->query($consulta2))
+				{
+					$consulta3="INSERT INTO tcm_vehiculo_kilometraje(id_vehiculo,km_final) values('$id_vehiculo','$kilometraje_ingreso');";
+					return $this->db->query($consulta3);
+				}
 			}
 		}
 	}
@@ -2784,7 +2860,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		$query="SELECT e.id_empleado, e.nombre, e.nominal, e.funcional
 				FROM tcm_empleado AS e
 				WHERE (e.funcional like 'mecanico' OR e.nominal like 'mecanico')
-				OR (e.nominal like 'tecnico en mantenimiento i' OR e.funcional like 'jefe de mecanicos')";
+				OR e.funcional like 'jefe de mecanicos'";
 		$query=$this->db->query($query);
 		return (array) $query->result_array();
 	}

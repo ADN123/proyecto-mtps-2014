@@ -56,6 +56,7 @@ foreach($vehiculos as $v)
         <div id="step-1">	
            <h2 class="StepTitle">Datos Generales del Vehículo</h2>
             <p>
+            	<input type="hidden" name="km_actual" id="km_actual" value="0" />
                 <label style="width:150px">Fecha de Recepción: </label>
                 <strong><?php echo date('d/m/Y'); //$fecha=getdate(); echo $fecha[year]."-".$fecha[mon]."-".$fecha[mday]." ".$fecha[hour]." ".$fecha[minutes].":".$fecha[seconds]?></strong>
             </p>
@@ -87,7 +88,7 @@ foreach($vehiculos as $v)
         	<h2 class="StepTitle">Información de ingreso del Vehículo</h2>
             <p>
             	<label style="width:100px">Mecánico que recibió el vehículo: </label>
-                <select style="width:300px" class="select" name="id_usuario_recibe_taller" placeholder="Seleccione..." multiple="multiple">
+                <select style="width:300px" class="select" name="id_usuario_recibe_taller" id="id_usuario_recibe_taller" placeholder="Seleccione..." multiple="multiple">
                 	<?php foreach($mecanicos as $m){?>
                     <option value="<?php echo $m['id_empleado']; ?>"><?php echo ucwords($m['nombre']) ?></option>
                     <?php }?>
@@ -95,13 +96,13 @@ foreach($vehiculos as $v)
             </p>
             <p>
             	<label class="label_textarea" style="width:100px">Trabajo solicitado: </label>
-                <textarea style="width:200px; resize:none;" name="trabajo_solicitado"></textarea>
+                <textarea style="width:200px; resize:none;" name="trabajo_solicitado" id="trabajo_solicitado"></textarea>
                 <label class="label_textarea" style="width:100px">Trabajo solicitado en la carrocería: </label>
-                <textarea style="width:200px; resize:none;" name="trabajo_solicitado_carroceria"></textarea>
+                <textarea style="width:200px; resize:none;" name="trabajo_solicitado_carroceria" id="trabajo_solicitado_carroceria"></textarea>
             </p>
             <p>
                 <label style="width:100px">Kilometraje: </label>
-                <input type="text" name="kilometraje_ingreso" />
+                <input type="text" name="kilometraje_ingreso" id="kilometraje_ingreso" />
             </p>
         </div>
         <div id="step-3">	
@@ -244,7 +245,26 @@ foreach($vehiculos as $v)
 </form>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#wizard').smartWizard(); 	
+	$('#wizard').smartWizard();
+	
+	$('#id_vehiculo').validacion({
+		req:true
+	});
+	$('#id_usuario_recibe_taller').validacion({
+		req:true
+	});
+	$('#trabajo_solicitado').validacion({
+		req:true,
+		lonMin:5
+	});
+	$('#trabajo_solicitado_carroceria').validacion({
+		req:false,
+		lonMin:5
+	});
+	$('#kilometraje_ingreso').validacion({
+		req:true,
+		num:true
+	});
 });
 
 function select_all(chk)
@@ -318,6 +338,12 @@ function cargar(id)
 				cont=cont+'</tr>'
 				cont=cont+'</table>';
 				$('#info_vehiculo').html(cont);
+				document.getElementById('km_actual').value=json[0]['kilometraje'];
+				$('#kilometraje_ingreso').validacion({
+					req:true,
+					num:true,
+					numMin:document.getElementById('km_actual').value
+				});
 			},
 			error:function(data) {
 				 alertify.alert('Error al cargar los datos de los vehiculos');

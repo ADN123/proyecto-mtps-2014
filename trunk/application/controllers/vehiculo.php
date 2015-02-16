@@ -1147,5 +1147,55 @@ class Vehiculo extends CI_Controller
 		$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
 		$this->mpdf->Output(); /*Salida del pdf*/
 	}
+	
+	/*
+	*	Nombre: reporte_presupuesto
+	*	Objetivo: llama a la vista de kardex_articulo para generar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 10/02/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function reporte_presupuesto()
+	{
+		$data['presupuesto']=$this->transporte_model->presupuesto();
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
+		$data['articulos']=$this->transporte_model->inventario();
+		pantalla('mantenimiento/reporte_presupuesto',$data);
+	}
+	
+	/*
+	*	Nombre: reporte_presupuesto_json
+	*	Objetivo: Obtiene la información relacionada al kardex_articulo para generar los informes y estadísticas
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 10/02/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function reporte_presupuesto_json()
+	{
+		$data=$this->transporte_model->presupuestos_mtto($_POST);
+		echo json_encode($data);
+	}
+	
+	/*
+	*	Nombre: reporte_presupuesto_pdf
+	*	Objetivo: Función que genera el pdf a imprimir de los informes y estadísticas
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 10/02/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function reporte_presupuesto_pdf()
+	{
+		$aux=$this->transporte_model->kardex_articulo($_POST);
+		$data['j']=json_encode($aux);
+		$data['id_articulo']=$_POST['id_articulo'];
+		$data['id_vehiculo']=$_POST['id_vehiculo'];
+		$this->load->view('mantenimiento/kardex_pdf',$data);
+	}
 }
 ?>

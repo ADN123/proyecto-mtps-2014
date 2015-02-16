@@ -73,7 +73,7 @@ function reporte(formu)
 {  
 	$.ajax({  //para articulos
 		async: true, 
-		url: base_url()+"index.php/vehiculo/kardex_articulo_json",
+		url: base_url()+"index.php/vehiculo/reporte_presupuesto_json",
 		dataType: "json",
 		type: "POST",
 		data: formu,
@@ -84,7 +84,7 @@ function reporte(formu)
 		},
 		error:function(data)
 		{
-			alertify.alert('Error al cargar datos de los articulos');
+			alertify.alert('Error al cargar datos de los presupuestos');
 		}
 	});
 }
@@ -104,7 +104,7 @@ function tabla(json)
 		cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
 		cont=cont+'<thead>';
 		cont=cont+'<tr>';
-		cont=cont+'<th width="90px" align="center">Fecha</th>';
+		if(filtro2==0 || filtro2=='')cont=cont+'<th width="90px" align="center">Fecha</th>';
 		cont=cont+'<th width="120px" align="center">Placa de Vehículo</th>';
 		cont=cont+'<th width="80px" align="center">Entrada</th>';
 		cont=cont+'<th width="80px" align="center">Salida</th>';
@@ -117,7 +117,7 @@ function tabla(json)
 		for(i=0;i<n;i++)
 		{
 			cont=cont+'<tr>';
-			cont=cont+'<td>'+json[i].fecha_transaccion+'</td>';
+			if(filtro2==0 || filtro2=='')cont=cont+'<td>'+json[i].fecha_transaccion+'</td>';
 			cont=cont+'<td>'+json[i].placa+'</td>';
 			if(json[i].tipo_transaccion=='ENTRADA')
 			{
