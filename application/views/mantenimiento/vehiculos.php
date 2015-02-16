@@ -15,6 +15,7 @@
         <th>Modelo</th>
         <th>Clase</th>
         <th>Estado</th>
+        <th>Mtto. Prev.</th>
         <th>Opción</th>
       </tr>
      </thead>
@@ -34,11 +35,18 @@
 			else if($fila->estado==3) $msj="En Taller Externo";
 			else if($fila->estado==4) $msj="Robado";
 			else if($fila->estado==5) $msj="Extraviado";
+			else if($fila->estado==6) $msj="Hurtado";
 			else if($fila->estado==0) $msj="Inactivo";
 			
 			echo $msj;
 			?>
             </td>
+            <td align="center"><img width="20px" title="<?php echo "Faltan ".$fila->dif_km." km";?>" src="
+				<?php
+					if(($fila->dif_km)>2000)echo base_url()."img/verde.jpg";
+                	elseif(($fila->dif_km)<=2000 && ($fila->dif_km)>500)echo base_url()."img/amarillo.jpg";
+					elseif(($fila->dif_km)<=500)echo base_url()."img/rojo.jpg";
+				?>" /></td>
             <td>
             	<a rel="leanModal" title="Ver información del Vehículo" href="#ventana" onclick="dialogo(<?php echo $fila->id?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>
                 <a rel="leanModal" title="Modificar información del Vehículo" href="<?php echo base_url()."index.php/vehiculo/nuevo_vehiculo/".$fila->id ?>" ><img src="<?php echo base_url()?>img/editar.png"/></a>
