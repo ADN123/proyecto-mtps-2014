@@ -89,12 +89,20 @@ $(document).ready(function()
 			{
 				cont='<p><label>Precio artículos($):&nbsp;</label><input type="text" id="gasto" name="gasto" size="10"></p>';
 				$("#compra").html(cont); 
+				$('#gasto').validacion({
+					req:true,
+					num: true
+				});
 			}
 			else
 			{
 				cont="";
 				$("#compra").html(cont);
-			} 
+				$('#gasto').validacion({
+					req:false,
+					num: true
+				});
+			}
 		}
 	);
 	

@@ -21,7 +21,7 @@ header('Content-Type: text/html; charset=UTF-8');
                 <img src="<?php echo base_url()?>/img/mtps_report.jpg" />
             </td>
             <td align="right">
-                <h3>KARDEX</h3>
+                <h3><?php echo $titulo ?></h3>
                 <h6>Fecha: <strong><?php echo date('d-m-Y') ?></strong> </h6>
             </td>
         </tr>
@@ -38,7 +38,7 @@ header('Content-Type: text/html; charset=UTF-8');
         <div id="tabla_resultado">
         </div>
         <br><br>
-        <div style="height:400px; background:#FFFFFF;" id="chartdiv">
+        <div style="height:400px; width:600px; background:#FFFFFF;" id="chartdiv">
         </div>
     </body>
 
@@ -50,7 +50,6 @@ header('Content-Type: text/html; charset=UTF-8');
 
 filtro=<?php echo $id_articulo ?>;
 filtro2=<?php echo $id_vehiculo ?>;
-alert(filtro+'___'+filtro2);
                 data=<?php echo $j; ?>;
                 tabla(data);
 				grafico(data);//contructor del grafico

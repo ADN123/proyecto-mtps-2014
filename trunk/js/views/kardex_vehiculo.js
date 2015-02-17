@@ -108,7 +108,7 @@ function tabla(json)
 		cont=cont+'<th width="120px" align="center">Placa de Vehículo</th>';
 		cont=cont+'<th width="80px" align="center">Entrada</th>';
 		cont=cont+'<th width="80px" align="center">Salida</th>';
-		if(filtro2==0 || filtro2=='')cont=cont+'<th width="80px" align="center">Existencia</th>';
+		if(filtro2.value==0 || filtro2.value=='')cont=cont+'<th width="80px" align="center">Existencia</th>';
 		cont=cont+'<th>Decripción</th>';
 		cont=cont+'</tr>';
 		cont=cont+'</thead>';
@@ -143,29 +143,56 @@ function tabla(json)
 	{
 		var ingresos=0;
 		var egresos=0;
-		cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
-		cont=cont+'<thead>';
-		cont=cont+'<tr>';
-		cont=cont+'<th width="120px" align="center">Artículo</th>';
-		cont=cont+'<th width="30px" align="center">Entrada</th>';
-		cont=cont+'<th width="30px" align="center">Salida</th>';
-		cont=cont+'<th width="30px" align="center">Existencia</th>';
-		cont=cont+'</tr>';
-		cont=cont+'</thead>';
-		cont=cont+'<tbody>';
-		
-		for(i=0;i<n;i++)
+		if(filtro2.value!='' && filtro2.value!=0)
 		{
+			cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
+			cont=cont+'<thead>';
 			cont=cont+'<tr>';
-			cont=cont+'<td>'+json[i].nombre+'</td>';
-			cont=cont+'<td align="right">'+json[i].entradas+'</td>';
-			cont=cont+'<td align="right">'+json[i].salidas+'</td>';
-			cont=cont+'<td align="right">'+json[i].existencia+'</td>';
+			cont=cont+'<th width="120px" align="center">Artículo</th>';
+			cont=cont+'<th width="30px" align="center">Cantidad Usada</th>';
+			cont=cont+'<th width="30px" align="center">Unidad de Medida</th>';
 			cont=cont+'</tr>';
+			cont=cont+'</thead>';
+			cont=cont+'<tbody>';
+			
+			for(i=0;i<n;i++)
+			{
+				cont=cont+'<tr>';
+				cont=cont+'<td>'+json[i].nombre+'</td>';
+				cont=cont+'<td align="right">'+json[i].cantidad+'</td>';
+				cont=cont+'<td align="right">'+json[i].unidad_medida+'</td>';
+				cont=cont+'</tr>';
+			}
+			
+			cont=cont+'</tbody>';
+			cont=cont+'</table>';
 		}
-		
-		cont=cont+'</tbody>';
-		cont=cont+'</table>';
+		else
+		{
+			cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
+			cont=cont+'<thead>';
+			cont=cont+'<tr>';
+			cont=cont+'<th width="120px" align="center">Artículo</th>';
+			cont=cont+'<th width="30px" align="center">Entrada</th>';
+			cont=cont+'<th width="30px" align="center">Salida</th>';
+			cont=cont+'<th width="30px" align="center">Existencia</th>';
+			cont=cont+'</tr>';
+			cont=cont+'</thead>';
+			cont=cont+'<tbody>';
+			
+			for(i=0;i<n;i++)
+			{
+				cont=cont+'<tr>';
+				cont=cont+'<td>'+json[i].nombre+'</td>';
+				cont=cont+'<td align="right">'+json[i].entradas+'</td>';
+				cont=cont+'<td align="right">'+json[i].salidas+'</td>';
+				cont=cont+'<td align="right">'+json[i].existencia+'</td>';
+				cont=cont+'</tr>';
+			}
+			
+			cont=cont+'</tbody>';
+			cont=cont+'</table>';
+		}
 	}
 	$('#tabla_resultado').html(cont);	
 }
@@ -175,6 +202,7 @@ function grafico(chartData)
 	var color1 = "#ADD981";
 	var color2 ="#27c5ff";
 	var filtro=document.getElementById('id_articulo');
+	var filtro2=document.getElementById('id_vehiculo');
 	var titulo;
 	var chart;
 	//color1 = $("#color1").val();
@@ -183,15 +211,26 @@ function grafico(chartData)
 	// SERIAL CHART
 	chart = new AmCharts.AmSerialChart();
 	chart.dataProvider = chartData;
-	if(filtro.value!='' && filtro.value!=0)
+	if(filtro.value!='' && filtro.value!='0')
 	{
+		document.getElementById('titulo').value='KARDEX DE INSUMOS';
 		titulo='KARDEX DE INSUMOS';
 		chart.categoryField = "placa";
 	}
 	else
 	{
-		titulo='MATERIALES EN EXISTENCIA EN BODEGA DE TALLER INSTITUCIONAL';
-		chart.categoryField = "nombre";
+		if(filtro2.value!='' && filtro2.value!='0')
+		{
+			document.getElementById('titulo').value='MATERIALES USADOS POR EL VEHÍCULO';
+			titulo='MATERIALES USADOS POR EL VEHÍCULO';
+			chart.categoryField = "nombre";
+		}
+		else
+		{
+			document.getElementById('titulo').value='MATERIALES EN EXISTENCIA EN BODEGA DE TALLER INSTITUCIONAL';
+			titulo='MATERIALES EN EXISTENCIA EN BODEGA DE TALLER INSTITUCIONAL';
+			chart.categoryField = "nombre";
+		}
 	}
 	chart.startDuration = 1;
 	chart.rotate = true;
@@ -232,26 +271,40 @@ function grafico(chartData)
 	else
 	{	
 		// column graph
-		
-		var graph3 = new AmCharts.AmGraph();
-		graph3.type = "column";
-		graph3.title = "Entradas";
-		graph3.valueField = "entradas";
-		graph3.lineAlpha=0;
-		graph3.fillColors = color1
-		graph3.fillAlphas = 0.8;
-		graph3.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
-		chart.addGraph(graph3)
-		
-		var graph2 = new AmCharts.AmGraph();
-		graph2.type = "column";
-		graph2.title = "Salidas";
-		graph2.valueField = "salidas";
-		graph2.lineAlpha=0;
-		graph2.fillColors = color2
-		graph2.fillAlphas = 0.8;
-		graph2.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
-		chart.addGraph(graph2);
+		if(filtro2.value!='' && filtro2.value!=0)
+		{
+			var graph1 = new AmCharts.AmGraph();
+			graph1.type = "column";
+			graph1.title = "cantidad usada";
+			graph1.valueField = "cantidad";
+			graph1.lineAlpha = 0;
+			graph1.fillColors = color1;
+			graph1.fillAlphas = 0.8;
+			graph1.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
+			chart.addGraph(graph1);
+		}
+		else
+		{
+			var graph3 = new AmCharts.AmGraph();
+			graph3.type = "column";
+			graph3.title = "Entradas";
+			graph3.valueField = "entradas";
+			graph3.lineAlpha=0;
+			graph3.fillColors = color1
+			graph3.fillAlphas = 0.8;
+			graph3.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
+			chart.addGraph(graph3)
+			
+			var graph2 = new AmCharts.AmGraph();
+			graph2.type = "column";
+			graph2.title = "Salidas";
+			graph2.valueField = "salidas";
+			graph2.lineAlpha=0;
+			graph2.fillColors = color2
+			graph2.fillAlphas = 0.8;
+			graph2.balloonText = "<span style='font-size:13px;'>[[title]] en [[category]]:<b>[[value]]</b></span>";
+			chart.addGraph(graph2);
+		}
 	}
 	
 	

@@ -2,6 +2,7 @@
     <h2>Kardex de Artículos</h2>
 </section>
 <form id="filtro" action="<? echo base_url()?>index.php/vehiculo/kardex_pdf" method="post">
+<input type="hidden" id="titulo" name="titulo" value="" />
 <table align="center" width="100%">
     <tr>
         <td width="50%">

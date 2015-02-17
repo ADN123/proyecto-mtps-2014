@@ -33,7 +33,7 @@ extract($vehiculos);
             <td width="300px">
 			<p>
                 <label style="width:150px">Fecha de mantenimiento: </label>
-                <strong><?php echo date('d/m/Y');// $fecha=getdate(); echo $fecha[year]."-".$fecha[mon]."-".$fecha[mday]?></strong>
+                <strong><?php echo date('d/m/Y');?></strong>
             </p>
             <p>
                 <label style="width:150px">Número de Placa: </label>
@@ -43,16 +43,16 @@ extract($vehiculos);
             <td width="700px">
             <p>
             	<label>Mecánico que revisó el vehículo: </label>
-                <select style="width:300px" class="select" name="id_empleado_repara" placeholder="Seleccione..." multiple="multiple">
-                	<?php foreach($empleado as $e){?>
-                    <option value="<?php echo $e['NR']; ?>"><?php echo ucwords($e['nombre']) ?></option>
+                <select style="width:300px" class="select" name="id_empleado_repara" id="id_empleado_repara" placeholder="Seleccione..." multiple="multiple">
+                	<?php foreach($mecanicos as $m){?>
+                    <option value="<?php echo $m['id_empleado']; ?>"><?php echo ucwords($m['nombre']) ?></option>
                     <?php }?>
                 </select>
             </p>
             <p>
              	<input type="hidden" name="id_vehiculo" value="<?php echo $id_vehiculo ?>" />
             	<label class="label_textarea" style="width:100px">Trabajo realizado: </label>
-                <textarea style="width:200px; resize:none;" name="trabajo_realizado"></textarea>
+                <textarea style="width:200px; resize:none;" name="trabajo_realizado" id="trabajo_realizado"></textarea>
             </p>
             </td>
             </tr></table>
@@ -122,6 +122,14 @@ extract($vehiculos);
 <script>
 $(document).ready(function(){
 	$('#wizard').smartWizard();
+	
+	$('#id_empleado_repara').validacion({
+		req:true
+	});
+	$('#trabajo_realizado').validacion({
+		req:true,
+		lonMin:5
+	});
 });
 
 function art_info(id)

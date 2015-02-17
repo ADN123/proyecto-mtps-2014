@@ -777,41 +777,7 @@ function solicitudes_por_asignar_depto(){
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	/////////////////////////////////CONSULTAR VEHÍCULOS 2//////////////////////////////////////////
-	function consultar_vehiculos2($estado=NULL, $id=NULL)
-	{
-		$where="";
-		
-		if($estado==NULL)
-		{
-			if($id!=NULL) $where=" where v.id_vehiculo='$id'";
-			
-			$consulta="
-			select max(tit.id_ingreso_taller) as id_ingreso_taller, tit.id_vehiculo, (tit.kilometraje_ingreso+5000) as km_mtto, coalesce(max(tvk.km_final),0) as km_actual,
-			((tit.kilometraje_ingreso+5000)-coalesce(max(tvk.km_final),0)) as dif_km
-			from tcm_ingreso_taller as tit
-			left join tcm_vehiculo_kilometraje as tvk on (tit.id_vehiculo=tvk.id_vehiculo)
-			group by tit.id_vehiculo
-			".$where;
-		}
-		else
-		{
-			if($id!=NULL) $where=" where v.estado='$estado' and v.id_vehiculo='$id'";
-			else $where=" where v.estado='$estado'";
-			
-			$consulta="
-			select v.id_vehiculo id, v.placa, v.estado, vm.nombre as marca, vmo.modelo, vc.nombre_clase clase, vcon.condicion
-			from tcm_vehiculo as v
-			inner join tcm_vehiculo_marca as vm on (v.id_marca=vm.id_vehiculo_marca)
-			inner join tcm_vehiculo_modelo as vmo on (v.id_modelo=vmo.id_vehiculo_modelo)
-			inner join tcm_vehiculo_clase as vc on (v.id_clase=vc.id_vehiculo_clase)
-			inner join tcm_vehiculo_condicion as vcon on (v.id_condicion=vcon.id_vehiculo_condicion)
-			".$where;
-		}
-		$query=$this->db->query($consulta);
-		return $query->result();
-	}
-	/////////////////////////////////////////////////////////////////////////////////////////////////
+	
 		
 	//////////////////////////////CONSUlTAR MARCAS//////////////////////////////
 	function consultar_marcas()
@@ -2111,7 +2077,19 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		return (array)$query->result_array();
 	}
 	/*******************************************************************************************************************************************/
-
+	
+	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_GASTO********************************************/
+	function ultimo_id_gasto()
+	{
+		$query="select max(id_gasto) as id_gasto from tcm_gasto_presupuesto;";
+		$query=$this->db->query($query);
+		$id=$query->result_array();
+		foreach($id as $i)
+		{
+			return $i['id_gasto'];
+		}
+	}
+	/*******************************************************************************************************************************************/
 	
 	//////////////////////////////////////////////FUNCIONES DE LOS ARTÍCULOS////////////////////////////////////////////
 	
@@ -2124,7 +2102,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			$where=" where art.id_articulo='$id_articulo'";
 		}
 		
-		$query="SELECT art.id_articulo, art.nombre, art.id_unidad_medida, tum.unidad_medida, art.descripcion, art.cantidad FROM tcm_articulo_bodega AS art
+		$query="SELECT art.id_articulo, art.nombre, art.id_unidad_medida, tum.unidad_medida, art.descripcion, art.cantidad, art.precio_promedio FROM tcm_articulo_bodega AS art
 				INNER JOIN tcm_unidad_medida AS tum ON (art.id_unidad_medida=tum.id_unidad_medida) ".$where;
 		$query=$this->db->query($query);
 		return (array)$query->result_array();
@@ -2171,7 +2149,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		extract($datos);
 		$bandera=1;
 		$fecha=date('Y-m-d');
-		
+		$precio_promedio=0.00;
 		$UM=$this->UM($id_unidad_medida);
 		
 		foreach($UM as $u)
@@ -2204,11 +2182,12 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 				if($this->db->query($query_gasto)) $bandera=$bandera*1;
 				else $bandera=$bandera*0;
 			}
+			$precio_promedio=$gasto/$cantidad;
 		}
 		
 		if($bandera==1)
 		{
-			$query="INSERT INTO tcm_articulo_bodega (nombre, id_unidad_medida, descripcion, cantidad) VALUES ('$nombre', '$id_unidad_medida', '$descripcion', '$cantidad');";
+			$query="INSERT INTO tcm_articulo_bodega (nombre, id_unidad_medida, descripcion, cantidad, precio_promedio) VALUES ('$nombre', '$id_unidad_medida', '$descripcion', '$cantidad','$precio_promedio');";
 			if($this->db->query($query))
 			{
 				$id_articulo=$this->ultimo_id_articulo();
@@ -2247,7 +2226,20 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		extract($datos);
 		$bandera=1;
 		$fecha=date('Y-m-d');
-				
+		$precio_promedio_act=0.00;
+		$precio_promedio=0.00;
+		$cant_art=0;
+		
+		$arti=$this->inventario($id_articulo);
+		
+		foreach($arti as $ar)
+		{
+			$precio_promedio_act=$ar['precio_promedio'];
+			$cant_art=$ar['cantidad'];
+		}		
+		$precio_promedio_act=$precio_promedio_act*$cant_art;
+		$precio_promedio=($gasto+$precio_promedio_act)/($cant_art+$cantidad);
+		
 		if($adquisicion=='comprado' && $gasto>0.00)
 		{
 			$presupuesto=$this->presupuesto_activo();
@@ -2278,7 +2270,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		if($bandera==1)
 		{
 			$cantidad_total=$cantidad2+$cantidad;
-			$query="UPDATE tcm_articulo_bodega SET cantidad='$cantidad_total' WHERE (id_articulo='$id_articulo');";
+			$query="UPDATE tcm_articulo_bodega SET cantidad='$cantidad_total', precio_promedio='$precio_promedio' WHERE (id_articulo='$id_articulo');";
 			if($this->db->query($query))
 			{
 				$query2="INSERT INTO tcm_transaccion_articulo (tipo_transaccion, cantidad, fecha, id_articulo) VALUES ('ENTRADA', '$cantidad', '$fecha', '$id_articulo');";
@@ -2328,7 +2320,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		////////////////////FILTRO DE VEHICULOS///////////////////
 		if($id_vehiculo>0)
 		{
-			$where_vehiculo=" and (v.id_vehiculo='$id_vehiculo')";
+			$where_vehiculo=" and (v.id_vehiculo='$id_vehiculo' or v2.id_vehiculo='$id_vehiculo')";
 			$select_vehiculo=" sum(tta.cantidad) as cantidad,";
 			$group_by_vehiculo=" group by v.placa";
 		}
@@ -2341,7 +2333,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		if($id_articulo!='' && $id_articulo!=0)
 		{
 			$query="SELECT tab.nombre, DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, tta.tipo_transaccion,
-					COALESCE(v.placa,'--') AS placa, ".$select_vehiculo." tum.unidad_medida, COALESCE(tta.descripcion,'') AS descripcion,
+					COALESCE(IF((COALESCE(v.placa,'0')!='0'),v.placa,v2.placa),'ingresos') AS placa, ".$select_vehiculo." tum.unidad_medida, COALESCE(tta.descripcion,'') AS descripcion,
 					tab.id_articulo, tta.id_transaccion_articulo, v.id_vehiculo, tmi.id_mantenimiento_interno,
 					tmr.id_mantenimiento_rutinario, tit.id_ingreso_taller
 					FROM tcm_articulo_bodega AS tab
@@ -2350,12 +2342,32 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 					LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tta.id_mantenimiento_interno=tmi.id_mantenimiento_interno)
 					LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tta.id_mantenimiento_rutinario)
 					LEFT JOIN tcm_ingreso_taller AS tit ON (tit.id_ingreso_taller=tmi.id_ingreso_taller)
-					LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo OR tmr.id_vehiculo=v.id_vehiculo)
+					LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo)
+					LEFT JOIN tcm_vehiculo AS v2 ON (v2.id_vehiculo=tmr.id_vehiculo)
 					".$where_fecha." and tab.id_articulo='$id_articulo' ".$where_vehiculo." ".$group_by_vehiculo;
 		}
 		else
 		{
-			$query="SELECT tab.id_articulo, tab.nombre, inv.entradas, inv.salidas, (inv.entradas-inv.salidas) AS existencia,
+			if($id_vehiculo!=0 && $id_vehiculo!="")
+			{
+				$query="SELECT tab.nombre, DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, tta.tipo_transaccion,
+					COALESCE(IF((COALESCE(v.placa,'0')!='0'),v.placa,v2.placa),'ingresos') AS placa, ".$select_vehiculo." tum.unidad_medida, COALESCE(tta.descripcion,'') AS descripcion,
+					tab.id_articulo, tta.id_transaccion_articulo, v.id_vehiculo, tmi.id_mantenimiento_interno,
+					tmr.id_mantenimiento_rutinario, tit.id_ingreso_taller
+					FROM tcm_articulo_bodega AS tab
+					INNER JOIN tcm_unidad_medida AS tum ON (tum.id_unidad_medida=tab.id_unidad_medida)
+					INNER JOIN tcm_transaccion_articulo AS tta ON (tab.id_articulo=tta.id_articulo)
+					LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tmi.id_mantenimiento_interno=tta.id_mantenimiento_interno)
+					LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tta.id_mantenimiento_rutinario)
+					LEFT JOIN tcm_ingreso_taller AS tit ON (tmi.id_ingreso_taller=tit.id_ingreso_taller)
+					LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo)
+					LEFT JOIN tcm_vehiculo AS v2 ON (v2.id_vehiculo=tmr.id_vehiculo)
+					WHERE (tta.tipo_transaccion like 'salida') and (v.id_vehiculo='$id_vehiculo' or v2.id_vehiculo='$id_vehiculo')
+					GROUP BY tab.id_articulo";
+			}
+			else
+			{
+				$query="SELECT tab.id_articulo, tab.nombre, inv.entradas, inv.salidas, (inv.entradas-inv.salidas) AS existencia,
 					tum.unidad_medida
 					FROM tcm_articulo_bodega AS tab
 					INNER JOIN tcm_unidad_medida AS tum ON (tum.id_unidad_medida=tab.id_unidad_medida)
@@ -2376,6 +2388,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 					) AS inv ON (inv.id_articulo=tab.id_articulo)
 					".$where_fecha."
 					GROUP BY tab.id_articulo";
+			}
 		}
 		
 		$query=$this->db->query($query);
@@ -2844,7 +2857,8 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		
 		if($bandera==1)
 		{
-			$consulta="UPDATE tcm_ingreso_taller_ext SET trabajo_realizado='$trabajo_realizado', fecha_entrega='$fecha', id_usuario='$id_usuario' WHERE id_ingreso_taller_ext='$id_ingreso_taller_ext'";
+			$id_gasto=$this->ultimo_id_gasto();
+			$consulta="UPDATE tcm_ingreso_taller_ext SET trabajo_realizado='$trabajo_realizado', fecha_entrega='$fecha', id_usuario='$id_usuario', id_gasto='$id_gasto' WHERE id_ingreso_taller_ext='$id_ingreso_taller_ext'";
 			if($this->db->query($consulta))
 			{
 				$consulta2="UPDATE tcm_vehiculo SET estado='2' WHERE (id_vehiculo='$id_vehiculo');";
