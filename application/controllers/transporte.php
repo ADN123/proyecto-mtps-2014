@@ -9,6 +9,7 @@ class Transporte extends CI_Controller
 		$this->load->model('transporte_model');
 		$this->load->library("mpdf");
     	if(!$this->session->userdata('id_usuario')) {
+    		$_SESSION['url']="http://".$_SERVER['HTTP_HOST'].":".$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI']; //para poder redireccionar 
 			redirect('index.php/sessiones');
 		}
     }

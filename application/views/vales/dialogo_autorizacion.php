@@ -1,4 +1,4 @@
-<form id='form' action="<?php echo base_url()?>index.php/vales/guardar_autorizacion" method='post'>
+﻿<form id='form' action="<?php echo base_url()?>index.php/vales/guardar_autorizacion" method='post'>
     <input type='hidden' id='resp' name='resp' />
     <input type='hidden' name='ids' value="<?php echo $id?>" />
     <fieldset>      
@@ -35,7 +35,7 @@
         <div id='autos' style="display:none">
 
         <table cellspacing='0' align='center' class='table_design'>
-            <thead>
+	            <thead>
                 <th>
                     Placa
                 </th>
@@ -72,7 +72,7 @@
                 <label for="asignar" id="lasignar" class="tam-2">Cantidad a Entregar</label>
                         <?php 
 
-                    if($refuerzo==1){?>
+                    if($refuerzo==1 || $refuerzo==0){?>
                             
                                 <input class="tam-1" id='asignar' tabindex='2' name='asignar' type="text" value="<?php echo $cantidad; ?>"/>
                                 
@@ -113,7 +113,7 @@
  <script type="text/javascript">
        $(document).ready(function(){  
 
-    <?php if($v['cantidad_restante']>0&& $refuerzo==1) {?>
+    <?php if($v['cantidad_restante']>0) {?>
 
             
                     $("#asignar").validacion({

@@ -87,8 +87,15 @@ class Sessiones extends CI_Controller {
 								$this->session->set_userdata('nr', $v['NR']);			
 								$this->session->set_userdata('id_seccion', $v['id_seccion']);
 								$this->session->set_userdata('sexo', $v['sexo']);
-								setcookie('contador', 1, time() + 15* 60);			
-								ir_a('index.php/inicio'); 
+								setcookie('contador', 1, time() + 15* 60);	
+									
+								if($_SESSION['url']!=NULL && $_SESSION['url']!='' ) {
+									redirect($_SESSION['url']);													
+
+								}else{
+									
+									ir_a('index.php/inicio'); 									
+								}	
 							}
 						}	else alerta("Usuario y clave no coinciden en Active Directory",'index.php/sessiones');	
 					////////////////Fin verificacion con Active Directory
@@ -106,7 +113,13 @@ class Sessiones extends CI_Controller {
 					$this->session->set_userdata('id_seccion', $v['id_seccion']);
 					$this->session->set_userdata('sexo', $v['sexo']);
 					setcookie('contador', 1, time() + 15* 60);			
-					ir_a('index.php/inicio'); 
+								if($_SESSION['url']!=NULL && $_SESSION['url']!='' ) {
+									redirect($_SESSION['url']);													
+
+								}else{
+									
+									ir_a('index.php/inicio'); 									
+								}	
 				}
 			////////////////////Fin de la verifiaciacion de usuario y contraseña
 			}else{

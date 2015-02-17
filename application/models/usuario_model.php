@@ -453,7 +453,7 @@ class Usuario_model extends CI_Model {
 						FROM tcm_empleado AS e
 						INNER JOIN org_usuario_rol AS ur ON ur.id_usuario=e.id_usuario
 						INNER JOIN org_rol AS r ON r.id_rol=ur.id_rol
-						INNER JOIN org_rol_modulo_permiso AS rm ON rm.id_rol=r.id_rol AND (rm.id_permiso=4 AND rm.id_modulo='".$id_modulo."') AND rm.id_permiso<>3
+						INNER JOIN org_rol_modulo_permiso AS rm ON rm.id_rol=r.id_rol AND (rm.id_permiso=4 AND rm.id_modulo='".$id_modulo."')
 						INNER JOIN org_modulo AS m ON m.id_modulo=rm.id_modulo AND m.id_sistema=5
 						INNER JOIN	
 							(SELECT e.id_seccion
@@ -474,12 +474,6 @@ class Usuario_model extends CI_Model {
 							INNER JOIN org_rol AS r ON r.id_rol=ur.id_rol
 							INNER JOIN org_rol_modulo_permiso AS rm ON rm.id_rol=r.id_rol AND rm.id_permiso=3 AND rm.id_modulo='".$id_modulo."'
 							INNER JOIN org_modulo AS m ON m.id_modulo=rm.id_modulo AND m.id_sistema=5
-							INNER JOIN	
-								(SELECT e.id_seccion
-								FROM tcm_empleado AS e
-								INNER JOIN tcm_solicitud_transporte AS s ON s.id_empleado_solicitante=e.id_empleado
-								WHERE id_solicitud_transporte='".$id_solicitud_transporte."') AS s
-							ON s.id_seccion IS NULL
 							WHERE e.correo NOT LIKE ''
 							GROUP BY id_empleado;";
 				$query=$this->db->query($sentencia);
