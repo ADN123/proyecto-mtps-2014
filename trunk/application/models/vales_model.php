@@ -1,5 +1,5 @@
-<?php
-
+﻿<?php
+	
 class Vales_model extends CI_Model {
     //constructor de la clase
     function __construct() {
@@ -1128,9 +1128,9 @@ por lo tanto la logica de niveles se manejara de forma diferente
 
 		$query=$this->db->query(" SET lc_time_names = 'es_ES'");		
 
-		$q="SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -65 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -65 DAY),'%Y%m') mes 
+		$q="SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -35 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -65 DAY),'%Y%m') mes 
 				UNION
-			SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -35 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -35 DAY),'%Y%m') mes 
+			SELECT DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -15 DAY),'%M') mes_nombre, DATE_FORMAT(DATE_ADD( CURDATE(), INTERVAL -35 DAY),'%Y%m') mes 
 				UNION
 			SELECT DATE_FORMAT(CURDATE(),'%M') mes_nombre, DATE_FORMAT(CURDATE(),'%Y%m') mes
 			UNION
@@ -1653,16 +1653,18 @@ function liquidacion_mensual($mes=NULL, $fuente=NULL)
 	SUM(r.restante_anterior) as anterior,
 	SUM(r.cantidad_entregado) as entregado,
 	SUM(r.restante_anterior) + SUM(cantidad_entregado) AS disponibles,
-	@con:=COALESCE(consumo(r.id_seccion,'$mes',id_fuente_fondo),0) AS consumido,
-	SUM(r.restante_anterior) + SUM(cantidad_entregado)-COALESCE(consumo(r.id_seccion,'$mes',id_fuente_fondo),0) AS sobrante,
+	COALESCE(consumo(r.id_seccion,'$mes',id_fuente_fondo)0) AS consumido,
+	SUM(r.restante_anterior) + SUM(cantidad_entregado)-COALESCE(consumo (r.id_seccion,'$mes',id_fuente_fondo),0) AS sobrante,	
 	r.mes,
 	r.id_seccion
 FROM
 	tcm_requisicion r
 	INNER JOIN org_seccion s ON s.id_seccion=r.id_seccion
-WHERE r.mes = $mes	AND r.id_fuente_fondo=$fuente
+WHERE r.mes = '$mes' AND r.id_fuente_fondo=$fuente
 GROUP BY r.mes, r.id_seccion";
+
     $query=$this->db->query($q);
+      //  echo "<pre> er  ".$this->db->_error_message()."'<br> $q</pre>";
     return $query->result_array();
    }   
    function liquidacion_mensual2($mes=NULL, $fuente=NULL)
