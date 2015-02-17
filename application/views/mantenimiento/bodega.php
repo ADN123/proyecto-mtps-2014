@@ -12,9 +12,10 @@
       <tr>
         <th>ID</th>
         <th>Nombre</th>
-        <th>Existencias</th>
+        <th width="100px">Existencias</th>
+        <th>Precio Unitario Promedio</th>
         <th>Descripción</th>
-        <th>Opción</th>
+        <th width="100px">Opción</th>
       </tr>
      </thead>
      <tbody>
@@ -25,6 +26,7 @@
             <td><?php echo $fila['id_articulo']?></td>
             <td><?php echo $fila['nombre']?></td>
             <td><?php echo $fila['cantidad']." ".$fila['unidad_medida']?></td>
+            <td><?php echo number_format($fila['precio_promedio'],2); ?></td>
             <td><?php echo $fila['descripcion']?></td>
             <td>
             	<a rel="leanModal" title="Ver información detallada del artículo" href="#ventana" onclick="dialogo(<?php echo $fila['id_articulo'] ?>)"><img  src="<?php echo base_url()?>img/lupa.gif"/></a>

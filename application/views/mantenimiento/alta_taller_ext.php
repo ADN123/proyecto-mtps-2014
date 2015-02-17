@@ -60,7 +60,7 @@
            <h2 class="StepTitle">Información del trabajo realizado en taller externo</h2>
            <p>
             	<label class="label_textarea" style="width:100px">Trabajo realizado: </label>
-                <textarea style="width:400px; resize:none;" name="trabajo_realizado"></textarea>
+                <textarea style="width:400px; resize:none;" name="trabajo_realizado" id="trabajo_realizado"></textarea>
             </p>
             <p>
             	<label>Tipo de reparación: </label>
@@ -82,16 +82,29 @@ $(document).ready(function(){
 		{
 			if(document.getElementById('adquisicion').value=='pagada')
 			{
-				cont='<p><label>Precio de la reparación($):&nbsp;</label><input type="text" name="gasto" size="10"></p>';
-				$("#precio").html(cont); 
+				cont='<p><label>Precio de la reparación($):&nbsp;</label><input type="text" name="gasto" id="gasto" size="10"></p>';
+				$("#precio").html(cont);
+				$('#gasto').validacion({
+					req:true,
+					num:true
+				});
 			}
 			else
 			{
 				cont="";
 				$("#precio").html(cont);
+				$('#gasto').validacion({
+					req:false,
+					num:true
+				});
 			} 
 		}
-	); 	
+	);
+	
+	$('#trabajo_realizado').validacion({
+		req:true,
+		lonMin:5
+	});
 });
 
 function cargar(id)

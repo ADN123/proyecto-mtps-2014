@@ -230,7 +230,7 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Carga la vista de mantenimiento rutinario
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 16/01/2014
+	*	Última Modificación: 16/02/2015
 	*	Observaciones: Ninguna
 	*/
 	
@@ -239,7 +239,7 @@ class Vehiculo extends CI_Controller
 		$data['vehiculos']=$this->transporte_model->vehiculos_taller_interno($id_v,1,NULL,1);
 		$data['vehiculos']=$data['vehiculos'][0];
 		$data['inventario']=$this->transporte_model->inventario();
-		$data['empleado']=$this->transporte_model->consultar_empleados();
+		$data['mecanicos']=$this->transporte_model->mecanicos();
 		pantalla('mantenimiento/mantenimiento_rutinario',$data);
 	}
 	
@@ -1079,6 +1079,7 @@ class Vehiculo extends CI_Controller
 		$data['j']=json_encode($aux);
 		$data['id_articulo']=$_POST['id_articulo'];
 		$data['id_vehiculo']=$_POST['id_vehiculo'];
+		$data['titulo']=$_POST['titulo'];
 		$this->load->view('mantenimiento/kardex_pdf',$data);
 	}
 	

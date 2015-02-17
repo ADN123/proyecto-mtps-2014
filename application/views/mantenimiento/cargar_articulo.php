@@ -70,13 +70,21 @@ $(document).ready(function()
 		{
 			if(document.getElementById('adquisicion').value=='comprado')
 			{
-				cont='<p><label>Precio artículos($):&nbsp;</label><input type="text" name="gasto" size="10"></p>';
-				$("#compra").html(cont); 
+				cont='<p><label>Precio artículos($):&nbsp;</label><input type="text" name="gasto" id="gasto" size="10"></p>';
+				$("#compra").html(cont);
+				$('#gasto').validacion({
+					req:true,
+					num: true
+				}); 
 			}
 			else
 			{
 				cont="";
 				$("#compra").html(cont);
+				$('#gasto').validacion({
+					req:false,
+					num: true
+				});
 			} 
 		}
 	);

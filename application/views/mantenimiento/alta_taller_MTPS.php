@@ -62,7 +62,7 @@
            <h2 class="StepTitle">Información de entrega del vehículo</h2>
            <p>
             	<label style="width:100px">Motorista o persona que recibe el vehículo: </label>
-                <select style="width:300px" class="select" name="id_motorista_recibe" placeholder="Seleccione..." multiple="multiple">
+                <select style="width:300px" class="select" name="id_motorista_recibe" id="id_motorista_recibe" placeholder="Seleccione..." multiple="multiple">
                 	<?php foreach($empleado as $e){ 
 					if($e['NR']==$id_empleado) $selected='selected="selected"';
 					else $selected="";
@@ -73,7 +73,7 @@
             </p>
             <p>
             	<label class="label_textarea" style="width:100px">Notas: </label>
-                <textarea style="width:200px; resize:none;" name="notas"></textarea>
+                <textarea style="width:200px; resize:none;" name="notas" id="notas"></textarea>
             </p>
         </div>
     </div>
@@ -81,7 +81,13 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$('#wizard').smartWizard();
- 	
+ 	$('#id_motorista_recibe').validacion({
+		req:true
+	});
+	$('#notas').validacion({
+		req:false,
+		lonMin:5
+	});
 });
 
 function cargar(id)

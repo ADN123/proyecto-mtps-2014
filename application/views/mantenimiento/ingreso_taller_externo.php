@@ -51,7 +51,7 @@ foreach($vehiculos as $v)
             <?php }else{ ?>
             <p>
             	<input type="hidden" name="pantalla" value="2" />
-            	<input type="hidden" name="id_vehiculo" value="<?php echo $id_vehiculo; ?>" />
+            	<input type="hidden" name="id_vehiculo" id="id_vehiculo" value="<?php echo $id_vehiculo; ?>" />
                 <label style="width:150px">Número de placa: </label>
                 <strong><?php echo $placa; ?></strong>
             </p>
@@ -60,7 +60,7 @@ foreach($vehiculos as $v)
             <td width="700px">
             <p>
             	<label class="label_textarea" style="width:100px">Trabajo solicitado: </label>
-                <textarea style="width:200px; resize:none;" name="trabajo_solicitado"></textarea>
+                <textarea style="width:200px; resize:none;" name="trabajo_solicitado" id="trabajo_solicitado"></textarea>
             </p>
             </td>
             </tr>
@@ -76,7 +76,14 @@ foreach($vehiculos as $v)
 </form>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#wizard').smartWizard(); 	
+	$('#wizard').smartWizard();
+	$('#id_vehiculo').validacion({
+		req:true
+	});
+	$('#trabajo_solicitado').validacion({
+		req:true,
+		lonMin:5
+	}); 	
 });
 
 function cargar(id)
