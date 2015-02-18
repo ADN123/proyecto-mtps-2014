@@ -6,7 +6,7 @@
 <section>
     <h2>Solicitudes</h2>
 </section>
-<table class="grid">
+<table class="grid2" id="tabla_datos">
 	<colgroup>
     	<col width="100" />
     	<col width="190" />
@@ -93,5 +93,13 @@ function eliminar (id_solicitud) {
                 }
             });
 }
-	
+
+$('#tabla_datos').dataTable( {
+        "language": {
+            "url": base_url()+"js/de_ES.txt"
+        },
+         "order": [[ 0, "desc" ]]
+    } );
+
+
 </script>

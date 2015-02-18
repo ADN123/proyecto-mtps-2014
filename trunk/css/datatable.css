@@ -328,7 +328,7 @@ table.dataTable td {
 /*CODIGO AGREGADO POR JHONATAN PARA QUE SE MIRE MEJOR LA CABECERA */
 
 
-  .grid thead{
+  .grid thead, .grid2 thead{
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,255,244,1)), color-stop(94%,rgba(223,229,215,1)), color-stop(100%,rgba(179,190,173,1))); /* Chrome,Safari4+ */
 background: -webkit-linear-gradient(top, rgba(252,255,244,1) 0%,rgba(223,229,215,1) 94%,rgba(179,190,173,1) 100%); /* Chrome10+,Safari5.1+ */
   color:#666;
