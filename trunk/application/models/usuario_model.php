@@ -490,11 +490,12 @@ class Usuario_model extends CI_Model {
 					tcm_empleado.nominal, 
 					DATE_FORMAT(fecha_mision,'%d-%m-%Y') AS fecha_mision,
 					tcm_solicitud_transporte.estado_solicitud_transporte AS estado,
-					tcm_observacion.observacion AS observacion
+					GROUP_CONCAT(tcm_observacion.observacion ) AS observacion
 					FROM tcm_empleado
 					INNER JOIN tcm_solicitud_transporte ON tcm_empleado.id_empleado = tcm_solicitud_transporte.id_empleado_solicitante
-					LEFT JOIN tcm_observacion ON tcm_observacion.id_solicitud_transporte = tcm_solicitud_transporte.id_solicitud_transporte AND tcm_observacion.quien_realiza=2
-					WHERE tcm_solicitud_transporte.id_solicitud_transporte='".$id_solicitud_transporte."';";
+					LEFT JOIN tcm_observacion ON tcm_observacion.id_solicitud_transporte = tcm_solicitud_transporte.id_solicitud_transporte 
+					WHERE tcm_solicitud_transporte.id_solicitud_transporte= ".$id_solicitud_transporte."
+				GROUP BY id_empleado";
 		$query=$this->db->query($sentencia);
 		return (array)$query->row();
 	}
@@ -526,6 +527,12 @@ class Usuario_model extends CI_Model {
 						(SELECT o.nr FROM org_usuario o  WHERE id_usuario=$id_usuario) ";
 			$query=$this->db->query($sentencia);
 			return (array)$query->row();
+	}
+	function datos_modulo($id_modulo)
+	{
+		$sentencia="SELECT * FROM org_modulo WHERE id_modulo = ". $id_modulo;
+		$query=$this->db->query($sentencia);
+		return (array)$query->row();	
 	}
 
 }

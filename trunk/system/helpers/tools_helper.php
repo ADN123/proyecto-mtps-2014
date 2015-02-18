@@ -46,9 +46,10 @@
 
 
 		$data['usuario']=$CI->session->userdata('usuario');
+		$data['nick']=$CI->session->userdata('usuario');
 		$data['nombre']=$CI->session->userdata('nombre');
 		$data['menus']=$CI->seguridad_model->buscar_menus($CI->session->userdata('id_usuario'));
-		
+
 ////para ayuda
 
 		$descripcion_ayuda="";
@@ -107,6 +108,8 @@
 	/*function enviar_correo($correo=array(),$title,$message) */
 	function enviar_correo($correo,$title,$message) 
 	{
+		$title= utf8_decode($title);
+		$message= utf8_decode($message);
 		$CI =& get_instance();
 		$CI->load->library("phpmailer");
 		
@@ -138,6 +141,7 @@
 	
 	function enviar_por_gmail($correo,$title,$message) 
 	{
+
 			$CI =& get_instance();
 			$CI->load->library("phpmailer");		
 			$mail = new PHPMailer();
@@ -178,20 +182,24 @@
 		$CI->load->model('transporte_model');
 		$datos=$CI->usuario_model->buscar_correos($id_solicitud_transporte, $id_modulo);
 		$solicitud=$CI->transporte_model->consultar_solicitud($id_solicitud_transporte);
+		$mod=$CI->usuario_model->datos_modulo($id_modulo);
+		$url="Presione <a href='".base_url()."index.php/".$mod['url_modulo']."'>aqui <a/> para verla en el sistema";
+		
+		
 		for($i=0;$i<count($datos);$i++) {
 			$nombre=ucwords($datos[$i]['nombre']);
 			$correo=ucwords($datos[$i]['correo']);
-			/*$correo="leoneladonispm@hotmail.com";*/
+			
 			$nominal=ucwords($datos[$i]['nominal']);
 			$mensaje="<style></style>Estimad@ ".$nombre.",<br><br>La solicitud N&deg;<strong>".$id_solicitud_transporte."</strong> realizada por <strong>".ucwords($solicitud['nombre'])."</strong> ";
 			switch($id_modulo){
 				case 66:
-					$titulo="SOLICITUD DE TRANSPORTE PENDIENTE DE AUTORIZACION";
-					$mensaje.="requiere de su autorizaci&oacute;n.<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+					$titulo="SOLICITUD DE TRANSPORTE N°".$id_solicitud_transporte;
+					$mensaje.="requiere de su autorizaci&oacute;n. ".$url."<br><br>Departamento de Transporte.";
 					break;
 				case 68:
-					$titulo="SOLICITUD DE TRANSPORTE PENDIENTE DE ASIGACION DE VEHCULO/MOTORISTA";
-					$mensaje.="requiere asignaci&oacute;n de veh&iacute;culo/motorista.<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+					$titulo="SOLICITUD DE TRANSPORTE N°".$id_solicitud_transporte;
+					$mensaje.="requiere asignaci&oacute;n de veh&iacute;culo/motorista. ".$url."<br><br>Departamento de Transporte.";
 					break;
 				default:
 					$titulo="X";
@@ -209,21 +217,22 @@
 		$datos=$CI->usuario_model->buscar_correo($id_solicitud_transporte);
 		$nombre=ucwords($datos['nombre']);
 		$correo=ucwords($datos['correo']);
-		/*$correo="leoneladonispm@hotmail.com";*/
+		
+		
 		$nominal=ucwords($datos['nominal']);
 		$mensaje="<style></style>Estimad@ ".$nombre.",<br><br>Su solicitud N&deg;<strong>".$id_solicitud_transporte."</strong> con fecha de salida <strong>".$datos['fecha_mision']."</strong> ";
 		switch($datos['estado']){
 			case 0:	
-				$titulo="SOLICITUD DE TRANSPORTE RECHAZADA";
-				$mensaje.="ha sido reprobada. Puede que se deba a uno de los siguientes motivos: '<strong>".$datos['observacion']."</strong>'<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+				$titulo="SOLICITUD DE TRANSPORTE N°".$id_solicitud_transporte;
+				$mensaje.="ha sido reprobada. Puede que se deba a uno de los siguientes motivos: '<strong>".$datos['observacion']."</strong>'<br><br>Departamento de Transporte.";
 				break;
 			case 2:
-				$titulo="SOLICITUD DE TRANSPORTE APROBADA";
-				$mensaje.="ha sido aprobada.<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+				$titulo="SOLICITUD DE TRANSPORTE N°".$id_solicitud_transporte;
+				$mensaje.="ha sido aprobada.<br><br>Departamento de Transporte.";
 				break;
 			case 3:
-				$titulo="SOLICITUD DE TRANSPORTE ASIGNADA CON VEHICULO/MOTORISTA";
-				$mensaje.="ha sido asignada con veh&iacute;culo/motorista.<br><br>Departamento de Transporte.<br><br><img src='".base_url()."img/mtps.jpg' />";
+				$titulo="SOLICITUD DE TRANSPORTE N°".$id_solicitud_transporte;
+				$mensaje.="ha sido asignada con veh&iacute;culo/motorista.<br><br>Departamento de Transporte.";
 				break;
 			default:
 				$titulo="Y";

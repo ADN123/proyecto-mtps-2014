@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php
+echo "<style>#contenido-ventana {
+    height: 85% !important;}</style>";
+?><!DOCTYPE html>
 <html lang="en" class="no-js">
 	<head>
 		<meta charset="UTF-8" />

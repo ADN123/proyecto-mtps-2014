@@ -172,6 +172,7 @@ class Transporte extends CI_Controller
 	*/
 	function aprobar_solicitud()
 	{
+		
 		$data['permiso']=$this->seguridad_model->consultar_permiso($this->session->userdata('id_usuario'),66);
 		if($data['permiso']>=2 && $data['permiso']!=NULL){
 			$this->db->trans_start();
@@ -179,13 +180,14 @@ class Transporte extends CI_Controller
 			$estado=$this->input->post('resp'); //estado de la solicitud
 			$descrip=$this->input->post('observacion'); //Observacion
 			$nr=$this->session->userdata('nr'); //NR del usuario Logueado
-			
+			$id_solicitud_transporte=$id;
 			if($estado ==2 || $estado== 0){
 				$this->transporte_model->aprobar($id,$estado, $nr,$this->session->userdata('id_usuario'));
 				if($descrip!="")
 					$this->transporte_model->insertar_descripcion($id,$descrip,2);
 				$this->db->trans_complete();
 				$tr=($this->db->trans_status()===FALSE)?0:1;
+				
 				if($tr==1 && $estado==2) {
 					enviar_correo_automatico_administracion($id_solicitud_transporte,68);
 				}
@@ -200,6 +202,7 @@ class Transporte extends CI_Controller
 		else {
 			echo 'No tiene permisos para acceder';
 		}	
+		
 	}
 	
 	/*
@@ -570,6 +573,12 @@ class Transporte extends CI_Controller
 					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
 					$this->db->trans_complete();
 					$tr=($this->db->trans_status()===FALSE)?0:1;
+
+					if($tr==1){
+
+						enviar_correo_automatico_usuarios($id_solicitud);
+					}
+					
 					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$tr."/".$estado);
 				}
 				else if($estado==0)
@@ -578,6 +587,10 @@ class Transporte extends CI_Controller
 					if($observaciones!="") $this->transporte_model->insertar_descripcion($id_solicitud,$observaciones,3);
 					$this->db->trans_complete();
 					$tr=($this->db->trans_status()===FALSE)?0:1;
+						if($tr==1){
+							enviar_correo_automatico_usuarios($id_solicitud);
+						}
+						
 					ir_a("index.php/transporte/asignar_vehiculo_motorista/".$tr."/".$estado);
 				}
 				else {
@@ -1170,23 +1183,9 @@ class Transporte extends CI_Controller
 	
 function prueba($id) 
 	{
-
-
-			$data['destinos']=$this->transporte_model->destinos($id);
-			
-			$this->mpdf->mPDF('utf-8','letter',0, '', 4, 4, 6, 6, 9, 9); /*Creacion de objeto mPDF con configuracion de pagina y margenes*/
-			$stylesheet = file_get_contents('css/pdf/solicitud.css'); /*Selecionamos la hoja de estilo del pdf*/
-			$this->mpdf->WriteHTML($stylesheet,1); /*lo escribimos en el pdf*/
-			$data['nombre'] = "Renatto NL";
-			$html = $this->load->view('prueba.php', $data, true); /*Seleccionamos la vista que se convertirá en pdf*/
-			$this->mpdf->WriteHTML($html,2); /*la escribimos en el pdf*/
-			if(count($data['destinos'])>1) { /*si la solicitud tiene varios detinos tenemos que crear otra hoja en el pdf y escribirlos allí*/
-				$this->mpdf->AddPage();
-				$html = $this->load->view('prueba.php', $data, true);
-				$this->mpdf->WriteHTML($html,2);
-			}
-			$this->mpdf->Output(); /*Salida del pdf*/
-
+		echo "<pre>";
+enviar_correo_automatico_usuarios($id);
+	echo "</pre>";
 	}
 			
 	

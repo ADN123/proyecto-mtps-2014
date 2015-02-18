@@ -16,7 +16,7 @@
 	define("ONLY_SOURCE",1); ///hay que cambiar a 0 si los vales de banco mundial y goes se trabajaran como uno solo
 	define("ADMIN_FACTURA",137); 
 	define("GASOLINERA",140); 
-	define("FUENTE_FONDO",139); 
+	define("FUENTE_FONDO",119); 
 
 class Vales extends CI_Controller
 {
@@ -2559,25 +2559,6 @@ function eliminar_fuente_fondo($id)
 		}else {
 			echo 'No tiene permisos para acceder';
 		}	
-}
-
-
-//////////////////////////Funciones de testeo
-
-
-function mostrar_form($mes=NULL,$rest=NULL)
-{
-				echo "<pre>";
-			$mes2=restar_mes($mes,$rest); //le resta dos meses
-			echo "<br>".$mes2;
-				echo "</pre>";
-
-}
-
-function proces($key='')
-{	$aux['keyform']=$key;
-	deleteform($aux);	
-	print_r($_SESSION['form']);	
 }
 
 }
