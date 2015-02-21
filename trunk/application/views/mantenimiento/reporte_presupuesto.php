@@ -5,7 +5,7 @@
 <table align="center" width="100%">
     <tr>
         <td width="50%">
-        <label style="width:100px">Mantenimiento: </label>
+        <label style="width:120px">Mantenimiento: </label>
             <select class="select" style="width:300px" name="mtto" id="mtto" multiple="multiple">
                 <option value="0" selected="selected">[Todos]</option>
                 <option value="1">Interno</option>
@@ -13,7 +13,7 @@
             </select>
         </td>
         <td>
-            <label>Vehículo: </label>
+            <label style="width:100px">Vehículo: </label>
             <select class="select" style="width:100px" name="id_vehiculo" id="id_vehiculo" multiple="multiple">
                 <option value="0" selected='selected'>[Todos]</option>
                 <?php
