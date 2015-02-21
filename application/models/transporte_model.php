@@ -2994,10 +2994,66 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	/*******************************FUNCIÓN PARA OBTENER LOS MECÁNICOS DEL MTPS*****************************************/
 	function mecanicos()
 	{
-		$query="SELECT e.id_empleado, e.nombre, e.nominal, e.funcional
+		$query="SELECT e.id_empleado, e.nombre, e.nominal, e.funcional, scf.id_cargo_funcional, scn.id_cargo_nominal
 				FROM tcm_empleado AS e
-				WHERE (e.funcional like 'mecanico' OR e.nominal like 'mecanico')
-				OR e.funcional like 'jefe de mecanicos'";
+				INNER JOIN sir_cargo_funcional AS scf ON (scf.funcional=e.funcional)
+				INNER JOIN sir_cargo_nominal AS scn ON (scn.cargo_nominal=e.nominal)
+				WHERE (scf.id_cargo_funcional=248 OR scf.id_cargo_funcional=289) OR (scn.id_cargo_nominal=99)";
+		$query=$this->db->query($query);
+		return (array) $query->result_array();
+	}
+	/*********************************************************************************************************************************************/
+	
+	/*******************************FUNCIÓN PARA OBTENER LOS REPORTES DE MANTENIMIENTOS*****************************************/
+	function mantenimientos()
+	{
+		extract($datos);
+		$where_fecha="";
+		$where_vehiculo="";
+		$where_articulo="";
+		$select_vehiculo="";
+		$select_articulo="";
+		$group_by_articulo="";
+		$group_by_vehiculo="";
+		$aux=0;
+		
+		//////////////////FILTRO DE FECHAS/////////////////////
+		if($fecha_inicial!='' && $fecha_final!='')
+		{
+			$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
+			$fecha_final2=date('Y-m-d',strtotime($fecha_final));
+			$where_fecha="where (tta.fecha between '$fecha_inicial2' and '$fecha_final2')";
+		}
+		elseif($fecha_inicial=='' && $fecha_final=='')
+		{
+			$fecha_inicial=date('Y')."-01-01";
+			$fecha_final=date('Y')."-12-31";
+			$where_fecha="where (tta.fecha between '$fecha_inicial' and '$fecha_final')";
+		}
+		elseif($fecha_inicial!='')
+		{
+			$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
+			$where_fecha="where (tta.fecha='$fecha_inicial2')";
+		}
+		elseif($fecha_final!='')
+		{
+			$fecha_final2=date('Y-m-d',strtotime($fecha_final));
+			$where_fecha="where (tta.fecha='$fecha_final2')";
+		}
+		
+		////////////////////FILTRO DE VEHICULOS///////////////////
+		if($id_vehiculo>0)
+		{
+			$where_vehiculo=" and (v.id_vehiculo='$id_vehiculo' or v2.id_vehiculo='$id_vehiculo')";
+			$select_vehiculo=" sum(tta.cantidad) as cantidad,";
+			$group_by_vehiculo=" group by v.placa";
+		}
+		else
+		{
+			$select_vehiculo=" tta.cantidad,";
+		}
+		
+		$query="";
 		$query=$this->db->query($query);
 		return (array) $query->result_array();
 	}

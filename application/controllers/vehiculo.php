@@ -1151,7 +1151,7 @@ class Vehiculo extends CI_Controller
 	
 	/*
 	*	Nombre: reporte_presupuesto
-	*	Objetivo: llama a la vista de kardex_articulo para generar los reportes
+	*	Objetivo: llama a la vista de reporte_presupuesto para generar los reportes
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
 	*	Última Modificación: 10/02/2015
@@ -1162,13 +1162,12 @@ class Vehiculo extends CI_Controller
 	{
 		$data['presupuesto']=$this->transporte_model->presupuesto();
 		$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
-		$data['articulos']=$this->transporte_model->inventario();
 		pantalla('mantenimiento/reporte_presupuesto',$data);
 	}
 	
 	/*
 	*	Nombre: reporte_presupuesto_json
-	*	Objetivo: Obtiene la información relacionada al kardex_articulo para generar los informes y estadísticas
+	*	Objetivo: Obtiene la información relacionada al reporte_presupuesto para generar los informes y estadísticas
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
 	*	Última Modificación: 10/02/2015
@@ -1191,6 +1190,55 @@ class Vehiculo extends CI_Controller
 	*/
 	
 	function reporte_presupuesto_pdf()
+	{
+		$aux=$this->transporte_model->presupuesto_mtto($_POST);
+		$data['j']=json_encode($aux);
+		$data['mtto']=$_POST['mtto'];
+		$data['id_vehiculo']=$_POST['id_vehiculo'];
+		$this->load->view('mantenimiento/reporte_presupuesto_pdf',$data);
+	}
+	
+	/*
+	*	Nombre: reporte_mantenimientos
+	*	Objetivo: llama a la vista de reporte_mantenimientos para generar los reportes
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 20/02/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function reporte_mantenimientos()
+	{
+		$data['mecanicos']=$this->transporte_model->mecanicos();
+		$data['vehiculos']=$this->transporte_model->consultar_vehiculos();
+		pantalla('mantenimiento/reporte_mantenimientos',$data);
+	}
+	
+	/*
+	*	Nombre: reporte_mantenimientos_json
+	*	Objetivo: Obtiene la información relacionada al reporte_mantenimiento para generar los informes y estadísticas
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 20/02/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function reporte_mantenimientos_json()
+	{
+		$data=$this->transporte_model->mantenimientos($_POST);
+		echo json_encode($data);
+	}
+	
+	/*
+	*	Nombre: reporte_mantenimientos_pdf
+	*	Objetivo: Función que genera el pdf a imprimir de los informes y estadísticas
+	*	Hecha por: Oscar
+	*	Modificada por: Oscar
+	*	Última Modificación: 20/02/2015
+	*	Observaciones: Ninguna
+	*/
+	
+	function reporte_mantenimientos_pdf()
 	{
 		$aux=$this->transporte_model->presupuesto_mtto($_POST);
 		$data['j']=json_encode($aux);
