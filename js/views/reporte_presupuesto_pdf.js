@@ -1,103 +1,11 @@
 // JavaScript Document
-$(document).ready(function()
-{
-	function startChange()
-	{
-		var startDate = start.value(),
-		endDate = end.value();
-	
-		if (startDate) 
-		{
-			//startDate = new Date(2014,07,01);
-			startDate.setDate(startDate.getDate());
-			end.min(startDate);
-		}
-		else if (endDate)
-		{
-			start.max(new Date(endDate));
-		}
-		else
-		{
-			endDate = new Date();
-			start.max(endDate);
-			end.min(endDate);
-		}
-	}
-	
-	function endChange()
-	{
-		var endDate = end.value(),
-		startDate = start.value();
-	
-		if (endDate)
-		{
-			endDate = new Date(endDate);
-			endDate.setDate(endDate.getDate());
-			start.max(endDate);
-		}
-		else if (startDate)
-		{
-			end.min(new Date(startDate));
-		}
-		else
-		{
-			endDate = new Date();
-			start.max(endDate);
-			end.min(endDate);
-		}
-	}
-	
-	var start = $("#fecha_inicial").kendoDatePicker({
-		change: startChange,
-		format: "dd-MM-yyyy"		 
-	}).data("kendoDatePicker");
-
-	var end = $("#fecha_final").kendoDatePicker({
-		change: endChange,
-		format: "dd-MM-yyyy" 
-	}).data("kendoDatePicker");
-
-	start.max(end.value());
-	end.min(start.value());
-});
-
-$("#Filtrar").click(function()
-{             
-	var formu = $('#filtro').serializeArray();
-	//    console.log(formu); 
-	reporte(formu);
-});
-
-
-function reporte(formu)
-{  
-	$.ajax({  //para articulos
-		async: true, 
-		url: base_url()+"index.php/vehiculo/reporte_presupuesto_json",
-		dataType: "json",
-		type: "POST",
-		data: formu,
-		success: function(data)
-		{
-			tabla(data), 
-			grafico(data)
-		},
-		error:function(data)
-		{
-			alertify.alert('Error al cargar datos de los presupuestos');
-		}
-	});
-}
-
 function tabla(json)
 {
 	var cont='';
 	var n=json.length;
-	var filtro=document.getElementById('mtto');
-	var filtro2=document.getElementById('id_vehiculo');
 	$('#tabla_resultado').html("");
 	
-	if(filtro.value!='' && filtro.value!=0)
+	if(filtro!='' && filtro!=0)
 	{
 		cont=cont+'<table class="table_design" align="center" cellpadding="0" cellspacing="0">';
 		cont=cont+'<thead>';
@@ -131,7 +39,7 @@ function tabla(json)
 		cont=cont+'<th align="center">Gasto en Mtto. Interno($)</th>';
 		cont=cont+'<th align="center">Gasto en Mtto. Externo($)</th>';
 		cont=cont+'<th align="center">Gasto Total($)</th>';
-		if(filtro2.value!=0 && filtro2.value!='')cont=cont+'<th align="center">Placa</th>';
+		if(filtro2!=0 && filtro2!='')cont=cont+'<th align="center">Placa</th>';
 		cont=cont+'</tr>';
 		cont=cont+'</thead>';
 		cont=cont+'<tbody>';
@@ -144,7 +52,7 @@ function tabla(json)
 			cont=cont+'<td align="right">'+json[i].gasto_interno+'</td>';
 			cont=cont+'<td align="right">'+json[i].gasto_externo+'</td>';
 			cont=cont+'<td align="right">'+json[i].total_gasto+'</td>';
-			if(filtro2.value!=0 && filtro2.value!='')cont=cont+'<td align="center">'+json[i].placa+'</td>';
+			if(filtro2!=0 && filtro2!='')cont=cont+'<td align="center">'+json[i].placa+'</td>';
 			cont=cont+'</tr>';
 		}
 		
@@ -158,8 +66,6 @@ function grafico(chartData)
 {
 	var color1 = "#ADD981";
 	var color2 ="#27c5ff";
-	var filtro=document.getElementById('mtto');
-	var filtro2=document.getElementById('id_vehiculo');
 	var titulo;
 	var chart;
 	//color1 = $("#color1").val();
@@ -168,7 +74,7 @@ function grafico(chartData)
 	// SERIAL CHART
 	chart = new AmCharts.AmSerialChart();
 	chart.dataProvider = chartData;
-	if(filtro.value!='' && filtro.value!=0)
+	if(filtro!='' && filtro!=0)
 	{
 		titulo='PRESUPUESTO DE MANTENIMIENTOS';
 		chart.categoryField = "id_presupuesto";
@@ -202,11 +108,11 @@ function grafico(chartData)
 	
 	// GRAPHS
 	// column graph
-	if(filtro.value!='' && filtro.value!=0)
+	if(filtro!='' && filtro!=0)
 	{
 		var graph3 = new AmCharts.AmGraph();
 		graph3.type = "column";
-		graph3.title = "Presupuesto";
+		graph3.title = "Presupuesto($)";
 		graph3.valueField = "presupuesto";
 		graph3.lineAlpha=0;
 		graph3.fillColors = color1
@@ -216,7 +122,7 @@ function grafico(chartData)
 		
 		var graph2 = new AmCharts.AmGraph();
 		graph2.type = "column";
-		graph2.title = "Cantidad gastada";
+		graph2.title = "Cantidad gastada($)";
 		graph2.valueField = "gasto";
 		graph2.lineAlpha=0;
 		graph2.fillColors = color2
@@ -230,7 +136,7 @@ function grafico(chartData)
 		
 		var graph3 = new AmCharts.AmGraph();
 		graph3.type = "column";
-		graph3.title = "Gasto Interno";
+		graph3.title = "Gasto Interno($)";
 		graph3.valueField = "gasto_interno";
 		graph3.lineAlpha=0;
 		graph3.fillColors = color1
@@ -240,7 +146,7 @@ function grafico(chartData)
 		
 		var graph2 = new AmCharts.AmGraph();
 		graph2.type = "column";
-		graph2.title = "Gasto Externo";
+		graph2.title = "Gasto Externo($)";
 		graph2.valueField = "gasto_externo";
 		graph2.lineAlpha=0;
 		graph2.fillColors = color2

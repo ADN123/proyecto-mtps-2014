@@ -1177,7 +1177,7 @@ class Vehiculo extends CI_Controller
 	
 	function reporte_presupuesto_json()
 	{
-		$data=$this->transporte_model->presupuestos_mtto($_POST);
+		$data=$this->transporte_model->presupuesto_mtto($_POST);
 		echo json_encode($data);
 	}
 	
@@ -1192,11 +1192,11 @@ class Vehiculo extends CI_Controller
 	
 	function reporte_presupuesto_pdf()
 	{
-		$aux=$this->transporte_model->kardex_articulo($_POST);
+		$aux=$this->transporte_model->presupuesto_mtto($_POST);
 		$data['j']=json_encode($aux);
-		$data['id_articulo']=$_POST['id_articulo'];
+		$data['mtto']=$_POST['mtto'];
 		$data['id_vehiculo']=$_POST['id_vehiculo'];
-		$this->load->view('mantenimiento/kardex_pdf',$data);
+		$this->load->view('mantenimiento/reporte_presupuesto_pdf',$data);
 	}
 }
 ?>

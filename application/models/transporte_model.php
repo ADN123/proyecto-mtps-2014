@@ -2062,17 +2062,140 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 		return (array)$query->result_array();
 	}
 	/******************************************************************************************************************/
-	/*******************************************FUNCIÓN PARA OBTENER EL ÚLTIMO ID_MANTENIMIENTO_INTERNO********************************************/
-	function presupuesto_mtto()
+	/*******************************************FUNCIÓN PARA OBTENER EL PRESUPUESTO DE MATTO********************************************/
+	function presupuesto_mtto($datos)
 	{
-		$query="SELECT tpm.presupuesto
-				FROM tcm_presupuesto_mantenimiento AS tpm
-				INNER JOIN tcm_gasto_presupuesto AS tgp ON (tpm.id_presupuesto=tgp.id_presupuesto)
-				LEFT JOIN tcm_articulo_bodega AS tab ON (tab.id_articulo=tgp.id_articulo)
-				LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tmi.id_mantenimiento_interno=tgp.id_mantenimiento_interno)
-				LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tgp.id_mantenimiento_rutinario)
-				LEFT JOIN tcm_ingreso_taller_ext AS tit ON (tit.id_ingreso_taller_ext=tgp.id_ingreso_taller_ext)
-				";
+		extract($datos);
+		
+		$where_fecha="";
+		$where_vehiculo="";
+		$group_by_vehiculo="";
+		
+		//////////////////FILTRO DE FECHAS/////////////////////
+		if($fecha_inicial!='' && $fecha_final!='')
+		{
+			$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
+			$fecha_final2=date('Y-m-d',strtotime($fecha_final));
+			$where_fecha="where (titx.fecha_entrega between '$fecha_inicial2' and '$fecha_final2')";
+		}
+		elseif($fecha_inicial=='' && $fecha_final=='')
+		{
+			$fecha_inicial=date('Y')."-01-01";
+			$fecha_final=date('Y')."-12-31";
+			$where_fecha="where (titx.fecha_entrega between '$fecha_inicial' and '$fecha_final')";
+		}
+		elseif($fecha_inicial!='')
+		{
+			$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
+			$where_fecha="where (titx.fecha_entrega='$fecha_inicial2')";
+		}
+		elseif($fecha_final!='')
+		{
+			$fecha_final2=date('Y-m-d',strtotime($fecha_final));
+			$where_fecha="where (titx.fecha_entrega='$fecha_final2')";
+		}
+		
+		if($mtto!=0 && $mtto!="")
+		{
+			if($id_vehiculo!=0 && $id_vehiculo!="")
+			{
+				$where_vehiculo="and (v.id_vehiculo='$id_vehiculo' or v2.id_vehiculo='$id_vehiculo')";
+				$group_by_vehiculo=",v.id_vehiculo";
+			}
+			if($mtto==1)
+			{
+				$query="SELECT round(SUM(interno.gasto_estimado),2) AS gasto, tpm.id_presupuesto, tpm.presupuesto
+							FROM
+							(
+								SELECT tab.nombre, tab.cantidad, tab.precio_promedio, (tab.cantidad*tab.precio_promedio) AS gasto_estimado,
+								tum.unidad_medida, IF((COALESCE(v.placa,'0')!='0'),v.placa,v2.placa) as placa
+								FROM tcm_articulo_bodega as tab
+								INNER JOIN tcm_unidad_medida AS tum on (tab.id_unidad_medida=tum.id_unidad_medida)
+								INNER JOIN tcm_transaccion_articulo AS tta ON (tab.id_articulo=tta.id_articulo)
+								LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tmi.id_mantenimiento_interno=tta.id_mantenimiento_interno)
+								LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tta.id_mantenimiento_rutinario)
+								LEFT JOIN tcm_ingreso_taller AS tit ON (tmi.id_ingreso_taller=tit.id_ingreso_taller)
+								LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo)
+								LEFT JOIN tcm_vehiculo AS v2 ON (v2.id_vehiculo=tmr.id_vehiculo)
+								WHERE (tta.tipo_transaccion like 'salida') ".$where_vehiculo."
+							) AS interno, tcm_presupuesto_mantenimiento as tpm
+							GROUP BY tpm.id_presupuesto";
+			}
+			else
+			{
+				if($id_vehiculo!=0 && $id_vehiculo!="") $where_vehiculo="and (v.id_vehiculo='$id_vehiculo')";
+				$query="SELECT tpm.id_presupuesto, tpm.presupuesto, round(sum(tgp.gasto),2) AS gasto,titx.fecha_entrega AS fecha,
+						v.placa
+						FROM tcm_gasto_presupuesto AS tgp
+						INNER JOIN tcm_presupuesto_mantenimiento AS tpm ON (tpm.id_presupuesto=tgp.id_presupuesto)
+						INNER JOIN tcm_ingreso_taller_ext as titx on (titx.id_gasto=tgp.id_gasto)
+						INNER JOIN tcm_vehiculo as v on (v.id_vehiculo=titx.id_vehiculo)
+						".$where_fecha." ".$where_vehiculo."
+						GROUP BY tpm.id_presupuesto".$group_by_vehiculo;
+			}
+		}
+		else
+		{
+			if($id_vehiculo!=0 && $id_vehiculo!="")
+			{
+				$query="SELECT ROUND(mtto_interno.gasto_interno,2) as gasto_interno, ROUND(mtto_externo.gasto_externo,2) AS gasto_externo,
+						DATE_FORMAT(mtto_externo.fecha,'%d-%m-%Y') AS fecha, mtto_interno.placa, mtto_externo.presupuesto,mtto_externo.id_presupuesto,
+						ROUND((mtto_interno.gasto_interno+mtto_externo.gasto_externo),2) as total_gasto
+						FROM 
+						(
+							SELECT tpm.id_presupuesto, tpm.presupuesto, sum(tgp.gasto) AS gasto_externo,titx.fecha_entrega AS fecha
+							FROM tcm_gasto_presupuesto AS tgp
+							INNER JOIN tcm_presupuesto_mantenimiento AS tpm ON (tpm.id_presupuesto=tgp.id_presupuesto)
+							INNER JOIN tcm_ingreso_taller_ext as titx on (titx.id_gasto=tgp.id_gasto)
+							".$where_fecha."
+							GROUP BY tpm.id_presupuesto
+						) AS mtto_externo,
+						(
+							SELECT SUM(interno.gasto_estimado) AS gasto_interno, interno.placa
+							FROM
+							(
+								SELECT tab.nombre, tab.cantidad, tab.precio_promedio, (tab.cantidad*tab.precio_promedio) AS gasto_estimado,
+								tum.unidad_medida, IF((COALESCE(v.placa,'0')!='0'),v.placa,v2.placa) as placa
+								FROM tcm_articulo_bodega as tab
+								INNER JOIN tcm_unidad_medida AS tum on (tab.id_unidad_medida=tum.id_unidad_medida)
+								INNER JOIN tcm_transaccion_articulo AS tta ON (tab.id_articulo=tta.id_articulo)
+								LEFT JOIN tcm_mantenimiento_interno AS tmi ON (tmi.id_mantenimiento_interno=tta.id_mantenimiento_interno)
+								LEFT JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_mantenimiento_rutinario=tta.id_mantenimiento_rutinario)
+								LEFT JOIN tcm_ingreso_taller AS tit ON (tmi.id_ingreso_taller=tit.id_ingreso_taller)
+								LEFT JOIN tcm_vehiculo AS v ON (tit.id_vehiculo=v.id_vehiculo)
+								LEFT JOIN tcm_vehiculo AS v2 ON (v2.id_vehiculo=tmr.id_vehiculo)
+								where v.id_vehiculo='$id_vehiculo' or v2.id_vehiculo='$id_vehiculo'
+							) AS interno
+							GROUP BY interno.placa
+						)AS mtto_interno";
+			}
+			else
+			{
+				$query="SELECT ROUND(mtto_interno.gasto_interno,2) as gasto_interno, ROUND(mtto_externo.gasto_externo,2) AS gasto_externo,
+						DATE_FORMAT(mtto_externo.fecha,'%d-%m-%Y') AS fecha, mtto_externo.presupuesto,mtto_externo.id_presupuesto,
+						ROUND((mtto_interno.gasto_interno+mtto_externo.gasto_externo),2) as total_gasto
+						FROM 
+						(
+							SELECT tpm.id_presupuesto, tpm.presupuesto, sum(tgp.gasto) AS gasto_externo,titx.fecha_entrega AS fecha
+							FROM tcm_gasto_presupuesto AS tgp
+							INNER JOIN tcm_presupuesto_mantenimiento AS tpm ON (tpm.id_presupuesto=tgp.id_presupuesto)
+							INNER JOIN tcm_ingreso_taller_ext as titx on (titx.id_gasto=tgp.id_gasto)
+							".$where_fecha."
+							GROUP BY tpm.id_presupuesto
+						) AS mtto_externo,
+						(
+							SELECT SUM(interno.gasto_estimado) AS gasto_interno
+							FROM
+							(
+								SELECT tab.nombre, tab.cantidad, tab.precio_promedio, (tab.cantidad*tab.precio_promedio) AS gasto_estimado,
+								tum.unidad_medida
+								FROM tcm_articulo_bodega as tab
+								INNER JOIN tcm_unidad_medida AS tum on (tab.id_unidad_medida=tum.id_unidad_medida)
+							) AS interno
+						)AS mtto_interno
+						";
+			}
+		}
 		$query=$this->db->query($query);
 		return (array)$query->result_array();
 	}
