@@ -3005,55 +3005,140 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 	/*********************************************************************************************************************************************/
 	
 	/*******************************FUNCIÓN PARA OBTENER LOS REPORTES DE MANTENIMIENTOS*****************************************/
-	function mantenimientos()
+	function mantenimientos($info)
 	{
-		extract($datos);
+		extract($info);
 		$where_fecha="";
-		$where_vehiculo="";
-		$where_articulo="";
-		$select_vehiculo="";
-		$select_articulo="";
-		$group_by_articulo="";
-		$group_by_vehiculo="";
-		$aux=0;
-		
 		//////////////////FILTRO DE FECHAS/////////////////////
 		if($fecha_inicial!='' && $fecha_final!='')
 		{
 			$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
 			$fecha_final2=date('Y-m-d',strtotime($fecha_final));
-			$where_fecha="where (tta.fecha between '$fecha_inicial2' and '$fecha_final2')";
+			$where_fecha="where (fecha between '$fecha_inicial2' and '$fecha_final2')";
 		}
 		elseif($fecha_inicial=='' && $fecha_final=='')
 		{
 			$fecha_inicial=date('Y')."-01-01";
 			$fecha_final=date('Y')."-12-31";
-			$where_fecha="where (tta.fecha between '$fecha_inicial' and '$fecha_final')";
+			$where_fecha="where (fecha between '$fecha_inicial' and '$fecha_final')";
 		}
 		elseif($fecha_inicial!='')
 		{
 			$fecha_inicial2=date('Y-m-d',strtotime($fecha_inicial));
-			$where_fecha="where (tta.fecha='$fecha_inicial2')";
+			$where_fecha="where (fecha='$fecha_inicial2')";
 		}
 		elseif($fecha_final!='')
 		{
 			$fecha_final2=date('Y-m-d',strtotime($fecha_final));
-			$where_fecha="where (tta.fecha='$fecha_final2')";
+			$where_fecha="where (fecha='$fecha_final2')";
 		}
 		
-		////////////////////FILTRO DE VEHICULOS///////////////////
-		if($id_vehiculo>0)
+		
+		if($mecanico!='' && $mecanico!=0)
 		{
-			$where_vehiculo=" and (v.id_vehiculo='$id_vehiculo' or v2.id_vehiculo='$id_vehiculo')";
-			$select_vehiculo=" sum(tta.cantidad) as cantidad,";
-			$group_by_vehiculo=" group by v.placa";
+			if($id_vehiculo!='' && $id_vehiculo!=0)/*un mecanico un vehiculo*/
+			{
+				$query="SELECT mtto_vh.id_vehiculo, mtto_vh.placa, SUM(mtto_vh.n_mtto) AS mttos, mtto_vh.nombre
+						FROM
+						(
+							(
+								SELECT v.id_vehiculo, v.placa, COUNT(v.id_vehiculo) AS n_mtto, e.nombre
+								FROM tcm_vehiculo AS v
+								INNER JOIN tcm_ingreso_taller AS tit ON (tit.id_vehiculo=v.id_vehiculo)
+								INNER JOIN tcm_mantenimiento_interno AS tmi ON (tmi.id_ingreso_taller=tit.id_ingreso_taller)
+								INNER JOIN tcm_empleado AS e ON (e.id_empleado=tmi.id_empleado_mtto)
+								".$where_fecha." AND e.id_empleado='".$mecanico."' AND v.id_vehiculo='".$id_vehiculo."'
+								GROUP BY v.id_vehiculo
+							)
+							UNION
+							(
+								SELECT v.id_vehiculo, v.placa, COUNT(v.id_vehiculo) AS n_mtto, e.nombre
+								FROM tcm_vehiculo AS v
+								INNER JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_vehiculo=v.id_vehiculo)
+								INNER JOIN tcm_empleado AS e ON (e.id_empleado=tmr.id_empleado_repara)
+								".$where_fecha." AND e.id_empleado='".$mecanico."' AND v.id_vehiculo='".$id_vehiculo."'
+								GROUP BY v.id_vehiculo
+							)
+						) AS mtto_vh
+						GROUP BY mtto_vh.placa";
+			}
+			else /*un mecanico todos vehiculos*/
+			{
+				$query="SELECT mtto_vh.id_vehiculo, mtto_vh.placa, SUM(mtto_vh.n_mtto) AS mttos, mtto_vh.nombre
+						FROM
+						(
+							(
+								SELECT v.id_vehiculo, v.placa, COUNT(v.id_vehiculo) AS n_mtto, e.nombre
+								FROM tcm_vehiculo AS v
+								INNER JOIN tcm_ingreso_taller AS tit ON (tit.id_vehiculo=v.id_vehiculo)
+								INNER JOIN tcm_mantenimiento_interno AS tmi ON (tmi.id_ingreso_taller=tit.id_ingreso_taller)
+								INNER JOIN tcm_empleado AS e ON (e.id_empleado=tmi.id_empleado_mtto)
+								".$where_fecha." AND e.id_empleado='".$mecanico."'
+								GROUP BY v.id_vehiculo
+							)
+							UNION
+							(
+								SELECT v.id_vehiculo, v.placa, COUNT(v.id_vehiculo) AS n_mtto, e.nombre
+								FROM tcm_vehiculo AS v
+								INNER JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_vehiculo=v.id_vehiculo)
+								INNER JOIN tcm_empleado AS e ON (e.id_empleado=tmr.id_empleado_repara)
+								".$where_fecha." AND e.id_empleado='".$mecanico."'
+								GROUP BY v.id_vehiculo
+							)
+						) AS mtto_vh
+						GROUP BY mtto_vh.placa";
+			}
 		}
-		else
+		elseif($id_vehiculo!='' && $id_vehiculo!=0) /*todos mecanicos un vehiculo*/
 		{
-			$select_vehiculo=" tta.cantidad,";
+			$query="SELECT mtto_vh.nombre, SUM(mtto_vh.n_mtto) AS mttos, mtto_vh.placa
+					FROM
+					(
+						(
+							SELECT v.id_vehiculo, e.nombre, v.placa, COUNT(v.id_vehiculo) AS n_mtto
+							FROM tcm_vehiculo AS v
+							INNER JOIN tcm_ingreso_taller AS tit ON (tit.id_vehiculo=v.id_vehiculo)
+							INNER JOIN tcm_mantenimiento_interno AS tmi ON (tmi.id_ingreso_taller=tit.id_ingreso_taller)
+							INNER JOIN tcm_empleado AS e ON (e.id_empleado=tmi.id_empleado_mtto)
+							".$where_fecha." AND v.id_vehiculo='".$id_vehiculo."'
+							GROUP BY e.nombre
+						)
+						UNION
+						(
+							SELECT v.id_vehiculo, e.nombre, v.placa, COUNT(v.id_vehiculo) AS n_mtto
+							FROM tcm_vehiculo AS v
+							INNER JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_vehiculo=v.id_vehiculo)
+							INNER JOIN tcm_empleado AS e ON (e.id_empleado=tmr.id_empleado_repara)
+							".$where_fecha." AND v.id_vehiculo='".$id_vehiculo."'
+							GROUP BY e.nombre
+						)
+					) AS mtto_vh
+					GROUP BY mtto_vh.nombre";
+		}
+		else/*todos mecánicos con todos vehículos*/
+		{
+			$query="SELECT mtto.id_empleado, mtto.nombre, SUM(mtto.n_mtto) AS mttos
+					FROM
+					(	
+						(
+							SELECT e.id_empleado, e.nombre, COUNT(e.id_empleado) AS n_mtto
+							FROM tcm_empleado AS e
+							INNER JOIN tcm_mantenimiento_interno AS tmi ON (tmi.id_empleado_mtto=e.id_empleado)
+							".$where_fecha."
+							GROUP BY e.id_empleado
+						)
+						UNION
+						(
+							SELECT e.id_empleado, e.nombre, COUNT(e.id_empleado) AS n_mtto
+							FROM tcm_empleado AS e
+							INNER JOIN tcm_mantenimiento_rutinario AS tmr ON (tmr.id_empleado_repara=e.id_empleado)
+							".$where_fecha."
+							GROUP BY e.id_empleado
+						)
+					) AS mtto
+					GROUP BY mtto.id_empleado";
 		}
 		
-		$query="";
 		$query=$this->db->query($query);
 		return (array) $query->result_array();
 	}

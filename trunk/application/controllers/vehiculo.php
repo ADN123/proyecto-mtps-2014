@@ -1234,17 +1234,18 @@ class Vehiculo extends CI_Controller
 	*	Objetivo: Función que genera el pdf a imprimir de los informes y estadísticas
 	*	Hecha por: Oscar
 	*	Modificada por: Oscar
-	*	Última Modificación: 20/02/2015
+	*	Última Modificación: 04/03/2015
 	*	Observaciones: Ninguna
 	*/
 	
 	function reporte_mantenimientos_pdf()
 	{
-		$aux=$this->transporte_model->presupuesto_mtto($_POST);
+		$aux=$this->transporte_model->mantenimientos($_POST);
 		$data['j']=json_encode($aux);
-		$data['mtto']=$_POST['mtto'];
+		$data['mecanico']=$_POST['mecanico'];
 		$data['id_vehiculo']=$_POST['id_vehiculo'];
-		$this->load->view('mantenimiento/reporte_presupuesto_pdf',$data);
+		//print_r($data);
+		$this->load->view('mantenimiento/reporte_mantenimientos_pdf',$data);
 	}
 }
 ?>
