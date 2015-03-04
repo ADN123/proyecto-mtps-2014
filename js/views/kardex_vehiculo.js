@@ -131,7 +131,7 @@ function tabla(json)
 				cont=cont+'<td align="right">'+json[i].cantidad+'</td>';
 				egresos=egresos+parseFloat(json[i].cantidad);
 			}
-			if(filtro2==0 || filtro2=='')cont=cont+'<td align="right">'+parseFloat(ingresos-egresos)+'</td>';
+			if(filtro2.value==0 || filtro2.value=='')cont=cont+'<td align="right">'+parseFloat(ingresos-egresos)+'</td>';
 			cont=cont+'<td>'+json[i].descripcion+'</td>';
 			cont=cont+'</tr>';
 		}
