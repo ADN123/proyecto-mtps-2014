@@ -2474,7 +2474,7 @@ LEFT JOIN sir_empleado e ON e.id_empleado = s.id_empleado_solicitante
 			if($id_vehiculo!=0 && $id_vehiculo!="")
 			{
 				$query="SELECT tab.nombre, DATE_FORMAT(tta.fecha,'%d/%m/%Y') AS fecha_transaccion, tta.tipo_transaccion,
-					COALESCE(IF((COALESCE(v.placa,'0')!='0'),v.placa,v2.placa),'ingresos') AS placa, ".$select_vehiculo." tum.unidad_medida, COALESCE(tta.descripcion,'') AS descripcion,
+					COALESCE(IF((COALESCE(v.placa,'0')!='0'),v.placa,v2.placa),'Ingresos') AS placa, ".$select_vehiculo." tum.unidad_medida, COALESCE(tta.descripcion,'') AS descripcion,
 					tab.id_articulo, tta.id_transaccion_articulo, v.id_vehiculo, tmi.id_mantenimiento_interno,
 					tmr.id_mantenimiento_rutinario, tit.id_ingreso_taller
 					FROM tcm_articulo_bodega AS tab
