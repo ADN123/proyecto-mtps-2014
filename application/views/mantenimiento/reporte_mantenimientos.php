@@ -7,7 +7,7 @@
     <tr>
         <td width="50%">
         <label style="width:100px">Mecánico: </label>
-            <select class="select" style="width:300px" name="id_articulo" id="id_articulo" multiple="multiple">
+            <select class="select" style="width:300px" name="mecanico" id="mecanico" multiple="multiple">
                 <option value="0" selected="selected">[Todos]</option>
                 <?php
                     foreach($mecanicos as $m)
