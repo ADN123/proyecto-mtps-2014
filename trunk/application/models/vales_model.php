@@ -2160,5 +2160,16 @@ function id_seccion_requisicion($id_requisicion){
 	$t=(array) $query->row();
 	return $t['id_seccion'];
 }
+
+function factura_repetida($numero_factura, $id_seccion, $year)
+{
+	$q="SELECT fecha_factura FROM tcm_consumo_vehiculo_info
+	 WHERE numero_factura = '$numero_factura' 
+	 AND  id_seccion=$id_seccion 
+	 AND DATE_FORMAT(fecha_factura,'%Y')=$year";
+	$query = $this->db->query($q);
+	return  ($query->num_rows()>0) ? FALSE : TRUE ;
+	
+}
 }
 ?>
