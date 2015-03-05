@@ -984,9 +984,7 @@ function guardar_consumo()
 		if($data['id_permiso']!=NULL) {
 
 			$this->db->trans_start();
-
-				if(verificarform($_POST)){
-					//$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
+			//$id_seccion=$this->transporte_model->consultar_seccion_usuario($this->session->userdata('nr'));
 					$id_seccion=$this->input->post('id_seccion');
 					$id_gasolinera=$this->input->post('id_gasolinera');
 					$fec=str_replace("/","-",$this->input->post('fecha_factura'));
@@ -1000,6 +998,12 @@ function guardar_consumo()
 					$actividad_consumo=$this->input->post('actividad_consumo');
 					$tip_gas_bruto=$this->input->post('tip_gas');
 					$cantidad_consumo=$this->input->post('cantidad_consumo');
+					$year =date("Y", strtotime($fec));
+
+					$verificar2= $this->vales_model->factura_repetida($numero_factura, $id_seccion, $year);
+					
+					if(verificarform($_POST) && $verificar2){ //se verifica que no sea el mismo formulario  por un F5 y ademas se verifica que la factura no este ingresada en el sistema
+					
 					
 					//esto se agrego debido a que no siempre se pedira el tipo de combustible
 					if ($valor_diesel=="") {

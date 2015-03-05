@@ -19,7 +19,7 @@ class Usuario_model extends CI_Model {
 			$id_mod[]=$val['id_modulo'];
 			$id_per[]=$val['id_permiso'];
 		}
-		$sentencia="SELECT id_sistema, nombre_sistema FROM org_sistema WHERE id_sistema=5 OR id_sistema=7 OR id_sistema = 8";
+		$sentencia="SELECT id_sistema, nombre_sistema FROM org_sistema WHERE id_sistema=5 OR id_sistema=7 OR id_sistema = 9";
 		$query0=$this->db->query($sentencia);
 		$m0=(array)$query0->result_array();
 		$result='';
