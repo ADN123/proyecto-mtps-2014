@@ -364,8 +364,7 @@ $(document).ready(function(){
 	$('#anio').validacion({
 		req: true,
 		ent:true,
-		lonMin:4,
-		lonMax:4
+		lonMin:4
 	});
 	$('#fuente').validacion({
 		req: true
