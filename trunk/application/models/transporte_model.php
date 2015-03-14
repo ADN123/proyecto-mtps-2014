@@ -705,20 +705,20 @@ function solicitudes_por_asignar_depto(){
 								WHERE id_solicitud_transporte=".$id);
 		return $query->result();
 	}	
-	function aprobar($id, $estado, $nr, $iduse){
+
+	function aprobar($id_solicitud_transporte, $estado, $id_usuario){     /// puede ser aprobar o denegar
 		$q="UPDATE tcm_solicitud_transporte SET 
-				id_empleado_autoriza= (SELECT id_empleado FROM sir_empleado WHERE NR LIKE '".$nr."'),
+				id_empleado_autoriza= (SELECT id_empleado FROM org_usuario u INNER JOIN sir_empleado e ON u.nr = e.nr WHERE id_usuario = '".$id_usuario."'),
 				estado_solicitud_transporte = $estado,
-				id_usuario_modifica = '".$iduse."', 
+				id_usuario_modifica = '".$id_usuario."', 
 				fecha_modificacion=  CONCAT_WS(' ', CURDATE(),CURTIME()),  
 				fecha_aprobacion=  CONCAT_WS(' ', CURDATE(),CURTIME())  
-			WHERE id_solicitud_transporte= ".$id;
+			WHERE id_solicitud_transporte= ".$id_solicitud_transporte;
 	
 		  $query=$this->db->query($q);
 	
 		return $query;
-	}	
-	
+	}
 	
 	/////////////////////////////////CONSULTAR VEHÍCULOS//////////////////////////////////////////
 	function consultar_vehiculos($estado=NULL, $id=NULL)
