@@ -245,6 +245,20 @@ class Seguridad_model extends CI_Model {
 		$temp= $query->result_array();
 		return $temp[0];
 	}	
+	 function verificar_usuario($usuarioe=NULL)
+    {
+
+        $sentencia="SELECT id_usuario, usuario FROM org_usuario WHERE md5(id_usuario)= '$usuarioe'";
+        $query=$this->db->query($sentencia);
+        return (array)$query->row();
+    }
+		 function verificar_solicitud($solicitude=NULL)
+    {
+
+        $sentencia="SELECT id_solicitud_transporte, estado_solicitud_transporte as estado FROM tcm_solicitud_transporte WHERE md5(id_solicitud_transporte)= '$solicitude'";
+        $query=$this->db->query($sentencia);
+        return (array)$query->row();
+    }
 
 }
 ?>

@@ -179,10 +179,10 @@ class Transporte extends CI_Controller
 			$id=$this->input->post('ids'); //id solicitud
 			$estado=$this->input->post('resp'); //estado de la solicitud
 			$descrip=$this->input->post('observacion'); //Observacion
-			$nr=$this->session->userdata('nr'); //NR del usuario Logueado
+			
 			$id_solicitud_transporte=$id;
 			if($estado ==2 || $estado== 0){
-				$this->transporte_model->aprobar($id,$estado, $nr,$this->session->userdata('id_usuario'));
+				$this->transporte_model->aprobar($id,$estado, $this->session->userdata('id_usuario'));
 				if($descrip!="")
 					$this->transporte_model->insertar_descripcion($id,$descrip,2);
 				$this->db->trans_complete();
@@ -1181,12 +1181,18 @@ class Transporte extends CI_Controller
 		pantalla('transporte/informes_solicitudes_pdf',$data);
 	}
 	
-function prueba($id) 
+function prueba($id=NULL) 
 	{
-		echo "<pre>";
-enviar_correo_automatico_usuarios($id);
-	echo "</pre>";
+
+
+		$html=$this->load->view('transporte/correo_aprobacion',$data,true);
+		echo $html;
+
 	}
+function enviar_solicitud($id_solicitud_transporte)
+{
+	enviar_correo_automatico_administracion($id_solicitud_transporte,66);		
+}
 			
 	
 }

@@ -189,13 +189,18 @@
 		for($i=0;$i<count($datos);$i++) {
 			$nombre=ucwords($datos[$i]['nombre']);
 			$correo=ucwords($datos[$i]['correo']);
+			$id_usuario=$datos[$i]['id_usuario'];
 			
 			$nominal=ucwords($datos[$i]['nominal']);
 			$mensaje="<style></style>Estimad@ ".$nombre.",<br><br>La solicitud N&deg;<strong>".$id_solicitud_transporte."</strong> realizada por <strong>".ucwords($solicitud['nombre'])."</strong> ";
 			switch($id_modulo){
 				case 66:
 					$titulo="SOLICITUD DE TRANSPORTE N°".$id_solicitud_transporte;
-					$mensaje.="requiere de su autorizaci&oacute;n. ".$url."<br><br>Departamento de Transporte.";
+					$data['id_solicitud_transporte']=$id_solicitud_transporte;
+					$data['nombre']=$nombre;
+					$data['solicitud']=$solicitud;
+					$data['id_usuario']=$id_usuario;
+					$mensaje=$CI->load->view('transporte/correo_aprobacion',$data,true);
 					break;
 				case 68:
 					$titulo="SOLICITUD DE TRANSPORTE N°".$id_solicitud_transporte;
